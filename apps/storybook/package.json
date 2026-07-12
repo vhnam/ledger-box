@@ -10,6 +10,7 @@
   "dependencies": {
     "@remixicon/react": "catalog:",
     "@vhnam/ui": "workspace:*",
+    "next-themes": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"
   },
