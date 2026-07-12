@@ -1,11 +1,13 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import heroImg from "../assets/hero.png";
-import typescriptLogo from "../assets/typescript.svg";
-import viteLogo from "../assets/vite.svg";
-import { Button } from "@vhnam/ui/components/button";
+import { createFileRoute } from '@tanstack/react-router';
+import { useState } from 'react';
 
-export const Route = createFileRoute("/")({
+import { Button } from '@vhnam/ui/components/button';
+
+import heroImg from '#/assets/hero.png';
+import typescriptLogo from '#/assets/typescript.svg';
+import viteLogo from '#/assets/vite.svg';
+
+export const Route = createFileRoute('/')({
   component: Index,
 });
 
@@ -26,12 +28,7 @@ function Index() {
             Edit <code>src/routes/index.tsx</code> and save to test <code>HMR</code>
           </p>
         </div>
-        <Button
-          id="counter"
-          type="button"
-          className="counter"
-          onClick={() => setCount((c) => c + 1)}
-        >
+        <Button id="counter" type="button" className="counter" onClick={() => setCount((c) => c + 1)}>
           Count is {count}
         </Button>
       </section>

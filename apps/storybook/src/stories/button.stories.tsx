@@ -1,21 +1,22 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Button } from "@vhnam/ui/components/button";
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+import { Button } from '@vhnam/ui/components/button';
 
 const meta = {
-  title: "Components/Button",
+  title: 'Components/Button',
   component: Button,
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
     variant: {
-      control: "select",
-      options: ["default", "outline", "secondary", "ghost", "destructive", "link"],
+      control: 'select',
+      options: ['default', 'outline', 'secondary', 'ghost', 'destructive', 'link'],
     },
     size: {
-      control: "select",
-      options: ["default", "xs", "sm", "lg", "icon", "icon-xs", "icon-sm", "icon-lg"],
+      control: 'select',
+      options: ['default', 'xs', 'sm', 'lg', 'icon', 'icon-xs', 'icon-sm', 'icon-lg'],
     },
   },
 } satisfies Meta<typeof Button>;
@@ -25,43 +26,43 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: "Button",
-    variant: "default",
-    size: "default",
+    children: 'Button',
+    variant: 'default',
+    size: 'default',
   },
 };
 
 export const Outline: Story = {
   args: {
-    children: "Button",
-    variant: "outline",
+    children: 'Button',
+    variant: 'outline',
   },
 };
 
 export const Secondary: Story = {
   args: {
-    children: "Button",
-    variant: "secondary",
+    children: 'Button',
+    variant: 'secondary',
   },
 };
 
 export const Ghost: Story = {
   args: {
-    children: "Button",
-    variant: "ghost",
+    children: 'Button',
+    variant: 'ghost',
   },
 };
 
 export const Destructive: Story = {
   args: {
-    children: "Button",
-    variant: "destructive",
+    children: 'Button',
+    variant: 'destructive',
   },
 };
 
 export const Link: Story = {
   args: {
-    children: "Button",
-    variant: "link",
+    children: 'Button',
+    variant: 'link',
   },
 };

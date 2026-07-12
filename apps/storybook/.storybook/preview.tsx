@@ -1,7 +1,8 @@
 /// <reference types="vite/client" />
 
-import "../src/style.css";
-import type { Preview } from "@storybook/react-vite";
+import type { Preview } from '@storybook/react-vite';
+
+import '../src/style.css';
 
 const preview: Preview = {
   parameters: {
@@ -12,7 +13,7 @@ const preview: Preview = {
       },
     },
     a11y: {
-      test: "todo",
+      test: 'todo',
     },
   },
 };

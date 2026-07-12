@@ -1,0 +1,39 @@
+{
+  "trailingComma": "all",
+  "printWidth": 120,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "bracketSpacing": true,
+  "arrowParens": "always",
+  "overrides": [
+    {
+      "files": ["**/*.{ts,tsx,js,jsx}"],
+      "options": {
+        "singleQuote": true
+      }
+    }
+  ],
+  "ignorePatterns": ["apps/ledger-box/src/routeTree.gen.ts"],
+  "sortImports": {
+    "customGroups": [
+      {
+        "groupName": "vhnam",
+        "elementNamePattern": ["@vhnam/**"]
+      },
+      {
+        "groupName": "app",
+        "elementNamePattern": ["#/**"]
+      }
+    ],
+    "newlinesBetween": true,
+    "groups": [
+      "builtin",
+      "external",
+      "vhnam",
+      "app",
+      ["parent", "sibling", "index", "style", "side_effect_style"],
+      "unknown"
+    ]
+  }
+}
