@@ -9,6 +9,7 @@
     "preview": "vp preview"
   },
   "dependencies": {
+    "@remixicon/react": "catalog:",
     "@tanstack/react-router": "catalog:",
     "@vhnam/ui": "workspace:*",
     "better-auth": "^1.6.23",

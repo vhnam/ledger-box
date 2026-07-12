@@ -2,6 +2,8 @@ import { createRouter, RouterProvider } from '@tanstack/react-router';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
+import { TooltipProvider } from '@vhnam/ui/components/tooltip';
+
 import './style.css';
 import { routeTree } from './routeTree.gen';
 
@@ -15,6 +17,8 @@ declare module '@tanstack/react-router' {
 
 createRoot(document.getElementById('app')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <TooltipProvider>
+      <RouterProvider router={router} />
+    </TooltipProvider>
   </StrictMode>,
 );

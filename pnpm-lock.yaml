@@ -86,6 +86,9 @@ importers:
 
   apps/ledger-box:
     dependencies:
+      '@remixicon/react':
+        specifier: 'catalog:'
+        version: 4.9.0(react@19.2.7)
       '@tanstack/react-router':
         specifier: 'catalog:'
         version: 1.170.17(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
