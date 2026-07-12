@@ -1,0 +1,17 @@
+[build]
+command = "pnpm install --frozen-lockfile && pnpm --filter @vhnam/ledger-box build"
+publish = "apps/ledger-box/dist"
+functions = "apps/ledger-box/netlify/functions"
+
+[build.environment]
+NODE_VERSION = "24"
+
+[dev]
+command = "pnpm --filter @vhnam/ledger-box dev"
+targetPort = 5173
+framework = "#custom"
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
