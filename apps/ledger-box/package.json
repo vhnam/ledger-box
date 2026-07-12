@@ -11,6 +11,8 @@
   "dependencies": {
     "@tanstack/react-router": "catalog:",
     "@vhnam/ui": "workspace:*",
+    "better-auth": "^1.6.23",
+    "pg": "^8.22.0",
     "react": "catalog:",
     "react-dom": "catalog:"
   },
@@ -19,6 +21,7 @@
     "@tailwindcss/vite": "catalog:",
     "@tanstack/router-devtools": "catalog:",
     "@tanstack/router-plugin": "catalog:",
+    "@types/pg": "^8.20.0",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",

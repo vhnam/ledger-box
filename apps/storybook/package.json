@@ -8,6 +8,7 @@
     "build": "storybook build"
   },
   "dependencies": {
+    "@remixicon/react": "catalog:",
     "@vhnam/ui": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:"
