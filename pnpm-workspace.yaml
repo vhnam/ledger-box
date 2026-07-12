@@ -23,6 +23,12 @@ catalogMode: prefer
 
 overrides:
   vite: "catalog:"
+  baseline-browser-mapping: 2.10.42
+  browserslist: 4.28.5
+  caniuse-lite: 1.0.30001803
+  es-module-lexer: 2.3.0
+  nanoid: 3.3.15
+  postcss: 8.5.16
 
 peerDependencyRules:
   allowAny:
