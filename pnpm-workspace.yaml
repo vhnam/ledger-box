@@ -3,6 +3,9 @@ packages:
   - packages/*
   - tools/*
 
+allowBuilds:
+  esbuild: true
+
 catalog:
   "@formisch/react": 1.0.0-rc.0
   "@netlify/functions": ^5.3.0
