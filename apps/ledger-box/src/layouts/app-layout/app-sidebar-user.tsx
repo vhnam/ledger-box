@@ -1,6 +1,6 @@
-import { RiExpandUpDownLine, RiLogoutBoxLine, RiSettingsLine } from '@remixicon/react';
+import { RiExpandUpDownLine, RiLogoutBoxLine } from '@remixicon/react';
 import { useNavigate } from '@tanstack/react-router';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@vhnam/ui/components/avatar';
 import {
@@ -16,10 +16,12 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@vhnam/ui/compo
 import { toast } from '@vhnam/ui/components/sonner';
 
 import { authClient, useSession } from '#/lib/auth-client';
+import { SettingsDialog, SettingsDialogTrigger } from '#/modules/settings/settings-dialog';
 
 function AppSidebarUser() {
   const navigate = useNavigate();
   const { data: session } = useSession();
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const avatarFallback = useMemo(() => {
     const name = session?.user.name?.trim() ?? '';
@@ -65,10 +67,7 @@ function AppSidebarUser() {
           />
           <DropdownMenuContent>
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <RiSettingsLine />
-                Settings
-              </DropdownMenuItem>
+              <SettingsDialogTrigger onOpen={() => setSettingsOpen(true)} />
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
@@ -79,6 +78,7 @@ function AppSidebarUser() {
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
+        <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
       </SidebarMenuItem>
     </SidebarMenu>
   );

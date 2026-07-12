@@ -9,7 +9,7 @@ export function AppLayout() {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <main className="flex flex-1 flex-col">
+        <main className="flex flex-1 flex-col relative">
           <Outlet />
         </main>
       </SidebarInset>

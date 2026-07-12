@@ -1,5 +1,5 @@
 import { RiWalletLine } from '@remixicon/react';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, Navigate } from '@tanstack/react-router';
 
 import { Icon } from '@vhnam/ui/components/icon';
 import { Spinner } from '@vhnam/ui/components/spinner';
@@ -45,6 +45,10 @@ function RouteComponent() {
         </div>
       </div>
     );
+  }
+
+  if (wallets?.length > 0) {
+    return <Navigate to="/wallets/$walletId" params={{ walletId: wallets[0].id }} replace />;
   }
 
   return null;

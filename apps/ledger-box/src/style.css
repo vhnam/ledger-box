@@ -4,3 +4,7 @@
 
 @source "../src";
 @source "../../../packages/ui/src";
+
+:root {
+  --header-height: calc(var(--spacing) * 12);
+}

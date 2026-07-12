@@ -4,6 +4,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { Toaster } from '@vhnam/ui/components/sonner';
+import { ThemeProvider } from '@vhnam/ui/components/theme-provider';
 import { TooltipProvider } from '@vhnam/ui/components/tooltip';
 
 import './style.css';
@@ -20,11 +21,13 @@ declare module '@tanstack/react-router' {
 
 createRoot(document.getElementById('app')!).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <RouterProvider router={router} />
-        <Toaster />
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <RouterProvider router={router} />
+          <Toaster />
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   </StrictMode>,
 );
