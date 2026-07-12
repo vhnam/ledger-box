@@ -5,6 +5,10 @@ packages:
 
 catalog:
   "@netlify/functions": ^5.3.0
+  "@storybook/addon-a11y": ^10.5.0
+  "@storybook/addon-docs": ^10.5.0
+  "@storybook/react-vite": ^10.5.0
+  "@tailwindcss/vite": ^4.3.2
   "@tanstack/react-router": ^1.170.17
   "@tanstack/router-devtools": ^1.167.0
   "@tanstack/router-plugin": ^1.168.19
@@ -14,6 +18,7 @@ catalog:
   "@vitejs/plugin-react": ^6.0.3
   react: ^19.2.7
   react-dom: ^19.2.7
+  storybook: ^10.5.0
   tailwindcss: ^4.3.2
   typescript: ^6
   vite: npm:@voidzero-dev/vite-plus-core@0.2.4
@@ -35,3 +40,6 @@ peerDependencyRules:
     - vite
   allowedVersions:
     vite: "*"
+
+onlyBuiltDependencies:
+  - esbuild
