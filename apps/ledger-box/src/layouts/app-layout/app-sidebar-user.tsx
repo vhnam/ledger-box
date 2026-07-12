@@ -13,6 +13,7 @@ import {
 } from '@vhnam/ui/components/dropdown-menu';
 import { Icon } from '@vhnam/ui/components/icon';
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@vhnam/ui/components/sidebar';
+import { toast } from '@vhnam/ui/components/sonner';
 
 import { authClient, useSession } from '#/lib/auth-client';
 
@@ -34,6 +35,10 @@ function AppSidebarUser() {
   async function handleSignOut() {
     await authClient.signOut();
     await navigate({ to: '/auth/login' });
+
+    toast.success('Logged out successfully', {
+      description: 'You have been logged out of your account',
+    });
   }
 
   return (

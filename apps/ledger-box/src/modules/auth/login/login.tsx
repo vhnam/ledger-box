@@ -1,40 +1,14 @@
-import { useNavigate } from '@tanstack/react-router';
-import { type SubmitEvent, useState } from 'react';
+import { Field as FormField, Form } from '@formisch/react';
 
 import { Button } from '@vhnam/ui/components/button';
 import { CardContent, CardDescription, CardHeader, CardTitle } from '@vhnam/ui/components/card';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@vhnam/ui/components/field';
 import { Input } from '@vhnam/ui/components/input';
 
-import { authClient } from '#/lib/auth-client';
+import { useLoginActions } from './login.actions';
 
 export function LoginPage() {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setError(null);
-    setIsSubmitting(true);
-
-    const { error: authError } = await authClient.signIn.email({ email, password });
-
-    setIsSubmitting(false);
-
-    if (authError) {
-      setError(authError.message ?? 'Something went wrong. Please try again.');
-      return;
-    }
-
-    await navigate({ to: '/' });
-  }
-
-  async function handleGoogleSignIn() {
-    await authClient.signIn.social({ provider: 'google', callbackURL: '/' });
-  }
+  const { form, error, isSubmitting, handleSubmit, handleGoogleSignIn } = useLoginActions();
 
   return (
     <>
@@ -44,32 +18,45 @@ export function LoginPage() {
       </CardHeader>
 
       <CardContent>
-        <form onSubmit={handleSubmit}>
+        <Form of={form} onSubmit={(output) => void handleSubmit(output)}>
           <FieldGroup>
-            <Field>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
-              <Input
-                id="email"
-                type="email"
-                required
-                value={email}
-                placeholder="Enter your email"
-                onChange={(event) => setEmail(event.target.value)}
-              />
-            </Field>
+            <FormField
+              of={form}
+              path={['email']}
+              children={(field) => (
+                <Field data-invalid={!!field.errors}>
+                  <FieldLabel htmlFor={field.props.name}>Email</FieldLabel>
+                  <Input
+                    id={field.props.name}
+                    type="email"
+                    placeholder="Enter your email"
+                    defaultValue={field.input}
+                    aria-invalid={!!field.errors}
+                    {...field.props}
+                  />
+                  {field.errors && <FieldError>{field.errors[0]}</FieldError>}
+                </Field>
+              )}
+            />
 
-            <Field>
-              <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input
-                id="password"
-                type="password"
-                required
-                minLength={8}
-                value={password}
-                placeholder="Enter your password"
-                onChange={(event) => setPassword(event.target.value)}
-              />
-            </Field>
+            <FormField
+              of={form}
+              path={['password']}
+              children={(field) => (
+                <Field data-invalid={!!field.errors}>
+                  <FieldLabel htmlFor={field.props.name}>Password</FieldLabel>
+                  <Input
+                    id={field.props.name}
+                    type="password"
+                    placeholder="Enter your password"
+                    defaultValue={field.input}
+                    aria-invalid={!!field.errors}
+                    {...field.props}
+                  />
+                  {field.errors && <FieldError>{field.errors[0]}</FieldError>}
+                </Field>
+              )}
+            />
 
             {error && <FieldError>{error}</FieldError>}
 
@@ -82,7 +69,7 @@ export function LoginPage() {
               </Button>
             </Field>
           </FieldGroup>
-        </form>
+        </Form>
       </CardContent>
     </>
   );

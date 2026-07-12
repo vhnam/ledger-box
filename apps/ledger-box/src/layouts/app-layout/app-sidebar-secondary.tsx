@@ -1,7 +1,5 @@
-import { RiAddLine } from '@remixicon/react';
 import type { ComponentProps } from 'react';
 
-import { Icon } from '@vhnam/ui/components/icon';
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -10,16 +8,15 @@ import {
   SidebarMenuItem,
 } from '@vhnam/ui/components/sidebar';
 
+import { CreateWalletDialog } from '#/modules/wallets/create-wallet-dialog';
+
 function AppSidebarSecondary(props: ComponentProps<typeof SidebarGroup>) {
   return (
     <SidebarGroup {...props}>
       <SidebarGroupContent>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="sm" variant="outline">
-              <Icon icon={RiAddLine} />
-              <span>Add new wallet</span>
-            </SidebarMenuButton>
+            <SidebarMenuButton size="sm" variant="outline" render={<CreateWalletDialog />} />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarGroupContent>
