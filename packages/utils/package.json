@@ -1,0 +1,22 @@
+{
+  "name": "@vhnam/utils",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./date": "./src/date/index.ts",
+    "./date/constants": "./src/date/constants.ts",
+    "./date/utils": "./src/date/utils.ts"
+  },
+  "scripts": {
+    "check": "vp check"
+  },
+  "dependencies": {
+    "date-fns": "catalog:"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "vite-plus": "catalog:"
+  }
+}

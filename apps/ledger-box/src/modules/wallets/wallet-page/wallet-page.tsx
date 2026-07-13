@@ -4,6 +4,9 @@ import { WalletHeader } from '#/modules/wallets/wallet-header';
 import { WalletSummary } from '#/modules/wallets/wallet-summary';
 import { useWallet } from '#/queries/wallets/wallet.queries';
 
+import { WalletActions } from '../wallet-actions';
+import { WalletTransactions } from '../wallet-transactions';
+
 interface WalletPageProps {
   walletId: string;
 }
@@ -31,8 +34,10 @@ function WalletPage({ walletId }: WalletPageProps) {
     <>
       <WalletHeader wallet={wallet} />
 
-      <div className="mx-auto mt-[calc(var(--header-height)+1rem)] w-full max-w-5xl p-4 lg:p-6">
+      <div className="mx-auto mt-[calc(var(--header-height)+1rem)] w-full max-w-5xl p-4 lg:p-6 flex flex-col gap-4">
+        <WalletActions />
         <WalletSummary />
+        <WalletTransactions walletId={walletId} />
       </div>
     </>
   );

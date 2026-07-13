@@ -20,10 +20,11 @@ Feature modules follow a `*.tsx` (presentational) + `*.actions.tsx` (state/handl
 
 ## API routes
 
-| Route          | Methods   | Description                                        |
-| -------------- | --------- | -------------------------------------------------- |
-| `/api/auth/*`  | all       | better-auth handler (email/password, Google OAuth) |
-| `/api/wallets` | GET, POST | List wallets / create a wallet                     |
+| Route                                 | Methods   | Description                                        |
+| ------------------------------------- | --------- | -------------------------------------------------- |
+| `/api/auth/*`                         | all       | better-auth handler (email/password, Google OAuth) |
+| `/api/wallets`                        | GET, POST | List wallets / create a wallet                     |
+| `/api/wallets/:walletId/transactions` | GET       | List transactions for a wallet (paginated)         |
 
 All routes except `/api/auth/*` require an authenticated session (checked via `auth.api.getSession`).
 
