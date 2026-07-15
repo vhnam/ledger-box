@@ -57,11 +57,17 @@ This runs the shadcn CLI and then rewrites its `@/`-aliased imports to the relat
 
 After adding a component, add a matching story in `apps/storybook/src/stories/<component>.stories.tsx`.
 
+## Components
+
+`src/components/` — one file per component, imported as `@vhnam/ui/components/<name>`:
+
+avatar, button, calendar, card, collapsible, date-picker-range, dialog, dropdown-menu, empty, field, icon, input, label, pagination, popover, scroll-area, select, separator, sheet, sidebar, skeleton, sonner, spinner, tabs, textarea, theme-provider, toggle, toggle-group, tooltip
+
 ## Structure
 
 ```
 src/components/   UI components (one file per component)
 src/hooks/         Shared hooks (use-mobile, use-theme)
 src/lib/            Utilities (cn, etc.)
-src/styles/          globals.css, tailwind.css
+src/styles/          globals.css, tailwind.css, fonts.css
 ```

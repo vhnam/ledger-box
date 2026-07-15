@@ -7,6 +7,7 @@ A personal finance tracker built as a Vite+ monorepo.
 - [`apps/ledger-box`](apps/ledger-box/README.md) — the app (TanStack Router, better-auth, Postgres via Kysely, Netlify Functions)
 - [`apps/storybook`](apps/storybook/README.md) — component stories for `@vhnam/ui`
 - [`packages/ui`](packages/ui/README.md) — shared UI components (shadcn-style, base-ui + Tailwind)
+- [`packages/utils`](packages/utils/README.md) — shared currency/date formatting utilities (date-fns)
 
 ## Prerequisites
 
