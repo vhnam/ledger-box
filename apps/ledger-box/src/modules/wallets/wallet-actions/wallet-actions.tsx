@@ -1,3 +1,6 @@
+import { getRouteApi } from '@tanstack/react-router';
+import { useState } from 'react';
+
 import { Button } from '@vhnam/ui/components/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@vhnam/ui/components/collapsible';
 import { DatePickerRange } from '@vhnam/ui/components/date-picker-range';
@@ -6,8 +9,12 @@ import { Icon } from '@vhnam/ui/components/icon';
 import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from '@vhnam/ui/components/select';
 
 import { DEFAULT_FILTER_VALUE, FILTER_OPTIONS_LIST } from '#/constants/filter-options';
+import { useWallets } from '#/queries/wallets/wallet.queries';
 
+import { TransferMoneyDialog } from '../transfer-money-dialog';
 import { useWalletActions } from './wallet-actions.actions';
+
+const walletRouteApi = getRouteApi('/_app/wallets/$walletId');
 
 type WalletActionsProps = {
   hasTransactions: boolean;
@@ -30,6 +37,11 @@ function WalletActions({ hasTransactions, filters }: WalletActionsProps) {
     sortOrderOptions,
   } = filters;
 
+  const { walletId } = walletRouteApi.useParams();
+  const { data: wallets = [] } = useWallets();
+  const [openTransferMoneyDialog, setOpenTransferMoneyDialog] = useState(false);
+  const canTransfer = wallets.length > 1;
+
   return (
     <Collapsible className="flex flex-col gap-4">
       <div className="flex items-center justify-between gap-2">
@@ -46,10 +58,19 @@ function WalletActions({ hasTransactions, filters }: WalletActionsProps) {
           <Button variant="outline" size="icon">
             <Icon name="GearSixIcon" />
           </Button>
-          <Button variant="secondary">
-            <Icon name="ArrowsLeftRightIcon" />
-            <span className="hidden lg:block">Transfer</span>
-          </Button>
+          {canTransfer ? (
+            <>
+              <Button variant="secondary" onClick={() => setOpenTransferMoneyDialog(true)}>
+                <Icon name="ArrowsLeftRightIcon" />
+                <span className="hidden lg:block">Transfer</span>
+              </Button>
+              <TransferMoneyDialog
+                open={openTransferMoneyDialog}
+                onOpenChange={setOpenTransferMoneyDialog}
+                walletId={walletId}
+              />
+            </>
+          ) : null}
           <Button variant="default">
             <Icon name="PlusIcon" />
             <span className="hidden lg:block">Add transaction</span>
