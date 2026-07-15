@@ -1,39 +1,43 @@
-import { RiAddLine, RiArrowLeftRightLine, RiFilterLine, RiSettings2Line } from '@remixicon/react';
-
 import { Button } from '@vhnam/ui/components/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@vhnam/ui/components/collapsible';
 import { DatePickerRange } from '@vhnam/ui/components/date-picker-range';
 import { Field, FieldLabel } from '@vhnam/ui/components/field';
+import { Icon } from '@vhnam/ui/components/icon';
 import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from '@vhnam/ui/components/select';
 
 import { DEFAULT_FILTER_VALUE, FILTER_OPTIONS_LIST } from '#/constants/filter-options';
 
 import { useWalletActions } from './wallet-actions.actions';
 
-function WalletActions() {
+type WalletActionsProps = {
+  hasTransactions: boolean;
+};
+
+function WalletActions({ hasTransactions }: WalletActionsProps) {
   const { filterBy, setFilterBy, dateRange, setDateRange, filterPreview, isDateRangeFilter } = useWalletActions();
 
   return (
     <Collapsible className="flex flex-col gap-4">
       <div className="flex items-center justify-between gap-2">
         <CollapsibleTrigger
+          disabled={!hasTransactions}
           render={
-            <Button variant="outline">
-              <RiFilterLine className="size-4" />
+            <Button variant="outline" disabled={!hasTransactions}>
+              <Icon name="FunnelIcon" />
               Filter
             </Button>
           }
         />
         <div className="flex items-center gap-2">
           <Button variant="outline" size="icon">
-            <RiSettings2Line className="size-4" />
+            <Icon name="SlidersHorizontalIcon" />
           </Button>
           <Button variant="secondary">
-            <RiArrowLeftRightLine className="size-4" />
+            <Icon name="ArrowsLeftRightIcon" />
             <span className="hidden lg:block">Transfer</span>
           </Button>
           <Button variant="default">
-            <RiAddLine className="size-4" />
+            <Icon name="PlusIcon" />
             <span className="hidden lg:block">Add transaction</span>
           </Button>
         </div>

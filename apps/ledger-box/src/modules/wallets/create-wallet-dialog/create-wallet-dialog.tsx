@@ -1,18 +1,8 @@
 import { Field as FormField, Form, reset, useForm } from '@formisch/react';
-import { RiAddLine } from '@remixicon/react';
-import { useState } from 'react';
 
 import { Button } from '@vhnam/ui/components/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@vhnam/ui/components/dialog';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@vhnam/ui/components/dialog';
 import { Field, FieldError, FieldLabel } from '@vhnam/ui/components/field';
-import { Icon } from '@vhnam/ui/components/icon';
 import { Input } from '@vhnam/ui/components/input';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
@@ -20,21 +10,25 @@ import { createWalletSchema } from '#/schemas/wallet.schema';
 
 import { useCreateWalletDialogActions } from './create-wallet-dialog.actions';
 
-export function CreateWalletDialog() {
-  const [open, setOpen] = useState(false);
+type CreateWalletDialogProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+};
+
+function CreateWalletDialog({ open, onOpenChange }: CreateWalletDialogProps) {
   const { createWallet, isPending } = useCreateWalletDialogActions();
   const form = useForm({ schema: createWalletSchema });
 
+  function handleOpenChange(nextOpen: boolean) {
+    if (!nextOpen) {
+      reset(form);
+    }
+
+    onOpenChange(nextOpen);
+  }
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger
-        render={
-          <Button variant="outline" className="w-full border-dashed">
-            <Icon icon={RiAddLine} />
-            <span>New wallet</span>
-          </Button>
-        }
-      />
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>New wallet</DialogTitle>
@@ -44,8 +38,7 @@ export function CreateWalletDialog() {
           onSubmit={(output) => {
             createWallet(output.name, {
               onSuccess: () => {
-                setOpen(false);
-                reset(form);
+                handleOpenChange(false);
               },
             });
           }}
@@ -79,3 +72,5 @@ export function CreateWalletDialog() {
     </Dialog>
   );
 }
+
+export { CreateWalletDialog };

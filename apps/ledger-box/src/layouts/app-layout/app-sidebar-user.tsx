@@ -1,4 +1,3 @@
-import { RiExpandUpDownLine, RiLogoutBoxLine } from '@remixicon/react';
 import { useNavigate } from '@tanstack/react-router';
 import { useMemo, useState } from 'react';
 
@@ -61,7 +60,7 @@ function AppSidebarUser() {
                   <span className="truncate font-medium">{session?.user.name}</span>
                   <span className="truncate text-xs">{session?.user.email}</span>
                 </div>
-                <Icon icon={RiExpandUpDownLine} className="ml-auto size-4" />
+                <Icon name="CaretUpDownIcon" className="ml-auto size-4" />
               </SidebarMenuButton>
             }
           />
@@ -72,7 +71,7 @@ function AppSidebarUser() {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={handleSignOut}>
-                <RiLogoutBoxLine />
+                <Icon name="SignOutIcon" />
                 Log out
               </DropdownMenuItem>
             </DropdownMenuGroup>

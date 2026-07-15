@@ -89,4 +89,5 @@ Migrations live in `apps/ledger-box/src/lib/db/migrations` and run via Kysely's 
 ```bash
 pnpm --filter @vhnam/ledger-box db:migrate       # apply pending migrations
 pnpm --filter @vhnam/ledger-box db:migrate:down  # roll back the last migration
+pnpm --filter @vhnam/ledger-box db:reset         # truncate wallets/transactions and re-seed demo data
 ```

@@ -1,7 +1,10 @@
+import { ScrollArea } from '@vhnam/ui/components/scroll-area';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
+import { WalletEmpty } from '#/modules/wallets/wallet-empty';
 import { WalletHeader } from '#/modules/wallets/wallet-header';
 import { WalletSummary } from '#/modules/wallets/wallet-summary';
+import { useTransactions } from '#/queries/transactions/transaction.queries';
 import { useWallet } from '#/queries/wallets/wallet.queries';
 
 import { WalletActions } from '../wallet-actions';
@@ -13,6 +16,11 @@ interface WalletPageProps {
 
 function WalletPage({ walletId }: WalletPageProps) {
   const { data: wallet, isPending, isError } = useWallet(walletId);
+  const { data: transactionsPage, isPending: isTransactionsPending } = useTransactions(walletId, {
+    page: 1,
+    pageSize: 1,
+  });
+  const hasTransactions = (transactionsPage?.total ?? 0) > 0;
 
   if (isPending) {
     return (
@@ -33,12 +41,25 @@ function WalletPage({ walletId }: WalletPageProps) {
   return (
     <>
       <WalletHeader wallet={wallet} />
-
-      <div className="mx-auto mt-[calc(var(--header-height)+1rem)] w-full max-w-5xl p-4 lg:p-6 flex flex-col gap-4">
-        <WalletActions />
-        <WalletSummary />
-        <WalletTransactions walletId={walletId} />
-      </div>
+      <ScrollArea className="h-[calc(100vh-var(--header-height))] w-full">
+        <div className="mx-auto max-w-5xl">
+          <div className="flex w-full max-w-5xl flex-col gap-4 p-4 lg:p-6">
+            <WalletActions hasTransactions={!isTransactionsPending && hasTransactions} />
+            {isTransactionsPending ? (
+              <div className="flex justify-center py-8">
+                <Spinner className="size-8 text-muted-foreground" />
+              </div>
+            ) : hasTransactions ? (
+              <>
+                <WalletSummary walletId={walletId} />
+                <WalletTransactions walletId={walletId} />
+              </>
+            ) : (
+              <WalletEmpty variant="transactions" />
+            )}
+          </div>
+        </div>
+      </ScrollArea>
     </>
   );
 }

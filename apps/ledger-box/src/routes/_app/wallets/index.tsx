@@ -1,10 +1,8 @@
-import { RiWalletLine } from '@remixicon/react';
 import { createFileRoute, Navigate } from '@tanstack/react-router';
 
-import { Icon } from '@vhnam/ui/components/icon';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
-import { CreateWalletDialog } from '#/modules/wallets/create-wallet-dialog';
+import { WalletEmpty } from '#/modules/wallets/wallet-empty';
 import { useWallets } from '#/queries/wallets/wallet.queries';
 
 export const Route = createFileRoute('/_app/wallets/')({
@@ -27,24 +25,7 @@ function RouteComponent() {
   }
 
   if (wallets?.length === 0) {
-    return (
-      <div className="flex flex-1 flex-col items-center justify-center p-6">
-        <div className="flex w-full max-w-sm flex-col items-center gap-6 text-center">
-          <div className="flex size-12 items-center justify-center rounded-xl bg-muted text-muted-foreground">
-            <Icon icon={RiWalletLine} className="size-6" />
-          </div>
-          <div className="flex flex-col gap-2">
-            <h1 className="font-heading text-lg font-medium">No wallets yet</h1>
-            <p className="text-sm text-muted-foreground">
-              Create your first wallet to start tracking balances and transactions.
-            </p>
-          </div>
-          <div className="w-full">
-            <CreateWalletDialog />
-          </div>
-        </div>
-      </div>
-    );
+    return <WalletEmpty />;
   }
 
   if (wallets?.length > 0) {

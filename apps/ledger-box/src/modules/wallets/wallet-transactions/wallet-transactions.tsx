@@ -11,6 +11,7 @@ import { Spinner } from '@vhnam/ui/components/spinner';
 import { cn } from '@vhnam/ui/lib/utils';
 import { DateTimeFormat, formatDateTime } from '@vhnam/utils/date';
 
+import { WalletEmpty } from '../wallet-empty';
 import { useWalletTransactions } from './wallet-transactions.actions';
 
 type WalletTransactionsProps = {
@@ -36,11 +37,6 @@ function WalletTransactions({ walletId }: WalletTransactionsProps) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-end justify-between">
-        <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Transactions</span>
-        <span className="font-mono text-xs text-muted-foreground">{resultLabel}</span>
-      </div>
-
       {isPending ? (
         <div className="flex justify-center py-8">
           <Spinner className="size-8 text-muted-foreground" />
@@ -50,32 +46,39 @@ function WalletTransactions({ walletId }: WalletTransactionsProps) {
       {isError ? <p className="text-sm text-destructive">Failed to load transactions.</p> : null}
 
       {!isPending && !isError && transactions.length > 0 ? (
-        <div className="divide-y rounded-lg border">
-          {transactions.map((transaction) => (
-            <div key={transaction.id} className="flex items-center justify-between gap-4 px-4 py-3">
-              <div className="min-w-0">
-                <p className="truncate text-sm font-medium">{transaction.description}</p>
-                <p className="text-xs text-muted-foreground">
-                  {formatDateTime(transaction.datetime, DateTimeFormat.Numeric)}
+        <div className="space-y-4">
+          <div className="flex items-end justify-between">
+            <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Transactions</span>
+            <span className="font-mono text-xs text-muted-foreground">{resultLabel}</span>
+          </div>
+          <div className="space-y-2">
+            {transactions.map((transaction) => (
+              <div
+                key={transaction.id}
+                className="flex items-center justify-between gap-4 px-4 py-3 border rounded-lg bg-card"
+              >
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium">{transaction.description}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {formatDateTime(transaction.datetime, DateTimeFormat.Numeric)}
+                  </p>
+                </div>
+                <p
+                  className={cn(
+                    'shrink-0 font-mono text-sm font-medium',
+                    transaction.type === 'income' ? 'text-emerald-500' : 'text-rose-500',
+                  )}
+                >
+                  {transaction.type === 'income' ? '+' : '-'}
+                  {transaction.amount.toLocaleString()}
                 </p>
               </div>
-              <p
-                className={cn(
-                  'shrink-0 font-mono text-sm font-medium',
-                  transaction.type === 'income' ? 'text-emerald-500' : 'text-rose-500',
-                )}
-              >
-                {transaction.type === 'income' ? '+' : '-'}
-                {transaction.amount.toLocaleString()}
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       ) : null}
 
-      {!isPending && !isError && transactions.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No transactions yet.</p>
-      ) : null}
+      {!isPending && !isError && transactions.length === 0 ? <WalletEmpty variant="transactions" /> : null}
 
       {showPagination ? (
         <div className="flex items-center justify-between">

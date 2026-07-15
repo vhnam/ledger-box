@@ -1,9 +1,9 @@
-import { RiArrowLeftSLine, RiArrowRightSLine, RiArrowDownSLine } from '@remixicon/react';
 import * as React from 'react';
 import { DayPicker, getDefaultClassNames, type DayButton, type Locale } from 'react-day-picker';
 
 import { cn } from '../lib/utils';
 import { Button, buttonVariants } from './button';
+import { Icon } from './icon';
 
 function Calendar({
   className,
@@ -107,14 +107,14 @@ function Calendar({
         },
         Chevron: ({ className, orientation, ...props }) => {
           if (orientation === 'left') {
-            return <RiArrowLeftSLine className={cn('size-4', className)} {...props} />;
+            return <Icon name="CaretLeftIcon" className={className} {...props} />;
           }
 
           if (orientation === 'right') {
-            return <RiArrowRightSLine className={cn('size-4', className)} {...props} />;
+            return <Icon name="CaretRightIcon" className={className} {...props} />;
           }
 
-          return <RiArrowDownSLine className={cn('size-4', className)} {...props} />;
+          return <Icon name="CaretDownIcon" className={className} {...props} />;
         },
         DayButton: ({ ...props }) => <CalendarDayButton locale={locale} {...props} />,
         WeekNumber: ({ children, ...props }) => {

@@ -1,6 +1,5 @@
 'use client';
 
-import { RiCalendar2Line } from '@remixicon/react';
 import { useId, useState } from 'react';
 import { type DateRange } from 'react-day-picker';
 
@@ -10,6 +9,7 @@ import { cn } from '../lib/utils';
 import { Button } from './button';
 import { Calendar } from './calendar';
 import { Field, FieldLabel } from './field';
+import { Icon } from './icon';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 
 type DatePickerRangeProps = {
@@ -83,7 +83,7 @@ function DatePickerRange({
               disabled={disabled}
               className={cn('justify-start px-2.5 font-normal', buttonClassName)}
             >
-              <RiCalendar2Line className="size-4" data-icon="inline-start" />
+              <Icon name="CalendarBlankIcon" data-icon="inline-start" />
               {formatRangeLabel(dateRange, dateFormat) ?? <span className="text-muted-foreground">{placeholder}</span>}
             </Button>
           }

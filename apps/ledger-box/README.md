@@ -36,6 +36,8 @@ pnpm build             # typecheck + build
 pnpm preview            # preview the production build
 pnpm db:migrate          # apply pending Kysely migrations
 pnpm db:migrate:down      # roll back the last migration
+pnpm db:seed              # truncate wallets/transactions and re-seed demo data
+pnpm db:reset             # alias for db:seed
 ```
 
 ## Auth

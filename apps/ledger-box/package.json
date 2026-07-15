@@ -9,11 +9,12 @@
     "preview": "vp preview",
     "db:migrate": "tsx --env-file ../../.env scripts/migrate.ts up",
     "db:migrate:down": "tsx --env-file ../../.env scripts/migrate.ts down",
-    "db:seed": "tsx --env-file ../../.env scripts/seed.ts"
+    "db:seed": "tsx --env-file ../../.env scripts/seed.ts",
+    "db:reset": "tsx --env-file ../../.env scripts/seed.ts"
   },
   "dependencies": {
     "@formisch/react": "catalog:",
-    "@remixicon/react": "catalog:",
+    "@phosphor-icons/react": "catalog:",
     "@tanstack/react-query": "catalog:",
     "@tanstack/react-router": "catalog:",
     "@vhnam/ui": "workspace:*",

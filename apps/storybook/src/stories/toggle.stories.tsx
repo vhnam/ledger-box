@@ -1,4 +1,3 @@
-import { RiStarLine } from '@remixicon/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { Icon } from '@vhnam/ui/components/icon';
@@ -44,7 +43,7 @@ export const Outline: Story = {
 export const WithIcon: Story = {
   render: (args) => (
     <Toggle {...args}>
-      <Icon icon={RiStarLine} />
+      <Icon name="StarIcon" />
     </Toggle>
   ),
   args: {

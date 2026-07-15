@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+
 import { sql } from 'kysely';
 
 import { db } from '../src/lib/db/index.ts';
@@ -8,7 +10,9 @@ async function main() {
     await sql`truncate table wallet cascade`.execute(trx);
 
     for (const wallet of SEED_WALLETS) {
-      await trx.insertInto('wallet').values({ id: wallet.id, name: wallet.name }).execute();
+      const walletId = randomUUID();
+
+      await trx.insertInto('wallet').values({ id: walletId, name: wallet.name }).execute();
 
       if (wallet.transactions.length === 0) {
         continue;
@@ -18,8 +22,8 @@ async function main() {
         .insertInto('transaction')
         .values(
           wallet.transactions.map((transaction) => ({
-            id: transaction.id,
-            walletId: wallet.id,
+            id: randomUUID(),
+            walletId,
             type: transaction.type,
             amount: transaction.amount,
             description: transaction.description,

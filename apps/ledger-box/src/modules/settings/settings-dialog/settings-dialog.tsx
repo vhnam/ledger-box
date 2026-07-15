@@ -1,7 +1,6 @@
-import { RiSettingsLine } from '@remixicon/react';
-
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@vhnam/ui/components/dialog';
 import { DropdownMenuItem } from '@vhnam/ui/components/dropdown-menu';
+import { Icon } from '@vhnam/ui/components/icon';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@vhnam/ui/components/tabs';
 
 import { SettingsAccount } from '../settings-account';
@@ -46,7 +45,7 @@ function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 function SettingsDialogTrigger({ onOpen }: { onOpen: () => void }) {
   return (
     <DropdownMenuItem onClick={onOpen}>
-      <RiSettingsLine />
+      <Icon name="GearIcon" />
       Settings
     </DropdownMenuItem>
   );

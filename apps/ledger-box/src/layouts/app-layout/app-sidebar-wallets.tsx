@@ -1,4 +1,3 @@
-import { RiWalletLine } from '@remixicon/react';
 import { Link, useParams } from '@tanstack/react-router';
 import type { ComponentProps } from 'react';
 
@@ -48,7 +47,7 @@ function AppSidebarWallets(props: ComponentProps<typeof SidebarGroup>) {
                 render={
                   <Link to="/wallets/$walletId" params={{ walletId: wallet.id }}>
                     <div className="size-8 rounded-lg flex items-center justify-center shrink-0 bg-accent text-accent-foreground">
-                      <Icon icon={RiWalletLine} />
+                      <Icon name="WalletIcon" />
                     </div>
                     <div className="grid flex-1 text-left text-sm leading-tight">
                       <span className="truncate font-medium">{wallet.name}</span>

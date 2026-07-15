@@ -13,13 +13,13 @@ function SettingsAccount() {
   return (
     <div className="flex flex-col gap-6 px-4">
       <div className="flex flex-col gap-1">
-        <h2 className="text-lg font-medium">Account</h2>
+        <h2 className="font-heading text-lg font-medium">Account</h2>
         <p className="text-sm text-muted-foreground">Manage your account settings.</p>
       </div>
 
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
-          <h3 className="text-sm font-medium">Change password</h3>
+          <h3 className="font-heading text-sm font-medium">Change password</h3>
           <p className="text-sm text-muted-foreground">Update your password to keep your account secure.</p>
         </div>
 

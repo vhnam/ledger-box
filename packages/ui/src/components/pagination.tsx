@@ -1,8 +1,8 @@
-import { RiArrowLeftSLine, RiArrowRightSLine, RiMoreLine } from '@remixicon/react';
 import * as React from 'react';
 
 import { cn } from '../lib/utils';
 import { Button } from './button';
+import { Icon } from './icon';
 
 function Pagination({ className, ...props }: React.ComponentProps<'nav'>) {
   return (
@@ -50,7 +50,7 @@ function PaginationPrevious({
 }: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
   return (
     <PaginationLink aria-label="Go to previous page" size="default" className={cn('pl-1.5!', className)} {...props}>
-      <RiArrowLeftSLine data-icon="inline-start" />
+      <Icon name="CaretLeftIcon" data-icon="inline-start" />
       <span className="hidden sm:block">{text}</span>
     </PaginationLink>
   );
@@ -64,7 +64,7 @@ function PaginationNext({
   return (
     <PaginationLink aria-label="Go to next page" size="default" className={cn('pr-1.5!', className)} {...props}>
       <span className="hidden sm:block">{text}</span>
-      <RiArrowRightSLine data-icon="inline-end" />
+      <Icon name="CaretRightIcon" data-icon="inline-end" />
     </PaginationLink>
   );
 }
@@ -77,7 +77,7 @@ function PaginationEllipsis({ className, ...props }: React.ComponentProps<'span'
       className={cn("flex size-8 items-center justify-center [&_svg:not([class*='size-'])]:size-4", className)}
       {...props}
     >
-      <RiMoreLine />
+      <Icon name="DotsThreeIcon" />
       <span className="sr-only">More pages</span>
     </span>
   );

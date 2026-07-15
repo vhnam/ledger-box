@@ -1,9 +1,9 @@
 import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
-import { RiCloseLine } from '@remixicon/react';
 import * as React from 'react';
 
 import { cn } from '../lib/utils';
 import { Button } from './button';
+import { Icon } from './icon';
 
 function Dialog({ ...props }: DialogPrimitive.Root.Props) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />;
@@ -59,7 +59,7 @@ function DialogContent({
             data-slot="dialog-close"
             render={<Button variant="ghost" className="absolute top-2 right-2" size="icon-sm" />}
           >
-            <RiCloseLine />
+            <Icon name="XIcon" />
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>
         )}

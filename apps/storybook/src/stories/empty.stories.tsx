@@ -1,4 +1,3 @@
-import { RiWallet3Line } from '@remixicon/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { Button } from '@vhnam/ui/components/button';
@@ -22,7 +21,7 @@ export const Default: Story = {
     <Empty className="w-96 border">
       <EmptyHeader>
         <EmptyMedia variant="icon">
-          <Icon icon={RiWallet3Line} />
+          <Icon name="WalletIcon" />
         </EmptyMedia>
         <EmptyTitle>No wallets yet</EmptyTitle>
         <EmptyDescription>Create your first wallet to start tracking your transactions.</EmptyDescription>

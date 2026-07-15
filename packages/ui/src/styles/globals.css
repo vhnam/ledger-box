@@ -1,3 +1,5 @@
+@import "./fonts.css";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -40,9 +42,16 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --font-sans: var(--font-sans);
+  --font-heading: var(--font-heading);
+  --font-mono: var(--font-mono);
 }
 
 :root {
+  --font-heading: "Montserrat", sans-serif;
+  --font-sans: "Public Sans", sans-serif;
+  --font-mono: "Fira Code", monospace;
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.1884 0.0128 248.5103);
 
@@ -132,16 +141,4 @@
   --sidebar-accent-foreground: oklch(0.6692 0.1607 245.011);
   --sidebar-border: oklch(0.3795 0.022 240.5943);
   --sidebar-ring: oklch(0.6818 0.1584 243.354);
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-  html {
-    @apply font-sans;
-  }
 }

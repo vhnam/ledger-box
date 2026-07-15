@@ -377,9 +377,9 @@ catalogs:
     '@netlify/functions':
       specifier: ^5.3.0
       version: 5.3.0
-    '@remixicon/react':
-      specifier: ^4.7.0
-      version: 4.9.0
+    '@phosphor-icons/react':
+      specifier: ^2.1.10
+      version: 2.1.10
     '@storybook/addon-a11y':
       specifier: ^10.5.0
       version: 10.5.0
@@ -484,9 +484,9 @@ importers:
       '@formisch/react':
         specifier: 'catalog:'
         version: 1.0.0-rc.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)(valibot@1.4.2(typescript@6.0.3))
-      '@remixicon/react':
+      '@phosphor-icons/react':
         specifier: 'catalog:'
-        version: 4.9.0(react@19.2.7)
+        version: 2.1.10(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@tanstack/react-query':
         specifier: 'catalog:'
         version: 5.101.2(react@19.2.7)
@@ -563,9 +563,9 @@ importers:
 
   apps/storybook:
     dependencies:
-      '@remixicon/react':
+      '@phosphor-icons/react':
         specifier: 'catalog:'
-        version: 4.9.0(react@19.2.7)
+        version: 2.1.10(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@vhnam/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -621,12 +621,18 @@ importers:
       '@base-ui/react':
         specifier: ^1.6.0
         version: 1.6.0(@date-fns/tz@1.5.0)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@fontsource-variable/geist':
-        specifier: ^5.2.9
-        version: 5.2.9
-      '@remixicon/react':
+      '@fontsource/fira-code':
+        specifier: ^5.2.7
+        version: 5.2.7
+      '@fontsource/montserrat':
+        specifier: ^5.2.8
+        version: 5.2.8
+      '@fontsource/public-sans':
+        specifier: ^5.2.7
+        version: 5.2.7
+      '@phosphor-icons/react':
         specifier: 'catalog:'
-        version: 4.9.0(react@19.2.7)
+        version: 2.1.10(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@vhnam/utils':
         specifier: workspace:*
         version: link:../utils
@@ -1139,8 +1145,14 @@ packages:
   '@floating-ui/utils@0.2.12':
     resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
 
-  '@fontsource-variable/geist@5.2.9':
-    resolution: {integrity: sha512-TP+QSBG3wxKGPE33CbMy/L0Nu3qvJ6Fy81Yc4LnQ95xH+i+cfEp8fyU8/kfV14YwszxIFPhnoMTbjL71waVpyQ==}
+  '@fontsource/fira-code@5.2.7':
+    resolution: {integrity: sha512-tnB9NNund9TwIym8/7DMJe573nlPEQb+fKUV5GL8TBYXjIhDvL0D7mgmNVNQUPhXp+R7RylQeiBdkA4EbOHPGQ==}
+
+  '@fontsource/montserrat@5.2.8':
+    resolution: {integrity: sha512-xTjLxSbSfCycDB0pwmNsfNvdfWPaDaRQ2LC6yt/ZI7SdvXG52zHnzNYC/09mzuAuWNJyShkteutfCoDgym56hQ==}
+
+  '@fontsource/public-sans@5.2.7':
+    resolution: {integrity: sha512-pVttDr3HvhVIt2x6sZJfZKksNEpq23C1JCHTQwT9KWJdmFRdNeRM8gQftq8uP72sPW+p3Ku9x8HPk2E392DFvg==}
 
   '@formisch/react@1.0.0-rc.0':
     resolution: {integrity: sha512-KLYvwpg1MGubT3JutG/3S+iy7zktkDoLmI1Gl991ZKkKMTttyZBJC+gQet5UwOLTB7XDiuxQ3AaTQqs1o34a4w==}
@@ -1759,13 +1771,15 @@ packages:
     resolution: {integrity: sha512-titLmukUt/h8ho7Svlf0xSBjoy2ccZKrXjpXpZCj+v6V4CJccC2KyP45BLSCMx8YIpifMyiDyUptM4+5sruKbQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
+  '@phosphor-icons/react@2.1.10':
+    resolution: {integrity: sha512-vt8Tvq8GLjheAZZYa+YG/pW7HDbov8El/MANW8pOAz4eGxrwhnbfrQZq0Cp4q8zBEu8NIhHdnr+r8thnfRSNYA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>= 16.8'
+      react-dom: '>= 16.8'
+
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
-
-  '@remixicon/react@4.9.0':
-    resolution: {integrity: sha512-5/jLDD4DtKxH2B4QVXTobvV1C2uL8ab9D5yAYNtFt+w80O0Ys1xFOrspqROL3fjrZi+7ElFUWE37hBfaAl6U+Q==}
-    peerDependencies:
-      react: '>=18.2.0'
 
   '@rolldown/binding-android-arm64@1.1.5':
     resolution: {integrity: sha512-lZg8fqIv2v7FF237bwMgzGZEJvGL79/s5knJ/i6FmsGF4XXlzccZ4jb+TrFIxtSSxFtIpdsgrPZeMk1I9AFcyQ==}
@@ -4712,7 +4726,11 @@ snapshots:
 
   '@floating-ui/utils@0.2.12': {}
 
-  '@fontsource-variable/geist@5.2.9': {}
+  '@fontsource/fira-code@5.2.7': {}
+
+  '@fontsource/montserrat@5.2.8': {}
+
+  '@fontsource/public-sans@5.2.7': {}
 
   '@formisch/react@1.0.0-rc.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3)(valibot@1.4.2(typescript@6.0.3))':
     dependencies:
@@ -5087,11 +5105,12 @@ snapshots:
 
   '@oxlint/plugins@1.68.0': {}
 
-  '@polka/url@1.0.0-next.29': {}
-
-  '@remixicon/react@4.9.0(react@19.2.7)':
+  '@phosphor-icons/react@2.1.10(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
       react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
+
+  '@polka/url@1.0.0-next.29': {}
 
   '@rolldown/binding-android-arm64@1.1.5':
     optional: true

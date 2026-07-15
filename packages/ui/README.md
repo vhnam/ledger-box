@@ -1,6 +1,6 @@
 # @vhnam/ui
 
-Shared UI components for the monorepo — [shadcn](https://ui.shadcn.com)-style components built on [Base UI](https://base-ui.com), Tailwind CSS v4, and [Remix Icon](https://remixicon.com).
+Shared UI components for the monorepo — [shadcn](https://ui.shadcn.com)-style components built on [Base UI](https://base-ui.com), Tailwind CSS v4, and [Phosphor Icons](https://phosphoricons.com).
 
 See the [root README](../../README.md) for monorepo-wide setup. Stories for every component live in [`apps/storybook`](../../apps/storybook).
 
@@ -24,20 +24,30 @@ The package also exports a `vite` preset (`@vhnam/ui/vite`) for consuming apps' 
 
 ## Icons
 
-Use the `Icon` wrapper (`@vhnam/ui/components/icon`) around any `@remixicon/react` icon instead of rendering icon components directly — it standardizes sizing/className via `cn`:
+Use the `Icon` wrapper (`@vhnam/ui/components/icon`) instead of rendering Phosphor icons directly.
+
+**By name** — any Phosphor icon, no registry needed:
 
 ```tsx
-import { RiUser3Line } from "@remixicon/react";
 import { Icon } from "@vhnam/ui/components/icon";
 
-<Icon icon={RiUser3Line} className="text-muted-foreground" />;
+<Icon name="UserIcon" className="text-muted-foreground" />;
 ```
 
-Import icons by name for tree-shaking (`import { RiUser3Line } from '@remixicon/react'`) — never `import * as Icons`.
+**By component** — best for tree-shaking when you only use a few icons:
+
+```tsx
+import { UserIcon } from "@phosphor-icons/react";
+import { Icon } from "@vhnam/ui/components/icon";
+
+<Icon icon={UserIcon} className="text-muted-foreground" />;
+```
+
+Phosphor exports use the `Icon` suffix (e.g. `ArrowUpRightIcon`, `WalletIcon`). The `name` prop is typed against the full Phosphor catalog.
 
 ## Adding a component
 
-This package tracks [shadcn](https://ui.shadcn.com)'s registry (see `components.json` — style `base-nova`, icon library `remixicon`). To add a new component:
+This package tracks [shadcn](https://ui.shadcn.com)'s registry (see `components.json` — style `base-nova`, icon library `phosphor`). To add a new component:
 
 ```bash
 pnpm --filter @vhnam/ui shadcn:add <component>

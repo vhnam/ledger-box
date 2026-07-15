@@ -1,6 +1,6 @@
-import { RiHome4Line, RiSettings4Line, RiUser3Line } from '@remixicon/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { Icon, type IconName } from '@vhnam/ui/components/icon';
 import {
   Sidebar,
   SidebarContent,
@@ -17,10 +17,10 @@ import {
   SidebarTrigger,
 } from '@vhnam/ui/components/sidebar';
 
-const items = [
-  { title: 'Home', icon: RiHome4Line },
-  { title: 'Profile', icon: RiUser3Line },
-  { title: 'Settings', icon: RiSettings4Line },
+const items: { title: string; icon: IconName }[] = [
+  { title: 'Home', icon: 'HouseIcon' },
+  { title: 'Profile', icon: 'UserIcon' },
+  { title: 'Settings', icon: 'GearIcon' },
 ];
 
 const meta = {
@@ -50,7 +50,7 @@ export const Default: Story = {
                 {items.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton render={<a href="#top" />}>
-                      <item.icon />
+                      <Icon name={item.icon} />
                       <span>{item.title}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
