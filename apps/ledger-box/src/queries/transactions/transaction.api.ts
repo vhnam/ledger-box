@@ -1,7 +1,25 @@
 import axios from 'axios';
 
+import type { AddTransactionOutput } from '#/schemas/add-transaction.schema';
+
 import type { TransactionsPageDto } from './transaction.dto';
 import type { TransactionQueryParams } from './transaction.params';
+
+function getApiErrorMessage(error: unknown, fallback: string): string {
+  if (axios.isAxiosError(error)) {
+    const data = error.response?.data;
+
+    if (typeof data === 'string' && data.length > 0) {
+      return data;
+    }
+  }
+
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return fallback;
+}
 
 export async function fetchTransactions(
   walletId: string,
@@ -20,4 +38,12 @@ export async function fetchTransactions(
   });
 
   return data;
+}
+
+export async function addTransaction(walletId: string, payload: AddTransactionOutput): Promise<void> {
+  try {
+    await axios.post(`/api/wallets/${walletId}/transactions`, payload);
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, 'Failed to add transaction. Please try again.'));
+  }
 }

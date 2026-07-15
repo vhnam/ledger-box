@@ -55,7 +55,7 @@ function AppSidebarWallets(props: ComponentProps<typeof SidebarGroup>) {
                         },
                       )}
                     >
-                      <span className="text-xs uppercase">{wallet.name.charAt(0)}</span>
+                      <span className="text-xs font-bold uppercase">{wallet.name.charAt(0)}</span>
                     </div>
                     <div className="grid flex-1 text-left text-sm leading-tight">
                       <span className="truncate font-medium">{wallet.name}</span>

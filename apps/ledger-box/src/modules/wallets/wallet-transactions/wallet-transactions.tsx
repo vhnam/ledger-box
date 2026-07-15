@@ -44,7 +44,9 @@ function WalletTransactions({ walletId, transactionQuery }: WalletTransactionsPr
       {!isPending && !isError && transactions.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-end justify-between">
-            <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Transactions</span>
+            <span className="font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              Transactions
+            </span>
             <span className="font-mono text-xs text-muted-foreground">{resultLabel}</span>
           </div>
           <div className="space-y-4">

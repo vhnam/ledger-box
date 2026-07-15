@@ -8,19 +8,76 @@ import type { TransactionQueryParams } from '#/queries/transactions/transaction.
 
 import { useWalletSummary } from './wallet-summary.actions';
 
+type WalletSummaryTone = 'income' | 'expense' | 'neutral';
+
 interface WalletSummaryStat {
   label: string;
   value: number;
-  valueClassName: string;
   icon: IconName;
-  iconClassName: string;
-  iconBackgroundClassName: string;
+  tone: WalletSummaryTone;
+  highlightWhenNegative?: boolean;
+  featured?: boolean;
 }
+
+const toneStyles: Record<WalletSummaryTone, { value: string; icon: string; iconBackground: string; label: string }> = {
+  income: {
+    value: 'text-emerald-400',
+    icon: 'text-emerald-400',
+    iconBackground: 'bg-emerald-400/10',
+    label: 'text-muted-foreground',
+  },
+  expense: {
+    value: 'text-rose-400',
+    icon: 'text-rose-400',
+    iconBackground: 'bg-rose-400/10',
+    label: 'text-muted-foreground',
+  },
+  neutral: {
+    value: 'text-foreground',
+    icon: 'text-muted-foreground',
+    iconBackground: 'bg-muted',
+    label: 'text-muted-foreground',
+  },
+};
+
+const negativeTextStyles = {
+  value: 'text-rose-500',
+  icon: 'text-rose-500',
+  iconBackground: 'bg-rose-500/10',
+  label: 'text-rose-500',
+};
+
+const negativeCardClassName = 'bg-rose-500/10 border-rose-500/30';
 
 type WalletSummaryProps = {
   walletId: string;
   transactionQuery: Omit<TransactionQueryParams, 'page' | 'pageSize'>;
 };
+
+function WalletSummaryStatCard({ stat }: { stat: WalletSummaryStat }) {
+  const isNegative = stat.highlightWhenNegative === true && stat.value < 0;
+  const styles = isNegative ? { ...toneStyles[stat.tone], ...negativeTextStyles } : toneStyles[stat.tone];
+
+  return (
+    <div
+      className={cn(
+        'bg-card rounded-xl border border-border p-3 md:p-4 flex flex-col gap-2',
+        stat.featured && 'col-span-2 sm:col-span-1 flex-row md:flex-col items-center sm:items-start gap-3 sm:gap-2',
+        isNegative && negativeCardClassName,
+      )}
+    >
+      <div className={cn('flex size-10 items-center justify-center rounded-lg', styles.iconBackground)}>
+        <Icon name={stat.icon} className={cn('size-6', styles.icon)} />
+      </div>
+      <div>
+        <p className={cn('mb-0.5 text-xs', styles.label)}>{stat.label}</p>
+        <p className={cn('font-mono truncate text-sm font-semibold leading-tight md:text-base', styles.value)}>
+          {formatCurrency(stat.value)}
+        </p>
+      </div>
+    </div>
+  );
+}
 
 function WalletSummary({ walletId, transactionQuery }: WalletSummaryProps) {
   const { stats, isPending, isError } = useWalletSummary({ walletId, transactionQuery });
@@ -46,52 +103,30 @@ function WalletSummary({ walletId, transactionQuery }: WalletSummaryProps) {
     {
       label: 'Income',
       value: stats.income,
-      valueClassName: 'text-emerald-400',
       icon: 'TrendUpIcon',
-      iconClassName: 'text-emerald-400',
-      iconBackgroundClassName: 'bg-emerald-400/10',
+      tone: 'income',
     },
     {
       label: 'Expenses',
       value: stats.expenses,
-      valueClassName: 'text-rose-400',
       icon: 'TrendDownIcon',
-      iconClassName: 'text-rose-400',
-      iconBackgroundClassName: 'bg-rose-400/10',
+      tone: 'expense',
     },
     {
       label: 'Net balance',
       value: stats.netBalance,
-      valueClassName: 'text-foreground',
       icon: 'ScalesIcon',
-      iconClassName: 'text-muted-foreground',
-      iconBackgroundClassName: 'bg-muted',
+      tone: 'neutral',
+      highlightWhenNegative: true,
+      featured: true,
     },
   ];
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 md:gap-3 mb-4 md:mb-6">
-      {walletSummaryStats.map(
-        ({ label, value, valueClassName, icon, iconClassName, iconBackgroundClassName }, index) => (
-          <div
-            key={label}
-            className={cn(
-              'bg-card rounded-xl border border-border p-3 md:p-4 flex flex-col gap-2',
-              index === 2 && 'col-span-2 sm:col-span-1 flex-row md:flex-col items-center sm:items-start gap-3 sm:gap-2',
-            )}
-          >
-            <div className={cn('flex size-10 items-center justify-center rounded-lg', iconBackgroundClassName)}>
-              <Icon name={icon} className={cn('size-6', iconClassName)} />
-            </div>
-            <div>
-              <p className="mb-0.5 text-xs text-muted-foreground">{label}</p>
-              <p className={cn('font-mono truncate text-sm font-semibold leading-tight md:text-base', valueClassName)}>
-                {formatCurrency(value)}
-              </p>
-            </div>
-          </div>
-        ),
-      )}
+      {walletSummaryStats.map((stat) => (
+        <WalletSummaryStatCard key={stat.label} stat={stat} />
+      ))}
     </div>
   );
 }

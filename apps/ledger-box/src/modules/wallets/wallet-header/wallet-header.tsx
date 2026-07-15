@@ -1,5 +1,6 @@
 import { Separator } from '@vhnam/ui/components/separator';
 import { SidebarTrigger } from '@vhnam/ui/components/sidebar';
+import { cn } from '@vhnam/ui/lib/utils';
 
 import { formatCurrency } from '@vhnam/utils/currency';
 
@@ -16,7 +17,14 @@ function WalletHeader({ wallet }: WalletHeaderProps) {
         <Separator orientation="vertical" className="mx-2 data-[orientation=vertical]:h-12" />
         <div className="flex flex-col">
           <h1 className="font-heading text-base font-medium">{wallet.name}</h1>
-          <p className="text-xs text-muted-foreground">New balance: {formatCurrency(wallet.amount)}</p>
+          <p
+            className={cn(
+              'text-xs text-muted-foreground',
+              wallet.amount >= 0 ? 'text-muted-foreground' : 'text-rose-400',
+            )}
+          >
+            New balance: {formatCurrency(wallet.amount)}
+          </p>
         </div>
       </div>
     </header>

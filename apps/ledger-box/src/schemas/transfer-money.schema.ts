@@ -8,7 +8,7 @@ export const transferMoneySchema = v.pipe(
       v.string(),
       v.trim(),
       v.nonEmpty('Amount is required'),
-      v.regex(/^(?:0|[1-9]\d*)(?:\.\d{1,2})?$/, 'Enter a valid amount'),
+      v.regex(/^(?:0|[1-9]\d*)(?:\.\d{1,2})?$/, 'Amount must be a valid number'),
       v.transform(Number),
       v.minValue(0.01, 'Amount must be greater than 0'),
     ),

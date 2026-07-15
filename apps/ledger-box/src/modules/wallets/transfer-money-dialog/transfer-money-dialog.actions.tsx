@@ -58,12 +58,6 @@ export function useTransferMoneyDialogActions({ open, walletId, wallets }: UseTr
     const fromWallet = wallets.find((wallet) => wallet.id === output.fromWalletId);
     const toWallet = wallets.find((wallet) => wallet.id === output.toWalletId);
 
-    if (fromWallet && output.amount > fromWallet.amount) {
-      const message = 'Insufficient balance in source wallet';
-      setError(message);
-      return;
-    }
-
     transferMoney(output, {
       onSuccess: () => {
         toast.success('Transfer completed', {

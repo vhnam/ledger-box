@@ -11,6 +11,7 @@ import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from '@
 import { DEFAULT_FILTER_VALUE, FILTER_OPTIONS_LIST } from '#/constants/filter-options';
 import { useWallets } from '#/queries/wallets/wallet.queries';
 
+import { AddTransactionDialog } from '../add-transaction-dialog';
 import { TransferMoneyDialog } from '../transfer-money-dialog';
 import { useWalletActions } from './wallet-actions.actions';
 
@@ -40,6 +41,7 @@ function WalletActions({ hasTransactions, filters }: WalletActionsProps) {
   const { walletId } = walletRouteApi.useParams();
   const { data: wallets = [] } = useWallets();
   const [openTransferMoneyDialog, setOpenTransferMoneyDialog] = useState(false);
+  const [openAddTransactionDialog, setOpenAddTransactionDialog] = useState(false);
   const canTransfer = wallets.length > 1;
 
   return (
@@ -71,10 +73,15 @@ function WalletActions({ hasTransactions, filters }: WalletActionsProps) {
               />
             </>
           ) : null}
-          <Button variant="default">
+          <Button variant="default" onClick={() => setOpenAddTransactionDialog(true)}>
             <Icon name="PlusIcon" />
             <span className="hidden lg:block">Add transaction</span>
           </Button>
+          <AddTransactionDialog
+            open={openAddTransactionDialog}
+            onOpenChange={setOpenAddTransactionDialog}
+            walletId={walletId}
+          />
         </div>
       </div>
       <CollapsibleContent>

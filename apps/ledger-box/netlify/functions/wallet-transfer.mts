@@ -70,10 +70,6 @@ export default async (request: Request) => {
     return new Response("Destination wallet not found", { status: 404 });
   }
 
-  if (fromWallet.amount < amount) {
-    return new Response("Insufficient balance in source wallet", { status: 400 });
-  }
-
   const description = buildTransferDescription(fromWallet.name, toWallet.name, note);
   const now = new Date();
 
