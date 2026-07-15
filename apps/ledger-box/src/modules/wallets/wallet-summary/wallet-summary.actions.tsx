@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 
+import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
 import { useTransactions } from '#/queries/transactions/transaction.queries';
 
 const SUMMARY_PAGE_SIZE = 100;
@@ -10,8 +11,17 @@ type WalletSummaryStats = {
   netBalance: number;
 };
 
-function useWalletSummary(walletId: string) {
-  const { data, isPending, isError } = useTransactions(walletId, { page: 1, pageSize: SUMMARY_PAGE_SIZE });
+type UseWalletSummaryOptions = {
+  walletId: string;
+  transactionQuery: Omit<TransactionQueryParams, 'page' | 'pageSize'>;
+};
+
+function useWalletSummary({ walletId, transactionQuery }: UseWalletSummaryOptions) {
+  const { data, isPending, isError } = useTransactions(walletId, {
+    page: 1,
+    pageSize: SUMMARY_PAGE_SIZE,
+    ...transactionQuery,
+  });
 
   const stats = useMemo<WalletSummaryStats>(() => {
     const items = data?.items ?? [];

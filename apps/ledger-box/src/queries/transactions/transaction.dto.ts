@@ -6,7 +6,8 @@ export interface TransactionDto {
   type: TransactionType;
   amount: number;
   description: string;
-  datetime: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface TransactionsPageDto {

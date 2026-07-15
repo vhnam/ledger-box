@@ -3,7 +3,28 @@ import { randomUUID } from 'node:crypto';
 import { sql } from 'kysely';
 
 import { db } from '../src/lib/db/index.ts';
-import { SEED_WALLETS } from '../src/lib/db/seed-data.ts';
+import { SEED_WALLETS, type SeedTransaction } from '../src/lib/db/seed-data.ts';
+
+function calculateWalletAmount(transactions: SeedTransaction[]): number {
+  return transactions.reduce((total, transaction) => {
+    return transaction.type === 'income' ? total + transaction.amount : total - transaction.amount;
+  }, 0);
+}
+
+function walletTimestamps(transactions: SeedTransaction[]) {
+  const now = new Date();
+
+  if (transactions.length === 0) {
+    return { createdAt: now, updatedAt: now };
+  }
+
+  const timestamps = transactions.map((transaction) => new Date(transaction.createdAt).getTime());
+
+  return {
+    createdAt: new Date(Math.min(...timestamps)),
+    updatedAt: new Date(Math.max(...timestamps)),
+  };
+}
 
 async function main() {
   await db.transaction().execute(async (trx) => {
@@ -11,8 +32,19 @@ async function main() {
 
     for (const wallet of SEED_WALLETS) {
       const walletId = randomUUID();
+      const { createdAt, updatedAt } = walletTimestamps(wallet.transactions);
 
-      await trx.insertInto('wallet').values({ id: walletId, name: wallet.name }).execute();
+      await trx
+        .insertInto('wallet')
+        .values({
+          id: walletId,
+          name: wallet.name,
+          amount: calculateWalletAmount(wallet.transactions),
+          createdAt,
+          updatedAt,
+          deletedAt: null,
+        })
+        .execute();
 
       if (wallet.transactions.length === 0) {
         continue;
@@ -27,7 +59,9 @@ async function main() {
             type: transaction.type,
             amount: transaction.amount,
             description: transaction.description,
-            datetime: transaction.datetime,
+            createdAt: transaction.createdAt,
+            updatedAt: transaction.createdAt,
+            deletedAt: null,
           })),
         )
         .execute();

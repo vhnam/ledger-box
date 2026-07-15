@@ -7,7 +7,7 @@ import { WalletSummary } from '#/modules/wallets/wallet-summary';
 import { useTransactions } from '#/queries/transactions/transaction.queries';
 import { useWallet } from '#/queries/wallets/wallet.queries';
 
-import { WalletActions } from '../wallet-actions';
+import { WalletActions, useWalletActions } from '../wallet-actions';
 import { WalletTransactions } from '../wallet-transactions';
 
 interface WalletPageProps {
@@ -15,6 +15,7 @@ interface WalletPageProps {
 }
 
 function WalletPage({ walletId }: WalletPageProps) {
+  const filters = useWalletActions();
   const { data: wallet, isPending, isError } = useWallet(walletId);
   const { data: transactionsPage, isPending: isTransactionsPending } = useTransactions(walletId, {
     page: 1,
@@ -44,15 +45,15 @@ function WalletPage({ walletId }: WalletPageProps) {
       <ScrollArea className="h-[calc(100vh-var(--header-height))] w-full">
         <div className="mx-auto max-w-5xl">
           <div className="flex w-full max-w-5xl flex-col gap-4 p-4 lg:p-6">
-            <WalletActions hasTransactions={!isTransactionsPending && hasTransactions} />
+            <WalletActions hasTransactions={!isTransactionsPending && hasTransactions} filters={filters} />
             {isTransactionsPending ? (
               <div className="flex justify-center py-8">
                 <Spinner className="size-8 text-muted-foreground" />
               </div>
             ) : hasTransactions ? (
               <>
-                <WalletSummary walletId={walletId} />
-                <WalletTransactions walletId={walletId} />
+                <WalletSummary walletId={walletId} transactionQuery={filters.transactionQuery} />
+                <WalletTransactions walletId={walletId} transactionQuery={filters.transactionQuery} />
               </>
             ) : (
               <WalletEmpty variant="transactions" />

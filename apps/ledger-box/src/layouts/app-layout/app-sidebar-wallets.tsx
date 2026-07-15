@@ -12,6 +12,8 @@ import {
 import { Skeleton } from '@vhnam/ui/components/skeleton';
 import { cn } from '@vhnam/ui/lib/utils';
 
+import { formatCurrency } from '@vhnam/utils/currency';
+
 import { useWallets } from '#/queries/wallets/wallet.queries';
 
 function AppSidebarWallets(props: ComponentProps<typeof SidebarGroup>) {
@@ -57,7 +59,7 @@ function AppSidebarWallets(props: ComponentProps<typeof SidebarGroup>) {
                           wallet.amount >= 0 ? 'text-emerald-400' : 'text-rose-400',
                         )}
                       >
-                        {wallet.amount}
+                        {formatCurrency(wallet.amount)}
                       </span>
                     </div>
                   </Link>

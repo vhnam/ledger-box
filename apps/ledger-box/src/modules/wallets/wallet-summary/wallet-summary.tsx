@@ -2,6 +2,10 @@ import { Icon, type IconName } from '@vhnam/ui/components/icon';
 import { Spinner } from '@vhnam/ui/components/spinner';
 import { cn } from '@vhnam/ui/lib/utils';
 
+import { formatCurrency } from '@vhnam/utils/currency';
+
+import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
+
 import { useWalletSummary } from './wallet-summary.actions';
 
 interface WalletSummaryStat {
@@ -15,10 +19,11 @@ interface WalletSummaryStat {
 
 type WalletSummaryProps = {
   walletId: string;
+  transactionQuery: Omit<TransactionQueryParams, 'page' | 'pageSize'>;
 };
 
-function WalletSummary({ walletId }: WalletSummaryProps) {
-  const { stats, isPending, isError } = useWalletSummary(walletId);
+function WalletSummary({ walletId, transactionQuery }: WalletSummaryProps) {
+  const { stats, isPending, isError } = useWalletSummary({ walletId, transactionQuery });
 
   if (isPending) {
     return (
@@ -50,7 +55,7 @@ function WalletSummary({ walletId }: WalletSummaryProps) {
       iconBackgroundClassName: 'bg-rose-400/10',
     },
     {
-      label: 'Net Balance',
+      label: 'Net balance',
       value: stats.netBalance,
       valueClassName: 'text-foreground',
       icon: 'ScalesIcon',
@@ -66,8 +71,8 @@ function WalletSummary({ walletId }: WalletSummaryProps) {
           <div
             key={label}
             className={cn(
-              'bg-card rounded-xl border border-border p-3 md:p-4 flex gap-2',
-              index === 2 && 'col-span-2 sm:col-span-1 items-center sm:items-start gap-3 sm:gap-2',
+              'bg-card rounded-xl border border-border p-3 md:p-4 flex flex-col gap-2',
+              index === 2 && 'col-span-2 sm:col-span-1 flex-row md:flex-col items-center sm:items-start gap-3 sm:gap-2',
             )}
           >
             <div className={cn('flex size-10 items-center justify-center rounded-lg', iconBackgroundClassName)}>
@@ -76,7 +81,7 @@ function WalletSummary({ walletId }: WalletSummaryProps) {
             <div>
               <p className="mb-0.5 text-xs text-muted-foreground">{label}</p>
               <p className={cn('font-mono truncate text-sm font-semibold leading-tight md:text-base', valueClassName)}>
-                {value.toLocaleString()}
+                {formatCurrency(value)}
               </p>
             </div>
           </div>

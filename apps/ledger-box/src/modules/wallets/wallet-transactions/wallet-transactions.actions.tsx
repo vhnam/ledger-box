@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
+import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
 import { useTransactions } from '#/queries/transactions/transaction.queries';
 
 import { TRANSACTIONS_PAGE_SIZE } from './constants';
@@ -40,12 +41,17 @@ function getPageItems(currentPage: number, totalPages: number): PageItem[] {
 type UseWalletTransactionsOptions = {
   walletId: string;
   pageSize?: number;
+  transactionQuery: Omit<TransactionQueryParams, 'page' | 'pageSize'>;
 };
 
-export function useWalletTransactions({ walletId, pageSize = TRANSACTIONS_PAGE_SIZE }: UseWalletTransactionsOptions) {
+export function useWalletTransactions({
+  walletId,
+  pageSize = TRANSACTIONS_PAGE_SIZE,
+  transactionQuery,
+}: UseWalletTransactionsOptions) {
   const [page, setPage] = useState(1);
 
-  const { data, isPending, isError } = useTransactions(walletId, { page, pageSize });
+  const { data, isPending, isError } = useTransactions(walletId, { page, pageSize, ...transactionQuery });
 
   const totalResults = data?.total ?? 0;
   const totalPages = Math.ceil(totalResults / pageSize);
@@ -58,7 +64,7 @@ export function useWalletTransactions({ walletId, pageSize = TRANSACTIONS_PAGE_S
 
   useEffect(() => {
     setPage(1);
-  }, [walletId]);
+  }, [walletId, transactionQuery]);
 
   useEffect(() => {
     if (totalPages > 0 && page > totalPages) {

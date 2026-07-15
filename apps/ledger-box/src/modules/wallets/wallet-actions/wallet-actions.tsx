@@ -11,10 +11,24 @@ import { useWalletActions } from './wallet-actions.actions';
 
 type WalletActionsProps = {
   hasTransactions: boolean;
+  filters: ReturnType<typeof useWalletActions>;
 };
 
-function WalletActions({ hasTransactions }: WalletActionsProps) {
-  const { filterBy, setFilterBy, dateRange, setDateRange, filterPreview, isDateRangeFilter } = useWalletActions();
+function WalletActions({ hasTransactions, filters }: WalletActionsProps) {
+  const {
+    filterBy,
+    setFilterBy,
+    dateRange,
+    setDateRange,
+    filterPreview,
+    isDateRangeFilter,
+    sortBy,
+    setSortBy,
+    sortOrder,
+    setSortOrder,
+    sortByOptions,
+    sortOrderOptions,
+  } = filters;
 
   return (
     <Collapsible className="flex flex-col gap-4">
@@ -30,7 +44,7 @@ function WalletActions({ hasTransactions }: WalletActionsProps) {
         />
         <div className="flex items-center gap-2">
           <Button variant="outline" size="icon">
-            <Icon name="SlidersHorizontalIcon" />
+            <Icon name="GearSixIcon" />
           </Button>
           <Button variant="secondary">
             <Icon name="ArrowsLeftRightIcon" />
@@ -43,7 +57,7 @@ function WalletActions({ hasTransactions }: WalletActionsProps) {
         </div>
       </div>
       <CollapsibleContent>
-        <div className="bg-sidebar p-4 rounded-lg flex items-center justify-between">
+        <div className="bg-sidebar p-4 rounded-lg flex flex-wrap items-center gap-4">
           <Field className="w-fit" orientation="horizontal">
             <FieldLabel>Filter by</FieldLabel>
             <Select
@@ -68,6 +82,42 @@ function WalletActions({ hasTransactions }: WalletActionsProps) {
           {filterPreview ? <p className="text-sm font-medium text-muted-foreground">{filterPreview}</p> : null}
 
           {isDateRangeFilter ? <DatePickerRange value={dateRange} onChange={setDateRange} numberOfMonths={1} /> : null}
+
+          <Field className="w-fit" orientation="horizontal">
+            <FieldLabel>Sort by</FieldLabel>
+            <Select items={sortByOptions} value={sortBy} onValueChange={(value) => setSortBy(value as typeof sortBy)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                {sortByOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </Field>
+
+          <Field className="w-fit" orientation="horizontal">
+            <FieldLabel>Order</FieldLabel>
+            <Select
+              items={sortOrderOptions}
+              value={sortOrder}
+              onValueChange={(value) => setSortOrder(value as typeof sortOrder)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Order" />
+              </SelectTrigger>
+              <SelectContent>
+                {sortOrderOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </Field>
         </div>
       </CollapsibleContent>
     </Collapsible>

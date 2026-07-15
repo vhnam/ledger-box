@@ -5,6 +5,10 @@ export type TransactionType = 'income' | 'expense';
 export interface WalletTable {
   id: Generated<string>;
   name: string;
+  amount: number;
+  createdAt: ColumnType<Date, Date | string, Date | string>;
+  updatedAt: ColumnType<Date, Date | string, Date | string>;
+  deletedAt: ColumnType<Date | null, Date | string | null, Date | string | null>;
 }
 
 export interface TransactionTable {
@@ -13,7 +17,9 @@ export interface TransactionTable {
   type: TransactionType;
   amount: number;
   description: string;
-  datetime: ColumnType<Date, Date | string, Date | string>;
+  createdAt: ColumnType<Date, Date | string, Date | string>;
+  updatedAt: ColumnType<Date, Date | string, Date | string>;
+  deletedAt: ColumnType<Date | null, Date | string | null, Date | string | null>;
 }
 
 export interface Database {

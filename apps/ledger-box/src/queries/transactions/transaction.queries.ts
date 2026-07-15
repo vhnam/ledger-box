@@ -1,16 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { fetchTransactions } from './transaction.api';
+import type { TransactionQueryParams } from './transaction.params';
 
-type UseTransactionsParams = {
-  page: number;
-  pageSize: number;
-};
-
-export function useTransactions(walletId: string, { page, pageSize }: UseTransactionsParams) {
+export function useTransactions(walletId: string, params: TransactionQueryParams) {
   return useQuery({
-    queryKey: ['transactions', walletId, { page, pageSize }],
-    queryFn: () => fetchTransactions(walletId, { page, pageSize }),
+    queryKey: ['transactions', walletId, params],
+    queryFn: () => fetchTransactions(walletId, params),
     enabled: walletId.length > 0,
   });
 }

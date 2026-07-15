@@ -1,24 +1,18 @@
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@vhnam/ui/components/pagination';
 import { Spinner } from '@vhnam/ui/components/spinner';
-import { cn } from '@vhnam/ui/lib/utils';
-import { DateTimeFormat, formatDateTime } from '@vhnam/utils/date';
+
+import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
 
 import { WalletEmpty } from '../wallet-empty';
+import { WalletPagination } from './wallet-pagination';
+import { WalletTransaction } from './wallet-transaction';
 import { useWalletTransactions } from './wallet-transactions.actions';
 
 type WalletTransactionsProps = {
   walletId: string;
+  transactionQuery: Omit<TransactionQueryParams, 'page' | 'pageSize'>;
 };
 
-function WalletTransactions({ walletId }: WalletTransactionsProps) {
+function WalletTransactions({ walletId, transactionQuery }: WalletTransactionsProps) {
   const {
     transactions,
     page,
@@ -33,7 +27,7 @@ function WalletTransactions({ walletId }: WalletTransactionsProps) {
     goToPage,
     goToPreviousPage,
     goToNextPage,
-  } = useWalletTransactions({ walletId });
+  } = useWalletTransactions({ walletId, transactionQuery });
 
   return (
     <div className="flex flex-col gap-4">
@@ -53,26 +47,7 @@ function WalletTransactions({ walletId }: WalletTransactionsProps) {
           </div>
           <div className="space-y-2">
             {transactions.map((transaction) => (
-              <div
-                key={transaction.id}
-                className="flex items-center justify-between gap-4 px-4 py-3 border rounded-lg bg-card"
-              >
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-medium">{transaction.description}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {formatDateTime(transaction.datetime, DateTimeFormat.Numeric)}
-                  </p>
-                </div>
-                <p
-                  className={cn(
-                    'shrink-0 font-mono text-sm font-medium',
-                    transaction.type === 'income' ? 'text-emerald-500' : 'text-rose-500',
-                  )}
-                >
-                  {transaction.type === 'income' ? '+' : '-'}
-                  {transaction.amount.toLocaleString()}
-                </p>
-              </div>
+              <WalletTransaction key={transaction.id} transaction={transaction} />
             ))}
           </div>
         </div>
@@ -81,57 +56,16 @@ function WalletTransactions({ walletId }: WalletTransactionsProps) {
       {!isPending && !isError && transactions.length === 0 ? <WalletEmpty variant="transactions" /> : null}
 
       {showPagination ? (
-        <div className="flex items-center justify-between">
-          <div className="text-xs text-muted-foreground">
-            Page {page} of {totalPages}
-          </div>
-          <Pagination className="mx-0 w-auto justify-end">
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  href="#"
-                  aria-disabled={!canGoPrevious}
-                  className={cn(!canGoPrevious && 'pointer-events-none opacity-50')}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    goToPreviousPage();
-                  }}
-                />
-              </PaginationItem>
-
-              {pageItems.map((item, index) => (
-                <PaginationItem key={item === 'ellipsis' ? `ellipsis-${index}` : item}>
-                  {item === 'ellipsis' ? (
-                    <PaginationEllipsis />
-                  ) : (
-                    <PaginationLink
-                      href="#"
-                      isActive={item === page}
-                      onClick={(event) => {
-                        event.preventDefault();
-                        goToPage(item);
-                      }}
-                    >
-                      {item}
-                    </PaginationLink>
-                  )}
-                </PaginationItem>
-              ))}
-
-              <PaginationItem>
-                <PaginationNext
-                  href="#"
-                  aria-disabled={!canGoNext}
-                  className={cn(!canGoNext && 'pointer-events-none opacity-50')}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    goToNextPage();
-                  }}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
+        <WalletPagination
+          page={page}
+          totalPages={totalPages}
+          canGoPrevious={canGoPrevious}
+          canGoNext={canGoNext}
+          pageItems={pageItems}
+          goToPage={goToPage}
+          goToPreviousPage={goToPreviousPage}
+          goToNextPage={goToNextPage}
+        />
       ) : null}
     </div>
   );
