@@ -8,7 +8,7 @@ export function AppLayout() {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset>
+      <SidebarInset className="min-h-svh">
         <Outlet />
       </SidebarInset>
     </SidebarProvider>

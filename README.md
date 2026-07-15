@@ -35,13 +35,13 @@ docker compose up -d
 cp .env.example .env
 ```
 
-| Variable               | Description                                                   |
-| ---------------------- | ------------------------------------------------------------- |
-| `DATABASE_URL`         | Postgres connection string (matches `compose.yml` by default) |
-| `BETTER_AUTH_SECRET`   | Secret used by better-auth to sign sessions                   |
-| `BETTER_AUTH_URL`      | Base URL the app is served on, e.g. `http://localhost:8888`   |
-| `GOOGLE_CLIENT_ID`     | Google OAuth client ID (for social sign-in)                   |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret                                    |
+| Variable               | Description                                                                                               |
+| ---------------------- | --------------------------------------------------------------------------------------------------------- |
+| `DATABASE_URL`         | Postgres connection string (matches `compose.yml` by default)                                             |
+| `BETTER_AUTH_SECRET`   | Secret used by better-auth to sign sessions                                                               |
+| `BETTER_AUTH_URL`      | Base URL the app is served on, e.g. `http://localhost:8888` or `http://192.168.1.209:8888` for LAN access |
+| `GOOGLE_CLIENT_ID`     | Google OAuth client ID (for social sign-in)                                                               |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret                                                                                |
 
 `.env` must live at the repo root — `netlify dev` loads it from there, not from `apps/ledger-box`.
 
@@ -76,6 +76,8 @@ vp run -r build
 ```bash
 pnpm dev
 ```
+
+Open `http://localhost:8888` locally, or `http://<your-lan-ip>:8888` from another device on the same network. Set `BETTER_AUTH_URL` in `.env` to the URL you actually use (e.g. `http://192.168.1.209:8888`).
 
 - Run Storybook:
 

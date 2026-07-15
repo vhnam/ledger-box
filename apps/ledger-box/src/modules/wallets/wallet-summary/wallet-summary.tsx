@@ -1,5 +1,5 @@
 import { Icon, type IconName } from '@vhnam/ui/components/icon';
-import { Spinner } from '@vhnam/ui/components/spinner';
+import { Skeleton } from '@vhnam/ui/components/skeleton';
 import { cn } from '@vhnam/ui/lib/utils';
 
 import { formatCurrency } from '@vhnam/utils/currency';
@@ -27,8 +27,13 @@ function WalletSummary({ walletId, transactionQuery }: WalletSummaryProps) {
 
   if (isPending) {
     return (
-      <div className="mb-6 flex justify-center py-8">
-        <Spinner className="size-8 text-muted-foreground" />
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 md:gap-3 mb-4 md:mb-6">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <div key={index} className="bg-card rounded-xl border border-border p-3 md:p-4 flex flex-col gap-2">
+            <Skeleton className="size-10 rounded-lg" />
+            <Skeleton className="h-4 w-full" />
+          </div>
+        ))}
       </div>
     );
   }

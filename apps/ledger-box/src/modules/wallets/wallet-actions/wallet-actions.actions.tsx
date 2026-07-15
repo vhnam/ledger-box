@@ -58,6 +58,7 @@ export function useWalletActions() {
     void navigate({
       search: (prev) => resolveWalletTransactionSearch({ ...prev, ...next }),
       replace: true,
+      resetScroll: false,
     });
   };
 
@@ -81,6 +82,7 @@ export function useWalletActions() {
   const setFilterBy = (filterBy: FilterOptionValue) => {
     updateSearch({
       filter: filterBy,
+      page: undefined,
       ...(filterBy === FILTER_OPTIONS.DATE_RANGE ? {} : { from: undefined, to: undefined }),
     });
   };
@@ -88,17 +90,18 @@ export function useWalletActions() {
   const setDateRange = (range: DatePickerRangeValue | undefined) => {
     updateSearch({
       filter: FILTER_OPTIONS.DATE_RANGE,
+      page: undefined,
       from: range?.from ? toIsoDate(range.from) : undefined,
       to: range?.to ? toIsoDate(range.to) : undefined,
     });
   };
 
   const setSortBy = (sortBy: SortByValue) => {
-    updateSearch({ sortBy });
+    updateSearch({ sortBy, page: undefined });
   };
 
   const setSortOrder = (sortOrder: SortOrderValue) => {
-    updateSearch({ sortOrder });
+    updateSearch({ sortOrder, page: undefined });
   };
 
   return {

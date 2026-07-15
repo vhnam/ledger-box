@@ -10,7 +10,10 @@ import { TooltipProvider } from '@vhnam/ui/components/tooltip';
 import './style.css';
 import { routeTree } from './routeTree.gen';
 
-const router = createRouter({ routeTree });
+const router = createRouter({
+  routeTree,
+  scrollRestoration: true,
+});
 const queryClient = new QueryClient();
 
 declare module '@tanstack/react-router' {

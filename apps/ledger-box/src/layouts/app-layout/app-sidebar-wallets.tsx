@@ -1,7 +1,6 @@
 import { Link, useParams } from '@tanstack/react-router';
 import type { ComponentProps } from 'react';
 
-import { Icon } from '@vhnam/ui/components/icon';
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -39,17 +38,24 @@ function AppSidebarWallets(props: ComponentProps<typeof SidebarGroup>) {
   return (
     <SidebarGroup {...props}>
       <SidebarGroupContent>
-        <SidebarMenu>
+        <SidebarMenu className="group-data-[state=expanded]:space-y-0 group-data-[state=collapsed]:space-y-3">
           {wallets?.map((wallet) => (
             <SidebarMenuItem key={wallet.id}>
               <SidebarMenuButton
                 size="lg"
                 isActive={walletId === wallet.id}
-                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                tooltip={wallet.name}
                 render={
                   <Link to="/wallets/$walletId" params={{ walletId: wallet.id }}>
-                    <div className="size-8 rounded-lg flex items-center justify-center shrink-0 bg-accent text-accent-foreground">
-                      <Icon name="WalletIcon" />
+                    <div
+                      className={cn(
+                        'size-8 rounded-lg flex items-center justify-center shrink-0 bg-muted text-muted-foreground',
+                        {
+                          'bg-white text-primary': walletId === wallet.id,
+                        },
+                      )}
+                    >
+                      <span className="text-xs uppercase">{wallet.name.charAt(0)}</span>
                     </div>
                     <div className="grid flex-1 text-left text-sm leading-tight">
                       <span className="truncate font-medium">{wallet.name}</span>

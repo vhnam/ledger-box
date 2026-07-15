@@ -1,4 +1,4 @@
-import { Spinner } from '@vhnam/ui/components/spinner';
+import { Skeleton } from '@vhnam/ui/components/skeleton';
 
 import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
 
@@ -31,31 +31,33 @@ function WalletTransactions({ walletId, transactionQuery }: WalletTransactionsPr
 
   return (
     <div className="flex flex-col gap-4">
-      {isPending ? (
-        <div className="flex justify-center py-8">
-          <Spinner className="size-8 text-muted-foreground" />
+      {isPending && (
+        <div className="space-y-2">
+          {Array.from({ length: 10 }).map((_, index) => (
+            <Skeleton key={index} className="h-12 w-full" />
+          ))}
         </div>
-      ) : null}
+      )}
 
-      {isError ? <p className="text-sm text-destructive">Failed to load transactions.</p> : null}
+      {isError && <p className="text-sm text-destructive">Failed to load transactions.</p>}
 
-      {!isPending && !isError && transactions.length > 0 ? (
+      {!isPending && !isError && transactions.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-end justify-between">
             <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Transactions</span>
             <span className="font-mono text-xs text-muted-foreground">{resultLabel}</span>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-4">
             {transactions.map((transaction) => (
               <WalletTransaction key={transaction.id} transaction={transaction} />
             ))}
           </div>
         </div>
-      ) : null}
+      )}
 
-      {!isPending && !isError && transactions.length === 0 ? <WalletEmpty variant="transactions" /> : null}
+      {!isPending && !isError && transactions.length === 0 && <WalletEmpty variant="transactions" />}
 
-      {showPagination ? (
+      {showPagination && (
         <WalletPagination
           page={page}
           totalPages={totalPages}
@@ -66,7 +68,7 @@ function WalletTransactions({ walletId, transactionQuery }: WalletTransactionsPr
           goToPreviousPage={goToPreviousPage}
           goToNextPage={goToNextPage}
         />
-      ) : null}
+      )}
     </div>
   );
 }

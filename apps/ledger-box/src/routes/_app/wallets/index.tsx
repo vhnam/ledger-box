@@ -29,7 +29,7 @@ function RouteComponent() {
   }
 
   if (wallets?.length > 0) {
-    return <Navigate to="/wallets/$walletId" params={{ walletId: wallets[0].id }} replace />;
+    return <Navigate to="/wallets/$walletId" params={{ walletId: wallets[0].id }} replace resetScroll={false} />;
   }
 
   return null;

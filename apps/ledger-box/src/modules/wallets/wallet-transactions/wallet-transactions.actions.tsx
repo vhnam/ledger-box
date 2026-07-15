@@ -1,11 +1,15 @@
-import { useEffect, useMemo, useState } from 'react';
+import { getRouteApi } from '@tanstack/react-router';
+import { useEffect, useMemo, useRef } from 'react';
 
 import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
 import { useTransactions } from '#/queries/transactions/transaction.queries';
+import { resolveWalletTransactionSearch } from '#/schemas/wallet-transaction-search.schema';
 
 import { TRANSACTIONS_PAGE_SIZE } from './constants';
 
 type PageItem = number | 'ellipsis';
+
+const walletRouteApi = getRouteApi('/_app/wallets/$walletId');
 
 function getPageItems(currentPage: number, totalPages: number): PageItem[] {
   if (totalPages <= 0) {
@@ -49,7 +53,10 @@ export function useWalletTransactions({
   pageSize = TRANSACTIONS_PAGE_SIZE,
   transactionQuery,
 }: UseWalletTransactionsOptions) {
-  const [page, setPage] = useState(1);
+  const search = walletRouteApi.useSearch();
+  const navigate = walletRouteApi.useNavigate();
+  const page = search.page;
+  const prevWalletIdRef = useRef(walletId);
 
   const { data, isPending, isError } = useTransactions(walletId, { page, pageSize, ...transactionQuery });
 
@@ -63,21 +70,45 @@ export function useWalletTransactions({
   const resultLabel = totalResults === 1 ? '1 result' : `${totalResults} results`;
 
   useEffect(() => {
-    setPage(1);
-  }, [walletId, transactionQuery]);
+    if (prevWalletIdRef.current === walletId) {
+      return;
+    }
+
+    prevWalletIdRef.current = walletId;
+
+    if (page !== 1) {
+      void navigate({
+        search: (prev) => resolveWalletTransactionSearch({ ...prev, page: undefined }),
+        replace: true,
+        resetScroll: false,
+      });
+    }
+  }, [walletId, page, navigate]);
 
   useEffect(() => {
     if (totalPages > 0 && page > totalPages) {
-      setPage(totalPages);
+      void navigate({
+        search: (prev) => resolveWalletTransactionSearch({ ...prev, page: totalPages === 1 ? undefined : totalPages }),
+        replace: true,
+        resetScroll: false,
+      });
     }
-  }, [page, totalPages]);
+  }, [page, totalPages, navigate]);
 
   const goToPage = (nextPage: number) => {
     if (nextPage < 1 || nextPage > totalPages) {
       return;
     }
 
-    setPage(nextPage);
+    void navigate({
+      search: (prev) =>
+        resolveWalletTransactionSearch({
+          ...prev,
+          page: nextPage === 1 ? undefined : nextPage,
+        }),
+      replace: true,
+      resetScroll: false,
+    });
   };
 
   const goToPreviousPage = () => {

@@ -31,7 +31,7 @@ function AppSidebar(props: ComponentProps<typeof Sidebar>) {
                     <Icon name="WalletIcon" className="size-4" />
                   </div>
                   <div className="flex flex-col gap-0.5 leading-none">
-                    <span className="font-medium">Ledger Box</span>
+                    <span className="font-heading font-medium">Ledger Box</span>
                     <span className="text-xs text-muted-foreground">Wallet Management</span>
                   </div>
                 </Link>

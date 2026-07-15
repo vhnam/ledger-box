@@ -20,6 +20,7 @@ export const walletTransactionSearchSchema = v.object({
   to: v.optional(v.pipe(v.string(), v.isoDate())),
   sortBy: v.optional(v.picklist(sortByValues)),
   sortOrder: v.optional(v.picklist(sortOrderValues)),
+  page: v.optional(v.pipe(v.union([v.string(), v.number()]), v.transform(Number), v.integer(), v.minValue(1))),
 });
 
 export type WalletTransactionSearchInput = v.InferOutput<typeof walletTransactionSearchSchema>;
@@ -30,12 +31,14 @@ export type WalletTransactionSearch = {
   to?: string;
   sortBy: SortByValue;
   sortOrder: SortOrderValue;
+  page: number;
 };
 
 export const WALLET_TRANSACTION_SEARCH_DEFAULTS = {
   filter: DEFAULT_FILTER_VALUE,
   sortBy: DEFAULT_SORT_BY,
   sortOrder: DEFAULT_SORT_ORDER,
+  page: 1,
 } as const;
 
 export function resolveWalletTransactionSearch(search: WalletTransactionSearchInput): WalletTransactionSearch {
@@ -45,5 +48,6 @@ export function resolveWalletTransactionSearch(search: WalletTransactionSearchIn
     to: search.to,
     sortBy: search.sortBy ?? DEFAULT_SORT_BY,
     sortOrder: search.sortOrder ?? DEFAULT_SORT_ORDER,
+    page: search.page ?? 1,
   };
 }

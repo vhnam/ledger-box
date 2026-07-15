@@ -5,7 +5,7 @@ import { WalletEmpty } from '#/modules/wallets/wallet-empty';
 import { WalletHeader } from '#/modules/wallets/wallet-header';
 import { WalletSummary } from '#/modules/wallets/wallet-summary';
 import { useTransactions } from '#/queries/transactions/transaction.queries';
-import { useWallet } from '#/queries/wallets/wallet.queries';
+import { useWallet, useWallets } from '#/queries/wallets/wallet.queries';
 
 import { WalletActions, useWalletActions } from '../wallet-actions';
 import { WalletTransactions } from '../wallet-transactions';
@@ -16,17 +16,20 @@ interface WalletPageProps {
 
 function WalletPage({ walletId }: WalletPageProps) {
   const filters = useWalletActions();
+  const { data: wallets } = useWallets();
   const { data: wallet, isPending, isError } = useWallet(walletId);
   const { data: transactionsPage, isPending: isTransactionsPending } = useTransactions(walletId, {
     page: 1,
     pageSize: 1,
   });
+  const walletPreview = wallet ?? wallets?.find((item) => item.id === walletId);
   const hasTransactions = (transactionsPage?.total ?? 0) > 0;
+  const showTransactions = !isTransactionsPending && hasTransactions;
 
-  if (isPending) {
+  if (!walletPreview && isPending) {
     return (
       <div className="flex flex-1 items-center justify-center">
-        <Spinner className="size-32 text-accent" />
+        <Spinner className="size-32 text-default-foreground" />
       </div>
     );
   }
@@ -35,32 +38,30 @@ function WalletPage({ walletId }: WalletPageProps) {
     return <p className="text-sm text-destructive">Failed to load wallet.</p>;
   }
 
-  if (!wallet) {
+  if (!walletPreview) {
     return <p className="text-sm text-destructive">Wallet not found.</p>;
   }
 
   return (
     <>
-      <WalletHeader wallet={wallet} />
-      <ScrollArea className="h-[calc(100vh-var(--header-height))] w-full">
-        <div className="mx-auto max-w-5xl">
-          <div className="flex w-full max-w-5xl flex-col gap-4 p-4 lg:p-6">
-            <WalletActions hasTransactions={!isTransactionsPending && hasTransactions} filters={filters} />
-            {isTransactionsPending ? (
-              <div className="flex justify-center py-8">
-                <Spinner className="size-8 text-muted-foreground" />
-              </div>
-            ) : hasTransactions ? (
-              <>
-                <WalletSummary walletId={walletId} transactionQuery={filters.transactionQuery} />
-                <WalletTransactions walletId={walletId} transactionQuery={filters.transactionQuery} />
-              </>
-            ) : (
-              <WalletEmpty variant="transactions" />
-            )}
+      <WalletHeader wallet={walletPreview} />
+      <div className="h-[calc(100vh-var(--header-height))] w-full">
+        <ScrollArea scrollRestorationId="wallet-main" className="h-full w-full">
+          <div className="mx-auto max-w-5xl">
+            <div className="flex w-full max-w-5xl flex-col gap-4 p-4 lg:p-6">
+              <WalletActions hasTransactions={showTransactions} filters={filters} />
+              {!isTransactionsPending && !hasTransactions ? (
+                <WalletEmpty variant="transactions" />
+              ) : (
+                <>
+                  <WalletSummary walletId={walletId} transactionQuery={filters.transactionQuery} />
+                  <WalletTransactions walletId={walletId} transactionQuery={filters.transactionQuery} />
+                </>
+              )}
+            </div>
           </div>
-        </div>
-      </ScrollArea>
+        </ScrollArea>
+      </div>
     </>
   );
 }
