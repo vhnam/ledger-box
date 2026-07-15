@@ -1,8 +1,8 @@
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
-import { RiArrowRightSLine, RiCheckLine } from '@remixicon/react';
 import * as React from 'react';
 
 import { cn } from '../lib/utils';
+import { Icon } from './icon';
 
 function DropdownMenu({ ...props }: MenuPrimitive.Root.Props) {
   return <MenuPrimitive.Root data-slot="dropdown-menu" {...props} />;
@@ -113,7 +113,7 @@ function DropdownMenuSubTrigger({
       {...props}
     >
       {children}
-      <RiArrowRightSLine className="ml-auto" />
+      <Icon name="CaretRightIcon" className="ml-auto" />
     </MenuPrimitive.SubmenuTrigger>
   );
 }
@@ -167,7 +167,7 @@ function DropdownMenuCheckboxItem({
         data-slot="dropdown-menu-checkbox-item-indicator"
       >
         <MenuPrimitive.CheckboxItemIndicator>
-          <RiCheckLine />
+          <Icon name="CheckIcon" />
         </MenuPrimitive.CheckboxItemIndicator>
       </span>
       {children}
@@ -202,7 +202,7 @@ function DropdownMenuRadioItem({
         data-slot="dropdown-menu-radio-item-indicator"
       >
         <MenuPrimitive.RadioItemIndicator>
-          <RiCheckLine />
+          <Icon name="CheckIcon" />
         </MenuPrimitive.RadioItemIndicator>
       </span>
       {children}

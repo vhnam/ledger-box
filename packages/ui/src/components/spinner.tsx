@@ -1,15 +1,16 @@
-import { RiLoaderLine } from '@remixicon/react';
 import type { ComponentProps } from 'react';
 
 import { cn } from '../lib/utils';
+import { Icon, type PhosphorIcon } from './icon';
 
-function Spinner({ className, ...props }: ComponentProps<typeof RiLoaderLine>) {
+function Spinner({ className, ...props }: Omit<ComponentProps<PhosphorIcon>, 'ref' | 'name'>) {
   return (
-    <RiLoaderLine
+    <Icon
+      name="CircleNotchIcon"
       data-slot="spinner"
       role="status"
       aria-label="Loading"
-      className={cn('size-4 animate-spin', className)}
+      className={cn('animate-spin', className)}
       {...props}
     />
   );

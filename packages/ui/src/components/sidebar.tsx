@@ -2,11 +2,11 @@
 
 import { mergeProps } from '@base-ui/react/merge-props';
 import { useRender } from '@base-ui/react/use-render';
-import { RiSideBarLine } from '@remixicon/react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 
 import { Button } from '../components/button';
+import { Icon } from '../components/icon';
 import { Input } from '../components/input';
 import { Separator } from '../components/separator';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '../components/sheet';
@@ -248,7 +248,7 @@ function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<t
       }}
       {...props}
     >
-      <RiSideBarLine />
+      <Icon name="SidebarIcon" />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );

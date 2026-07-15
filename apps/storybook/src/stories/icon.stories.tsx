@@ -1,4 +1,3 @@
-import { RiHeartFill, RiSettings4Line, RiUser3Line } from '@remixicon/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { Icon } from '@vhnam/ui/components/icon';
@@ -17,33 +16,34 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    icon: RiUser3Line,
+    name: 'UserIcon',
   },
 };
 
 export const CustomSize: Story = {
   args: {
-    icon: RiSettings4Line,
+    name: 'GearIcon',
     className: 'size-8',
   },
 };
 
 export const CustomColor: Story = {
   args: {
-    icon: RiHeartFill,
+    name: 'HeartIcon',
+    weight: 'fill',
     className: 'text-destructive',
   },
 };
 
 export const Gallery: Story = {
   args: {
-    icon: RiUser3Line,
+    name: 'UserIcon',
   },
   render: () => (
     <div className="flex items-center gap-4">
-      <Icon icon={RiUser3Line} />
-      <Icon icon={RiSettings4Line} />
-      <Icon icon={RiHeartFill} className="text-destructive" />
+      <Icon name="UserIcon" />
+      <Icon name="GearIcon" />
+      <Icon name="HeartIcon" weight="fill" className="text-destructive" />
     </div>
   ),
 };

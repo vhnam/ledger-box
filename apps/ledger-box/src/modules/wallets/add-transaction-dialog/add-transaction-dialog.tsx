@@ -1,0 +1,146 @@
+import { Field as FormField, Form } from '@formisch/react';
+
+import { Button } from '@vhnam/ui/components/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@vhnam/ui/components/dialog';
+import { Field, FieldError, FieldGroup, FieldLabel } from '@vhnam/ui/components/field';
+import { Icon } from '@vhnam/ui/components/icon';
+import { Input } from '@vhnam/ui/components/input';
+import { Spinner } from '@vhnam/ui/components/spinner';
+import { Textarea } from '@vhnam/ui/components/textarea';
+import { ToggleGroup, ToggleGroupItem } from '@vhnam/ui/components/toggle-group';
+import { cn } from '@vhnam/ui/lib/utils';
+
+import { useWallets } from '#/queries/wallets/wallet.queries';
+import type { AddTransactionOutput } from '#/schemas/add-transaction.schema';
+
+import { useAddTransactionDialogActions } from './add-transaction-dialog.actions';
+
+interface AddTransactionDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  walletId: string;
+}
+
+function AddTransactionDialog({ open, onOpenChange, walletId }: AddTransactionDialogProps) {
+  const { data: wallets = [] } = useWallets();
+  const { form, handleOpenChange, handleAddTransaction, isPending, error } = useAddTransactionDialogActions({
+    open,
+    walletId,
+    wallets,
+  });
+
+  function handleDialogOpenChange(nextOpen: boolean) {
+    handleOpenChange(nextOpen);
+    onOpenChange(nextOpen);
+  }
+
+  function handleSubmit(output: AddTransactionOutput) {
+    handleAddTransaction(output, () => {
+      handleDialogOpenChange(false);
+    });
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={handleDialogOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>New Transaction</DialogTitle>
+        </DialogHeader>
+
+        <Form of={form} onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <FieldGroup>
+            <FormField
+              of={form}
+              path={['type']}
+              children={(field) => (
+                <Field data-invalid={!!field.errors}>
+                  <ToggleGroup
+                    value={field.input ? [field.input] : []}
+                    onValueChange={(values) => {
+                      const nextValue = values.at(-1);
+                      const nextType =
+                        nextValue === 'income' || nextValue === 'expense' ? nextValue : (field.input ?? 'expense');
+                      field.onChange(nextType);
+                    }}
+                    variant="outline"
+                    spacing={0}
+                    className="w-full rounded-xl bg-muted/50 p-1"
+                  >
+                    <ToggleGroupItem
+                      value="expense"
+                      className={cn(
+                        'flex-1 gap-1.5 rounded-lg border-0',
+                        'aria-pressed:bg-rose-500 aria-pressed:text-white aria-pressed:hover:bg-rose-500',
+                      )}
+                    >
+                      <Icon name="ArrowDownIcon" />
+                      Expense
+                    </ToggleGroupItem>
+                    <ToggleGroupItem
+                      value="income"
+                      className={cn(
+                        'flex-1 gap-1.5 rounded-lg border-0',
+                        'aria-pressed:bg-emerald-500 aria-pressed:text-white aria-pressed:hover:bg-emerald-500',
+                      )}
+                    >
+                      <Icon name="ArrowUpIcon" />
+                      Income
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+                  {field.errors && <FieldError>{field.errors[0]}</FieldError>}
+                </Field>
+              )}
+            />
+
+            <FormField
+              of={form}
+              path={['amount']}
+              children={(field) => (
+                <Field data-invalid={!!field.errors}>
+                  <FieldLabel htmlFor={field.props.name}>Amount</FieldLabel>
+                  <Input
+                    id={field.props.name}
+                    className="font-mono"
+                    inputMode="decimal"
+                    defaultValue={field.input}
+                    aria-invalid={!!field.errors}
+                    placeholder="Enter the amount"
+                    {...field.props}
+                  />
+                  {field.errors && <FieldError>{field.errors[0]}</FieldError>}
+                </Field>
+              )}
+            />
+
+            <FormField
+              of={form}
+              path={['description']}
+              children={(field) => (
+                <Field data-invalid={!!field.errors}>
+                  <FieldLabel htmlFor={field.props.name}>Description</FieldLabel>
+                  <Textarea
+                    id={field.props.name}
+                    defaultValue={field.input}
+                    aria-invalid={!!field.errors}
+                    placeholder="What is this for?"
+                    {...field.props}
+                  />
+                  {field.errors && <FieldError>{field.errors[0]}</FieldError>}
+                </Field>
+              )}
+            />
+          </FieldGroup>
+
+          {error ? <FieldError>{error}</FieldError> : null}
+
+          <Button type="submit" variant="default" size="lg" className="w-full" disabled={!form.isValid || isPending}>
+            {isPending && <Spinner className="size-4" />}
+            {isPending ? 'Adding...' : 'Add Transaction'}
+          </Button>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+export { AddTransactionDialog };

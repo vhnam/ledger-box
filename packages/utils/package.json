@@ -1,0 +1,25 @@
+{
+  "name": "@vhnam/utils",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./currency": "./src/currency/index.ts",
+    "./currency/constants": "./src/currency/constants.ts",
+    "./currency/utils": "./src/currency/utils.ts",
+    "./date": "./src/date/index.ts",
+    "./date/constants": "./src/date/constants.ts",
+    "./date/utils": "./src/date/utils.ts"
+  },
+  "scripts": {
+    "check": "vp check"
+  },
+  "dependencies": {
+    "date-fns": "catalog:"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "vite-plus": "catalog:"
+  }
+}

@@ -8,10 +8,8 @@ export function AppLayout() {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset>
-        <main className="flex flex-1 flex-col">
-          <Outlet />
-        </main>
+      <SidebarInset className="min-h-svh">
+        <Outlet />
       </SidebarInset>
     </SidebarProvider>
   );

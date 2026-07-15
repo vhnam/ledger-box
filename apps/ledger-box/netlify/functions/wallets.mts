@@ -11,7 +11,12 @@ export default async (request: Request) => {
   }
 
   if (request.method === "GET") {
-    const wallets = await db.selectFrom("wallet").select(["id", "name"]).orderBy("name").execute();
+    const wallets = await db
+      .selectFrom("wallet")
+      .select(["id", "name", "amount"])
+      .where("deletedAt", "is", null)
+      .orderBy("name")
+      .execute();
 
     return Response.json(wallets);
   }

@@ -1,4 +1,3 @@
-import { RiWallet3Line } from '@remixicon/react';
 import { Link } from '@tanstack/react-router';
 import type { ComponentProps } from 'react';
 
@@ -29,10 +28,10 @@ function AppSidebar(props: ComponentProps<typeof Sidebar>) {
               render={
                 <Link to="/">
                   <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                    <Icon icon={RiWallet3Line} className="size-4" />
+                    <Icon name="WalletIcon" className="size-4" />
                   </div>
                   <div className="flex flex-col gap-0.5 leading-none">
-                    <span className="font-medium">Ledger Box</span>
+                    <span className="font-heading font-medium">Ledger Box</span>
                     <span className="text-xs text-muted-foreground">Wallet Management</span>
                   </div>
                 </Link>

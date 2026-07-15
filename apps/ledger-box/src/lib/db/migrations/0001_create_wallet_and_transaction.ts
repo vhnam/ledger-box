@@ -5,6 +5,10 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .createTable('wallet')
     .addColumn('id', 'text', (col) => col.primaryKey().defaultTo(sql`gen_random_uuid()`))
     .addColumn('name', 'text', (col) => col.notNull())
+    .addColumn('amount', 'numeric(14, 2)', (col) => col.notNull().defaultTo(0))
+    .addColumn('created_at', 'timestamptz', (col) => col.notNull().defaultTo(sql`now()`))
+    .addColumn('updated_at', 'timestamptz', (col) => col.notNull().defaultTo(sql`now()`))
+    .addColumn('deleted_at', 'timestamptz')
     .execute();
 
   await db.schema
@@ -14,7 +18,9 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .addColumn('type', 'text', (col) => col.notNull())
     .addColumn('amount', 'numeric(14, 2)', (col) => col.notNull())
     .addColumn('description', 'text', (col) => col.notNull())
-    .addColumn('datetime', 'timestamptz', (col) => col.notNull())
+    .addColumn('created_at', 'timestamptz', (col) => col.notNull().defaultTo(sql`now()`))
+    .addColumn('updated_at', 'timestamptz', (col) => col.notNull().defaultTo(sql`now()`))
+    .addColumn('deleted_at', 'timestamptz')
     .addCheckConstraint('transaction_type_check', sql`type in ('income', 'expense')`)
     .execute();
 

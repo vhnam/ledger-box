@@ -8,8 +8,9 @@
     "build": "storybook build"
   },
   "dependencies": {
-    "@remixicon/react": "catalog:",
+    "@phosphor-icons/react": "catalog:",
     "@vhnam/ui": "workspace:*",
+    "next-themes": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"
   },

@@ -4,3 +4,11 @@
 
 @source "../src";
 @source "../../../packages/ui/src";
+
+[data-slot="sidebar-wrapper"] {
+  --header-height: calc(var(--spacing) * 16);
+}
+
+[data-slot="sidebar-wrapper"]:has([data-state="collapsed"]) {
+  --header-height: calc(var(--spacing) * 12);
+}

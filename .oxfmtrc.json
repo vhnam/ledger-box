@@ -18,8 +18,12 @@
   "sortImports": {
     "customGroups": [
       {
-        "groupName": "vhnam",
-        "elementNamePattern": ["@vhnam/**"]
+        "groupName": "vhnam/ui",
+        "elementNamePattern": ["@vhnam/ui/**"]
+      },
+      {
+        "groupName": "vhnam/utils",
+        "elementNamePattern": ["@vhnam/utils/**"]
       },
       {
         "groupName": "app",
@@ -30,7 +34,8 @@
     "groups": [
       "builtin",
       "external",
-      "vhnam",
+      "vhnam/ui",
+      "vhnam/utils",
       "app",
       ["parent", "sibling", "index", "style", "side_effect_style"],
       "unknown"

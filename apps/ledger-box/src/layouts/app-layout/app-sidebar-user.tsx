@@ -1,6 +1,5 @@
-import { RiExpandUpDownLine, RiLogoutBoxLine, RiSettingsLine } from '@remixicon/react';
 import { useNavigate } from '@tanstack/react-router';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@vhnam/ui/components/avatar';
 import {
@@ -16,10 +15,12 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@vhnam/ui/compo
 import { toast } from '@vhnam/ui/components/sonner';
 
 import { authClient, useSession } from '#/lib/auth-client';
+import { SettingsDialog, SettingsDialogTrigger } from '#/modules/settings/settings-dialog';
 
 function AppSidebarUser() {
   const navigate = useNavigate();
   const { data: session } = useSession();
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const avatarFallback = useMemo(() => {
     const name = session?.user.name?.trim() ?? '';
@@ -51,34 +52,32 @@ function AppSidebarUser() {
                 size="lg"
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
-                <Avatar className="h-8 w-8 rounded-lg">
+                <Avatar>
                   <AvatarImage src={session?.user.image ?? undefined} alt={session?.user.name ?? undefined} />
-                  <AvatarFallback className="rounded-lg">{avatarFallback}</AvatarFallback>
+                  <AvatarFallback>{avatarFallback}</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{session?.user.name}</span>
-                  <span className="truncate text-xs">{session?.user.email}</span>
+                  <span className="truncate text-xs text-muted-foreground">{session?.user.email}</span>
                 </div>
-                <Icon icon={RiExpandUpDownLine} className="ml-auto size-4" />
+                <Icon name="CaretUpDownIcon" className="ml-auto size-4" />
               </SidebarMenuButton>
             }
           />
           <DropdownMenuContent>
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <RiSettingsLine />
-                Settings
-              </DropdownMenuItem>
+              <SettingsDialogTrigger onOpen={() => setSettingsOpen(true)} />
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={handleSignOut}>
-                <RiLogoutBoxLine />
+                <Icon name="SignOutIcon" />
                 Log out
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
+        <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
       </SidebarMenuItem>
     </SidebarMenu>
   );
