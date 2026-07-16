@@ -17,7 +17,7 @@ type UseEditTransactionDialogActionsOptions = {
 };
 
 function formatAmountForInput(amount: number): string {
-  return Number.isInteger(amount) ? String(amount) : String(amount);
+  return String(Math.round(amount));
 }
 
 function getInitialInput(transaction: TransactionDto): EditTransactionInput {

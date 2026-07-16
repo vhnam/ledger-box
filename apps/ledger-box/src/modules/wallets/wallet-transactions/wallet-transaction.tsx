@@ -5,6 +5,7 @@ import type { TransactionDto } from '#/queries/transactions/transaction.dto';
 
 import { DeleteTransactionDialog } from '../delete-transaction-dialog';
 import { EditTransactionDialog } from '../edit-transaction-dialog';
+import { TransactionAttachmentsSheet } from '../transaction-attachments';
 import { WalletTransactionDetailSheet } from './wallet-transaction-detail-sheet';
 import { WalletTransactionMenu } from './wallet-transaction-menu';
 import { getTransactionAmountClassName, useWalletTransaction } from './wallet-transaction.actions';
@@ -18,6 +19,13 @@ function WalletTransaction({ transaction }: WalletTransactionProps) {
     isMobile,
     editOpen,
     setEditOpen,
+    returnToDetail,
+    handleEditBack,
+    attachmentsOpen,
+    setAttachmentsOpen,
+    returnToDetailFromAttachments,
+    handleAttachmentsBack,
+    openAttachmentsSheet,
     deleteOpen,
     setDeleteOpen,
     actionsOpen,
@@ -42,21 +50,36 @@ function WalletTransaction({ transaction }: WalletTransactionProps) {
           <p className={getTransactionAmountClassName(transaction.type)}>
             {formatSignedCurrency(transaction.amount, transaction.type)}
           </p>
-          {!isMobile && <WalletTransactionMenu onEdit={openEditDialog} onDelete={openDeleteDialog} />}
+          {!isMobile && (
+            <div onClick={(event) => event.stopPropagation()}>
+              <WalletTransactionMenu onEdit={openEditDialog} onDelete={openDeleteDialog} />
+            </div>
+          )}
         </div>
       </div>
 
-      {isMobile && (
-        <WalletTransactionDetailSheet
-          open={actionsOpen}
-          onOpenChange={setActionsOpen}
-          transaction={transaction}
-          onEdit={openEditDialog}
-          onDelete={openDeleteDialog}
-        />
-      )}
+      <WalletTransactionDetailSheet
+        open={actionsOpen}
+        onOpenChange={setActionsOpen}
+        transaction={transaction}
+        onEdit={openEditDialog}
+        onDelete={openDeleteDialog}
+        onOpenAttachments={openAttachmentsSheet}
+      />
 
-      <EditTransactionDialog open={editOpen} onOpenChange={setEditOpen} transaction={transaction} />
+      <TransactionAttachmentsSheet
+        open={attachmentsOpen}
+        onOpenChange={setAttachmentsOpen}
+        transaction={transaction}
+        onBack={returnToDetailFromAttachments ? handleAttachmentsBack : undefined}
+      />
+
+      <EditTransactionDialog
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        transaction={transaction}
+        onBack={returnToDetail ? handleEditBack : undefined}
+      />
       <DeleteTransactionDialog open={deleteOpen} onOpenChange={setDeleteOpen} transaction={transaction} />
     </>
   );

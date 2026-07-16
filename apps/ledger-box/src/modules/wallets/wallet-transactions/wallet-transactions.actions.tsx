@@ -5,7 +5,7 @@ import type { TransactionQueryParams } from '#/queries/transactions/transaction.
 import { useTransactions } from '#/queries/transactions/transaction.queries';
 import { resolveWalletTransactionSearch } from '#/schemas/wallet-transaction-search.schema';
 
-import { TRANSACTIONS_PAGE_SIZE } from './constants';
+const TRANSACTIONS_PAGE_SIZE = 10;
 
 type PageItem = number | 'ellipsis';
 

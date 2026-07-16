@@ -1,9 +1,9 @@
 import { Field as FormField, Form } from '@formisch/react';
 
 import { Button } from '@vhnam/ui/components/button';
+import { CurrencyInput } from '@vhnam/ui/components/currency-input';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@vhnam/ui/components/field';
 import { Icon } from '@vhnam/ui/components/icon';
-import { Input } from '@vhnam/ui/components/input';
 import { Spinner } from '@vhnam/ui/components/spinner';
 import { Textarea } from '@vhnam/ui/components/textarea';
 import { ToggleGroup, ToggleGroupItem } from '@vhnam/ui/components/toggle-group';
@@ -74,15 +74,16 @@ function EditTransactionForm({ form, onSubmit, isPending, error }: EditTransacti
           children={(field) => (
             <Field data-invalid={!!field.errors}>
               <FieldLabel htmlFor={field.props.name}>Amount</FieldLabel>
-              <Input
+              <CurrencyInput
                 id={field.props.name}
-                type="number"
-                className="font-mono"
-                inputMode="decimal"
-                placeholder="Enter amount"
-                defaultValue={field.input}
+                value={field.input ?? ''}
                 aria-invalid={!!field.errors}
-                {...field.props}
+                placeholder="Enter the amount"
+                name={field.props.name}
+                ref={field.props.ref}
+                onFocus={field.props.onFocus}
+                onBlur={field.props.onBlur}
+                onValueChange={field.onChange}
               />
               {field.errors && <FieldError>{field.errors[0]}</FieldError>}
             </Field>
