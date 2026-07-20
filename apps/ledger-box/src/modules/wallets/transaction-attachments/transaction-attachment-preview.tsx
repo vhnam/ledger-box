@@ -5,11 +5,12 @@ import { Dialog, DialogContent } from '@vhnam/ui/components/dialog';
 import { Icon } from '@vhnam/ui/components/icon';
 import { cn } from '@vhnam/ui/lib/utils';
 
-import { isPdfFile } from '#/lib/file';
+import { isPdfContentType } from '#/lib/file';
 
 type PreviewableTransactionAttachment = {
   id: string;
-  file: File;
+  fileName: string;
+  contentType: string;
   previewUrl: string;
 };
 
@@ -67,7 +68,7 @@ function TransactionAttachmentPreview({
         )}
       >
         <div className="relative z-10 flex shrink-0 items-center gap-3 px-4 py-3 pt-[max(env(safe-area-inset-top),0.75rem)]">
-          <p className="min-w-0 flex-1 truncate text-sm font-medium">{activeAttachment.file.name}</p>
+          <p className="min-w-0 flex-1 truncate text-sm font-medium">{activeAttachment.fileName}</p>
           <div className="flex shrink-0 items-center gap-1">
             <Button
               type="button"
@@ -94,16 +95,16 @@ function TransactionAttachmentPreview({
 
         <div className="relative min-h-0 flex-1">
           <div className="absolute inset-0 flex items-center justify-center px-4 pb-[max(env(safe-area-inset-bottom),0.75rem)]">
-            {isPdfFile(activeAttachment.file) ? (
+            {isPdfContentType(activeAttachment.contentType) ? (
               <iframe
                 src={activeAttachment.previewUrl}
-                title={activeAttachment.file.name}
+                title={activeAttachment.fileName}
                 className="h-full w-full border-0 bg-black"
               />
             ) : (
               <img
                 src={activeAttachment.previewUrl}
-                alt={activeAttachment.file.name}
+                alt={activeAttachment.fileName}
                 className="max-h-full max-w-full object-contain"
               />
             )}

@@ -8,6 +8,10 @@
     "dev": "netlify dev --filter @vhnam/ledger-box",
     "prepare": "vp config"
   },
+  "dependencies": {
+    "@aws-sdk/client-s3": "catalog:",
+    "@aws-sdk/s3-request-presigner": "catalog:"
+  },
   "devDependencies": {
     "vite": "catalog:",
     "vite-plus": "catalog:"

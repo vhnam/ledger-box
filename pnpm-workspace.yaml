@@ -38,6 +38,8 @@ catalog:
   vite: npm:@voidzero-dev/vite-plus-core@0.2.4
   vite-plus: 0.2.4
   react-day-picker: ^10.0.1
+  "@aws-sdk/client-s3": ^3.1090.0
+  "@aws-sdk/s3-request-presigner": ^3.1090.0
 
 catalogMode: prefer
 

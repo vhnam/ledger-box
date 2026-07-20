@@ -3,7 +3,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { AddTransactionOutput } from '#/schemas/add-transaction.schema';
 import type { EditTransactionOutput } from '#/schemas/edit-transaction.schema';
 
-import { addTransaction, deleteTransaction, updateTransaction } from './transaction.api';
+import {
+  addTransaction,
+  deleteTransaction,
+  deleteTransactionAttachment,
+  updateTransaction,
+  uploadTransactionAttachment,
+} from './transaction.api';
 
 type AddTransactionPayload = AddTransactionOutput & {
   walletId: string;
@@ -58,6 +64,46 @@ export function useDeleteTransaction() {
         queryClient.invalidateQueries({ queryKey: ['wallets'] }),
         queryClient.invalidateQueries({ queryKey: ['transactions', variables.walletId] }),
       ]);
+    },
+  });
+}
+
+type UploadTransactionAttachmentPayload = {
+  walletId: string;
+  transactionId: string;
+  file: File;
+};
+
+export function useUploadTransactionAttachment() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: UploadTransactionAttachmentPayload) =>
+      uploadTransactionAttachment(payload.walletId, payload.transactionId, payload.file),
+    onSuccess: async (_data, variables) => {
+      await queryClient.invalidateQueries({
+        queryKey: ['transaction-attachments', variables.walletId, variables.transactionId],
+      });
+    },
+  });
+}
+
+type DeleteTransactionAttachmentPayload = {
+  walletId: string;
+  transactionId: string;
+  attachmentId: string;
+};
+
+export function useDeleteTransactionAttachment() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: DeleteTransactionAttachmentPayload) =>
+      deleteTransactionAttachment(payload.walletId, payload.transactionId, payload.attachmentId),
+    onSuccess: async (_data, variables) => {
+      await queryClient.invalidateQueries({
+        queryKey: ['transaction-attachments', variables.walletId, variables.transactionId],
+      });
     },
   });
 }

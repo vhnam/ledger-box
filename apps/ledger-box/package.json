@@ -13,6 +13,7 @@
     "db:reset": "tsx --env-file ../../.env scripts/seed.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "catalog:",
     "@formisch/react": "catalog:",
     "@phosphor-icons/react": "catalog:",
     "@tanstack/react-query": "catalog:",
