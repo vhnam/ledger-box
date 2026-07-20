@@ -61,8 +61,10 @@ function getFilterDateRange(filter: string, from: string | null, to: string | nu
 
 function isValidSortBy(
   value: string | null,
-): value is typeof SORT_BY_OPTIONS.UPDATED_AT | typeof SORT_BY_OPTIONS.AMOUNT {
-  return value === SORT_BY_OPTIONS.UPDATED_AT || value === SORT_BY_OPTIONS.AMOUNT;
+): value is typeof SORT_BY_OPTIONS.CREATED_AT | typeof SORT_BY_OPTIONS.UPDATED_AT | typeof SORT_BY_OPTIONS.AMOUNT {
+  return (
+    value === SORT_BY_OPTIONS.CREATED_AT || value === SORT_BY_OPTIONS.UPDATED_AT || value === SORT_BY_OPTIONS.AMOUNT
+  );
 }
 
 function isValidSortOrder(
