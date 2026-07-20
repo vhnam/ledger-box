@@ -21,7 +21,6 @@
     "@vhnam/utils": "workspace:*",
     "axios": "catalog:",
     "better-auth": "^1.6.23",
-    "date-fns": "catalog:",
     "kysely": "catalog:",
     "pg": "^8.22.0",
     "react": "catalog:",

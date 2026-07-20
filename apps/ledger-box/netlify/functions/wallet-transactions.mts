@@ -1,7 +1,5 @@
 import type { Config, Context } from "@netlify/functions";
 
-import { endOfDay, getLastMonthRange, getThisMonthRange, getTodayRange, parseISO, startOfDay } from "@vhnam/utils/date";
-
 import { FILTER_OPTIONS } from "../../src/constants/filter-options.ts";
 import {
   DEFAULT_SORT_BY,
@@ -12,6 +10,7 @@ import {
 import { auth } from "../../src/lib/auth.ts";
 import { db } from "../../src/lib/db/index.ts";
 import type { TransactionType } from "../../src/lib/db/schema.ts";
+import { getDateRange, getLastMonthRange, getThisMonthRange, getTodayRange } from "./lib/date-ranges.ts";
 
 function getWalletId(request: Request, context: Context): string | null {
   const paramWalletId = context.params?.walletId;
@@ -49,10 +48,7 @@ function getFilterDateRange(filter: string, from: string | null, to: string | nu
         return null;
       }
 
-      return {
-        start: startOfDay(parseISO(from)),
-        end: endOfDay(parseISO(to)),
-      };
+      return getDateRange(from, to);
     }
     default:
       return null;
