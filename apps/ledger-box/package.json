@@ -9,8 +9,7 @@
     "preview": "vp preview",
     "db:migrate": "tsx --env-file ../../.env scripts/migrate.ts up",
     "db:migrate:down": "tsx --env-file ../../.env scripts/migrate.ts down",
-    "db:seed": "tsx --env-file ../../.env scripts/seed.ts",
-    "db:reset": "tsx --env-file ../../.env scripts/seed.ts"
+    "db:seed": "tsx --env-file ../../.env scripts/seed.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "catalog:",
@@ -22,6 +21,7 @@
     "@vhnam/utils": "workspace:*",
     "axios": "catalog:",
     "better-auth": "^1.6.23",
+    "date-fns": "catalog:",
     "kysely": "catalog:",
     "pg": "^8.22.0",
     "react": "catalog:",
