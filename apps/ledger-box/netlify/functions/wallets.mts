@@ -2,6 +2,7 @@ import type { Config } from "@netlify/functions";
 
 import { auth } from "../../src/lib/auth.ts";
 import { db } from "../../src/lib/db/index.ts";
+import { getTenantId } from "./lib/tenant-access.ts";
 
 export default async (request: Request) => {
   const session = await auth.api.getSession({ headers: request.headers });
@@ -10,10 +11,13 @@ export default async (request: Request) => {
     return new Response("Unauthorized", { status: 401 });
   }
 
+  const tenantId = getTenantId(session);
+
   if (request.method === "GET") {
     const wallets = await db
       .selectFrom("wallet")
       .select(["id", "name", "amount"])
+      .where("tenantId", "=", tenantId)
       .where("deletedAt", "is", null)
       .orderBy("name")
       .execute();
@@ -30,7 +34,7 @@ export default async (request: Request) => {
 
     const wallet = await db
       .insertInto("wallet")
-      .values({ name: body.name.trim() })
+      .values({ name: body.name.trim(), tenantId })
       .returning(["id", "name"])
       .executeTakeFirstOrThrow();
 

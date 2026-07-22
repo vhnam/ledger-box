@@ -4,6 +4,8 @@ export type TransactionType = 'income' | 'expense';
 
 export interface WalletTable {
   id: Generated<string>;
+  /** v1: better-auth user id (1 user = 1 tenant). */
+  tenantId: string;
   name: string;
   amount: number;
   createdAt: ColumnType<Date, Date | string, Date | string>;
