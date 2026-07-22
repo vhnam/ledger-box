@@ -8,8 +8,7 @@
     "build": "tsc && vp build",
     "preview": "vp preview",
     "db:migrate": "tsx --env-file ../../.env scripts/migrate.ts up",
-    "db:migrate:down": "tsx --env-file ../../.env scripts/migrate.ts down",
-    "db:seed": "tsx --env-file ../../.env scripts/seed.ts"
+    "db:migrate:down": "tsx --env-file ../../.env scripts/migrate.ts down"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "catalog:",

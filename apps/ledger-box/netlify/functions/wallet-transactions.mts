@@ -11,6 +11,7 @@ import { auth } from "../../src/lib/auth.ts";
 import { db } from "../../src/lib/db/index.ts";
 import type { TransactionType } from "../../src/lib/db/schema.ts";
 import { getDateRange, getLastMonthRange, getThisMonthRange, getTodayRange } from "./lib/date-ranges.ts";
+import { getTenantId, requireOwnedWallet } from "./lib/tenant-access.ts";
 
 function getWalletId(request: Request, context: Context): string | null {
   const paramWalletId = context.params?.walletId;
@@ -86,6 +87,8 @@ export default async (request: Request, context: Context) => {
     return new Response("Wallet id is required", { status: 400 });
   }
 
+  const tenantId = getTenantId(session);
+
   if (request.method === "POST") {
     const body = (await request.json()) as AddTransactionBody;
 
@@ -105,17 +108,13 @@ export default async (request: Request, context: Context) => {
     const amount = body.amount;
     const description = body.description.trim();
 
-    const wallet = await db
-      .selectFrom("wallet")
-      .select(["id", "amount"])
-      .where("id", "=", walletId)
-      .where("deletedAt", "is", null)
-      .executeTakeFirst();
+    const ownership = await requireOwnedWallet(tenantId, walletId);
 
-    if (!wallet) {
-      return new Response("Wallet not found", { status: 404 });
+    if (!ownership.ok) {
+      return ownership.error;
     }
 
+    const { wallet } = ownership;
     const now = new Date();
     const nextWalletAmount = type === "income" ? wallet.amount + amount : wallet.amount - amount;
 
@@ -139,6 +138,7 @@ export default async (request: Request, context: Context) => {
           updatedAt: now,
         })
         .where("id", "=", walletId)
+        .where("tenantId", "=", tenantId)
         .execute();
     });
 
@@ -159,15 +159,10 @@ export default async (request: Request, context: Context) => {
     const sortOrder = isValidSortOrder(sortOrderParam) ? sortOrderParam : DEFAULT_SORT_ORDER;
     const dateRange = getFilterDateRange(filter, from, to);
 
-    const wallet = await db
-      .selectFrom("wallet")
-      .select("id")
-      .where("id", "=", walletId)
-      .where("deletedAt", "is", null)
-      .executeTakeFirst();
+    const ownership = await requireOwnedWallet(tenantId, walletId);
 
-    if (!wallet) {
-      return new Response("Wallet not found", { status: 404 });
+    if (!ownership.ok) {
+      return ownership.error;
     }
 
     let itemsQuery = db

@@ -1,8 +1,8 @@
 import type { Config, Context } from "@netlify/functions";
 
 import { auth } from "../../src/lib/auth.ts";
-import { db } from "../../src/lib/db/index.ts";
 import { listTransactionAttachments, uploadTransactionAttachment } from "../../src/lib/r2.ts";
+import { getTenantId, requireOwnedTransaction } from "./lib/tenant-access.ts";
 
 const ACCEPTED_ATTACHMENT_TYPES = new Set(["application/pdf", "image/png", "image/jpeg", "image/webp"]);
 
@@ -40,33 +40,6 @@ function isAcceptedAttachment(file: File): boolean {
   return ACCEPTED_ATTACHMENT_TYPES.has(file.type);
 }
 
-async function verifyTransaction(walletId: string, transactionId: string) {
-  const wallet = await db
-    .selectFrom("wallet")
-    .select("id")
-    .where("id", "=", walletId)
-    .where("deletedAt", "is", null)
-    .executeTakeFirst();
-
-  if (!wallet) {
-    return new Response("Wallet not found", { status: 404 });
-  }
-
-  const transaction = await db
-    .selectFrom("transaction")
-    .select("id")
-    .where("id", "=", transactionId)
-    .where("walletId", "=", walletId)
-    .where("deletedAt", "is", null)
-    .executeTakeFirst();
-
-  if (!transaction) {
-    return new Response("Transaction not found", { status: 404 });
-  }
-
-  return null;
-}
-
 export default async (request: Request, context: Context) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
@@ -84,15 +57,16 @@ export default async (request: Request, context: Context) => {
     return new Response("Transaction id is required", { status: 400 });
   }
 
-  const verificationError = await verifyTransaction(walletId, transactionId);
+  const tenantId = getTenantId(session);
+  const ownership = await requireOwnedTransaction(tenantId, walletId, transactionId);
 
-  if (verificationError) {
-    return verificationError;
+  if (!ownership.ok) {
+    return ownership.error;
   }
 
   if (request.method === "GET") {
     try {
-      const attachments = await listTransactionAttachments(transactionId);
+      const attachments = await listTransactionAttachments(tenantId, transactionId);
 
       return Response.json({ attachments });
     } catch (error) {
@@ -143,6 +117,7 @@ export default async (request: Request, context: Context) => {
 
     uploads.push(
       uploadTransactionAttachment({
+        tenantId,
         transactionId,
         attachmentId,
         fileName,

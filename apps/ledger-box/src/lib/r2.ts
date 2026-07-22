@@ -53,22 +53,30 @@ function getR2Client(): S3Client {
   });
 }
 
-function buildTransactionPrefix(transactionId: string): string {
-  const { keyPrefix } = getR2BucketConfig();
-  const segments = [keyPrefix, 'transactions', transactionId].filter((segment) => segment.length > 0);
+function joinKeySegments(...segments: string[]): string {
+  return segments.filter((segment) => segment.length > 0).join('/');
+}
 
-  return `${segments.join('/')}/`;
+function buildTransactionPrefix(tenantId: string, transactionId: string): string {
+  const { keyPrefix } = getR2BucketConfig();
+
+  return `${joinKeySegments(keyPrefix, 'tenants', tenantId, 'transactions', transactionId)}/`;
+}
+
+/** Pre-tenant path used before multi-tenant keys were introduced. */
+function buildLegacyTransactionPrefix(transactionId: string): string {
+  const { keyPrefix } = getR2BucketConfig();
+
+  return `${joinKeySegments(keyPrefix, 'transactions', transactionId)}/`;
 }
 
 function parseAttachmentObjectKey(
   key: string,
-  transactionId: string,
+  prefix: string,
 ): {
   id: string;
   fileName: string;
 } | null {
-  const prefix = buildTransactionPrefix(transactionId);
-
   if (!key.startsWith(prefix)) {
     return null;
   }
@@ -108,13 +116,10 @@ function inferContentType(fileName: string): string {
   }
 }
 
-function buildObjectKey(transactionId: string, attachmentId: string, fileName: string): string {
+function buildObjectKey(tenantId: string, transactionId: string, attachmentId: string, fileName: string): string {
   const { keyPrefix } = getR2BucketConfig();
-  const segments = [keyPrefix, 'transactions', transactionId, attachmentId, fileName].filter(
-    (segment) => segment.length > 0,
-  );
 
-  return segments.join('/');
+  return joinKeySegments(keyPrefix, 'tenants', tenantId, 'transactions', transactionId, attachmentId, fileName);
 }
 
 function buildPublicUrl(objectKey: string): string | undefined {
@@ -128,6 +133,7 @@ function buildPublicUrl(objectKey: string): string | undefined {
 }
 
 type UploadTransactionAttachmentInput = {
+  tenantId: string;
   transactionId: string;
   attachmentId: string;
   fileName: string;
@@ -149,7 +155,7 @@ async function uploadTransactionAttachment(
 ): Promise<UploadTransactionAttachmentResult> {
   const client = getR2Client();
   const { bucket } = getR2BucketConfig();
-  const key = buildObjectKey(input.transactionId, input.attachmentId, input.fileName);
+  const key = buildObjectKey(input.tenantId, input.transactionId, input.attachmentId, input.fileName);
 
   await client.send(
     new PutObjectCommand({
@@ -170,10 +176,11 @@ async function uploadTransactionAttachment(
   };
 }
 
-async function listTransactionAttachments(transactionId: string): Promise<UploadTransactionAttachmentResult[]> {
-  const client = getR2Client();
-  const { bucket } = getR2BucketConfig();
-  const prefix = buildTransactionPrefix(transactionId);
+async function listAttachmentsUnderPrefix(
+  client: S3Client,
+  bucket: string,
+  prefix: string,
+): Promise<UploadTransactionAttachmentResult[]> {
   const attachments: UploadTransactionAttachmentResult[] = [];
   let continuationToken: string | undefined;
 
@@ -191,20 +198,18 @@ async function listTransactionAttachments(transactionId: string): Promise<Upload
         continue;
       }
 
-      const parsed = parseAttachmentObjectKey(object.Key, transactionId);
+      const parsed = parseAttachmentObjectKey(object.Key, prefix);
 
       if (!parsed) {
         continue;
       }
-
-      const contentType = inferContentType(parsed.fileName);
 
       attachments.push({
         id: parsed.id,
         key: object.Key,
         url: buildPublicUrl(object.Key),
         fileName: parsed.fileName,
-        contentType,
+        contentType: inferContentType(parsed.fileName),
         size: object.Size,
       });
     }
@@ -212,13 +217,33 @@ async function listTransactionAttachments(transactionId: string): Promise<Upload
     continuationToken = response.IsTruncated ? response.NextContinuationToken : undefined;
   } while (continuationToken);
 
-  return attachments.sort((left, right) => left.fileName.localeCompare(right.fileName));
+  return attachments;
 }
 
-async function deleteTransactionAttachment(transactionId: string, attachmentId: string): Promise<boolean> {
+async function listTransactionAttachments(
+  tenantId: string,
+  transactionId: string,
+): Promise<UploadTransactionAttachmentResult[]> {
   const client = getR2Client();
   const { bucket } = getR2BucketConfig();
-  const prefix = `${buildTransactionPrefix(transactionId)}${attachmentId}/`;
+  const tenantPrefix = buildTransactionPrefix(tenantId, transactionId);
+  const legacyPrefix = buildLegacyTransactionPrefix(transactionId);
+
+  const [tenantAttachments, legacyAttachments] = await Promise.all([
+    listAttachmentsUnderPrefix(client, bucket, tenantPrefix),
+    listAttachmentsUnderPrefix(client, bucket, legacyPrefix),
+  ]);
+
+  const attachmentsById = new Map<string, UploadTransactionAttachmentResult>();
+
+  for (const attachment of [...legacyAttachments, ...tenantAttachments]) {
+    attachmentsById.set(attachment.id, attachment);
+  }
+
+  return [...attachmentsById.values()].sort((left, right) => left.fileName.localeCompare(right.fileName));
+}
+
+async function deleteAttachmentsUnderPrefix(client: S3Client, bucket: string, prefix: string): Promise<boolean> {
   const response = await client.send(
     new ListObjectsV2Command({
       Bucket: bucket,
@@ -244,6 +269,24 @@ async function deleteTransactionAttachment(transactionId: string, attachmentId: 
   );
 
   return true;
+}
+
+async function deleteTransactionAttachment(
+  tenantId: string,
+  transactionId: string,
+  attachmentId: string,
+): Promise<boolean> {
+  const client = getR2Client();
+  const { bucket } = getR2BucketConfig();
+  const tenantPrefix = `${buildTransactionPrefix(tenantId, transactionId)}${attachmentId}/`;
+  const legacyPrefix = `${buildLegacyTransactionPrefix(transactionId)}${attachmentId}/`;
+
+  const [deletedTenant, deletedLegacy] = await Promise.all([
+    deleteAttachmentsUnderPrefix(client, bucket, tenantPrefix),
+    deleteAttachmentsUnderPrefix(client, bucket, legacyPrefix),
+  ]);
+
+  return deletedTenant || deletedLegacy;
 }
 
 export { deleteTransactionAttachment, listTransactionAttachments, uploadTransactionAttachment };

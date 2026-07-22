@@ -2,6 +2,7 @@ import type { Config } from "@netlify/functions";
 
 import { auth } from "../../src/lib/auth.ts";
 import { db } from "../../src/lib/db/index.ts";
+import { getTenantId } from "./lib/tenant-access.ts";
 
 type TransferMoneyBody = {
   fromWalletId?: unknown;
@@ -25,6 +26,7 @@ export default async (request: Request) => {
     return new Response("Method Not Allowed", { status: 405 });
   }
 
+  const tenantId = getTenantId(session);
   const body = (await request.json()) as TransferMoneyBody;
 
   if (typeof body.fromWalletId !== "string" || body.fromWalletId.trim().length === 0) {
@@ -56,6 +58,7 @@ export default async (request: Request) => {
     .selectFrom("wallet")
     .select(["id", "name", "amount"])
     .where("id", "in", [fromWalletId, toWalletId])
+    .where("tenantId", "=", tenantId)
     .where("deletedAt", "is", null)
     .execute();
 
@@ -105,6 +108,7 @@ export default async (request: Request) => {
         updatedAt: now,
       })
       .where("id", "=", fromWalletId)
+      .where("tenantId", "=", tenantId)
       .execute();
 
     await trx
@@ -114,6 +118,7 @@ export default async (request: Request) => {
         updatedAt: now,
       })
       .where("id", "=", toWalletId)
+      .where("tenantId", "=", tenantId)
       .execute();
   });
 

@@ -3,6 +3,7 @@ import type { Config, Context } from "@netlify/functions";
 import { auth } from "../../src/lib/auth.ts";
 import { db } from "../../src/lib/db/index.ts";
 import type { TransactionType } from "../../src/lib/db/schema.ts";
+import { getTenantId, requireOwnedTransaction } from "./lib/tenant-access.ts";
 
 type UpdateTransactionBody = {
   type?: unknown;
@@ -60,28 +61,14 @@ export default async (request: Request, context: Context) => {
     return new Response("Transaction id is required", { status: 400 });
   }
 
-  const wallet = await db
-    .selectFrom("wallet")
-    .select(["id", "amount"])
-    .where("id", "=", walletId)
-    .where("deletedAt", "is", null)
-    .executeTakeFirst();
+  const tenantId = getTenantId(session);
+  const ownership = await requireOwnedTransaction(tenantId, walletId, transactionId);
 
-  if (!wallet) {
-    return new Response("Wallet not found", { status: 404 });
+  if (!ownership.ok) {
+    return ownership.error;
   }
 
-  const existingTransaction = await db
-    .selectFrom("transaction")
-    .select(["id", "walletId", "type", "amount"])
-    .where("id", "=", transactionId)
-    .where("walletId", "=", walletId)
-    .where("deletedAt", "is", null)
-    .executeTakeFirst();
-
-  if (!existingTransaction) {
-    return new Response("Transaction not found", { status: 404 });
-  }
+  const { wallet, transaction: existingTransaction } = ownership;
 
   if (request.method === "DELETE") {
     const walletDelta = -getTransactionContribution(existingTransaction.type, existingTransaction.amount);
@@ -104,6 +91,7 @@ export default async (request: Request, context: Context) => {
           updatedAt: now,
         })
         .where("id", "=", walletId)
+        .where("tenantId", "=", tenantId)
         .execute();
     });
 
@@ -152,6 +140,7 @@ export default async (request: Request, context: Context) => {
         updatedAt: now,
       })
       .where("id", "=", walletId)
+      .where("tenantId", "=", tenantId)
       .execute();
   });
 
