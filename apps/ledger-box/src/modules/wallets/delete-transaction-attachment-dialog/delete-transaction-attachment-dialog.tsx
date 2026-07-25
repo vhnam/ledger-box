@@ -55,13 +55,7 @@ function DeleteTransactionAttachmentContent({
         <Button type="button" variant="outline" className="flex-1" onClick={onCancel} disabled={isPending}>
           Cancel
         </Button>
-        <Button
-          type="button"
-          variant="destructive"
-          className="flex-1 bg-rose-500 hover:bg-rose-500/90"
-          onClick={onConfirm}
-          disabled={isPending}
-        >
+        <Button type="button" variant="destructive" className="flex-1" onClick={onConfirm} disabled={isPending}>
           {isPending ? <Spinner className="size-4" /> : null}
           {isPending ? 'Removing...' : 'Remove'}
         </Button>

@@ -20,7 +20,7 @@ import { AppSidebarWallets } from './app-sidebar-wallets';
 function AppSidebar(props: ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+      <SidebarHeader className="h-(--header-height) shrink-0 border-b border-sidebar-border">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
@@ -40,7 +40,7 @@ function AppSidebar(props: ComponentProps<typeof Sidebar>) {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent className="scroll-fade scrollbar-none">
+      <SidebarContent className="scroll-fade overflow-y-auto">
         <AppSidebarWallets />
       </SidebarContent>
       <SidebarFooter>

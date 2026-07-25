@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import type { TransferMoneyOutput } from '#/schemas/transfer-money.schema';
+import type { CreateWalletSchema } from '#/schemas/wallet.schema';
 
 import type { WalletDto } from './wallet.dto';
 
@@ -43,8 +44,8 @@ export async function fetchWallet(walletId: string): Promise<WalletDto> {
   return wallet;
 }
 
-export async function createWallet(name: string): Promise<WalletDto> {
-  const { data } = await axios.post<WalletResponseDto>('/api/wallets', { name });
+export async function createWallet(payload: CreateWalletSchema): Promise<WalletDto> {
+  const { data } = await axios.post<WalletResponseDto>('/api/wallets', payload);
 
   return data;
 }

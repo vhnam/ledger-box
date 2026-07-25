@@ -2,6 +2,7 @@ import { Field as FormField, Form } from '@formisch/react';
 import { useMemo } from 'react';
 
 import { Button } from '@vhnam/ui/components/button';
+import { CurrencyInput } from '@vhnam/ui/components/currency-input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@vhnam/ui/components/dialog';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@vhnam/ui/components/field';
 import { Icon } from '@vhnam/ui/components/icon';
@@ -108,14 +109,16 @@ function TransferMoneyDialog({ open, onOpenChange, walletId }: TransferMoneyDial
               children={(field) => (
                 <Field data-invalid={!!field.errors}>
                   <FieldLabel htmlFor={field.props.name}>Amount</FieldLabel>
-                  <Input
+                  <CurrencyInput
                     id={field.props.name}
-                    className="font-mono"
-                    inputMode="decimal"
-                    defaultValue={field.input}
+                    value={field.input ?? ''}
                     aria-invalid={!!field.errors}
                     placeholder="Enter the amount"
-                    {...field.props}
+                    name={field.props.name}
+                    ref={field.props.ref}
+                    onFocus={field.props.onFocus}
+                    onBlur={field.props.onBlur}
+                    onValueChange={field.onChange}
                   />
                   {field.errors && <FieldError>{field.errors[0]}</FieldError>}
                 </Field>
