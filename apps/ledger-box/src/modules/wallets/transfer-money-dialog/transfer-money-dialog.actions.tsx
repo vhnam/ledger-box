@@ -1,7 +1,7 @@
 import { reset, useForm } from '@formisch/react';
 import { useEffect, useState } from 'react';
 
-import { toast } from '@vhnam/ui/components/sonner';
+import { toast } from '@vhnam/ui/components/toast';
 
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
 import { useTransferMoney } from '#/queries/wallets/wallet.mutations';
@@ -60,15 +60,17 @@ export function useTransferMoneyDialogActions({ open, walletId, wallets }: UseTr
 
     transferMoney(output, {
       onSuccess: () => {
-        toast.success('Transfer completed', {
+        toast.add({
+          title: 'Transfer completed',
           description: `${fromWallet?.name ?? 'Wallet'} → ${toWallet?.name ?? 'wallet'}`,
+          type: 'success',
         });
         onSuccess();
       },
       onError: (transferError) => {
         const message = transferError instanceof Error ? transferError.message : 'Transfer failed. Please try again.';
         setError(message);
-        toast.error('Transfer failed', { description: message });
+        toast.add({ title: 'Transfer failed', description: message, type: 'error' });
       },
     });
   }

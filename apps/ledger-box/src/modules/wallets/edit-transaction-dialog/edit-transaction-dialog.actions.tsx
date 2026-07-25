@@ -1,7 +1,7 @@
 import { reset, useForm } from '@formisch/react';
 import { useEffect, useState } from 'react';
 
-import { toast } from '@vhnam/ui/components/sonner';
+import { toast } from '@vhnam/ui/components/toast';
 
 import type { TransactionDto } from '#/queries/transactions/transaction.dto';
 import { useUpdateTransaction } from '#/queries/transactions/transaction.mutations';
@@ -58,14 +58,14 @@ export function useEditTransactionDialogActions({ open, transaction }: UseEditTr
       { walletId: transaction.walletId, transactionId: transaction.id, ...output },
       {
         onSuccess: () => {
-          toast.success('Transaction updated');
+          toast.add({ title: 'Transaction updated', type: 'success' });
           onSuccess();
         },
         onError: (updateError) => {
           const message =
             updateError instanceof Error ? updateError.message : 'Failed to update transaction. Please try again.';
           setError(message);
-          toast.error('Failed to update transaction', { description: message });
+          toast.add({ title: 'Failed to update transaction', description: message, type: 'error' });
         },
       },
     );
