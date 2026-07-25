@@ -1,5 +1,5 @@
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
-import { dirname, extname, join, relative, resolve } from "node:path";
+import { dirname, extname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -50,15 +50,7 @@ function resolveModuleFile(target) {
   return null;
 }
 
-function toRelativeImport(fromFile, targetFile) {
-  let importPath = relative(dirname(fromFile), targetFile).split("\\").join("/");
-  if (!importPath.startsWith(".")) {
-    importPath = `./${importPath}`;
-  }
-  return importPath.replace(/\.(tsx|ts|jsx|js)$/, "");
-}
-
-const importPattern = /(?<=from\s+['"])(@\/|#\/)([^'"]+)(?=['"])/g;
+const importPattern = /(?<=from\s+['"])(@\/)([^'"]+)(?=['"])/g;
 
 for (const file of walk(srcRoot)) {
   const source = readFileSync(file, "utf8");
@@ -71,7 +63,7 @@ for (const file of walk(srcRoot)) {
     }
 
     changed = true;
-    return toRelativeImport(file, target);
+    return `#/${subpath}`;
   });
 
   if (changed) {

@@ -2,7 +2,7 @@ import * as PhosphorIcons from '@phosphor-icons/react';
 import type { Icon as PhosphorIcon } from '@phosphor-icons/react';
 import { type ComponentProps } from 'react';
 
-import { cn } from '../lib/utils';
+import { cn } from '#/lib/utils';
 
 type IconName = {
   [K in keyof typeof PhosphorIcons]: (typeof PhosphorIcons)[K] extends PhosphorIcon
