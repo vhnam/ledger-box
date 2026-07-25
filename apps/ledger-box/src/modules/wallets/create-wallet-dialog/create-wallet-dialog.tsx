@@ -5,8 +5,9 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { Field, FieldError, FieldLabel } from '@vhnam/ui/components/field';
 import { Input } from '@vhnam/ui/components/input';
 import { Spinner } from '@vhnam/ui/components/spinner';
+import { toast } from '@vhnam/ui/components/toast';
 
-import { createWalletSchema } from '#/schemas/wallet.schema';
+import { createWalletSchema, type CreateWalletSchema } from '#/schemas/wallet.schema';
 
 import { useCreateWalletDialogActions } from './create-wallet-dialog.actions';
 
@@ -27,22 +28,22 @@ function CreateWalletDialog({ open, onOpenChange }: CreateWalletDialogProps) {
     onOpenChange(nextOpen);
   }
 
+  function handleSubmit(payload: CreateWalletSchema) {
+    createWallet(payload, {
+      onSuccess: () => {
+        handleOpenChange(false);
+        toast.add({ title: 'Wallet created', type: 'success' });
+      },
+    });
+  }
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>New wallet</DialogTitle>
         </DialogHeader>
-        <Form
-          of={form}
-          onSubmit={(output) => {
-            createWallet(output.name, {
-              onSuccess: () => {
-                handleOpenChange(false);
-              },
-            });
-          }}
-        >
+        <Form of={form} onSubmit={handleSubmit}>
           <FormField
             of={form}
             path={['name']}

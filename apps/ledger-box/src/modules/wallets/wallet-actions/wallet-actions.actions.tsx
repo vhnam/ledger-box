@@ -18,7 +18,7 @@ import {
   type WalletTransactionSearch,
 } from '#/schemas/wallet-transaction-search.schema';
 
-const walletRouteApi = getRouteApi('/_app/wallets/$walletId');
+const walletRouteApi = getRouteApi('/_app/wallets/$walletId/');
 
 function toIsoDate(date: Date): string {
   return format(date, 'yyyy-MM-dd');

@@ -38,20 +38,21 @@ function AppSidebarWallets(props: ComponentProps<typeof SidebarGroup>) {
   return (
     <SidebarGroup {...props}>
       <SidebarGroupContent>
-        <SidebarMenu className="group-data-[state=expanded]:space-y-0 group-data-[state=collapsed]:space-y-3">
+        <SidebarMenu className="group-data-[state=expanded]:space-y-1 group-data-[state=collapsed]:space-y-3">
           {wallets?.map((wallet) => (
             <SidebarMenuItem key={wallet.id}>
               <SidebarMenuButton
                 size="lg"
                 isActive={walletId === wallet.id}
                 tooltip={wallet.name}
+                className={cn('data-[status=active]:bg-secondary data-[status=active]:text-secondary-foreground')}
                 render={
                   <Link to="/wallets/$walletId" params={{ walletId: wallet.id }}>
                     <div
                       className={cn(
                         'size-8 rounded-lg flex items-center justify-center shrink-0 bg-muted text-muted-foreground',
                         {
-                          'bg-white text-primary': walletId === wallet.id,
+                          'bg-foreground text-background': walletId === wallet.id,
                         },
                       )}
                     >

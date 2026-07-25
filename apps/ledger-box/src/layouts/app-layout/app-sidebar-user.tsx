@@ -15,6 +15,7 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@vhnam/ui/compo
 import { toast } from '@vhnam/ui/components/toast';
 
 import { authClient, useSession } from '#/lib/auth-client';
+import { getAvatarFallbackFromName } from '#/lib/avatar';
 import { SettingsDialog, SettingsDialogTrigger } from '#/modules/settings/settings-dialog';
 
 function AppSidebarUser() {
@@ -22,16 +23,7 @@ function AppSidebarUser() {
   const { data: session } = useSession();
   const [settingsOpen, setSettingsOpen] = useState(false);
 
-  const avatarFallback = useMemo(() => {
-    const name = session?.user.name?.trim() ?? '';
-    return (
-      name
-        .split(' ')
-        .map((n) => n.charAt(0))
-        .join('')
-        .toUpperCase() ?? 'N/A'
-    );
-  }, [session?.user.name]);
+  const avatarFallback = useMemo(() => getAvatarFallbackFromName(session?.user.name ?? ''), [session?.user.name]);
 
   async function handleSignOut() {
     await authClient.signOut();

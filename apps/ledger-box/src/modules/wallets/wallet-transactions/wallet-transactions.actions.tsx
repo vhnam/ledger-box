@@ -9,7 +9,7 @@ const TRANSACTIONS_PAGE_SIZE = 10;
 
 type PageItem = number | 'ellipsis';
 
-const walletRouteApi = getRouteApi('/_app/wallets/$walletId');
+const walletRouteApi = getRouteApi('/_app/wallets/$walletId/');
 
 function getPageItems(currentPage: number, totalPages: number): PageItem[] {
   if (totalPages <= 0) {
