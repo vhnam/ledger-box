@@ -8,6 +8,7 @@ import { Spinner } from '@vhnam/ui/components/spinner';
 import { WalletHeader } from '#/modules/wallets/wallet-header';
 import { WalletSettingsDangerZone } from '#/modules/wallets/wallet-settings-danger-zone';
 import { WalletSettingsGeneral } from '#/modules/wallets/wallet-settings-general';
+import { WalletSettingsMembers } from '#/modules/wallets/wallet-settings-members';
 import { useWallet, useWallets } from '#/queries/wallets/wallet.queries';
 
 type WalletSettingsPageProps = {
@@ -57,10 +58,11 @@ function WalletSettingsPage({ walletId }: WalletSettingsPageProps) {
               <div className="max-w-2xl mx-auto w-full space-y-6">
                 <div className="flex flex-col gap-1">
                   <h2 className="font-heading text-lg font-medium">Wallet settings</h2>
-                  <p className="text-sm text-muted-foreground">Manage your wallet name and preferences.</p>
+                  <p className="text-sm text-muted-foreground">Manage your wallet name, members, and preferences.</p>
                 </div>
 
                 <WalletSettingsGeneral wallet={walletPreview} />
+                <WalletSettingsMembers wallet={walletPreview} />
                 <WalletSettingsDangerZone wallet={walletPreview} />
               </div>
             </div>
