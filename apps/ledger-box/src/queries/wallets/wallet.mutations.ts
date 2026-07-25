@@ -1,8 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import type { TransferMoneyOutput } from '#/schemas/transfer-money.schema';
+import type { UpdateWalletSchema } from '#/schemas/wallet.schema';
 
-import { createWallet, transferMoney } from './wallet.api';
+import { createWallet, deleteWallet, transferMoney, updateWallet } from './wallet.api';
 
 export function useCreateWallet() {
   const queryClient = useQueryClient();
@@ -26,6 +27,33 @@ export function useTransferMoney() {
         queryClient.invalidateQueries({ queryKey: ['transactions', variables.fromWalletId] }),
         queryClient.invalidateQueries({ queryKey: ['transactions', variables.toWalletId] }),
       ]);
+    },
+  });
+}
+
+export function useUpdateWallet(walletId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: UpdateWalletSchema) => updateWallet(walletId, payload),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['wallets'] }),
+        queryClient.invalidateQueries({ queryKey: ['wallet', walletId] }),
+      ]);
+    },
+  });
+}
+
+export function useDeleteWallet() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteWallet,
+    onSuccess: async (_data, walletId) => {
+      queryClient.removeQueries({ queryKey: ['wallet', walletId] });
+      queryClient.removeQueries({ queryKey: ['transactions', walletId] });
+      await queryClient.invalidateQueries({ queryKey: ['wallets'] });
     },
   });
 }

@@ -9,7 +9,7 @@ import {
   type WalletTransactionSearchInput,
 } from '#/schemas/wallet-transaction-search.schema';
 
-export const Route = createFileRoute('/_app/wallets/$walletId')({
+export const Route = createFileRoute('/_app/wallets/$walletId/')({
   validateSearch: (search: WalletTransactionSearchInput & SearchSchemaInput) =>
     resolveWalletTransactionSearch(v.parse(walletTransactionSearchSchema, search)),
   search: {
