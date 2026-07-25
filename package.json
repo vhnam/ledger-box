@@ -13,7 +13,7 @@
     "@aws-sdk/s3-request-presigner": "catalog:"
   },
   "devDependencies": {
-    "vite": "catalog:",
+    "vite": "npm:@voidzero-dev/vite-plus-core@0.2.4",
     "vite-plus": "catalog:"
   },
   "devEngines": {

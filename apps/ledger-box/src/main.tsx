@@ -3,8 +3,8 @@ import { createRouter, RouterProvider } from '@tanstack/react-router';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { Toaster } from '@vhnam/ui/components/sonner';
 import { ThemeProvider } from '@vhnam/ui/components/theme-provider';
+import { Toaster } from '@vhnam/ui/components/toast';
 import { TooltipProvider } from '@vhnam/ui/components/tooltip';
 
 import './style.css';

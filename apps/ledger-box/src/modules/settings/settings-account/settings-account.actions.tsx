@@ -1,7 +1,7 @@
 import { reset, useForm } from '@formisch/react';
 import { useState } from 'react';
 
-import { toast } from '@vhnam/ui/components/sonner';
+import { toast } from '@vhnam/ui/components/toast';
 
 import { authClient } from '#/lib/auth-client';
 import { changePasswordSchema } from '#/schemas/auth.schema';
@@ -33,8 +33,10 @@ export function useSettingsAccountActions() {
     }
 
     reset(form);
-    toast.success('Password updated', {
+    toast.add({
+      title: 'Password updated',
       description: 'Your password has been changed successfully.',
+      type: 'success',
     });
   }
 

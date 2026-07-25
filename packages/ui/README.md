@@ -61,7 +61,7 @@ After adding a component, add a matching story in `apps/storybook/src/stories/<c
 
 `src/components/` — one file per component, imported as `@vhnam/ui/components/<name>`:
 
-avatar, button, calendar, card, collapsible, date-picker-range, dialog, dropdown-menu, empty, field, icon, input, label, pagination, popover, scroll-area, select, separator, sheet, sidebar, skeleton, sonner, spinner, tabs, textarea, theme-provider, toggle, toggle-group, tooltip
+avatar, button, calendar, card, collapsible, date-picker-range, dialog, dropdown-menu, empty, field, icon, input, label, pagination, popover, scroll-area, select, separator, sheet, sidebar, skeleton, toast, spinner, tabs, textarea, theme-provider, toggle, toggle-group, tooltip
 
 ## Structure
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { toast } from '@vhnam/ui/components/sonner';
+import { toast } from '@vhnam/ui/components/toast';
 
 import { useDeleteTransactionAttachment } from '#/queries/transactions/transaction.mutations';
 
@@ -43,14 +43,14 @@ export function useDeleteTransactionAttachmentDialogActions({
       },
       {
         onSuccess: () => {
-          toast.success('Attachment removed');
+          toast.add({ title: 'Attachment removed', type: 'success' });
           onSuccess();
         },
         onError: (removeError) => {
           const message =
             removeError instanceof Error ? removeError.message : 'Failed to remove attachment. Please try again.';
           setError(message);
-          toast.error('Failed to remove attachment', { description: message });
+          toast.add({ title: 'Failed to remove attachment', description: message, type: 'error' });
         },
       },
     );

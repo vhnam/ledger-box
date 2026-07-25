@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { toast } from '@vhnam/ui/components/sonner';
+import { toast } from '@vhnam/ui/components/toast';
 
 import { isPreviewableContentType, isPreviewableFile } from '#/lib/file';
 import { optimizeImageForUpload } from '#/lib/image';
@@ -164,7 +164,7 @@ export function useTransactionAttachments({ open, walletId, transactionId }: Use
             status: 'error',
             error: message,
           });
-          toast.error('Failed to upload attachment', { description: message });
+          toast.add({ title: 'Failed to upload attachment', description: message, type: 'error' });
         },
       },
     );
