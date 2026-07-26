@@ -9,9 +9,8 @@ import { Textarea } from '@vhnam/ui/components/textarea';
 import { ToggleGroup, ToggleGroupItem } from '@vhnam/ui/components/toggle-group';
 import { cn } from '@vhnam/ui/lib/utils';
 
+import type { useEditTransactionDialogActions } from '#/modules/wallets/edit-transaction-dialog/edit-transaction-dialog.actions';
 import type { EditTransactionOutput } from '#/schemas/edit-transaction.schema';
-
-import type { useEditTransactionDialogActions } from './edit-transaction-dialog.actions';
 
 type EditTransactionFormProps = Pick<
   ReturnType<typeof useEditTransactionDialogActions>,

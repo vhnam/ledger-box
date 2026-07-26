@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 import { FileMigrationProvider, Migrator } from 'kysely/migration';
 
-import { db } from '../src/lib/db/index.ts';
+import { db } from '#/lib/db/index.ts';
 
 const migrationFolder = path.join(path.dirname(fileURLToPath(import.meta.url)), '../src/lib/db/migrations');
 

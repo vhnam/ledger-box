@@ -7,8 +7,9 @@ import { ThemeProvider } from '@vhnam/ui/components/theme-provider';
 import { Toaster } from '@vhnam/ui/components/toast';
 import { TooltipProvider } from '@vhnam/ui/components/tooltip';
 
+import { routeTree } from '#/routeTree.gen';
+
 import './style.css';
-import { routeTree } from './routeTree.gen';
 
 const router = createRouter({
   routeTree,

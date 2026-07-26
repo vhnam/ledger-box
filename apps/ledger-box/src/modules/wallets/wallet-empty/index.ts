@@ -1,1 +1,1 @@
-export { WalletEmpty } from './wallet-empty';
+export { WalletEmpty } from '#/modules/wallets/wallet-empty/wallet-empty';

@@ -2,16 +2,15 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@vhnam/ui
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from '@vhnam/ui/components/sheet';
 import { useIsMobile } from '@vhnam/ui/hooks/use-mobile';
 
+import { DeleteTransactionAttachmentDialog } from '#/modules/wallets/delete-transaction-attachment-dialog';
+import { TransactionAttachmentEmptyState } from '#/modules/wallets/transaction-attachments/transaction-attachment-empty-state';
+import { TransactionAttachmentList } from '#/modules/wallets/transaction-attachments/transaction-attachment-list';
+import { TransactionAttachmentLoadingState } from '#/modules/wallets/transaction-attachments/transaction-attachment-loading-state';
+import { TransactionAttachmentPreview } from '#/modules/wallets/transaction-attachments/transaction-attachment-preview';
+import { TransactionAttachmentUpload } from '#/modules/wallets/transaction-attachments/transaction-attachment-upload';
+import { useTransactionAttachments } from '#/modules/wallets/transaction-attachments/transaction-attachments-sheet.actions';
+import { TransactionDialogHeader } from '#/modules/wallets/wallet-transactions/wallet-transaction-dialog-header';
 import type { TransactionDto } from '#/queries/transactions/transaction.dto';
-
-import { DeleteTransactionAttachmentDialog } from '../delete-transaction-attachment-dialog';
-import { TransactionDialogHeader } from '../wallet-transactions/wallet-transaction-dialog-header';
-import { TransactionAttachmentEmptyState } from './transaction-attachment-empty-state';
-import { TransactionAttachmentList } from './transaction-attachment-list';
-import { TransactionAttachmentLoadingState } from './transaction-attachment-loading-state';
-import { TransactionAttachmentPreview } from './transaction-attachment-preview';
-import { TransactionAttachmentUpload } from './transaction-attachment-upload';
-import { useTransactionAttachments } from './transaction-attachments-sheet.actions';
 
 type TransactionAttachmentsSheetProps = {
   open: boolean;

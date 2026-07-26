@@ -1,1 +1,1 @@
-export { WalletSummary } from './wallet-summary';
+export { WalletSummary } from '#/modules/wallets/wallet-summary/wallet-summary';

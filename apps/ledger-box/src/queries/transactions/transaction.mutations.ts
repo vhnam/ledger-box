@@ -1,15 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import type { AddTransactionOutput } from '#/schemas/add-transaction.schema';
-import type { EditTransactionOutput } from '#/schemas/edit-transaction.schema';
-
 import {
   addTransaction,
   deleteTransaction,
   deleteTransactionAttachment,
   updateTransaction,
   uploadTransactionAttachment,
-} from './transaction.api';
+} from '#/queries/transactions/transaction.api';
+import type { AddTransactionOutput } from '#/schemas/add-transaction.schema';
+import type { EditTransactionOutput } from '#/schemas/edit-transaction.schema';
 
 type AddTransactionPayload = AddTransactionOutput & {
   walletId: string;

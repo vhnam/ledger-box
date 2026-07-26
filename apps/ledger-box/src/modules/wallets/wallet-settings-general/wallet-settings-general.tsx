@@ -6,9 +6,8 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '@vhnam/ui/components/
 import { Input } from '@vhnam/ui/components/input';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
+import { useWalletSettingsGeneralActions } from '#/modules/wallets/wallet-settings-general/wallet-settings-general.actions';
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
-
-import { useWalletSettingsGeneralActions } from './wallet-settings-general.actions';
 
 type WalletSettingsGeneralProps = {
   wallet: WalletDto;

@@ -7,9 +7,8 @@ import { Input } from '@vhnam/ui/components/input';
 import { Spinner } from '@vhnam/ui/components/spinner';
 import { toast } from '@vhnam/ui/components/toast';
 
+import { useCreateWalletDialogActions } from '#/modules/wallets/create-wallet-dialog/create-wallet-dialog.actions';
 import { createWalletSchema, type CreateWalletSchema } from '#/schemas/wallet.schema';
-
-import { useCreateWalletDialogActions } from './create-wallet-dialog.actions';
 
 type CreateWalletDialogProps = {
   open: boolean;

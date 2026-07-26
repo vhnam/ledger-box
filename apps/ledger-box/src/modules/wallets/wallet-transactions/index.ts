@@ -1,1 +1,1 @@
-export { WalletTransactions } from './wallet-transactions';
+export { WalletTransactions } from '#/modules/wallets/wallet-transactions/wallet-transactions';

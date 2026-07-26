@@ -4,7 +4,7 @@ import { Button } from '@vhnam/ui/components/button';
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@vhnam/ui/components/empty';
 import { Icon } from '@vhnam/ui/components/icon';
 
-import { CreateWalletDialog } from '../create-wallet-dialog';
+import { CreateWalletDialog } from '#/modules/wallets/create-wallet-dialog';
 
 type WalletEmptyVariant = 'wallets' | 'transactions';
 

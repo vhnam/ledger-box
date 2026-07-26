@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { fetchTransactionAttachments, fetchTransactions } from './transaction.api';
-import type { TransactionQueryParams } from './transaction.params';
+import { fetchTransactionAttachments, fetchTransactions } from '#/queries/transactions/transaction.api';
+import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
 
 export function useTransactions(walletId: string, params: TransactionQueryParams) {
   return useQuery({

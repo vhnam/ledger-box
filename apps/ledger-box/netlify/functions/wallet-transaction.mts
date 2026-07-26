@@ -1,8 +1,9 @@
 import type { Config, Context } from "@netlify/functions";
 
-import { auth } from "../../src/lib/auth.ts";
-import { db } from "../../src/lib/db/index.ts";
-import type { TransactionType } from "../../src/lib/db/schema.ts";
+import { auth } from "#/lib/auth.ts";
+import { db } from "#/lib/db/index.ts";
+import type { TransactionType } from "#/lib/db/schema.ts";
+
 import { getTenantId, requireOwnedTransaction } from "./lib/tenant-access.ts";
 
 type UpdateTransactionBody = {

@@ -9,11 +9,10 @@ import { Icon } from '@vhnam/ui/components/icon';
 import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from '@vhnam/ui/components/select';
 
 import { DEFAULT_FILTER_VALUE, FILTER_OPTIONS_LIST } from '#/constants/filter-options';
+import { AddTransactionDialog } from '#/modules/wallets/add-transaction-dialog';
+import { TransferMoneyDialog } from '#/modules/wallets/transfer-money-dialog';
+import { useWalletActions } from '#/modules/wallets/wallet-actions/wallet-actions.actions';
 import { useWallets } from '#/queries/wallets/wallet.queries';
-
-import { AddTransactionDialog } from '../add-transaction-dialog';
-import { TransferMoneyDialog } from '../transfer-money-dialog';
-import { useWalletActions } from './wallet-actions.actions';
 
 const walletRouteApi = getRouteApi('/_app/wallets/$walletId/');
 

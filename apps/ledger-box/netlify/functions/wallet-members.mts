@@ -1,10 +1,11 @@
 import type { Config, Context } from "@netlify/functions";
 import { sql } from "kysely";
 
-import { WALLET_MEMBER_ROLES } from "../../src/constants/wallet-member-role-options.ts";
-import { auth } from "../../src/lib/auth.ts";
-import { db } from "../../src/lib/db/index.ts";
-import type { WalletMemberRole } from "../../src/lib/db/schema.ts";
+import { WALLET_MEMBER_ROLES } from "#/constants/wallet-member-role-options.ts";
+import { auth } from "#/lib/auth.ts";
+import { db } from "#/lib/db/index.ts";
+import type { WalletMemberRole } from "#/lib/db/schema.ts";
+
 import { getTenantId, requireOwnedWallet } from "./lib/tenant-access.ts";
 import { findUserByEmail, findUserById } from "./lib/user-lookup.ts";
 import { mapOwnerMember, mapWalletMember } from "./lib/wallet-member-response.ts";
@@ -123,6 +124,7 @@ export default async (request: Request, context: Context) => {
         walletId,
         email,
         userId: invitedUser?.id ?? null,
+        createdAt: now,
         role,
         status: "pending",
         updatedAt: now,

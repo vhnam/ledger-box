@@ -1,1 +1,1 @@
-export { WalletHeader } from './wallet-header';
+export { WalletHeader } from '#/modules/wallets/wallet-header/wallet-header';

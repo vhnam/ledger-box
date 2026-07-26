@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { fetchWallet, fetchWallets } from './wallet.api';
+import { fetchWallet, fetchWallets } from '#/queries/wallets/wallet.api';
 
 export function useWallets() {
   return useQuery({

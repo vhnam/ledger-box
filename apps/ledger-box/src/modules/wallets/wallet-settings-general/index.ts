@@ -1,1 +1,1 @@
-export { WalletSettingsGeneral } from './wallet-settings-general';
+export { WalletSettingsGeneral } from '#/modules/wallets/wallet-settings-general/wallet-settings-general';

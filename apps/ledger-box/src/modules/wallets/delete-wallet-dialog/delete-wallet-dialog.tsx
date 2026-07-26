@@ -6,9 +6,8 @@ import { Sheet, SheetContent, SheetDescription, SheetTitle } from '@vhnam/ui/com
 import { Spinner } from '@vhnam/ui/components/spinner';
 import { useIsMobile } from '@vhnam/ui/hooks/use-mobile';
 
+import { useDeleteWalletDialogActions } from '#/modules/wallets/delete-wallet-dialog/delete-wallet-dialog.actions';
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
-
-import { useDeleteWalletDialogActions } from './delete-wallet-dialog.actions';
 
 type DeleteWalletDialogProps = {
   open: boolean;

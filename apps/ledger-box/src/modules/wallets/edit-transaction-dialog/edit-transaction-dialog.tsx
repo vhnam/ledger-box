@@ -4,11 +4,10 @@ import { Icon } from '@vhnam/ui/components/icon';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@vhnam/ui/components/sheet';
 import { useIsMobile } from '@vhnam/ui/hooks/use-mobile';
 
+import { useEditTransactionDialogActions } from '#/modules/wallets/edit-transaction-dialog/edit-transaction-dialog.actions';
+import { EditTransactionForm } from '#/modules/wallets/edit-transaction-dialog/edit-transaction-form';
 import type { TransactionDto } from '#/queries/transactions/transaction.dto';
 import type { EditTransactionOutput } from '#/schemas/edit-transaction.schema';
-
-import { useEditTransactionDialogActions } from './edit-transaction-dialog.actions';
-import { EditTransactionForm } from './edit-transaction-form';
 
 interface EditTransactionDialogProps {
   open: boolean;

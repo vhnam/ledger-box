@@ -1,6 +1,6 @@
 import type { Config } from "@netlify/functions";
 
-import { auth } from "../../src/lib/auth.ts";
+import { auth } from "#/lib/auth.ts";
 
 export default async (request: Request) => auth.handler(request);
 

@@ -1,9 +1,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@vhnam/ui/components/avatar';
 
 import { getAvatarFallbackFromEmail, getAvatarFallbackFromName } from '#/lib/avatar';
+import { hasRegisteredWalletMember } from '#/modules/wallets/wallet-settings-members/wallet-member.utils';
 import type { WalletMemberDto } from '#/queries/wallets/wallet-member.dto';
-
-import { hasRegisteredWalletMember } from './wallet-member.utils';
 
 type WalletMemberAvatarProps = {
   member: WalletMemberDto;

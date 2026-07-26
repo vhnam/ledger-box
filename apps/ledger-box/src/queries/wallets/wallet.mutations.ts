@@ -1,9 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { createWallet, deleteWallet, transferMoney, updateWallet } from '#/queries/wallets/wallet.api';
 import type { TransferMoneyOutput } from '#/schemas/transfer-money.schema';
 import type { UpdateWalletSchema } from '#/schemas/wallet.schema';
-
-import { createWallet, deleteWallet, transferMoney, updateWallet } from './wallet.api';
 
 export function useCreateWallet() {
   const queryClient = useQueryClient();

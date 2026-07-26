@@ -1,7 +1,8 @@
 import type { Config, Context } from "@netlify/functions";
 
-import { auth } from "../../src/lib/auth.ts";
-import { listTransactionAttachments, uploadTransactionAttachment } from "../../src/lib/r2.ts";
+import { auth } from "#/lib/auth.ts";
+import { listTransactionAttachments, uploadTransactionAttachment } from "#/lib/r2.ts";
+
 import { getTenantId, requireOwnedTransaction } from "./lib/tenant-access.ts";
 
 const ACCEPTED_ATTACHMENT_TYPES = new Set(["application/pdf", "image/png", "image/jpeg", "image/webp"]);

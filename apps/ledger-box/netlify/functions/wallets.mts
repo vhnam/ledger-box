@@ -1,7 +1,8 @@
 import type { Config } from "@netlify/functions";
 
-import { auth } from "../../src/lib/auth.ts";
-import { db } from "../../src/lib/db/index.ts";
+import { auth } from "#/lib/auth.ts";
+import { db } from "#/lib/db/index.ts";
+
 import { getTenantId } from "./lib/tenant-access.ts";
 
 export default async (request: Request) => {
@@ -34,7 +35,7 @@ export default async (request: Request) => {
 
     const wallet = await db
       .insertInto("wallet")
-      .values({ name: body.name.trim(), tenantId })
+      .values({ name: body.name.trim(), tenantId, amount: 0, createdAt: new Date(), updatedAt: new Date() })
       .returning(["id", "name"])
       .executeTakeFirstOrThrow();
 

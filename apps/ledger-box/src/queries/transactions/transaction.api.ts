@@ -1,11 +1,10 @@
 import axios from 'axios';
 
+import type { UploadTransactionAttachmentsDto } from '#/queries/transactions/transaction-attachment.dto';
+import type { TransactionsPageDto } from '#/queries/transactions/transaction.dto';
+import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
 import type { AddTransactionOutput } from '#/schemas/add-transaction.schema';
 import type { EditTransactionOutput } from '#/schemas/edit-transaction.schema';
-
-import type { UploadTransactionAttachmentsDto } from './transaction-attachment.dto';
-import type { TransactionsPageDto } from './transaction.dto';
-import type { TransactionQueryParams } from './transaction.params';
 
 function getApiErrorMessage(error: unknown, fallback: string): string {
   if (axios.isAxiosError(error)) {

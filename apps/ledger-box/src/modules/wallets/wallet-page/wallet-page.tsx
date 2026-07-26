@@ -1,14 +1,13 @@
 import { ScrollArea } from '@vhnam/ui/components/scroll-area';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
+import { WalletActions, useWalletActions } from '#/modules/wallets/wallet-actions';
 import { WalletEmpty } from '#/modules/wallets/wallet-empty';
 import { WalletHeader } from '#/modules/wallets/wallet-header';
 import { WalletSummary } from '#/modules/wallets/wallet-summary';
+import { WalletTransactions } from '#/modules/wallets/wallet-transactions';
 import { useTransactions } from '#/queries/transactions/transaction.queries';
 import { useWallet, useWallets } from '#/queries/wallets/wallet.queries';
-
-import { WalletActions, useWalletActions } from '../wallet-actions';
-import { WalletTransactions } from '../wallet-transactions';
 
 interface WalletPageProps {
   walletId: string;
