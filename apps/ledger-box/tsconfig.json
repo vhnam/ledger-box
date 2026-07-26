@@ -22,7 +22,7 @@
     "noFallthroughCasesInSwitch": true,
 
     "paths": {
-      "#/*": ["./src/*"]
+      "#/*": ["./src/*", "../../packages/ui/src/*"]
     }
   },
   "include": ["src", "netlify", "scripts"]
