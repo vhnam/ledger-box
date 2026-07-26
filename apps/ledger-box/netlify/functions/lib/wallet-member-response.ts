@@ -1,4 +1,5 @@
-import type { WalletMemberRole, WalletMemberStatus } from '../../../src/lib/db/schema.ts';
+import type { WalletMemberRole, WalletMemberStatus } from '#/lib/db/schema.ts';
+
 import type { UserRow } from './user-lookup.ts';
 
 type WalletMemberResponse = {

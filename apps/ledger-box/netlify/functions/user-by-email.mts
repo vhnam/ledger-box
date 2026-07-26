@@ -1,8 +1,8 @@
 import type { Config } from "@netlify/functions";
 import { sql } from "kysely";
 
-import { auth } from "../../src/lib/auth.ts";
-import { db } from "../../src/lib/db/index.ts";
+import { auth } from "#/lib/auth.ts";
+import { db } from "#/lib/db/index.ts";
 
 type UserRow = {
   id: string;

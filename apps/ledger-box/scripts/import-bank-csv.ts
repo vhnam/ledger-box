@@ -2,8 +2,8 @@ import { readFileSync } from 'node:fs';
 
 import { sql } from 'kysely';
 
-import { db } from '../src/lib/db/index.ts';
-import type { TransactionType } from '../src/lib/db/schema.ts';
+import { db } from '#/lib/db/index.ts';
+import type { TransactionType } from '#/lib/db/schema.ts';
 
 function parseCsv(content: string): Record<string, string>[] {
   const lines = content
@@ -170,7 +170,7 @@ async function main() {
         .onConflict((oc) =>
           oc.column('id').doUpdateSet({
             walletId: transaction.account_id,
-            type: transaction.type,
+            type: transaction.type as TransactionType,
             amount,
             description: transaction.description,
             createdAt: transaction.date,

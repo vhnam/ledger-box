@@ -5,7 +5,7 @@ import { CardContent, CardDescription, CardHeader, CardTitle } from '@vhnam/ui/c
 import { Field, FieldError, FieldGroup, FieldLabel } from '@vhnam/ui/components/field';
 import { Input } from '@vhnam/ui/components/input';
 
-import { useLoginActions } from './login.actions';
+import { useLoginActions } from '#/modules/auth/login/login.actions';
 
 export function LoginPage() {
   const { form, error, isSubmitting, handleSubmit, handleGoogleSignIn } = useLoginActions();

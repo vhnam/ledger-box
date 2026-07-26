@@ -1,11 +1,10 @@
 import { Skeleton } from '@vhnam/ui/components/skeleton';
 
+import { WalletEmpty } from '#/modules/wallets/wallet-empty';
+import { WalletPagination } from '#/modules/wallets/wallet-transactions/wallet-pagination';
+import { WalletTransaction } from '#/modules/wallets/wallet-transactions/wallet-transaction';
+import { useWalletTransactions } from '#/modules/wallets/wallet-transactions/wallet-transactions.actions';
 import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
-
-import { WalletEmpty } from '../wallet-empty';
-import { WalletPagination } from './wallet-pagination';
-import { WalletTransaction } from './wallet-transaction';
-import { useWalletTransactions } from './wallet-transactions.actions';
 
 type WalletTransactionsProps = {
   walletId: string;

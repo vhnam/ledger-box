@@ -5,15 +5,15 @@ import { useRender } from '@base-ui/react/use-render';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 
-import { Button } from '../components/button';
-import { Icon } from '../components/icon';
-import { Input } from '../components/input';
-import { Separator } from '../components/separator';
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '../components/sheet';
-import { Skeleton } from '../components/skeleton';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../components/tooltip';
-import { useIsMobile } from '../hooks/use-mobile';
-import { cn } from '../lib/utils';
+import { Button } from '#/components/button';
+import { Icon } from '#/components/icon';
+import { Input } from '#/components/input';
+import { Separator } from '#/components/separator';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '#/components/sheet';
+import { Skeleton } from '#/components/skeleton';
+import { Tooltip, TooltipContent, TooltipTrigger } from '#/components/tooltip';
+import { useIsMobile } from '#/hooks/use-mobile';
+import { cn } from '#/lib/utils';
 
 const SIDEBAR_COOKIE_NAME = 'sidebar_state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;

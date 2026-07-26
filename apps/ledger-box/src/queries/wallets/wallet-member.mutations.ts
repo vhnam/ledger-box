@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { inviteWalletMember, removeWalletMember, updateWalletMemberRole } from '#/queries/wallets/wallet-member.api';
 import type { InviteWalletMemberSchema, UpdateWalletMemberRoleSchema } from '#/schemas/wallet-member.schema';
-
-import { inviteWalletMember, removeWalletMember, updateWalletMemberRole } from './wallet-member.api';
 
 export function useInviteWalletMember(walletId: string) {
   const queryClient = useQueryClient();

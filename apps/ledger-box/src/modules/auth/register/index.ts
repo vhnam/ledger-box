@@ -1,1 +1,1 @@
-export { RegisterPage } from './register';
+export { RegisterPage } from '#/modules/auth/register/register';

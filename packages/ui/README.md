@@ -20,7 +20,17 @@ Global styles (Tailwind layers + design tokens) and the Tailwind entrypoint:
 import "@vhnam/ui/globals.css";
 ```
 
-The package also exports a `vite` preset (`@vhnam/ui/vite`) for consuming apps' `vite.config.ts`.
+The package also exports a `vite` preset (`@vhnam/ui/vite`) for consuming apps' `vite.config.ts`. Pass your app's `src` directory so `#/` imports resolve correctly for both the app and this package:
+
+```ts
+import { ui } from "@vhnam/ui/vite";
+
+const src = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "src");
+
+export default defineConfig({
+  plugins: [ui(src) /* ... */],
+});
+```
 
 ## Icons
 
@@ -53,7 +63,7 @@ This package tracks [shadcn](https://ui.shadcn.com)'s registry (see `components.
 pnpm --filter @vhnam/ui shadcn:add <component>
 ```
 
-This runs the shadcn CLI and then rewrites its `@/`-aliased imports to the relative imports this package actually uses.
+This runs the shadcn CLI and then rewrites its `@/`-aliased imports to the `#/` imports this package uses.
 
 After adding a component, add a matching story in `apps/storybook/src/stories/<component>.stories.tsx`.
 

@@ -1,14 +1,16 @@
 import { formatSignedCurrency } from '@vhnam/utils/currency';
 import { DateTimeFormat, formatDateTime } from '@vhnam/utils/date';
 
+import { DeleteTransactionDialog } from '#/modules/wallets/delete-transaction-dialog';
+import { EditTransactionDialog } from '#/modules/wallets/edit-transaction-dialog';
+import { TransactionAttachmentsSheet } from '#/modules/wallets/transaction-attachments';
+import { WalletTransactionDetailSheet } from '#/modules/wallets/wallet-transactions/wallet-transaction-detail-sheet';
+import { WalletTransactionMenu } from '#/modules/wallets/wallet-transactions/wallet-transaction-menu';
+import {
+  getTransactionAmountClassName,
+  useWalletTransaction,
+} from '#/modules/wallets/wallet-transactions/wallet-transaction.actions';
 import type { TransactionDto } from '#/queries/transactions/transaction.dto';
-
-import { DeleteTransactionDialog } from '../delete-transaction-dialog';
-import { EditTransactionDialog } from '../edit-transaction-dialog';
-import { TransactionAttachmentsSheet } from '../transaction-attachments';
-import { WalletTransactionDetailSheet } from './wallet-transaction-detail-sheet';
-import { WalletTransactionMenu } from './wallet-transaction-menu';
-import { getTransactionAmountClassName, useWalletTransaction } from './wallet-transaction.actions';
 
 type WalletTransactionProps = {
   transaction: TransactionDto;

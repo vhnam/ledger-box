@@ -1,1 +1,1 @@
-export { TransactionAttachmentsSheet } from './transaction-attachments-sheet';
+export { TransactionAttachmentsSheet } from '#/modules/wallets/transaction-attachments/transaction-attachments-sheet';

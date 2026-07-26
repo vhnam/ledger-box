@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 
 import { sql } from 'kysely';
 
-import { db } from '../src/lib/db/index.ts';
+import { db } from '#/lib/db/index.ts';
 
 function parseCsv(content: string): Record<string, string>[] {
   const lines = content

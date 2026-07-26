@@ -1,1 +1,1 @@
-export { WalletSettingsMembers } from './wallet-settings-members';
+export { WalletSettingsMembers } from '#/modules/wallets/wallet-settings-members/wallet-settings-members';

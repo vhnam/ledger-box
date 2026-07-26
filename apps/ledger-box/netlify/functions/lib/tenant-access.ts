@@ -1,4 +1,4 @@
-import { db } from '../../../src/lib/db/index.ts';
+import { db } from '#/lib/db/index.ts';
 
 type SessionLike = {
   user: {

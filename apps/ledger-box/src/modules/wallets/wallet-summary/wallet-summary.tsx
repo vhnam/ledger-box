@@ -4,9 +4,8 @@ import { cn } from '@vhnam/ui/lib/utils';
 
 import { formatCurrency } from '@vhnam/utils/currency';
 
+import { useWalletSummary } from '#/modules/wallets/wallet-summary/wallet-summary.actions';
 import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
-
-import { useWalletSummary } from './wallet-summary.actions';
 
 type WalletSummaryTone = 'income' | 'expense' | 'neutral';
 

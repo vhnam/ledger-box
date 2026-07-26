@@ -6,8 +6,8 @@ import { Sheet, SheetContent, SheetDescription, SheetTitle } from '@vhnam/ui/com
 import { Spinner } from '@vhnam/ui/components/spinner';
 import { useIsMobile } from '@vhnam/ui/hooks/use-mobile';
 
-import type { TransactionAttachment } from '../transaction-attachments/transaction-attachments-sheet.actions';
-import { useDeleteTransactionAttachmentDialogActions } from './delete-transaction-attachment-dialog.actions';
+import { useDeleteTransactionAttachmentDialogActions } from '#/modules/wallets/delete-transaction-attachment-dialog/delete-transaction-attachment-dialog.actions';
+import type { TransactionAttachment } from '#/modules/wallets/transaction-attachments/transaction-attachments-sheet.actions';
 
 type DeleteTransactionAttachmentDialogProps = {
   open: boolean;

@@ -1,7 +1,8 @@
 import type { Config, Context } from "@netlify/functions";
 
-import { auth } from "../../src/lib/auth.ts";
-import { db } from "../../src/lib/db/index.ts";
+import { auth } from "#/lib/auth.ts";
+import { db } from "#/lib/db/index.ts";
+
 import { getTenantId, requireOwnedWallet } from "./lib/tenant-access.ts";
 
 function getWalletId(request: Request, context: Context): string | null {

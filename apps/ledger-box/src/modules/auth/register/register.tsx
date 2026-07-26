@@ -6,7 +6,7 @@ import { CardContent, CardDescription, CardHeader, CardTitle } from '@vhnam/ui/c
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@vhnam/ui/components/field';
 import { Input } from '@vhnam/ui/components/input';
 
-import { useRegisterActions } from './register.actions';
+import { useRegisterActions } from '#/modules/auth/register/register.actions';
 
 export function RegisterPage() {
   const { form, error, isSubmitting, handleSubmit, handleGoogleSignIn } = useRegisterActions();

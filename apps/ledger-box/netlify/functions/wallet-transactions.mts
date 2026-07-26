@@ -1,15 +1,11 @@
 import type { Config, Context } from "@netlify/functions";
 
-import { FILTER_OPTIONS } from "../../src/constants/filter-options.ts";
-import {
-  DEFAULT_SORT_BY,
-  DEFAULT_SORT_ORDER,
-  SORT_BY_OPTIONS,
-  SORT_ORDER_OPTIONS,
-} from "../../src/constants/sort-options.ts";
-import { auth } from "../../src/lib/auth.ts";
-import { db } from "../../src/lib/db/index.ts";
-import type { TransactionType } from "../../src/lib/db/schema.ts";
+import { FILTER_OPTIONS } from "#/constants/filter-options.ts";
+import { DEFAULT_SORT_BY, DEFAULT_SORT_ORDER, SORT_BY_OPTIONS, SORT_ORDER_OPTIONS } from "#/constants/sort-options.ts";
+import { auth } from "#/lib/auth.ts";
+import { db } from "#/lib/db/index.ts";
+import type { TransactionType } from "#/lib/db/schema.ts";
+
 import { getDateRange, getLastMonthRange, getThisMonthRange, getTodayRange } from "./lib/date-ranges.ts";
 import { getTenantId, requireOwnedWallet } from "./lib/tenant-access.ts";
 

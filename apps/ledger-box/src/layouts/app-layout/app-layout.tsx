@@ -2,7 +2,7 @@ import { Outlet } from '@tanstack/react-router';
 
 import { SidebarInset, SidebarProvider } from '@vhnam/ui/components/sidebar';
 
-import { AppSidebar } from './app-sidebar';
+import { AppSidebar } from '#/layouts/app-layout/app-sidebar';
 
 export function AppLayout() {
   return (

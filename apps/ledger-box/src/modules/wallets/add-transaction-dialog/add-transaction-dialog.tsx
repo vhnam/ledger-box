@@ -10,10 +10,9 @@ import { Textarea } from '@vhnam/ui/components/textarea';
 import { ToggleGroup, ToggleGroupItem } from '@vhnam/ui/components/toggle-group';
 import { cn } from '@vhnam/ui/lib/utils';
 
+import { useAddTransactionDialogActions } from '#/modules/wallets/add-transaction-dialog/add-transaction-dialog.actions';
 import { useWallets } from '#/queries/wallets/wallet.queries';
 import type { AddTransactionOutput } from '#/schemas/add-transaction.schema';
-
-import { useAddTransactionDialogActions } from './add-transaction-dialog.actions';
 
 interface AddTransactionDialogProps {
   open: boolean;

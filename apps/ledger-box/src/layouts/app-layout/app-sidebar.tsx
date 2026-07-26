@@ -13,9 +13,9 @@ import {
   SidebarRail,
 } from '@vhnam/ui/components/sidebar';
 
-import { AppSidebarSecondary } from './app-sidebar-secondary';
-import { AppSidebarUser } from './app-sidebar-user';
-import { AppSidebarWallets } from './app-sidebar-wallets';
+import { AppSidebarSecondary } from '#/layouts/app-layout/app-sidebar-secondary';
+import { AppSidebarUser } from '#/layouts/app-layout/app-sidebar-user';
+import { AppSidebarWallets } from '#/layouts/app-layout/app-sidebar-wallets';
 
 function AppSidebar(props: ComponentProps<typeof Sidebar>) {
   return (

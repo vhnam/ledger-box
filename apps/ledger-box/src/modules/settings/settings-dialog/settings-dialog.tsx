@@ -3,8 +3,8 @@ import { DropdownMenuItem } from '@vhnam/ui/components/dropdown-menu';
 import { Icon } from '@vhnam/ui/components/icon';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@vhnam/ui/components/tabs';
 
-import { SettingsAccount } from '../settings-account';
-import { SettingsAppearance } from '../settings-appearance';
+import { SettingsAccount } from '#/modules/settings/settings-account';
+import { SettingsAppearance } from '#/modules/settings/settings-appearance';
 
 const SettingsTab = {
   Account: 'account',

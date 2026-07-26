@@ -1,1 +1,1 @@
-export { DeleteTransactionDialog } from './delete-transaction-dialog';
+export { DeleteTransactionDialog } from '#/modules/wallets/delete-transaction-dialog/delete-transaction-dialog';

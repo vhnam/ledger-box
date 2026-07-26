@@ -1,1 +1,1 @@
-export { WalletSettingsPage } from './wallet-settings-page';
+export { WalletSettingsPage } from '#/modules/wallets/wallet-settings-page/wallet-settings-page';

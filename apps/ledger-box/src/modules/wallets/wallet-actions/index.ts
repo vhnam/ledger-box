@@ -1,2 +1,2 @@
-export { WalletActions } from './wallet-actions';
-export { useWalletActions } from './wallet-actions.actions';
+export { WalletActions } from '#/modules/wallets/wallet-actions/wallet-actions';
+export { useWalletActions } from '#/modules/wallets/wallet-actions/wallet-actions.actions';

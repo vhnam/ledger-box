@@ -5,7 +5,7 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '@vhnam/ui/components/
 import { Input } from '@vhnam/ui/components/input';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
-import { useSettingsAccountActions } from './settings-account.actions';
+import { useSettingsAccountActions } from '#/modules/settings/settings-account/settings-account.actions';
 
 function SettingsAccount() {
   const { form, error, isSubmitting, handleChangePassword } = useSettingsAccountActions();

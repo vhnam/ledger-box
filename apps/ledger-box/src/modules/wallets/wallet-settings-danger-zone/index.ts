@@ -1,1 +1,1 @@
-export { WalletSettingsDangerZone } from './wallet-settings-danger-zone';
+export { WalletSettingsDangerZone } from '#/modules/wallets/wallet-settings-danger-zone/wallet-settings-danger-zone';

@@ -1,7 +1,8 @@
 import type { Config, Context } from "@netlify/functions";
 
-import { auth } from "../../src/lib/auth.ts";
-import { deleteTransactionAttachment } from "../../src/lib/r2.ts";
+import { auth } from "#/lib/auth.ts";
+import { deleteTransactionAttachment } from "#/lib/r2.ts";
+
 import { getTenantId, requireOwnedTransaction } from "./lib/tenant-access.ts";
 
 function getIds(

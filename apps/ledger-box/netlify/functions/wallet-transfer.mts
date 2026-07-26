@@ -1,7 +1,8 @@
 import type { Config } from "@netlify/functions";
 
-import { auth } from "../../src/lib/auth.ts";
-import { db } from "../../src/lib/db/index.ts";
+import { auth } from "#/lib/auth.ts";
+import { db } from "#/lib/db/index.ts";
+
 import { getTenantId } from "./lib/tenant-access.ts";
 
 type TransferMoneyBody = {

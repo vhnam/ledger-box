@@ -1,1 +1,1 @@
-export { DeleteTransactionAttachmentDialog } from './delete-transaction-attachment-dialog';
+export { DeleteTransactionAttachmentDialog } from '#/modules/wallets/delete-transaction-attachment-dialog/delete-transaction-attachment-dialog';

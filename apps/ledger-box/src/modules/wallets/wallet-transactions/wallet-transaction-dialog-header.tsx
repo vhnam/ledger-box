@@ -4,9 +4,8 @@ import { cn } from '@vhnam/ui/lib/utils';
 
 import { formatSignedCurrency } from '@vhnam/utils/currency';
 
+import { getTransactionAmountClassName } from '#/modules/wallets/wallet-transactions/wallet-transaction.actions';
 import type { TransactionDto } from '#/queries/transactions/transaction.dto';
-
-import { getTransactionAmountClassName } from './wallet-transaction.actions';
 
 type TransactionDialogHeaderProps = {
   transaction: TransactionDto;

@@ -1,1 +1,1 @@
-export { CreateWalletDialog } from './create-wallet-dialog';
+export { CreateWalletDialog } from '#/modules/wallets/create-wallet-dialog/create-wallet-dialog';

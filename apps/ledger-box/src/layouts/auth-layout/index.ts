@@ -1,1 +1,1 @@
-export { AuthLayout } from './auth-layout';
+export { AuthLayout } from '#/layouts/auth-layout/auth-layout';

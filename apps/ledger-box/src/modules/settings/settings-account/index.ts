@@ -1,1 +1,1 @@
-export { SettingsAccount } from './settings-account';
+export { SettingsAccount } from '#/modules/settings/settings-account/settings-account';

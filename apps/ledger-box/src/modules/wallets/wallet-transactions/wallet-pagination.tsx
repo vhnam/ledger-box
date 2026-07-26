@@ -9,7 +9,7 @@ import {
 } from '@vhnam/ui/components/pagination';
 import { cn } from '@vhnam/ui/lib/utils';
 
-import type { PageItem } from './wallet-transactions.actions';
+import type { PageItem } from '#/modules/wallets/wallet-transactions/wallet-transactions.actions';
 
 type WalletPaginationProps = {
   page: number;
@@ -41,6 +41,7 @@ function WalletPagination({
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
+              size="sm"
               href="#"
               aria-disabled={!canGoPrevious}
               className={cn(!canGoPrevious && 'pointer-events-none opacity-50')}
@@ -57,6 +58,7 @@ function WalletPagination({
                 <PaginationEllipsis />
               ) : (
                 <PaginationLink
+                  size="sm"
                   href="#"
                   isActive={item === page}
                   onClick={(event) => {
@@ -72,6 +74,7 @@ function WalletPagination({
 
           <PaginationItem>
             <PaginationNext
+              size="sm"
               href="#"
               aria-disabled={!canGoNext}
               className={cn(!canGoNext && 'pointer-events-none opacity-50')}

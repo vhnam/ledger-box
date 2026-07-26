@@ -1,9 +1,8 @@
 import axios from 'axios';
 
 import type { WalletMemberRole } from '#/constants/wallet-member-role-options';
+import type { WalletMemberDto } from '#/queries/wallets/wallet-member.dto';
 import type { InviteWalletMemberSchema, UpdateWalletMemberRoleSchema } from '#/schemas/wallet-member.schema';
-
-import type { WalletMemberDto } from './wallet-member.dto';
 
 function getApiErrorMessage(error: unknown, fallback: string): string {
   if (axios.isAxiosError(error)) {
