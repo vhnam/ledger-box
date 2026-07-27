@@ -1,12 +1,12 @@
-import type { Config, Context } from "@netlify/functions";
+import type { Config, Context } from '@netlify/functions';
 
-import { auth } from "#/lib/auth.ts";
-import { db } from "#/lib/db/index.ts";
-import { calendarDateToOccurredAtStart } from "#/lib/period-bounds.ts";
-import { generateShareToken } from "#/lib/share-token.ts";
-import { buildStatement } from "#/lib/statement.ts";
+import { auth } from '#/lib/auth.ts';
+import { db } from '#/lib/db/index.ts';
+import { calendarDateToOccurredAtStart } from '#/lib/period-bounds.ts';
+import { generateShareToken } from '#/lib/share-token.ts';
+import { buildStatement } from '#/lib/statement.ts';
 
-import { getTenantId, requireOwnedWallet } from "./lib/tenant-access.ts";
+import { getTenantId, requireOwnedWallet } from './lib/tenant-access.ts';
 
 const DEFAULT_EXPIRY_DAYS = 90;
 const MAX_DISPLAY_TITLE_LENGTH = 80;
@@ -21,7 +21,7 @@ type CreateStatementShareBody = {
 function getWalletId(request: Request, context: Context): string | null {
   const paramWalletId = context.params?.walletId;
 
-  if (typeof paramWalletId === "string" && paramWalletId.length > 0) {
+  if (typeof paramWalletId === 'string' && paramWalletId.length > 0) {
     return paramWalletId;
   }
 
@@ -50,13 +50,13 @@ export default async (request: Request, context: Context) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response("Unauthorized", { status: 401 });
+    return new Response('Unauthorized', { status: 401 });
   }
 
   const walletId = getWalletId(request, context);
 
   if (!walletId) {
-    return new Response("Wallet id is required", { status: 400 });
+    return new Response('Wallet id is required', { status: 400 });
   }
 
   const tenantId = getTenantId(session);
@@ -68,22 +68,22 @@ export default async (request: Request, context: Context) => {
 
   const { wallet } = ownership;
 
-  if (request.method === "GET") {
+  if (request.method === 'GET') {
     const shares = await db
-      .selectFrom("walletStatementShare")
+      .selectFrom('walletStatementShare')
       .select([
-        "id",
-        "periodFrom",
-        "periodTo",
-        "displayTitle",
-        "expiresAt",
-        "revokedAt",
-        "snapshotAt",
-        "accessCount",
-        "lastAccessedAt",
+        'id',
+        'periodFrom',
+        'periodTo',
+        'displayTitle',
+        'expiresAt',
+        'revokedAt',
+        'snapshotAt',
+        'accessCount',
+        'lastAccessedAt',
       ])
-      .where("walletId", "=", walletId)
-      .orderBy("createdAt", "desc")
+      .where('walletId', '=', walletId)
+      .orderBy('createdAt', 'desc')
       .execute();
 
     return Response.json({
@@ -94,32 +94,32 @@ export default async (request: Request, context: Context) => {
     });
   }
 
-  if (request.method === "POST") {
+  if (request.method === 'POST') {
     const body = (await request.json()) as CreateStatementShareBody;
 
-    if (typeof body.periodFrom !== "string" || body.periodFrom.length === 0) {
-      return new Response("Period start is required", { status: 400 });
+    if (typeof body.periodFrom !== 'string' || body.periodFrom.length === 0) {
+      return new Response('Period start is required', { status: 400 });
     }
 
-    if (typeof body.periodTo !== "string" || body.periodTo.length === 0) {
-      return new Response("Period end is required", { status: 400 });
+    if (typeof body.periodTo !== 'string' || body.periodTo.length === 0) {
+      return new Response('Period end is required', { status: 400 });
     }
 
-    if (body.displayTitle !== undefined && typeof body.displayTitle !== "string") {
-      return new Response("Display title must be a string", { status: 400 });
+    if (body.displayTitle !== undefined && typeof body.displayTitle !== 'string') {
+      return new Response('Display title must be a string', { status: 400 });
     }
 
-    if (typeof body.displayTitle === "string" && body.displayTitle.length > MAX_DISPLAY_TITLE_LENGTH) {
+    if (typeof body.displayTitle === 'string' && body.displayTitle.length > MAX_DISPLAY_TITLE_LENGTH) {
       return new Response(`Display title must be ${MAX_DISPLAY_TITLE_LENGTH} characters or fewer`, { status: 400 });
     }
 
-    if (body.expiresAt !== undefined && body.expiresAt !== null && typeof body.expiresAt !== "string") {
-      return new Response("Expiry must be a date string or null", { status: 400 });
+    if (body.expiresAt !== undefined && body.expiresAt !== null && typeof body.expiresAt !== 'string') {
+      return new Response('Expiry must be a date string or null', { status: 400 });
     }
 
     const periodFrom = body.periodFrom;
     const periodTo = body.periodTo;
-    const displayTitle = typeof body.displayTitle === "string" ? body.displayTitle.trim() || null : null;
+    const displayTitle = typeof body.displayTitle === 'string' ? body.displayTitle.trim() || null : null;
 
     const bounds = {
       start: calendarDateToOccurredAtStart(wallet.timezone, periodFrom),
@@ -130,7 +130,7 @@ export default async (request: Request, context: Context) => {
 
     const url = new URL(request.url);
 
-    if (url.searchParams.get("preview") === "true") {
+    if (url.searchParams.get('preview') === 'true') {
       return Response.json({ preview: snapshot });
     }
 
@@ -141,7 +141,7 @@ export default async (request: Request, context: Context) => {
     const { raw, hash } = await generateShareToken();
 
     const share = await db
-      .insertInto("walletStatementShare")
+      .insertInto('walletStatementShare')
       .values({
         walletId,
         tenantId,
@@ -153,7 +153,7 @@ export default async (request: Request, context: Context) => {
         snapshotJson: snapshot,
         snapshotAt: new Date(),
       })
-      .returning(["id"])
+      .returning(['id'])
       .executeTakeFirstOrThrow();
 
     return Response.json(
@@ -166,9 +166,9 @@ export default async (request: Request, context: Context) => {
     );
   }
 
-  return new Response("Method Not Allowed", { status: 405 });
+  return new Response('Method Not Allowed', { status: 405 });
 };
 
 export const config: Config = {
-  path: "/api/wallets/:walletId/statement-shares",
+  path: '/api/wallets/:walletId/statement-shares',
 };

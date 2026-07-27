@@ -1,17 +1,17 @@
-import type { Config, Context } from "@netlify/functions";
+import type { Config, Context } from '@netlify/functions';
 
-import { FILTER_OPTIONS } from "#/constants/filter-options.ts";
-import { auth } from "#/lib/auth.ts";
-import { db } from "#/lib/db/index.ts";
-import { resolvePeriodBounds } from "#/lib/period-bounds.ts";
-import { computeWalletSummary } from "#/lib/wallet-summary.ts";
+import { FILTER_OPTIONS } from '#/constants/filter-options.ts';
+import { auth } from '#/lib/auth.ts';
+import { db } from '#/lib/db/index.ts';
+import { resolvePeriodBounds } from '#/lib/period-bounds.ts';
+import { computeWalletSummary } from '#/lib/wallet-summary.ts';
 
-import { requireOwnedWallet } from "./lib/tenant-access.ts";
+import { requireWalletAccess } from './lib/tenant-access.ts';
 
 function getWalletId(request: Request, context: Context): string | null {
   const paramWalletId = context.params?.walletId;
 
-  if (typeof paramWalletId === "string" && paramWalletId.length > 0) {
+  if (typeof paramWalletId === 'string' && paramWalletId.length > 0) {
     return paramWalletId;
   }
 
@@ -21,34 +21,34 @@ function getWalletId(request: Request, context: Context): string | null {
 }
 
 export default async (request: Request, context: Context) => {
-  if (request.method !== "GET") {
-    return new Response("Method Not Allowed", { status: 405 });
+  if (request.method !== 'GET') {
+    return new Response('Method Not Allowed', { status: 405 });
   }
 
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response("Unauthorized", { status: 401 });
+    return new Response('Unauthorized', { status: 401 });
   }
 
   const walletId = getWalletId(request, context);
 
   if (!walletId) {
-    return new Response("Wallet id is required", { status: 400 });
+    return new Response('Wallet id is required', { status: 400 });
   }
 
   const tenantId = session.user.id;
-  const ownership = await requireOwnedWallet(tenantId, walletId);
+  const access = await requireWalletAccess(tenantId, walletId, session.user.email);
 
-  if (!ownership.ok) {
-    return ownership.error;
+  if (!access.ok) {
+    return access.error;
   }
 
   const url = new URL(request.url);
-  const filter = url.searchParams.get("filter") ?? FILTER_OPTIONS.ALL_TIME;
-  const from = url.searchParams.get("from");
-  const to = url.searchParams.get("to");
-  const bounds = resolvePeriodBounds(ownership.wallet.timezone, filter, from ?? undefined, to ?? undefined);
+  const filter = url.searchParams.get('filter') ?? FILTER_OPTIONS.ALL_TIME;
+  const from = url.searchParams.get('from');
+  const to = url.searchParams.get('to');
+  const bounds = resolvePeriodBounds(access.wallet.timezone, filter, from ?? undefined, to ?? undefined);
 
   const summary = await computeWalletSummary(db, walletId, bounds);
 
@@ -56,5 +56,5 @@ export default async (request: Request, context: Context) => {
 };
 
 export const config: Config = {
-  path: "/api/wallets/:walletId/summary",
+  path: '/api/wallets/:walletId/summary',
 };

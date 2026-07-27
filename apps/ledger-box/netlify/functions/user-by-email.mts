@@ -1,8 +1,8 @@
-import type { Config } from "@netlify/functions";
-import { sql } from "kysely";
+import type { Config } from '@netlify/functions';
+import { sql } from 'kysely';
 
-import { auth } from "#/lib/auth.ts";
-import { db } from "#/lib/db/index.ts";
+import { auth } from '#/lib/auth.ts';
+import { db } from '#/lib/db/index.ts';
 
 type UserRow = {
   id: string;
@@ -15,17 +15,17 @@ export default async (request: Request) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response("Unauthorized", { status: 401 });
+    return new Response('Unauthorized', { status: 401 });
   }
 
-  if (request.method !== "GET") {
-    return new Response("Method Not Allowed", { status: 405 });
+  if (request.method !== 'GET') {
+    return new Response('Method Not Allowed', { status: 405 });
   }
 
-  const email = new URL(request.url).searchParams.get("email")?.trim().toLowerCase() ?? "";
+  const email = new URL(request.url).searchParams.get('email')?.trim().toLowerCase() ?? '';
 
   if (!email) {
-    return new Response("Email is required", { status: 400 });
+    return new Response('Email is required', { status: 400 });
   }
 
   const result = await sql<UserRow>`
@@ -50,5 +50,5 @@ export default async (request: Request) => {
 };
 
 export const config: Config = {
-  path: "/api/users/by-email",
+  path: '/api/users/by-email',
 };

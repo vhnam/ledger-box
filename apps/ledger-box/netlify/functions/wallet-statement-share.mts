@@ -1,18 +1,18 @@
-import type { Config, Context } from "@netlify/functions";
+import type { Config, Context } from '@netlify/functions';
 
-import { auth } from "#/lib/auth.ts";
-import { db } from "#/lib/db/index.ts";
+import { auth } from '#/lib/auth.ts';
+import { db } from '#/lib/db/index.ts';
 
-import { getTenantId, requireOwnedWallet } from "./lib/tenant-access.ts";
+import { getTenantId, requireOwnedWallet } from './lib/tenant-access.ts';
 
 function getIds(request: Request, context: Context): { walletId: string | null; shareId: string | null } {
   const paramWalletId = context.params?.walletId;
   const paramShareId = context.params?.shareId;
 
   if (
-    typeof paramWalletId === "string" &&
+    typeof paramWalletId === 'string' &&
     paramWalletId.length > 0 &&
-    typeof paramShareId === "string" &&
+    typeof paramShareId === 'string' &&
     paramShareId.length > 0
   ) {
     return { walletId: paramWalletId, shareId: paramShareId };
@@ -30,21 +30,21 @@ export default async (request: Request, context: Context) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response("Unauthorized", { status: 401 });
+    return new Response('Unauthorized', { status: 401 });
   }
 
-  if (request.method !== "DELETE") {
-    return new Response("Method Not Allowed", { status: 405 });
+  if (request.method !== 'DELETE') {
+    return new Response('Method Not Allowed', { status: 405 });
   }
 
   const { walletId, shareId } = getIds(request, context);
 
   if (!walletId) {
-    return new Response("Wallet id is required", { status: 400 });
+    return new Response('Wallet id is required', { status: 400 });
   }
 
   if (!shareId) {
-    return new Response("Share id is required", { status: 400 });
+    return new Response('Share id is required', { status: 400 });
   }
 
   const tenantId = getTenantId(session);
@@ -55,26 +55,26 @@ export default async (request: Request, context: Context) => {
   }
 
   const existingShare = await db
-    .selectFrom("walletStatementShare")
-    .select(["id"])
-    .where("id", "=", shareId)
-    .where("walletId", "=", walletId)
+    .selectFrom('walletStatementShare')
+    .select(['id'])
+    .where('id', '=', shareId)
+    .where('walletId', '=', walletId)
     .executeTakeFirst();
 
   if (!existingShare) {
-    return new Response("Share not found", { status: 404 });
+    return new Response('Share not found', { status: 404 });
   }
 
   await db
-    .updateTable("walletStatementShare")
+    .updateTable('walletStatementShare')
     .set({ revokedAt: new Date() })
-    .where("id", "=", shareId)
-    .where("walletId", "=", walletId)
+    .where('id', '=', shareId)
+    .where('walletId', '=', walletId)
     .execute();
 
   return Response.json({ success: true });
 };
 
 export const config: Config = {
-  path: "/api/wallets/:walletId/statement-shares/:shareId",
+  path: '/api/wallets/:walletId/statement-shares/:shareId',
 };

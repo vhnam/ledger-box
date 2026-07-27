@@ -17,6 +17,6 @@ export default defineConfig({
     cache: true,
   },
   test: {
-    projects: ['apps/storybook/vitest.config.ts'],
+    projects: ['apps/storybook/vitest.config.ts', 'apps/ledger-box/vitest.config.ts'],
   },
 });
