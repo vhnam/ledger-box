@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect } from 'storybook/test';
 
 import {
   Attachment,
@@ -13,6 +14,8 @@ import {
 } from '@vhnam/ui/components/attachment';
 import { Icon } from '@vhnam/ui/components/icon';
 import { Spinner } from '@vhnam/ui/components/spinner';
+
+import { sampleAvatarDataUri } from '../fixtures/sample-avatar';
 
 const meta = {
   title: 'Components/Attachment',
@@ -57,13 +60,17 @@ export const Default: Story = {
       </AttachmentActions>
     </Attachment>
   ),
+  play: async ({ canvas }) => {
+    await expect(canvas.getByText('receipt.pdf')).toBeVisible();
+    await expect(canvas.getByText(/245 KB/)).toBeVisible();
+  },
 };
 
 export const ImagePreview: Story = {
   render: () => (
     <Attachment className="w-80 cursor-pointer">
       <AttachmentMedia variant="image" className="size-12">
-        <img src="https://github.com/shadcn.png" alt="receipt.png" />
+        <img src={sampleAvatarDataUri} alt="receipt.png" />
       </AttachmentMedia>
       <AttachmentContent>
         <AttachmentTitle>receipt.png</AttachmentTitle>
@@ -108,6 +115,9 @@ export const Uploading: Story = {
       </AttachmentContent>
     </Attachment>
   ),
+  play: async ({ canvas }) => {
+    await expect(canvas.getByText('Uploading...')).toBeVisible();
+  },
 };
 
 export const Processing: Story = {
@@ -141,13 +151,16 @@ export const Error: Story = {
       </AttachmentActions>
     </Attachment>
   ),
+  play: async ({ canvas }) => {
+    await expect(canvas.getByText('Upload failed')).toBeVisible();
+  },
 };
 
 export const Vertical: Story = {
   render: () => (
     <Attachment orientation="vertical">
       <AttachmentMedia variant="image">
-        <img src="https://github.com/shadcn.png" alt="receipt.png" />
+        <img src={sampleAvatarDataUri} alt="receipt.png" />
       </AttachmentMedia>
       <AttachmentContent>
         <AttachmentTitle>receipt.png</AttachmentTitle>
@@ -167,7 +180,7 @@ export const Group: Story = {
     <AttachmentGroup className="max-w-md">
       <Attachment orientation="vertical">
         <AttachmentMedia variant="image">
-          <img src="https://github.com/shadcn.png" alt="receipt-1.png" />
+          <img src={sampleAvatarDataUri} alt="receipt-1.png" />
         </AttachmentMedia>
         <AttachmentContent>
           <AttachmentTitle>receipt-1.png</AttachmentTitle>
@@ -185,7 +198,7 @@ export const Group: Story = {
       </Attachment>
       <Attachment orientation="vertical">
         <AttachmentMedia variant="image">
-          <img src="https://github.com/shadcn.png" alt="receipt-2.png" />
+          <img src={sampleAvatarDataUri} alt="receipt-2.png" />
         </AttachmentMedia>
         <AttachmentContent>
           <AttachmentTitle>receipt-2.png</AttachmentTitle>

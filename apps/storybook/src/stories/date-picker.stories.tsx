@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, waitFor, within } from 'storybook/test';
 
 import { DatePicker } from '@vhnam/ui/components/date-picker';
 
@@ -30,6 +31,13 @@ export const WithLabel: Story = {
 export const WithDefaultValue: Story = {
   args: {
     defaultValue: new Date(2026, 6, 15),
+  },
+  play: async ({ canvas, userEvent }) => {
+    await expect(canvas.getByRole('button')).toHaveTextContent('15/07/2026');
+    await userEvent.click(canvas.getByRole('button'));
+    await waitFor(() => expect(within(document.body).getByRole('grid')).toBeVisible());
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(within(document.body).queryByRole('dialog')).toBeNull());
   },
 };
 

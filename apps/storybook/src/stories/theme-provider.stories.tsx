@@ -1,17 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useTheme } from 'next-themes';
+import { expect } from 'storybook/test';
 
 import { Button } from '@vhnam/ui/components/button';
-import { ThemeProvider } from '@vhnam/ui/components/theme-provider';
 
 const meta = {
   title: 'Components/ThemeProvider',
-  component: ThemeProvider,
+  component: Button,
   parameters: {
     layout: 'centered',
   },
   tags: ['autodocs'],
-} satisfies Meta<typeof ThemeProvider>;
+} satisfies Meta<typeof Button>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -38,9 +38,10 @@ function ThemeToggleDemo() {
 }
 
 export const Default: Story = {
-  render: () => (
-    <ThemeProvider>
-      <ThemeToggleDemo />
-    </ThemeProvider>
-  ),
+  render: () => <ThemeToggleDemo />,
+  play: async ({ canvas, userEvent }) => {
+    await expect(canvas.getByText(/Current theme: light/)).toBeVisible();
+    await userEvent.click(canvas.getByRole('button', { name: 'Dark' }));
+    await expect(canvas.getByText(/Current theme: dark/)).toBeVisible();
+  },
 };

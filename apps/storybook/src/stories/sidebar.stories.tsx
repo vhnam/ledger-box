@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect } from 'storybook/test';
 
 import { Icon, type IconName } from '@vhnam/ui/components/icon';
 import {
@@ -36,6 +37,11 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  parameters: {
+    viewport: {
+      defaultViewport: 'desktop',
+    },
+  },
   render: () => (
     <SidebarProvider className="min-h-[480px]">
       <Sidebar>
@@ -72,4 +78,11 @@ export const Default: Story = {
       </SidebarInset>
     </SidebarProvider>
   ),
+  play: async ({ canvas, userEvent }) => {
+    await expect(canvas.getByText('Dashboard')).toBeVisible();
+    await expect(canvas.getByText('Navigation')).toBeVisible();
+    const trigger = canvas.getByRole('button', { name: 'Toggle Sidebar' });
+    await userEvent.click(trigger);
+    await expect(document.querySelector('[data-slot="sidebar"]')).toHaveAttribute('data-state', 'collapsed');
+  },
 };

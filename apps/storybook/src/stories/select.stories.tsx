@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Fragment } from 'react';
+import { expect, waitFor, within } from 'storybook/test';
 
 import {
   Select,
@@ -35,10 +36,10 @@ const fruits = [
 export const Default: Story = {
   render: () => (
     <Select items={fruits}>
-      <SelectTrigger className="w-48">
+      <SelectTrigger className="w-48" aria-label="Select a fruit">
         <SelectValue placeholder="Select a fruit" />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent aria-label="Fruits">
         {fruits.map((fruit) => (
           <SelectItem key={fruit.value} value={fruit.value}>
             {fruit.label}
@@ -47,6 +48,12 @@ export const Default: Story = {
       </SelectContent>
     </Select>
   ),
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole('combobox'));
+    const listbox = await waitFor(() => within(document.body).getByRole('listbox'));
+    await userEvent.click(within(listbox).getByRole('option', { name: 'Apple' }));
+    await expect(canvas.getByRole('combobox')).toHaveTextContent('Apple');
+  },
 };
 
 const timezoneGroups = [
@@ -72,10 +79,10 @@ const timezones = timezoneGroups.flatMap((group) => group.timezones);
 export const WithGroups: Story = {
   render: () => (
     <Select items={timezones}>
-      <SelectTrigger className="w-48">
+      <SelectTrigger className="w-48" aria-label="Select a timezone">
         <SelectValue placeholder="Select a timezone" />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent aria-label="Timezones">
         {timezoneGroups.map((group, index) => (
           <Fragment key={group.label}>
             {index > 0 ? <SelectSeparator /> : null}
@@ -97,10 +104,10 @@ export const WithGroups: Story = {
 export const Small: Story = {
   render: () => (
     <Select items={fruits}>
-      <SelectTrigger size="sm" className="w-48">
+      <SelectTrigger size="sm" className="w-48" aria-label="Select a fruit">
         <SelectValue placeholder="Select a fruit" />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent aria-label="Fruits">
         {fruits.map((fruit) => (
           <SelectItem key={fruit.value} value={fruit.value}>
             {fruit.label}
@@ -114,10 +121,10 @@ export const Small: Story = {
 export const Disabled: Story = {
   render: () => (
     <Select disabled items={fruits}>
-      <SelectTrigger className="w-48">
+      <SelectTrigger className="w-48" aria-label="Select a fruit">
         <SelectValue placeholder="Select a fruit" />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent aria-label="Fruits">
         {fruits.map((fruit) => (
           <SelectItem key={fruit.value} value={fruit.value}>
             {fruit.label}

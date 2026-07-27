@@ -23,6 +23,7 @@ export const Default: Story = {
 export const WithValue: Story = {
   args: {
     defaultValue: 'Hello world',
+    'aria-label': 'Sample input',
   },
 };
 
@@ -43,5 +44,6 @@ export const Invalid: Story = {
 export const File: Story = {
   args: {
     type: 'file',
+    'aria-label': 'Upload file',
   },
 };

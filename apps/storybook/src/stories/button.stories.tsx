@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect } from 'storybook/test';
 
 import { Button } from '@vhnam/ui/components/button';
 
@@ -29,6 +30,21 @@ export const Default: Story = {
     children: 'Button',
     variant: 'default',
     size: 'default',
+  },
+  play: async ({ canvas, userEvent }) => {
+    const button = canvas.getByRole('button', { name: 'Button' });
+    await userEvent.click(button);
+    await expect(button).toBeInTheDocument();
+  },
+};
+
+export const Disabled: Story = {
+  args: {
+    children: 'Button',
+    disabled: true,
+  },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByRole('button', { name: 'Button' })).toBeDisabled();
   },
 };
 

@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-10 — feat/ui-testing](docs/changelogs/mr-10-ui-storybook-component-tests.md)
+
+#### Added
+
+- Storybook Vitest harness (`@storybook/addon-vitest` + Playwright Chromium) wired into `vp test` via root `test.projects`
+- Interaction `play` tests for button, currency-input, toast, dialog, sheet, select, date-picker(s), attachment, theme-provider, sidebar; smoke coverage for all 33 UI stories
+- Local avatar fixture for network-free story/tests; Storybook / UI README and `AGENTS.md` test workflow notes
+
+#### Changed
+
+- A11y gate: `parameters.a11y.test` `'todo'` → `'error'`; global light ThemeProvider + desktop viewport in Storybook preview
+- Contrast and label fixes in `@vhnam/ui` (destructive variants, muted-foreground, avatar, date-picker/select aria-labels)
+
 ### [mr-09 — feat/share-link](docs/changelogs/mr-09-shareable-statement-links.md)
 
 #### Added

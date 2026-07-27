@@ -43,7 +43,7 @@ Two consequences that shape most decisions in this repo:
 
 **Where new code goes:**
 
-- Reusable, presentational, no business logic → `packages/ui`, **plus a Storybook story**.
+- Reusable, presentational, no business logic → `packages/ui`, **plus a Storybook story** (and a `play` function when the component is interactive).
 - Currency or date formatting → `packages/utils`. Never re-implement formatting locally.
 - Anything that knows about wallets, transactions, or tenancy → `apps/ledger-box`
   (`src/modules/` for feature UI, `src/queries/` for TanStack Query, `*.actions.tsx`

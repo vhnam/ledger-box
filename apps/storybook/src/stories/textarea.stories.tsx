@@ -23,6 +23,7 @@ export const Default: Story = {
 export const WithValue: Story = {
   args: {
     defaultValue: 'Hello world',
+    'aria-label': 'Sample textarea',
   },
 };
 

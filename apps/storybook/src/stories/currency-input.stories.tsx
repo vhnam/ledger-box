@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState, type ComponentProps } from 'react';
+import { expect } from 'storybook/test';
 
 import { CurrencyInput } from '@vhnam/ui/components/currency-input';
 import { Field, FieldDescription, FieldLabel } from '@vhnam/ui/components/field';
@@ -28,12 +29,18 @@ export const Default: Story = {
       <CurrencyInputDemo placeholder="Enter amount" />
     </div>
   ),
+  play: async ({ canvas, userEvent }) => {
+    const input = canvas.getByPlaceholderText('Enter amount');
+    await userEvent.clear(input);
+    await userEvent.type(input, '1234567');
+    await expect(input).toHaveValue('1.234.567');
+  },
 };
 
 export const WithValue: Story = {
   render: () => (
     <div className="w-80">
-      <CurrencyInputDemo value="1234567.89" />
+      <CurrencyInputDemo value="1234567.89" aria-label="Amount" />
     </div>
   ),
 };
@@ -44,6 +51,9 @@ export const Disabled: Story = {
       <CurrencyInputDemo value="50000" disabled placeholder="Enter amount" />
     </div>
   ),
+  play: async ({ canvas }) => {
+    await expect(canvas.getByRole('textbox')).toBeDisabled();
+  },
 };
 
 export const InField: Story = {

@@ -69,7 +69,7 @@ function DatePicker({
             </Button>
           }
         />
-        <PopoverContent className="w-auto p-0" align={align}>
+        <PopoverContent className="w-auto p-0" align={align} aria-label={label ?? 'Choose date'}>
           <Calendar mode="single" defaultMonth={date} selected={date} onSelect={handleSelect} disabled={disabled} />
         </PopoverContent>
       </Popover>
