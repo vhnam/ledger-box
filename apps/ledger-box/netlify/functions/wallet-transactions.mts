@@ -5,8 +5,8 @@ import { DEFAULT_SORT_BY, DEFAULT_SORT_ORDER, SORT_BY_OPTIONS, SORT_ORDER_OPTION
 import { auth } from "#/lib/auth.ts";
 import { db } from "#/lib/db/index.ts";
 import type { TransactionType } from "#/lib/db/schema.ts";
+import { calendarDateToOccurredAtStart, resolvePeriodBounds } from "#/lib/period-bounds.ts";
 
-import { getDateRange, getLastMonthRange, getThisMonthRange, getTodayRange } from "./lib/date-ranges.ts";
 import { getTenantId, requireOwnedWallet } from "./lib/tenant-access.ts";
 
 function getWalletId(request: Request, context: Context): string | null {
@@ -21,42 +21,25 @@ function getWalletId(request: Request, context: Context): string | null {
   return match?.[1] ?? null;
 }
 
-type DateRange = {
-  start: Date;
-  end: Date;
-};
-
 type AddTransactionBody = {
   type?: unknown;
   amount?: unknown;
   description?: unknown;
+  occurredAt?: unknown;
 };
-
-function getFilterDateRange(filter: string, from: string | null, to: string | null): DateRange | null {
-  switch (filter) {
-    case FILTER_OPTIONS.TODAY:
-      return getTodayRange();
-    case FILTER_OPTIONS.THIS_MONTH:
-      return getThisMonthRange();
-    case FILTER_OPTIONS.LAST_MONTH:
-      return getLastMonthRange();
-    case FILTER_OPTIONS.DATE_RANGE: {
-      if (!from || !to) {
-        return null;
-      }
-
-      return getDateRange(from, to);
-    }
-    default:
-      return null;
-  }
-}
 
 function isValidSortBy(
   value: string | null,
-): value is typeof SORT_BY_OPTIONS.CREATED_AT | typeof SORT_BY_OPTIONS.UPDATED_AT | typeof SORT_BY_OPTIONS.AMOUNT {
+): value is
+  | typeof SORT_BY_OPTIONS.CREATED_AT
+  | typeof SORT_BY_OPTIONS.UPDATED_AT
+  | typeof SORT_BY_OPTIONS.AMOUNT
+  | typeof SORT_BY_OPTIONS.OCCURRED_AT {
   return (
-    value === SORT_BY_OPTIONS.CREATED_AT || value === SORT_BY_OPTIONS.UPDATED_AT || value === SORT_BY_OPTIONS.AMOUNT
+    value === SORT_BY_OPTIONS.CREATED_AT ||
+    value === SORT_BY_OPTIONS.UPDATED_AT ||
+    value === SORT_BY_OPTIONS.AMOUNT ||
+    value === SORT_BY_OPTIONS.OCCURRED_AT
   );
 }
 
@@ -100,6 +83,10 @@ export default async (request: Request, context: Context) => {
       return new Response("Description is required", { status: 400 });
     }
 
+    if (body.occurredAt !== undefined && typeof body.occurredAt !== "string") {
+      return new Response("Occurred at must be a date string", { status: 400 });
+    }
+
     const type = body.type;
     const amount = body.amount;
     const description = body.description.trim();
@@ -112,6 +99,10 @@ export default async (request: Request, context: Context) => {
 
     const { wallet } = ownership;
     const now = new Date();
+    // No explicit date: default to the current instant, not start-of-day. Backfilled rows
+    // keep real intraday `created_at` times, so a start-of-day default for new rows would
+    // make same-day ordering inconsistent between old and new transactions.
+    const occurredAt = body.occurredAt ? calendarDateToOccurredAtStart(wallet.timezone, body.occurredAt) : now;
     const nextWalletAmount = type === "income" ? wallet.amount + amount : wallet.amount - amount;
 
     await db.transaction().execute(async (trx) => {
@@ -122,6 +113,7 @@ export default async (request: Request, context: Context) => {
           type,
           amount,
           description,
+          occurredAt,
           createdAt: now,
           updatedAt: now,
         })
@@ -153,7 +145,6 @@ export default async (request: Request, context: Context) => {
     const sortOrderParam = url.searchParams.get("sortOrder");
     const sortBy = isValidSortBy(sortByParam) ? sortByParam : DEFAULT_SORT_BY;
     const sortOrder = isValidSortOrder(sortOrderParam) ? sortOrderParam : DEFAULT_SORT_ORDER;
-    const dateRange = getFilterDateRange(filter, from, to);
 
     const ownership = await requireOwnedWallet(tenantId, walletId);
 
@@ -161,9 +152,11 @@ export default async (request: Request, context: Context) => {
       return ownership.error;
     }
 
+    const bounds = resolvePeriodBounds(ownership.wallet.timezone, filter, from ?? undefined, to ?? undefined);
+
     let itemsQuery = db
       .selectFrom("transaction")
-      .select(["id", "walletId", "type", "amount", "description", "createdAt", "updatedAt"])
+      .select(["id", "walletId", "type", "amount", "description", "occurredAt", "createdAt", "updatedAt"])
       .where("walletId", "=", walletId)
       .where("deletedAt", "is", null);
 
@@ -173,9 +166,9 @@ export default async (request: Request, context: Context) => {
       .where("walletId", "=", walletId)
       .where("deletedAt", "is", null);
 
-    if (dateRange) {
-      itemsQuery = itemsQuery.where("updatedAt", ">=", dateRange.start).where("updatedAt", "<=", dateRange.end);
-      countQuery = countQuery.where("updatedAt", ">=", dateRange.start).where("updatedAt", "<=", dateRange.end);
+    if (bounds) {
+      itemsQuery = itemsQuery.where("occurredAt", ">=", bounds.start).where("occurredAt", "<", bounds.endExclusive);
+      countQuery = countQuery.where("occurredAt", ">=", bounds.start).where("occurredAt", "<", bounds.endExclusive);
     }
 
     const [items, countResult] = await Promise.all([

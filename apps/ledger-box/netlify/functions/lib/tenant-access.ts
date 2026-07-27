@@ -10,6 +10,7 @@ type OwnedWallet = {
   id: string;
   name: string;
   amount: number;
+  timezone: string;
 };
 
 type OwnedTransaction = {
@@ -27,7 +28,7 @@ function getTenantId(session: SessionLike): string {
 async function findOwnedWallet(tenantId: string, walletId: string): Promise<OwnedWallet | undefined> {
   return db
     .selectFrom('wallet')
-    .select(['id', 'name', 'amount'])
+    .select(['id', 'name', 'amount', 'timezone'])
     .where('id', '=', walletId)
     .where('tenantId', '=', tenantId)
     .where('deletedAt', 'is', null)

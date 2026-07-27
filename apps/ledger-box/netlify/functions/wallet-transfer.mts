@@ -2,6 +2,7 @@ import type { Config } from "@netlify/functions";
 
 import { auth } from "#/lib/auth.ts";
 import { db } from "#/lib/db/index.ts";
+import { calendarDateToOccurredAtStart } from "#/lib/period-bounds.ts";
 
 import { getTenantId } from "./lib/tenant-access.ts";
 
@@ -10,6 +11,7 @@ type TransferMoneyBody = {
   toWalletId?: unknown;
   amount?: unknown;
   note?: unknown;
+  occurredAt?: unknown;
 };
 
 function buildTransferDescription(fromWalletName: string, toWalletName: string, note: string): string {
@@ -46,6 +48,10 @@ export default async (request: Request) => {
     return new Response("Note is required", { status: 400 });
   }
 
+  if (body.occurredAt !== undefined && typeof body.occurredAt !== "string") {
+    return new Response("Occurred at must be a date string", { status: 400 });
+  }
+
   const fromWalletId = body.fromWalletId.trim();
   const toWalletId = body.toWalletId.trim();
   const amount = body.amount;
@@ -57,7 +63,7 @@ export default async (request: Request) => {
 
   const wallets = await db
     .selectFrom("wallet")
-    .select(["id", "name", "amount"])
+    .select(["id", "name", "amount", "timezone"])
     .where("id", "in", [fromWalletId, toWalletId])
     .where("tenantId", "=", tenantId)
     .where("deletedAt", "is", null)
@@ -76,6 +82,9 @@ export default async (request: Request) => {
 
   const description = buildTransferDescription(fromWallet.name, toWallet.name, note);
   const now = new Date();
+  // Matches the add-transaction default rule: current instant unless the user picks a date,
+  // to keep intraday ordering consistent with backfilled rows.
+  const occurredAt = body.occurredAt ? calendarDateToOccurredAtStart(fromWallet.timezone, body.occurredAt) : now;
 
   await db.transaction().execute(async (trx) => {
     await trx
@@ -85,6 +94,7 @@ export default async (request: Request) => {
         type: "expense",
         amount,
         description,
+        occurredAt,
         createdAt: now,
         updatedAt: now,
       })
@@ -97,6 +107,7 @@ export default async (request: Request) => {
         type: "income",
         amount,
         description,
+        occurredAt,
         createdAt: now,
         updatedAt: now,
       })

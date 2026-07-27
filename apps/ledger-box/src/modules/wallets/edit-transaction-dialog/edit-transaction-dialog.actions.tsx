@@ -25,6 +25,7 @@ function getInitialInput(transaction: TransactionDto): EditTransactionInput {
     type: transaction.type,
     amount: formatAmountForInput(transaction.amount),
     description: transaction.description,
+    occurredAt: transaction.occurredAt.slice(0, 10),
   };
 }
 

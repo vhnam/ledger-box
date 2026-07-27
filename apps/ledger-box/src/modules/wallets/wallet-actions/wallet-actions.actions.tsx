@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 
 import type { DatePickerRangeValue } from '@vhnam/ui/components/date-picker-range';
 
-import { DateFormat, endOfDay, format, formatDate, parseISO, startOfDay, subMonths } from '@vhnam/utils/date';
+import { DateFormat, format, formatDate, parseISO, subMonths } from '@vhnam/utils/date';
 
 import { FILTER_OPTIONS, type FilterOptionValue } from '#/constants/filter-options';
 import {
@@ -43,8 +43,10 @@ function toTransactionQuery(search: WalletTransactionSearch): Omit<TransactionQu
   };
 
   if (search.filter === FILTER_OPTIONS.DATE_RANGE && search.from && search.to) {
-    query.from = startOfDay(parseISO(search.from)).toISOString();
-    query.to = endOfDay(parseISO(search.to)).toISOString();
+    // Send calendar dates only; the server resolves bounds in the wallet's timezone
+    // (see `resolvePeriodBounds`). Do not pre-convert to ISO instants here.
+    query.from = search.from;
+    query.to = search.to;
   }
 
   return query;

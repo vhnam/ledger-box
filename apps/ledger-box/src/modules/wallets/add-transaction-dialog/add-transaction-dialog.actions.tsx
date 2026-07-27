@@ -22,6 +22,7 @@ function getDefaultInput(): AddTransactionInput {
     type: 'expense',
     amount: '',
     description: '',
+    occurredAt: undefined,
   };
 }
 

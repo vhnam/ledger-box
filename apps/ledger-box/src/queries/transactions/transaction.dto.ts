@@ -6,6 +6,7 @@ export interface TransactionDto {
   type: TransactionType;
   amount: number;
   description: string;
+  occurredAt: string;
   createdAt: string;
   updatedAt: string;
 }

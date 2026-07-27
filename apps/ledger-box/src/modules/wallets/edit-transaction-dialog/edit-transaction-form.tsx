@@ -2,6 +2,7 @@ import { Field as FormField, Form } from '@formisch/react';
 
 import { Button } from '@vhnam/ui/components/button';
 import { CurrencyInput } from '@vhnam/ui/components/currency-input';
+import { DatePicker } from '@vhnam/ui/components/date-picker';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@vhnam/ui/components/field';
 import { Icon } from '@vhnam/ui/components/icon';
 import { Spinner } from '@vhnam/ui/components/spinner';
@@ -101,6 +102,23 @@ function EditTransactionForm({ form, onSubmit, isPending, error }: EditTransacti
                 defaultValue={field.input}
                 aria-invalid={!!field.errors}
                 {...field.props}
+              />
+              {field.errors && <FieldError>{field.errors[0]}</FieldError>}
+            </Field>
+          )}
+        />
+
+        <FormField
+          of={form}
+          path={['occurredAt']}
+          children={(field) => (
+            <Field data-invalid={!!field.errors}>
+              <FieldLabel htmlFor={field.props.name}>Date</FieldLabel>
+              <DatePicker
+                id={field.props.name}
+                value={field.input ? new Date(field.input) : undefined}
+                placeholder="Pick a date"
+                onChange={(date) => field.onChange(date ? date.toISOString().slice(0, 10) : undefined)}
               />
               {field.errors && <FieldError>{field.errors[0]}</FieldError>}
             </Field>

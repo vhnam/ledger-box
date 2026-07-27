@@ -41,7 +41,6 @@ function WalletPagination({
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
-              size="sm"
               href="#"
               aria-disabled={!canGoPrevious}
               className={cn(!canGoPrevious && 'pointer-events-none opacity-50')}
@@ -74,7 +73,6 @@ function WalletPagination({
 
           <PaginationItem>
             <PaginationNext
-              size="sm"
               href="#"
               aria-disabled={!canGoNext}
               className={cn(!canGoNext && 'pointer-events-none opacity-50')}

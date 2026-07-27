@@ -10,6 +10,8 @@ export interface WalletTable {
   tenantId: string;
   name: string;
   amount: number;
+  /** IANA timezone name; authoritative zone for all calendar-day/month period boundaries. */
+  timezone: Generated<string>;
   createdAt: ColumnType<Date, Date | string, Date | string>;
   updatedAt: ColumnType<Date, Date | string, Date | string>;
   deletedAt: ColumnType<Date | null, Date | string | null, Date | string | null>;
@@ -33,15 +35,38 @@ export interface TransactionTable {
   type: TransactionType;
   amount: number;
   description: string;
+  /** User-editable event date; the sole period boundary for filters, summaries, and statements. */
+  occurredAt: ColumnType<Date, Date | string, Date | string>;
   createdAt: ColumnType<Date, Date | string, Date | string>;
   updatedAt: ColumnType<Date, Date | string, Date | string>;
   deletedAt: ColumnType<Date | null, Date | string | null, Date | string | null>;
+}
+
+export interface WalletStatementShareTable {
+  id: Generated<string>;
+  walletId: string;
+  tenantId: string;
+  periodFrom: ColumnType<Date, Date | string, Date | string>;
+  periodTo: ColumnType<Date, Date | string, Date | string>;
+  tokenHash: string;
+  displayTitle: string | null;
+  expiresAt: ColumnType<Date | null, Date | string | null, Date | string | null>;
+  revokedAt: ColumnType<Date | null, Date | string | null, Date | string | null>;
+  /** Frozen `StatementSnapshot` payload; the public endpoint serves this, never recomputes. */
+  snapshotJson: ColumnType<unknown, unknown, unknown>;
+  snapshotAt: ColumnType<Date, Date | string, Date | string>;
+  accessCount: Generated<number>;
+  lastAccessedAt: ColumnType<Date | null, Date | string | null, Date | string | null>;
+  rateWindowStart: ColumnType<Date | null, Date | string | null, Date | string | null>;
+  rateWindowCount: Generated<number>;
+  createdAt: Generated<ColumnType<Date, Date | string, Date | string>>;
 }
 
 export interface Database {
   wallet: WalletTable;
   walletMember: WalletMemberTable;
   transaction: TransactionTable;
+  walletStatementShare: WalletStatementShareTable;
 }
 
 export type Wallet = Selectable<WalletTable>;
@@ -55,3 +80,7 @@ export type WalletMemberUpdate = Updateable<WalletMemberTable>;
 export type Transaction = Selectable<TransactionTable>;
 export type NewTransaction = Insertable<TransactionTable>;
 export type TransactionUpdate = Updateable<TransactionTable>;
+
+export type WalletStatementShare = Selectable<WalletStatementShareTable>;
+export type NewWalletStatementShare = Insertable<WalletStatementShareTable>;
+export type WalletStatementShareUpdate = Updateable<WalletStatementShareTable>;

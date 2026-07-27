@@ -1,24 +1,9 @@
 import axios from 'axios';
 
 import type { WalletMemberRole } from '#/constants/wallet-member-role-options';
+import { getApiErrorMessage } from '#/lib/api-error';
 import type { WalletMemberDto } from '#/queries/wallets/wallet-member.dto';
 import type { InviteWalletMemberSchema, UpdateWalletMemberRoleSchema } from '#/schemas/wallet-member.schema';
-
-function getApiErrorMessage(error: unknown, fallback: string): string {
-  if (axios.isAxiosError(error)) {
-    const data = error.response?.data;
-
-    if (typeof data === 'string' && data.length > 0) {
-      return data;
-    }
-  }
-
-  if (error instanceof Error) {
-    return error.message;
-  }
-
-  return fallback;
-}
 
 export async function fetchWalletMembers(walletId: string): Promise<WalletMemberDto[]> {
   const { data } = await axios.get<WalletMemberDto[]>(`/api/wallets/${walletId}/members`);

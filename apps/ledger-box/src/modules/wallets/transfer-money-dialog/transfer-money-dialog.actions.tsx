@@ -25,6 +25,7 @@ function getDefaultInput(walletId: string, wallets: WalletDto[]): TransferMoneyI
     toWalletId: defaultTo,
     amount: '',
     note: '',
+    occurredAt: undefined,
   };
 }
 
