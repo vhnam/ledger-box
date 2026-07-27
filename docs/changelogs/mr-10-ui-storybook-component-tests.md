@@ -49,4 +49,4 @@ No database migrations or new environment variables.
 
 ### Commits
 
-- `3942d04` test(storybook): add Vitest play coverage for UI components
+- `82e938b` test(storybook): add Vitest play coverage for UI components
