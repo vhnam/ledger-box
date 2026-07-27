@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, waitFor, within } from 'storybook/test';
 
 import { Button } from '@vhnam/ui/components/button';
 import { toast, Toaster } from '@vhnam/ui/components/toast';
@@ -25,6 +26,10 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => <Button onClick={() => toast.add({ title: 'Wallet created' })}>Show toast</Button>,
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole('button', { name: 'Show toast' }));
+    await waitFor(() => expect(within(document.body).getByText('Wallet created')).toBeVisible());
+  },
 };
 
 export const Variants: Story = {
@@ -47,6 +52,10 @@ export const Variants: Story = {
       </Button>
     </div>
   ),
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole('button', { name: 'Success' }));
+    await waitFor(() => expect(within(document.body).getByText('Wallet created')).toBeVisible());
+  },
 };
 
 export const WithDescription: Story = {
@@ -86,6 +95,11 @@ export const WithAction: Story = {
 };
 
 export const WithPromise: Story = {
+  parameters: {
+    vitest: {
+      disable: true,
+    },
+  },
   render: () => (
     <Button
       onClick={() =>

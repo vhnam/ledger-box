@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, waitFor, within } from 'storybook/test';
 
 import { Button } from '@vhnam/ui/components/button';
 import { Field, FieldLabel } from '@vhnam/ui/components/field';
@@ -52,6 +53,13 @@ export const Default: Story = {
       </SheetContent>
     </Sheet>
   ),
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole('button', { name: 'Open sheet' }));
+    await waitFor(() => expect(within(document.body).getByRole('dialog')).toBeInTheDocument());
+    await expect(within(document.body).getByRole('heading', { name: 'Edit profile' })).toBeInTheDocument();
+    await userEvent.click(within(document.body).getByRole('button', { name: 'Cancel' }));
+    await waitFor(() => expect(within(document.body).queryByRole('dialog')).toBeNull());
+  },
 };
 
 export const Sides: Story = {

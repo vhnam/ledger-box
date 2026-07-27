@@ -65,7 +65,7 @@ pnpm --filter @vhnam/ui shadcn:add <component>
 
 This runs the shadcn CLI and then rewrites its `@/`-aliased imports to the `#/` imports this package uses.
 
-After adding a component, add a matching story in `apps/storybook/src/stories/<component>.stories.tsx`.
+After adding a component, add a matching story in `apps/storybook/src/stories/<component>.stories.tsx`. For interactive components, add a `play` function in that story (see `button.stories.tsx`); static components only need the story for automatic smoke + a11y coverage.
 
 ## Components
 

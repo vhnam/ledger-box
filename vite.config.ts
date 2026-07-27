@@ -16,4 +16,7 @@ export default defineConfig({
   run: {
     cache: true,
   },
+  test: {
+    projects: ['apps/storybook/vitest.config.ts'],
+  },
 });

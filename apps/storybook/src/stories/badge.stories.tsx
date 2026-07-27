@@ -66,6 +66,6 @@ export const Custom: Story = {
   args: {
     children: 'Owner',
     variant: 'secondary',
-    className: 'border-transparent bg-yellow-500/15 text-yellow-600 hover:bg-yellow-500/15',
+    className: 'border-transparent bg-yellow-100 text-yellow-900 hover:bg-yellow-100',
   },
 };

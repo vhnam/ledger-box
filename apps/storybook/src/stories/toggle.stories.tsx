@@ -42,7 +42,7 @@ export const Outline: Story = {
 
 export const WithIcon: Story = {
   render: (args) => (
-    <Toggle {...args}>
+    <Toggle {...args} aria-label="Favorite">
       <Icon name="StarIcon" />
     </Toggle>
   ),

@@ -9,6 +9,8 @@ import {
   AvatarImage,
 } from '@vhnam/ui/components/avatar';
 
+import { sampleAvatarDataUri } from '../fixtures/sample-avatar';
+
 const meta = {
   title: 'Components/Avatar',
   component: Avatar,
@@ -30,7 +32,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: (args) => (
     <Avatar {...args}>
-      <AvatarImage src="https://github.com/shadcn.png" alt="Avatar" />
+      <AvatarImage src={sampleAvatarDataUri} alt="Avatar" />
       <AvatarFallback>CN</AvatarFallback>
     </Avatar>
   ),
@@ -64,7 +66,7 @@ export const Sizes: Story = {
 export const WithBadge: Story = {
   render: () => (
     <Avatar>
-      <AvatarImage src="https://github.com/shadcn.png" alt="Avatar" />
+      <AvatarImage src={sampleAvatarDataUri} alt="Avatar" />
       <AvatarFallback>CN</AvatarFallback>
       <AvatarBadge className="bg-green-500" />
     </Avatar>
@@ -75,7 +77,7 @@ export const Group: Story = {
   render: () => (
     <AvatarGroup>
       <Avatar>
-        <AvatarImage src="https://github.com/shadcn.png" alt="Avatar" />
+        <AvatarImage src={sampleAvatarDataUri} alt="Avatar" />
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
       <Avatar>

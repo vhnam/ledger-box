@@ -88,7 +88,7 @@ function DatePickerRange({
             </Button>
           }
         />
-        <PopoverContent className="w-auto p-0" align={align}>
+        <PopoverContent className="w-auto p-0" align={align} aria-label={label ?? 'Choose date range'}>
           <Calendar
             mode="range"
             defaultMonth={dateRange?.from}
