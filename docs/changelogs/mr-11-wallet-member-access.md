@@ -57,4 +57,4 @@ No new environment variables.
 
 ### Commits
 
-- (pending — not yet committed)
+- `5cee428` feat(ledger-box): grant active wallet members role-scoped access
