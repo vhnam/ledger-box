@@ -2,6 +2,7 @@ import { Field as FormField, Form } from '@formisch/react';
 
 import { Button } from '@vhnam/ui/components/button';
 import { CurrencyInput } from '@vhnam/ui/components/currency-input';
+import { DatePicker } from '@vhnam/ui/components/date-picker';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@vhnam/ui/components/dialog';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@vhnam/ui/components/field';
 import { Icon } from '@vhnam/ui/components/icon';
@@ -125,6 +126,23 @@ function AddTransactionDialog({ open, onOpenChange, walletId }: AddTransactionDi
                     aria-invalid={!!field.errors}
                     placeholder="What is this for?"
                     {...field.props}
+                  />
+                  {field.errors && <FieldError>{field.errors[0]}</FieldError>}
+                </Field>
+              )}
+            />
+
+            <FormField
+              of={form}
+              path={['occurredAt']}
+              children={(field) => (
+                <Field data-invalid={!!field.errors}>
+                  <FieldLabel htmlFor={field.props.name}>Date (optional)</FieldLabel>
+                  <DatePicker
+                    id={field.props.name}
+                    value={field.input ? new Date(field.input) : undefined}
+                    placeholder="Today"
+                    onChange={(date) => field.onChange(date ? date.toISOString().slice(0, 10) : undefined)}
                   />
                   {field.errors && <FieldError>{field.errors[0]}</FieldError>}
                 </Field>

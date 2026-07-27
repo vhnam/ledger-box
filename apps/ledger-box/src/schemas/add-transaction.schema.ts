@@ -11,6 +11,7 @@ export const addTransactionSchema = v.object({
     v.minValue(0.01, 'Amount must be greater than 0'),
   ),
   description: v.pipe(v.string(), v.trim(), v.nonEmpty('Description is required')),
+  occurredAt: v.optional(v.pipe(v.string(), v.isoDate())),
 });
 
 export type AddTransactionInput = v.InferInput<typeof addTransactionSchema>;

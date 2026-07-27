@@ -13,6 +13,7 @@ export const transferMoneySchema = v.pipe(
       v.minValue(0.01, 'Amount must be greater than 0'),
     ),
     note: v.pipe(v.string(), v.trim(), v.nonEmpty('Note is required')),
+    occurredAt: v.optional(v.pipe(v.string(), v.isoDate())),
   }),
   v.forward(
     v.partialCheck(

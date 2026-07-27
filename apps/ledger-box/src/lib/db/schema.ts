@@ -10,6 +10,8 @@ export interface WalletTable {
   tenantId: string;
   name: string;
   amount: number;
+  /** IANA timezone name; authoritative zone for all calendar-day/month period boundaries. */
+  timezone: Generated<string>;
   createdAt: ColumnType<Date, Date | string, Date | string>;
   updatedAt: ColumnType<Date, Date | string, Date | string>;
   deletedAt: ColumnType<Date | null, Date | string | null, Date | string | null>;
@@ -33,6 +35,8 @@ export interface TransactionTable {
   type: TransactionType;
   amount: number;
   description: string;
+  /** User-editable event date; the sole period boundary for filters, summaries, and statements. */
+  occurredAt: ColumnType<Date, Date | string, Date | string>;
   createdAt: ColumnType<Date, Date | string, Date | string>;
   updatedAt: ColumnType<Date, Date | string, Date | string>;
   deletedAt: ColumnType<Date | null, Date | string | null, Date | string | null>;

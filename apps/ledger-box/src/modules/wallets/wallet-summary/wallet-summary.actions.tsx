@@ -1,9 +1,5 @@
-import { useMemo } from 'react';
-
 import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
-import { useTransactions } from '#/queries/transactions/transaction.queries';
-
-const SUMMARY_PAGE_SIZE = 100;
+import { useWalletSummaryQuery } from '#/queries/wallet-summary/wallet-summary.queries';
 
 type WalletSummaryStats = {
   income: number;
@@ -13,35 +9,16 @@ type WalletSummaryStats = {
 
 type UseWalletSummaryOptions = {
   walletId: string;
-  transactionQuery: Omit<TransactionQueryParams, 'page' | 'pageSize'>;
+  transactionQuery: Pick<TransactionQueryParams, 'filter' | 'from' | 'to'>;
 };
 
+// Totals are computed by a server-side aggregate over the full period (see
+// `#/lib/wallet-summary.ts`), not by reducing a paginated page of transactions — a paginated
+// reduce silently truncated totals for any period with more than one page of transactions.
 function useWalletSummary({ walletId, transactionQuery }: UseWalletSummaryOptions) {
-  const { data, isPending, isError } = useTransactions(walletId, {
-    page: 1,
-    pageSize: SUMMARY_PAGE_SIZE,
-    ...transactionQuery,
-  });
+  const { data, isPending, isError } = useWalletSummaryQuery(walletId, transactionQuery);
 
-  const stats = useMemo<WalletSummaryStats>(() => {
-    const items = data?.items ?? [];
-    let income = 0;
-    let expenses = 0;
-
-    for (const transaction of items) {
-      if (transaction.type === 'income') {
-        income += transaction.amount;
-      } else {
-        expenses += transaction.amount;
-      }
-    }
-
-    return {
-      income,
-      expenses,
-      netBalance: income - expenses,
-    };
-  }, [data?.items]);
+  const stats: WalletSummaryStats = data ?? { income: 0, expenses: 0, netBalance: 0 };
 
   return {
     stats,

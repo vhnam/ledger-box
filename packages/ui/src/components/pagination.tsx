@@ -26,8 +26,8 @@ function PaginationItem({ ...props }: React.ComponentProps<'li'>) {
 
 type PaginationLinkProps = {
   isActive?: boolean;
-} & Pick<React.ComponentProps<typeof Button>, 'size'> &
-  React.ComponentProps<'a'>;
+  size?: React.ComponentProps<typeof Button>['size'];
+} & React.ComponentProps<'a'>;
 
 function PaginationLink({ className, isActive, size = 'icon', ...props }: PaginationLinkProps) {
   return (
@@ -47,7 +47,7 @@ function PaginationPrevious({
   className,
   text = 'Previous',
   ...props
-}: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
+}: Omit<React.ComponentProps<typeof PaginationLink>, 'size'> & { text?: string }) {
   return (
     <PaginationLink aria-label="Go to previous page" size="default" className={cn('pl-1.5!', className)} {...props}>
       <Icon name="CaretLeftIcon" data-icon="inline-start" />
@@ -60,7 +60,7 @@ function PaginationNext({
   className,
   text = 'Next',
   ...props
-}: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
+}: Omit<React.ComponentProps<typeof PaginationLink>, 'size'> & { text?: string }) {
   return (
     <PaginationLink aria-label="Go to next page" size="default" className={cn('pr-1.5!', className)} {...props}>
       <span className="hidden sm:block">{text}</span>

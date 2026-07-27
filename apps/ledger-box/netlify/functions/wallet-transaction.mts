@@ -3,6 +3,7 @@ import type { Config, Context } from "@netlify/functions";
 import { auth } from "#/lib/auth.ts";
 import { db } from "#/lib/db/index.ts";
 import type { TransactionType } from "#/lib/db/schema.ts";
+import { calendarDateToOccurredAtStart } from "#/lib/period-bounds.ts";
 
 import { getTenantId, requireOwnedTransaction } from "./lib/tenant-access.ts";
 
@@ -10,6 +11,7 @@ type UpdateTransactionBody = {
   type?: unknown;
   amount?: unknown;
   description?: unknown;
+  occurredAt?: unknown;
 };
 
 function getIds(request: Request, context: Context): { walletId: string | null; transactionId: string | null } {
@@ -113,6 +115,10 @@ export default async (request: Request, context: Context) => {
     return new Response("Description is required", { status: 400 });
   }
 
+  if (body.occurredAt !== undefined && typeof body.occurredAt !== "string") {
+    return new Response("Occurred at must be a date string", { status: 400 });
+  }
+
   const type = body.type;
   const amount = body.amount;
   const description = body.description.trim();
@@ -121,6 +127,9 @@ export default async (request: Request, context: Context) => {
     getTransactionContribution(type, amount) -
     getTransactionContribution(existingTransaction.type, existingTransaction.amount);
   const now = new Date();
+  // Only change occurred_at when the caller explicitly provides a date; amount/description
+  // edits alone must not shift the transaction's period.
+  const occurredAt = body.occurredAt ? calendarDateToOccurredAtStart(wallet.timezone, body.occurredAt) : undefined;
 
   await db.transaction().execute(async (trx) => {
     await trx
@@ -130,6 +139,7 @@ export default async (request: Request, context: Context) => {
         amount,
         description,
         updatedAt: now,
+        ...(occurredAt ? { occurredAt } : {}),
       })
       .where("id", "=", transactionId)
       .execute();

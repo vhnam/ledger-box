@@ -112,7 +112,7 @@ function WalletTransactionDetailContent({
         <DetailRow
           icon="CalendarBlankIcon"
           label="Date & Time"
-          value={formatTransactionDetailDateTime(transaction.createdAt)}
+          value={formatTransactionDetailDateTime(transaction.occurredAt)}
           className="p-4"
         />
         <AttachmentsDetailRow

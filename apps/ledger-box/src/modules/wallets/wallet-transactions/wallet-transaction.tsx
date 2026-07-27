@@ -46,7 +46,7 @@ function WalletTransaction({ transaction }: WalletTransactionProps) {
           <div className="min-w-0">
             <p className="truncate text-sm font-medium">{transaction.description}</p>
             <p className="text-xs font-mono text-muted-foreground">
-              {formatDateTime(transaction.createdAt, DateTimeFormat.Numeric)}
+              {formatDateTime(transaction.occurredAt, DateTimeFormat.Numeric)}
             </p>
           </div>
           <p className={getTransactionAmountClassName(transaction.type)}>
