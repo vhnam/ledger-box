@@ -6,6 +6,41 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-09 — feat/share-link](docs/changelogs/mr-09-shareable-statement-links.md)
+
+#### Added
+
+- Migration `0005_create_wallet_statement_share` — snapshot storage, hashed token, expiry/revocation, access and rate-limit tracking
+- Statement share APIs: list/create/preview and revoke at `/api/wallets/:walletId/statement-shares`; public read at `GET /api/public/statements/:token`
+- Wallet settings **Statement links** — mandatory preview before create, copy link, revoke; default 90-day expiry
+- Public route `/statement/$token` with read-only snapshot view (opening/closing balance, running balance, period + timezone label)
+- `#/lib/share-token.ts` (CSPRNG + SHA-256); `#/lib/api-error.ts` shared axios error helper
+- `Referrer-Policy: no-referrer` for `/statement/*`
+
+#### Changed
+
+- `AGENTS.md` documents statement-share and public statement routes
+
+### [mr-08 — feat/share-link](docs/changelogs/mr-08-transaction-dates-and-timezone.md)
+
+#### Added
+
+- Migration `0004_add_transaction_occurred_at_and_wallet_timezone` — `transaction.occurred_at`, `wallet.timezone` (default `Asia/Ho_Chi_Minh`)
+- Timezone-aware period resolver (`#/lib/period-bounds.ts`), statement builder (`#/lib/statement.ts`), and `GET /api/wallets/:walletId/summary` for uncapped period totals
+- `DatePicker` in `@vhnam/ui` with Storybook story; optional date on add/edit transaction and transfer dialogs
+- `useWalletSummary` hook
+
+#### Changed
+
+- Transaction filters, default sort, and display use `occurred_at` instead of `updated_at` / `created_at`
+- Summary cards use summary API (fixes wrong totals when a period exceeds one page)
+- Period boundaries computed server-side in wallet timezone (fixes UTC preset and custom-range bugs)
+- `PaginationLink` `size` prop is optional
+
+#### Removed
+
+- `netlify/functions/lib/date-ranges.ts`
+
 ### [mr-07 — refactor/import](docs/changelogs/mr-07-hash-import-alias.md)
 
 #### Added
