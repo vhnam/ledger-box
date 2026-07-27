@@ -1,11 +1,11 @@
-import type { Config, Context } from "@netlify/functions";
+import type { Config, Context } from '@netlify/functions';
 
-import { auth } from "#/lib/auth.ts";
-import { db } from "#/lib/db/index.ts";
-import type { TransactionType } from "#/lib/db/schema.ts";
-import { calendarDateToOccurredAtStart } from "#/lib/period-bounds.ts";
+import { auth } from '#/lib/auth.ts';
+import { db } from '#/lib/db/index.ts';
+import type { TransactionType } from '#/lib/db/schema.ts';
+import { calendarDateToOccurredAtStart } from '#/lib/period-bounds.ts';
 
-import { getTenantId, requireOwnedTransaction } from "./lib/tenant-access.ts";
+import { getTenantId, requireTransactionWriteAccess } from './lib/tenant-access.ts';
 
 type UpdateTransactionBody = {
   type?: unknown;
@@ -19,9 +19,9 @@ function getIds(request: Request, context: Context): { walletId: string | null; 
   const paramTransactionId = context.params?.transactionId;
 
   if (
-    typeof paramWalletId === "string" &&
+    typeof paramWalletId === 'string' &&
     paramWalletId.length > 0 &&
-    typeof paramTransactionId === "string" &&
+    typeof paramTransactionId === 'string' &&
     paramTransactionId.length > 0
   ) {
     return { walletId: paramWalletId, transactionId: paramTransactionId };
@@ -36,65 +36,64 @@ function getIds(request: Request, context: Context): { walletId: string | null; 
 }
 
 function isValidTransactionType(value: unknown): value is TransactionType {
-  return value === "income" || value === "expense";
+  return value === 'income' || value === 'expense';
 }
 
 function getTransactionContribution(type: TransactionType, amount: number): number {
-  return type === "income" ? amount : -amount;
+  return type === 'income' ? amount : -amount;
 }
 
 export default async (request: Request, context: Context) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response("Unauthorized", { status: 401 });
+    return new Response('Unauthorized', { status: 401 });
   }
 
-  if (request.method !== "PATCH" && request.method !== "DELETE") {
-    return new Response("Method Not Allowed", { status: 405 });
+  if (request.method !== 'PATCH' && request.method !== 'DELETE') {
+    return new Response('Method Not Allowed', { status: 405 });
   }
 
   const { walletId, transactionId } = getIds(request, context);
 
   if (!walletId) {
-    return new Response("Wallet id is required", { status: 400 });
+    return new Response('Wallet id is required', { status: 400 });
   }
 
   if (!transactionId) {
-    return new Response("Transaction id is required", { status: 400 });
+    return new Response('Transaction id is required', { status: 400 });
   }
 
   const tenantId = getTenantId(session);
-  const ownership = await requireOwnedTransaction(tenantId, walletId, transactionId);
+  const access = await requireTransactionWriteAccess(tenantId, walletId, transactionId, session.user.email);
 
-  if (!ownership.ok) {
-    return ownership.error;
+  if (!access.ok) {
+    return access.error;
   }
 
-  const { wallet, transaction: existingTransaction } = ownership;
+  const { wallet, transaction: existingTransaction } = access;
 
-  if (request.method === "DELETE") {
+  if (request.method === 'DELETE') {
     const walletDelta = -getTransactionContribution(existingTransaction.type, existingTransaction.amount);
     const now = new Date();
 
     await db.transaction().execute(async (trx) => {
       await trx
-        .updateTable("transaction")
+        .updateTable('transaction')
         .set({
           deletedAt: now,
           updatedAt: now,
         })
-        .where("id", "=", transactionId)
+        .where('id', '=', transactionId)
         .execute();
 
       await trx
-        .updateTable("wallet")
+        .updateTable('wallet')
         .set({
           amount: wallet.amount + walletDelta,
           updatedAt: now,
         })
-        .where("id", "=", walletId)
-        .where("tenantId", "=", tenantId)
+        .where('id', '=', walletId)
         .execute();
     });
 
@@ -104,19 +103,19 @@ export default async (request: Request, context: Context) => {
   const body = (await request.json()) as UpdateTransactionBody;
 
   if (!isValidTransactionType(body.type)) {
-    return new Response("Transaction type must be income or expense", { status: 400 });
+    return new Response('Transaction type must be income or expense', { status: 400 });
   }
 
-  if (typeof body.amount !== "number" || !Number.isFinite(body.amount) || body.amount <= 0) {
-    return new Response("Amount must be greater than 0", { status: 400 });
+  if (typeof body.amount !== 'number' || !Number.isFinite(body.amount) || body.amount <= 0) {
+    return new Response('Amount must be greater than 0', { status: 400 });
   }
 
-  if (typeof body.description !== "string" || body.description.trim().length === 0) {
-    return new Response("Description is required", { status: 400 });
+  if (typeof body.description !== 'string' || body.description.trim().length === 0) {
+    return new Response('Description is required', { status: 400 });
   }
 
-  if (body.occurredAt !== undefined && typeof body.occurredAt !== "string") {
-    return new Response("Occurred at must be a date string", { status: 400 });
+  if (body.occurredAt !== undefined && typeof body.occurredAt !== 'string') {
+    return new Response('Occurred at must be a date string', { status: 400 });
   }
 
   const type = body.type;
@@ -133,7 +132,7 @@ export default async (request: Request, context: Context) => {
 
   await db.transaction().execute(async (trx) => {
     await trx
-      .updateTable("transaction")
+      .updateTable('transaction')
       .set({
         type,
         amount,
@@ -141,17 +140,16 @@ export default async (request: Request, context: Context) => {
         updatedAt: now,
         ...(occurredAt ? { occurredAt } : {}),
       })
-      .where("id", "=", transactionId)
+      .where('id', '=', transactionId)
       .execute();
 
     await trx
-      .updateTable("wallet")
+      .updateTable('wallet')
       .set({
         amount: wallet.amount + walletDelta,
         updatedAt: now,
       })
-      .where("id", "=", walletId)
-      .where("tenantId", "=", tenantId)
+      .where('id', '=', walletId)
       .execute();
   });
 
@@ -159,5 +157,5 @@ export default async (request: Request, context: Context) => {
 };
 
 export const config: Config = {
-  path: "/api/wallets/:walletId/transactions/:transactionId",
+  path: '/api/wallets/:walletId/transactions/:transactionId',
 };

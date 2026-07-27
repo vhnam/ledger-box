@@ -1,13 +1,13 @@
-import type { Config, Context } from "@netlify/functions";
+import type { Config, Context } from '@netlify/functions';
 
-import { WALLET_MEMBER_ROLES } from "#/constants/wallet-member-role-options.ts";
-import { auth } from "#/lib/auth.ts";
-import { db } from "#/lib/db/index.ts";
-import type { WalletMemberRole } from "#/lib/db/schema.ts";
+import { WALLET_MEMBER_ROLES } from '#/constants/wallet-member-role-options.ts';
+import { auth } from '#/lib/auth.ts';
+import { db } from '#/lib/db/index.ts';
+import type { WalletMemberRole } from '#/lib/db/schema.ts';
 
-import { getTenantId, requireOwnedWallet } from "./lib/tenant-access.ts";
-import { findUserByEmail, findUserById } from "./lib/user-lookup.ts";
-import { mapWalletMember } from "./lib/wallet-member-response.ts";
+import { getTenantId, requireOwnedWallet } from './lib/tenant-access.ts';
+import { findUserByEmail, findUserById } from './lib/user-lookup.ts';
+import { mapWalletMember } from './lib/wallet-member-response.ts';
 
 type UpdateWalletMemberBody = {
   role?: unknown;
@@ -18,9 +18,9 @@ function getIds(request: Request, context: Context): { walletId: string | null; 
   const paramMemberId = context.params?.memberId;
 
   if (
-    typeof paramWalletId === "string" &&
+    typeof paramWalletId === 'string' &&
     paramWalletId.length > 0 &&
-    typeof paramMemberId === "string" &&
+    typeof paramMemberId === 'string' &&
     paramMemberId.length > 0
   ) {
     return { walletId: paramWalletId, memberId: paramMemberId };
@@ -42,21 +42,21 @@ export default async (request: Request, context: Context) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response("Unauthorized", { status: 401 });
+    return new Response('Unauthorized', { status: 401 });
   }
 
-  if (request.method !== "PATCH" && request.method !== "DELETE") {
-    return new Response("Method Not Allowed", { status: 405 });
+  if (request.method !== 'PATCH' && request.method !== 'DELETE') {
+    return new Response('Method Not Allowed', { status: 405 });
   }
 
   const { walletId, memberId } = getIds(request, context);
 
   if (!walletId) {
-    return new Response("Wallet id is required", { status: 400 });
+    return new Response('Wallet id is required', { status: 400 });
   }
 
   if (!memberId) {
-    return new Response("Member id is required", { status: 400 });
+    return new Response('Member id is required', { status: 400 });
   }
 
   const tenantId = getTenantId(session);
@@ -67,28 +67,28 @@ export default async (request: Request, context: Context) => {
   }
 
   const existingMember = await db
-    .selectFrom("walletMember")
-    .select(["id", "email", "userId", "role", "status"])
-    .where("id", "=", memberId)
-    .where("walletId", "=", walletId)
-    .where("deletedAt", "is", null)
+    .selectFrom('walletMember')
+    .select(['id', 'email', 'userId', 'role', 'status'])
+    .where('id', '=', memberId)
+    .where('walletId', '=', walletId)
+    .where('deletedAt', 'is', null)
     .executeTakeFirst();
 
   if (!existingMember) {
-    return new Response("Member not found", { status: 404 });
+    return new Response('Member not found', { status: 404 });
   }
 
-  if (request.method === "DELETE") {
+  if (request.method === 'DELETE') {
     const now = new Date();
 
     await db
-      .updateTable("walletMember")
+      .updateTable('walletMember')
       .set({
         deletedAt: now,
         updatedAt: now,
       })
-      .where("id", "=", memberId)
-      .where("walletId", "=", walletId)
+      .where('id', '=', memberId)
+      .where('walletId', '=', walletId)
       .execute();
 
     return Response.json({ success: true });
@@ -97,19 +97,19 @@ export default async (request: Request, context: Context) => {
   const body = (await request.json()) as UpdateWalletMemberBody;
 
   if (!isWalletMemberRole(body.role)) {
-    return new Response("Role is required", { status: 400 });
+    return new Response('Role is required', { status: 400 });
   }
 
   const member = await db
-    .updateTable("walletMember")
+    .updateTable('walletMember')
     .set({
       role: body.role,
       updatedAt: new Date(),
     })
-    .where("id", "=", memberId)
-    .where("walletId", "=", walletId)
-    .where("deletedAt", "is", null)
-    .returning(["id", "email", "userId", "role", "status"])
+    .where('id', '=', memberId)
+    .where('walletId', '=', walletId)
+    .where('deletedAt', 'is', null)
+    .returning(['id', 'email', 'userId', 'role', 'status'])
     .executeTakeFirstOrThrow();
 
   const user = member.userId ? await findUserById(member.userId) : await findUserByEmail(member.email.toLowerCase());
@@ -118,5 +118,5 @@ export default async (request: Request, context: Context) => {
 };
 
 export const config: Config = {
-  path: "/api/wallets/:walletId/members/:memberId",
+  path: '/api/wallets/:walletId/members/:memberId',
 };

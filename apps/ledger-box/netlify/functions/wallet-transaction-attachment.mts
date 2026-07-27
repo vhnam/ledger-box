@@ -1,9 +1,9 @@
-import type { Config, Context } from "@netlify/functions";
+import type { Config, Context } from '@netlify/functions';
 
-import { auth } from "#/lib/auth.ts";
-import { deleteTransactionAttachment } from "#/lib/r2.ts";
+import { auth } from '#/lib/auth.ts';
+import { deleteTransactionAttachment } from '#/lib/r2.ts';
 
-import { getTenantId, requireOwnedTransaction } from "./lib/tenant-access.ts";
+import { getTenantId, requireTransactionWriteAccess } from './lib/tenant-access.ts';
 
 function getIds(
   request: Request,
@@ -14,11 +14,11 @@ function getIds(
   const paramAttachmentId = context.params?.attachmentId;
 
   if (
-    typeof paramWalletId === "string" &&
+    typeof paramWalletId === 'string' &&
     paramWalletId.length > 0 &&
-    typeof paramTransactionId === "string" &&
+    typeof paramTransactionId === 'string' &&
     paramTransactionId.length > 0 &&
-    typeof paramAttachmentId === "string" &&
+    typeof paramAttachmentId === 'string' &&
     paramAttachmentId.length > 0
   ) {
     return {
@@ -43,49 +43,49 @@ export default async (request: Request, context: Context) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response("Unauthorized", { status: 401 });
+    return new Response('Unauthorized', { status: 401 });
   }
 
-  if (request.method !== "DELETE") {
-    return new Response("Method Not Allowed", { status: 405 });
+  if (request.method !== 'DELETE') {
+    return new Response('Method Not Allowed', { status: 405 });
   }
 
   const { walletId, transactionId, attachmentId } = getIds(request, context);
 
   if (!walletId) {
-    return new Response("Wallet id is required", { status: 400 });
+    return new Response('Wallet id is required', { status: 400 });
   }
 
   if (!transactionId) {
-    return new Response("Transaction id is required", { status: 400 });
+    return new Response('Transaction id is required', { status: 400 });
   }
 
   if (!attachmentId) {
-    return new Response("Attachment id is required", { status: 400 });
+    return new Response('Attachment id is required', { status: 400 });
   }
 
   const tenantId = getTenantId(session);
-  const ownership = await requireOwnedTransaction(tenantId, walletId, transactionId);
+  const access = await requireTransactionWriteAccess(tenantId, walletId, transactionId, session.user.email);
 
-  if (!ownership.ok) {
-    return ownership.error;
+  if (!access.ok) {
+    return access.error;
   }
 
   try {
-    const deleted = await deleteTransactionAttachment(tenantId, transactionId, attachmentId);
+    const deleted = await deleteTransactionAttachment(access.wallet.tenantId, transactionId, attachmentId);
 
     if (!deleted) {
-      return new Response("Attachment not found", { status: 404 });
+      return new Response('Attachment not found', { status: 404 });
     }
 
     return Response.json({ success: true });
   } catch (error) {
-    console.error("Failed to delete transaction attachment", error);
+    console.error('Failed to delete transaction attachment', error);
 
-    return new Response("Failed to delete attachment", { status: 500 });
+    return new Response('Failed to delete attachment', { status: 500 });
   }
 };
 
 export const config: Config = {
-  path: "/api/wallets/:walletId/transactions/:transactionId/attachments/:attachmentId",
+  path: '/api/wallets/:walletId/transactions/:transactionId/attachments/:attachmentId',
 };

@@ -1,11 +1,11 @@
-import type { Config, Context } from "@netlify/functions";
+import type { Config, Context } from '@netlify/functions';
 
-import { auth } from "#/lib/auth.ts";
-import { listTransactionAttachments, uploadTransactionAttachment } from "#/lib/r2.ts";
+import { auth } from '#/lib/auth.ts';
+import { listTransactionAttachments, uploadTransactionAttachment } from '#/lib/r2.ts';
 
-import { getTenantId, requireOwnedTransaction } from "./lib/tenant-access.ts";
+import { getTenantId, requireTransactionAccess, requireTransactionWriteAccess } from './lib/tenant-access.ts';
 
-const ACCEPTED_ATTACHMENT_TYPES = new Set(["application/pdf", "image/png", "image/jpeg", "image/webp"]);
+const ACCEPTED_ATTACHMENT_TYPES = new Set(['application/pdf', 'image/png', 'image/jpeg', 'image/webp']);
 
 const MAX_ATTACHMENT_SIZE_BYTES = 10 * 1024 * 1024;
 
@@ -14,9 +14,9 @@ function getIds(request: Request, context: Context): { walletId: string | null; 
   const paramTransactionId = context.params?.transactionId;
 
   if (
-    typeof paramWalletId === "string" &&
+    typeof paramWalletId === 'string' &&
     paramWalletId.length > 0 &&
-    typeof paramTransactionId === "string" &&
+    typeof paramTransactionId === 'string' &&
     paramTransactionId.length > 0
   ) {
     return { walletId: paramWalletId, transactionId: paramTransactionId };
@@ -31,10 +31,10 @@ function getIds(request: Request, context: Context): { walletId: string | null; 
 }
 
 function sanitizeFileName(fileName: string): string {
-  const baseName = fileName.split(/[/\\]/).pop() ?? "file";
-  const sanitized = baseName.replace(/[^\w.\-() ]/g, "_").trim();
+  const baseName = fileName.split(/[/\\]/).pop() ?? 'file';
+  const sanitized = baseName.replace(/[^\w.\-() ]/g, '_').trim();
 
-  return sanitized.length > 0 ? sanitized.slice(0, 255) : "file";
+  return sanitized.length > 0 ? sanitized.slice(0, 255) : 'file';
 }
 
 function isAcceptedAttachment(file: File): boolean {
@@ -45,40 +45,47 @@ export default async (request: Request, context: Context) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response("Unauthorized", { status: 401 });
+    return new Response('Unauthorized', { status: 401 });
   }
 
   const { walletId, transactionId } = getIds(request, context);
 
   if (!walletId) {
-    return new Response("Wallet id is required", { status: 400 });
+    return new Response('Wallet id is required', { status: 400 });
   }
 
   if (!transactionId) {
-    return new Response("Transaction id is required", { status: 400 });
+    return new Response('Transaction id is required', { status: 400 });
   }
 
   const tenantId = getTenantId(session);
-  const ownership = await requireOwnedTransaction(tenantId, walletId, transactionId);
 
-  if (!ownership.ok) {
-    return ownership.error;
-  }
+  if (request.method === 'GET') {
+    const access = await requireTransactionAccess(tenantId, walletId, transactionId, session.user.email);
 
-  if (request.method === "GET") {
+    if (!access.ok) {
+      return access.error;
+    }
+
     try {
-      const attachments = await listTransactionAttachments(tenantId, transactionId);
+      const attachments = await listTransactionAttachments(access.wallet.tenantId, transactionId);
 
       return Response.json({ attachments });
     } catch (error) {
-      console.error("Failed to list transaction attachments", error);
+      console.error('Failed to list transaction attachments', error);
 
-      return new Response("Failed to load attachments", { status: 500 });
+      return new Response('Failed to load attachments', { status: 500 });
     }
   }
 
-  if (request.method !== "POST") {
-    return new Response("Method Not Allowed", { status: 405 });
+  if (request.method !== 'POST') {
+    return new Response('Method Not Allowed', { status: 405 });
+  }
+
+  const access = await requireTransactionWriteAccess(tenantId, walletId, transactionId, session.user.email);
+
+  if (!access.ok) {
+    return access.error;
   }
 
   let formData: FormData;
@@ -86,30 +93,30 @@ export default async (request: Request, context: Context) => {
   try {
     formData = await request.formData();
   } catch {
-    return new Response("Invalid multipart form data", { status: 400 });
+    return new Response('Invalid multipart form data', { status: 400 });
   }
 
-  const files = [...formData.getAll("file"), ...formData.getAll("files")].filter(
+  const files = [...formData.getAll('file'), ...formData.getAll('files')].filter(
     (value): value is File => value instanceof File,
   );
 
   if (files.length === 0) {
-    return new Response("At least one file is required", { status: 400 });
+    return new Response('At least one file is required', { status: 400 });
   }
 
   const uploads = [];
 
   for (const file of files) {
     if (!isAcceptedAttachment(file)) {
-      return new Response("Only PDF, PNG, JPG, JPEG, and WEBP files are supported", { status: 400 });
+      return new Response('Only PDF, PNG, JPG, JPEG, and WEBP files are supported', { status: 400 });
     }
 
     if (file.size <= 0) {
-      return new Response("File must not be empty", { status: 400 });
+      return new Response('File must not be empty', { status: 400 });
     }
 
     if (file.size > MAX_ATTACHMENT_SIZE_BYTES) {
-      return new Response("File size must be 10 MB or less", { status: 400 });
+      return new Response('File size must be 10 MB or less', { status: 400 });
     }
 
     const attachmentId = crypto.randomUUID();
@@ -118,7 +125,7 @@ export default async (request: Request, context: Context) => {
 
     uploads.push(
       uploadTransactionAttachment({
-        tenantId,
+        tenantId: access.wallet.tenantId,
         transactionId,
         attachmentId,
         fileName,
@@ -138,12 +145,12 @@ export default async (request: Request, context: Context) => {
       { status: 201 },
     );
   } catch (error) {
-    console.error("Failed to upload transaction attachment", error);
+    console.error('Failed to upload transaction attachment', error);
 
-    return new Response("Failed to upload attachment", { status: 500 });
+    return new Response('Failed to upload attachment', { status: 500 });
   }
 };
 
 export const config: Config = {
-  path: "/api/wallets/:walletId/transactions/:transactionId/attachments",
+  path: '/api/wallets/:walletId/transactions/:transactionId/attachments',
 };

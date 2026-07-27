@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-11 — feat/ui-testing](docs/changelogs/mr-11-wallet-member-access.md)
+
+#### Added
+
+- Role-scoped wallet member access: `viewer` (read-only) / `manager` (full access except delete-wallet and member/statement-share management), resolved via new `tenant-access.ts` helpers alongside the existing owner-only ones
+- Pending `wallet_member` invites auto-activate on first matching sign-in (by user id, or by email with backfill for users who register after being invited)
+- Migration `0006_add_wallet_member_user_lookup_index`
+- Vitest project for `apps/ledger-box` (previously untested), with integration coverage for the new access paths
+
+#### Changed
+
+- `wallets`, `wallet`, `wallet-transactions(s)`, `wallet-transfer`, `wallet-transaction-attachment(s)`, `wallet-summary` handlers resolve access via role-aware helpers instead of owner-only checks
+- Wallet-balance update predicates and attachment R2 key scoping fixed to work correctly for non-owner (manager) writers
+
 ### [mr-10 — feat/ui-testing](docs/changelogs/mr-10-ui-storybook-component-tests.md)
 
 #### Added
