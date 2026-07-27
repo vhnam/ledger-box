@@ -1,26 +1,11 @@
 import axios from 'axios';
 
+import { getApiErrorMessage } from '#/lib/api-error';
 import type { UploadTransactionAttachmentsDto } from '#/queries/transactions/transaction-attachment.dto';
 import type { TransactionsPageDto } from '#/queries/transactions/transaction.dto';
 import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
 import type { AddTransactionOutput } from '#/schemas/add-transaction.schema';
 import type { EditTransactionOutput } from '#/schemas/edit-transaction.schema';
-
-function getApiErrorMessage(error: unknown, fallback: string): string {
-  if (axios.isAxiosError(error)) {
-    const data = error.response?.data;
-
-    if (typeof data === 'string' && data.length > 0) {
-      return data;
-    }
-  }
-
-  if (error instanceof Error) {
-    return error.message;
-  }
-
-  return fallback;
-}
 
 export async function fetchTransactions(
   walletId: string,

@@ -13,6 +13,7 @@ import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as StatementTokenRouteImport } from './routes/statement/$token'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AppWalletsIndexRouteImport } from './routes/_app/wallets/index'
@@ -37,6 +38,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppRouteRoute,
+} as any)
+const StatementTokenRoute = StatementTokenRouteImport.update({
+  id: '/statement/$token',
+  path: '/statement/$token',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
   id: '/register',
@@ -70,6 +76,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/statement/$token': typeof StatementTokenRoute
   '/auth/': typeof AuthIndexRoute
   '/wallets/': typeof AppWalletsIndexRoute
   '/wallets/$walletId/settings': typeof AppWalletsWalletIdSettingsRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/statement/$token': typeof StatementTokenRoute
   '/': typeof AppIndexRoute
   '/auth': typeof AuthIndexRoute
   '/wallets': typeof AppWalletsIndexRoute
@@ -90,6 +98,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRouteRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/statement/$token': typeof StatementTokenRoute
   '/_app/': typeof AppIndexRoute
   '/auth/': typeof AuthIndexRoute
   '/_app/wallets/': typeof AppWalletsIndexRoute
@@ -103,6 +112,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/auth/login'
     | '/auth/register'
+    | '/statement/$token'
     | '/auth/'
     | '/wallets/'
     | '/wallets/$walletId/settings'
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
   to:
     | '/auth/login'
     | '/auth/register'
+    | '/statement/$token'
     | '/'
     | '/auth'
     | '/wallets'
@@ -122,6 +133,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/auth/login'
     | '/auth/register'
+    | '/statement/$token'
     | '/_app/'
     | '/auth/'
     | '/_app/wallets/'
@@ -132,6 +144,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AppRouteRoute: typeof AppRouteRouteWithChildren
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  StatementTokenRoute: typeof StatementTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -163,6 +176,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRouteRoute
+    }
+    '/statement/$token': {
+      id: '/statement/$token'
+      path: '/statement/$token'
+      fullPath: '/statement/$token'
+      preLoaderRoute: typeof StatementTokenRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/auth/register': {
       id: '/auth/register'
@@ -239,6 +259,7 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   AppRouteRoute: AppRouteRouteWithChildren,
   AuthRouteRoute: AuthRouteRouteWithChildren,
+  StatementTokenRoute: StatementTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -145,6 +145,8 @@ File-based, named `000N_short_description`. Current set:
 - `0001_create_wallet_and_transaction`
 - `0002_add_wallet_tenant_id`
 - `0003_create_wallet_member`
+- `0004_add_transaction_occurred_at_and_wallet_timezone`
+- `0005_create_wallet_statement_share`
 
 Add new migrations; **never edit one that has been merged**. Migrations run forward with
 `pnpm --filter @vhnam/ledger-box db:migrate` and back with `db:migrate:down`. There is no
@@ -157,18 +159,22 @@ or `apps/ledger-box/scripts/import-bank-csv.ts`.
 
 Netlify Functions under `/api/*`, in `apps/ledger-box/netlify/functions`.
 
-| Route                                                                      | Purpose                        |
-| -------------------------------------------------------------------------- | ------------------------------ |
-| `/api/auth/*`                                                              | better-auth handler            |
-| `GET` `POST` `/api/wallets`                                                | List, create                   |
-| `PATCH` `DELETE` `/api/wallets/:walletId`                                  | Rename, soft-delete            |
-| `POST` `/api/wallets/transfer`                                             | Paired expense/income transfer |
-| `GET` `POST` `/api/wallets/:walletId/transactions`                         | Paginated list, create         |
-| `PATCH` `DELETE` `/api/wallets/:walletId/transactions/:transactionId`      | Edit, soft-delete              |
-| `GET` `POST` `.../transactions/:transactionId/attachments`                 | List, upload                   |
-| `DELETE` `.../transactions/:transactionId/attachments/:attachmentId`       | Permanent R2 delete            |
-| `GET` `POST` `PATCH` `DELETE` `/api/wallets/:walletId/members[/:memberId]` | Invite, update role, remove    |
-| `GET` `/api/users/by-email`                                                | Look up a better-auth user     |
+| Route                                                                      | Purpose                                                   |
+| -------------------------------------------------------------------------- | --------------------------------------------------------- |
+| `/api/auth/*`                                                              | better-auth handler                                       |
+| `GET` `POST` `/api/wallets`                                                | List, create                                              |
+| `PATCH` `DELETE` `/api/wallets/:walletId`                                  | Rename, soft-delete                                       |
+| `POST` `/api/wallets/transfer`                                             | Paired expense/income transfer                            |
+| `GET` `POST` `/api/wallets/:walletId/transactions`                         | Paginated list, create                                    |
+| `PATCH` `DELETE` `/api/wallets/:walletId/transactions/:transactionId`      | Edit, soft-delete                                         |
+| `GET` `POST` `.../transactions/:transactionId/attachments`                 | List, upload                                              |
+| `DELETE` `.../transactions/:transactionId/attachments/:attachmentId`       | Permanent R2 delete                                       |
+| `GET` `POST` `PATCH` `DELETE` `/api/wallets/:walletId/members[/:memberId]` | Invite, update role, remove                               |
+| `GET` `/api/users/by-email`                                                | Look up a better-auth user                                |
+| `GET` `/api/wallets/:walletId/summary`                                     | Full-period income/expense/net balance aggregate          |
+| `GET` `POST` `/api/wallets/:walletId/statement-shares`                     | List, create/preview a statement share link               |
+| `DELETE` `/api/wallets/:walletId/statement-shares/:shareId`                | Revoke a share link                                       |
+| `GET` `/api/public/statements/:token`                                      | Public, unauthenticated statement snapshot (rate limited) |
 
 Attachment uploads accept PDF, PNG, JPG, JPEG, WEBP up to 10 MB. Images are resized
 client-side (2048px max, JPEG compression) before upload.

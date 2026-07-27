@@ -16,3 +16,8 @@ framework = "#custom"
 from = "/*"
 to = "/index.html"
 status = 200
+
+[[headers]]
+for = "/statement/*"
+[headers.values]
+Referrer-Policy = "no-referrer"

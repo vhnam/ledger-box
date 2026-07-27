@@ -9,6 +9,7 @@ import { WalletHeader } from '#/modules/wallets/wallet-header';
 import { WalletSettingsDangerZone } from '#/modules/wallets/wallet-settings-danger-zone';
 import { WalletSettingsGeneral } from '#/modules/wallets/wallet-settings-general';
 import { WalletSettingsMembers } from '#/modules/wallets/wallet-settings-members';
+import { WalletSettingsStatementShares } from '#/modules/wallets/wallet-settings-statement-shares';
 import { useWallet, useWallets } from '#/queries/wallets/wallet.queries';
 
 type WalletSettingsPageProps = {
@@ -63,6 +64,7 @@ function WalletSettingsPage({ walletId }: WalletSettingsPageProps) {
 
                 <WalletSettingsGeneral wallet={walletPreview} />
                 <WalletSettingsMembers wallet={walletPreview} />
+                <WalletSettingsStatementShares wallet={walletPreview} />
                 <WalletSettingsDangerZone wallet={walletPreview} />
               </div>
             </div>

@@ -1,24 +1,9 @@
 import axios from 'axios';
 
+import { getApiErrorMessage } from '#/lib/api-error';
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
 import type { TransferMoneyOutput } from '#/schemas/transfer-money.schema';
 import type { CreateWalletSchema, UpdateWalletSchema } from '#/schemas/wallet.schema';
-
-function getApiErrorMessage(error: unknown, fallback: string): string {
-  if (axios.isAxiosError(error)) {
-    const data = error.response?.data;
-
-    if (typeof data === 'string' && data.length > 0) {
-      return data;
-    }
-  }
-
-  if (error instanceof Error) {
-    return error.message;
-  }
-
-  return fallback;
-}
 
 interface WalletResponseDto {
   id: string;

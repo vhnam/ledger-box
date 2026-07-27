@@ -1,0 +1,66 @@
+import axios from 'axios';
+
+import { getApiErrorMessage } from '#/lib/api-error';
+import type {
+  CreateStatementSharePayload,
+  CreateStatementShareResponse,
+  PreviewStatementShareResponse,
+  PublicStatementResponse,
+  StatementShareDto,
+} from '#/queries/statement-shares/statement-share.dto';
+
+export async function fetchStatementShares(walletId: string): Promise<StatementShareDto[]> {
+  try {
+    const { data } = await axios.get<{ items: StatementShareDto[] }>(`/api/wallets/${walletId}/statement-shares`);
+
+    return data.items;
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, 'Failed to load statement shares. Please try again.'));
+  }
+}
+
+export async function previewStatementShare(
+  walletId: string,
+  payload: CreateStatementSharePayload,
+): Promise<PreviewStatementShareResponse> {
+  try {
+    const { data } = await axios.post<PreviewStatementShareResponse>(
+      `/api/wallets/${walletId}/statement-shares?preview=true`,
+      payload,
+    );
+
+    return data;
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, 'Failed to preview statement. Please try again.'));
+  }
+}
+
+export async function createStatementShare(
+  walletId: string,
+  payload: CreateStatementSharePayload,
+): Promise<CreateStatementShareResponse> {
+  try {
+    const { data } = await axios.post<CreateStatementShareResponse>(
+      `/api/wallets/${walletId}/statement-shares`,
+      payload,
+    );
+
+    return data;
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, 'Failed to create share link. Please try again.'));
+  }
+}
+
+export async function revokeStatementShare(walletId: string, shareId: string): Promise<void> {
+  try {
+    await axios.delete(`/api/wallets/${walletId}/statement-shares/${shareId}`);
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, 'Failed to revoke share link. Please try again.'));
+  }
+}
+
+export async function fetchPublicStatement(token: string): Promise<PublicStatementResponse> {
+  const { data } = await axios.get<PublicStatementResponse>(`/api/public/statements/${token}`);
+
+  return data;
+}
