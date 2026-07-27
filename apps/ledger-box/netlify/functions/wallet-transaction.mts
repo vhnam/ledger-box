@@ -1,4 +1,5 @@
 import type { Config, Context } from '@netlify/functions';
+import { sql } from 'kysely';
 
 import { auth } from '#/lib/auth.ts';
 import { db } from '#/lib/db/index.ts';
@@ -90,7 +91,7 @@ export default async (request: Request, context: Context) => {
       await trx
         .updateTable('wallet')
         .set({
-          amount: wallet.amount + walletDelta,
+          amount: sql`amount + ${walletDelta}`,
           updatedAt: now,
         })
         .where('id', '=', walletId)
@@ -146,7 +147,7 @@ export default async (request: Request, context: Context) => {
     await trx
       .updateTable('wallet')
       .set({
-        amount: wallet.amount + walletDelta,
+        amount: sql`amount + ${walletDelta}`,
         updatedAt: now,
       })
       .where('id', '=', walletId)
