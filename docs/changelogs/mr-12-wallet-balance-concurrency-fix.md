@@ -27,12 +27,13 @@ Postgres inside the existing `db.transaction()`, instead of a JS-computed
 
 ### Added
 
-- `netlify/functions/wallet-transactions.test.ts` — concurrency regression
+- `netlify/functions/lib/wallet-transactions.test.ts` — concurrency regression
   tests: two concurrent income transactions, and a concurrent income + expense
   pair, against the same wallet, asserting the final `wallet.amount` reflects
   both deltas and matches the independently-summed non-deleted transaction
   total. Run against a real local Postgres, following the existing
-  `tenant-access.test.ts` conventions.
+  `tenant-access.test.ts` conventions. Lives under `lib/` (not the functions
+  directory root) so Netlify doesn't try to deploy it as a serverless function.
 - `spdd/analysis/...-wallet-balance-concurrency-audit.md` and
   `spdd/prompt/...-wallet-balance-concurrency.md` — SPDD analysis and REASONS
   Canvas documenting the audit findings and the fix's design decisions.
