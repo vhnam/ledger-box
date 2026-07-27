@@ -12,7 +12,7 @@
     "preview": "vp preview",
     "db:migrate": "tsx --env-file ../../.env scripts/migrate.ts up",
     "db:migrate:down": "tsx --env-file ../../.env scripts/migrate.ts down",
-    "test": "vitest run"
+    "test": "vp test run"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "catalog:",

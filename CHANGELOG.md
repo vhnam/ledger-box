@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-12 — feat/audit-wallet](docs/changelogs/mr-12-wallet-balance-concurrency-fix.md)
+
+#### Fixed
+
+- Wallet balance lost-update race: `wallet-transactions.mts` (POST), `wallet-transaction.mts` (PATCH/DELETE), and `wallet-transfer.mts` (both legs) now write `wallet.amount` via a SQL-relative expression instead of a JS-computed absolute value, closing a concurrency gap opened by MR-11's manager write access
+
+#### Added
+
+- Concurrency regression tests for wallet balance updates (`wallet-transactions.test.ts`)
+
 ### [mr-11 — feat/ui-testing](docs/changelogs/mr-11-wallet-member-access.md)
 
 #### Added

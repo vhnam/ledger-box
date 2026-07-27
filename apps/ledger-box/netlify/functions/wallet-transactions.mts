@@ -1,4 +1,5 @@
 import type { Config, Context } from '@netlify/functions';
+import { sql } from 'kysely';
 
 import { FILTER_OPTIONS } from '#/constants/filter-options.ts';
 import { DEFAULT_SORT_BY, DEFAULT_SORT_ORDER, SORT_BY_OPTIONS, SORT_ORDER_OPTIONS } from '#/constants/sort-options.ts';
@@ -103,7 +104,7 @@ export default async (request: Request, context: Context) => {
     // keep real intraday `created_at` times, so a start-of-day default for new rows would
     // make same-day ordering inconsistent between old and new transactions.
     const occurredAt = body.occurredAt ? calendarDateToOccurredAtStart(wallet.timezone, body.occurredAt) : now;
-    const nextWalletAmount = type === 'income' ? wallet.amount + amount : wallet.amount - amount;
+    const delta = type === 'income' ? amount : -amount;
 
     await db.transaction().execute(async (trx) => {
       await trx
@@ -122,7 +123,7 @@ export default async (request: Request, context: Context) => {
       await trx
         .updateTable('wallet')
         .set({
-          amount: nextWalletAmount,
+          amount: sql`amount + ${delta}`,
           updatedAt: now,
         })
         .where('id', '=', walletId)
