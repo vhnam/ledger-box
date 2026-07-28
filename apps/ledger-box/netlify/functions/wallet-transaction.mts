@@ -1,5 +1,4 @@
 import type { Config, Context } from '@netlify/functions';
-import { sql } from 'kysely';
 
 import { auth } from '#/lib/auth.ts';
 import { db } from '#/lib/db/index.ts';
@@ -7,6 +6,7 @@ import type { TransactionType } from '#/lib/db/schema.ts';
 import { calendarDateToOccurredAtStart } from '#/lib/period-bounds.ts';
 
 import { getTenantId, requireTransactionWriteAccess } from './lib/tenant-access.ts';
+import { softDeleteTransaction, toTransactionSnapshot, updateTransaction } from './lib/wallet-mutations.ts';
 
 type UpdateTransactionBody = {
   type?: unknown;
@@ -40,10 +40,6 @@ function isValidTransactionType(value: unknown): value is TransactionType {
   return value === 'income' || value === 'expense';
 }
 
-function getTransactionContribution(type: TransactionType, amount: number): number {
-  return type === 'income' ? amount : -amount;
-}
-
 export default async (request: Request, context: Context) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
@@ -73,29 +69,18 @@ export default async (request: Request, context: Context) => {
   }
 
   const { wallet, transaction: existingTransaction } = access;
+  const actor = { userId: session.user.id, email: session.user.email };
+  const existing = toTransactionSnapshot(existingTransaction);
 
   if (request.method === 'DELETE') {
-    const walletDelta = -getTransactionContribution(existingTransaction.type, existingTransaction.amount);
-    const now = new Date();
-
     await db.transaction().execute(async (trx) => {
-      await trx
-        .updateTable('transaction')
-        .set({
-          deletedAt: now,
-          updatedAt: now,
-        })
-        .where('id', '=', transactionId)
-        .execute();
-
-      await trx
-        .updateTable('wallet')
-        .set({
-          amount: sql`amount + ${walletDelta}`,
-          updatedAt: now,
-        })
-        .where('id', '=', walletId)
-        .execute();
+      await softDeleteTransaction(trx, {
+        walletId,
+        tenantId: wallet.tenantId,
+        actor,
+        transactionId,
+        existing,
+      });
     });
 
     return Response.json({ success: true });
@@ -122,36 +107,22 @@ export default async (request: Request, context: Context) => {
   const type = body.type;
   const amount = body.amount;
   const description = body.description.trim();
-
-  const walletDelta =
-    getTransactionContribution(type, amount) -
-    getTransactionContribution(existingTransaction.type, existingTransaction.amount);
-  const now = new Date();
   // Only change occurred_at when the caller explicitly provides a date; amount/description
   // edits alone must not shift the transaction's period.
   const occurredAt = body.occurredAt ? calendarDateToOccurredAtStart(wallet.timezone, body.occurredAt) : undefined;
 
   await db.transaction().execute(async (trx) => {
-    await trx
-      .updateTable('transaction')
-      .set({
-        type,
-        amount,
-        description,
-        updatedAt: now,
-        ...(occurredAt ? { occurredAt } : {}),
-      })
-      .where('id', '=', transactionId)
-      .execute();
-
-    await trx
-      .updateTable('wallet')
-      .set({
-        amount: sql`amount + ${walletDelta}`,
-        updatedAt: now,
-      })
-      .where('id', '=', walletId)
-      .execute();
+    await updateTransaction(trx, {
+      walletId,
+      tenantId: wallet.tenantId,
+      actor,
+      transactionId,
+      existing,
+      type,
+      amount,
+      description,
+      occurredAt,
+    });
   });
 
   return Response.json({ success: true });

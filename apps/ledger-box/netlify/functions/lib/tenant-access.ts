@@ -1,3 +1,5 @@
+import { sql } from 'kysely';
+
 import { db } from '#/lib/db/index.ts';
 
 type SessionLike = {
@@ -15,14 +17,20 @@ type OwnedWallet = {
   timezone: string;
 };
 
+type WalletAccessRole = 'owner' | 'manager' | 'viewer';
+
+type AccessibleWallet = OwnedWallet & {
+  role: WalletAccessRole;
+};
+
 type OwnedTransaction = {
   id: string;
   walletId: string;
   type: 'income' | 'expense';
   amount: number;
+  description: string;
+  occurredAt: Date;
 };
-
-type WalletAccessRole = 'owner' | 'manager' | 'viewer';
 
 type WalletAccessResult = { ok: true; wallet: OwnedWallet; role: WalletAccessRole } | { ok: false; error: Response };
 
@@ -75,7 +83,7 @@ async function requireOwnedTransaction(
 
   const transaction = await db
     .selectFrom('transaction')
-    .select(['id', 'walletId', 'type', 'amount'])
+    .select(['id', 'walletId', 'type', 'amount', 'description', 'occurredAt'])
     .where('id', '=', transactionId)
     .where('walletId', '=', walletId)
     .where('deletedAt', 'is', null)
@@ -176,7 +184,7 @@ async function requireTransactionAccess(
 
   const transaction = await db
     .selectFrom('transaction')
-    .select(['id', 'walletId', 'type', 'amount'])
+    .select(['id', 'walletId', 'type', 'amount', 'description', 'occurredAt'])
     .where('id', '=', transactionId)
     .where('walletId', '=', walletId)
     .where('deletedAt', 'is', null)
@@ -209,19 +217,19 @@ async function requireTransactionWriteAccess(
 }
 
 /** Wallets the tenant owns, unioned with wallets they have an (active or pending) invite on. */
-async function findAccessibleWallets(tenantId: string, sessionEmail: string): Promise<OwnedWallet[]> {
+async function findAccessibleWallets(tenantId: string, sessionEmail: string): Promise<AccessibleWallet[]> {
   const normalizedEmail = sessionEmail.toLowerCase();
 
   const owned = db
     .selectFrom('wallet')
-    .select(['id', 'tenantId', 'name', 'amount', 'timezone'])
+    .select(['id', 'tenantId', 'name', 'amount', 'timezone', sql<WalletAccessRole>`'owner'`.as('role')])
     .where('tenantId', '=', tenantId)
     .where('deletedAt', 'is', null);
 
   const member = db
     .selectFrom('wallet')
     .innerJoin('walletMember', 'walletMember.walletId', 'wallet.id')
-    .select(['wallet.id', 'wallet.tenantId', 'wallet.name', 'wallet.amount', 'wallet.timezone'])
+    .select(['wallet.id', 'wallet.tenantId', 'wallet.name', 'wallet.amount', 'wallet.timezone', 'walletMember.role'])
     .where('wallet.deletedAt', 'is', null)
     .where('walletMember.deletedAt', 'is', null)
     .where('walletMember.status', 'in', ['active', 'pending'])
@@ -250,5 +258,7 @@ export {
   requireTransactionWriteAccess,
   requireWalletAccess,
   requireWalletWriteAccess,
+  type AccessibleWallet,
+  type OwnedTransaction,
   type WalletAccessRole,
 };

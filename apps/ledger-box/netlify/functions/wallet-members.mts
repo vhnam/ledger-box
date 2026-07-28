@@ -6,6 +6,7 @@ import { auth } from '#/lib/auth.ts';
 import { db } from '#/lib/db/index.ts';
 import type { WalletMemberRole } from '#/lib/db/schema.ts';
 
+import { recordActivity } from './lib/activity-log.ts';
 import { getTenantId, requireOwnedWallet } from './lib/tenant-access.ts';
 import { findUserByEmail, findUserById } from './lib/user-lookup.ts';
 import { mapOwnerMember, mapWalletMember } from './lib/wallet-member-response.ts';
@@ -117,20 +118,37 @@ export default async (request: Request, context: Context) => {
 
     const invitedUser = await findUserByEmail(email);
     const now = new Date();
+    const actor = { userId: session.user.id, email: session.user.email };
 
-    const member = await db
-      .insertInto('walletMember')
-      .values({
+    const member = await db.transaction().execute(async (trx) => {
+      const created = await trx
+        .insertInto('walletMember')
+        .values({
+          walletId,
+          email,
+          userId: invitedUser?.id ?? null,
+          createdAt: now,
+          role,
+          status: 'pending',
+          updatedAt: now,
+        })
+        .returning(['id', 'email', 'userId', 'role', 'status'])
+        .executeTakeFirstOrThrow();
+
+      await recordActivity(trx, {
         walletId,
-        email,
-        userId: invitedUser?.id ?? null,
-        createdAt: now,
-        role,
-        status: 'pending',
-        updatedAt: now,
-      })
-      .returning(['id', 'email', 'userId', 'role', 'status'])
-      .executeTakeFirstOrThrow();
+        tenantId: ownership.wallet.tenantId,
+        actorUserId: actor.userId,
+        actorEmail: actor.email,
+        entityType: 'wallet_member',
+        entityId: created.id,
+        action: 'invite',
+        before: null,
+        after: { email: created.email, role: created.role, status: created.status },
+      });
+
+      return created;
+    });
 
     return Response.json(mapWalletMember(member, invitedUser), { status: 201 });
   }

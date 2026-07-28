@@ -3,6 +3,7 @@ import type { Config, Context } from '@netlify/functions';
 import { auth } from '#/lib/auth.ts';
 import { db } from '#/lib/db/index.ts';
 
+import { recordActivity } from './lib/activity-log.ts';
 import { getTenantId, requireOwnedWallet } from './lib/tenant-access.ts';
 
 function getIds(request: Request, context: Context): { walletId: string | null; shareId: string | null } {
@@ -56,7 +57,7 @@ export default async (request: Request, context: Context) => {
 
   const existingShare = await db
     .selectFrom('walletStatementShare')
-    .select(['id'])
+    .select(['id', 'periodFrom', 'periodTo', 'displayTitle', 'expiresAt', 'snapshotAt'])
     .where('id', '=', shareId)
     .where('walletId', '=', walletId)
     .executeTakeFirst();
@@ -65,12 +66,36 @@ export default async (request: Request, context: Context) => {
     return new Response('Share not found', { status: 404 });
   }
 
-  await db
-    .updateTable('walletStatementShare')
-    .set({ revokedAt: new Date() })
-    .where('id', '=', shareId)
-    .where('walletId', '=', walletId)
-    .execute();
+  const revokedAt = new Date();
+  const actor = { userId: session.user.id, email: session.user.email };
+
+  await db.transaction().execute(async (trx) => {
+    await trx
+      .updateTable('walletStatementShare')
+      .set({ revokedAt })
+      .where('id', '=', shareId)
+      .where('walletId', '=', walletId)
+      .execute();
+
+    await recordActivity(trx, {
+      walletId,
+      tenantId: ownership.wallet.tenantId,
+      actorUserId: actor.userId,
+      actorEmail: actor.email,
+      entityType: 'statement_share',
+      entityId: shareId,
+      action: 'revoke',
+      before: {
+        shareId: existingShare.id,
+        periodFrom: existingShare.periodFrom,
+        periodTo: existingShare.periodTo,
+        displayTitle: existingShare.displayTitle,
+        expiresAt: existingShare.expiresAt,
+        snapshotAt: existingShare.snapshotAt,
+      },
+      after: { revokedAt: revokedAt.toISOString() },
+    });
+  });
 
   return Response.json({ success: true });
 };

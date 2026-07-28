@@ -3,6 +3,16 @@ import { type ColumnType, type Generated, type Insertable, type Selectable, type
 export type TransactionType = 'income' | 'expense';
 export type WalletMemberRole = 'viewer' | 'manager';
 export type WalletMemberStatus = 'active' | 'pending';
+export type ActivityEntityType = 'transaction' | 'wallet' | 'wallet_member' | 'statement_share' | 'transfer';
+export type ActivityAction =
+  | 'create'
+  | 'update'
+  | 'delete'
+  | 'transfer'
+  | 'invite'
+  | 'role_change'
+  | 'revoke'
+  | 'rename';
 
 export interface WalletTable {
   id: Generated<string>;
@@ -62,11 +72,31 @@ export interface WalletStatementShareTable {
   createdAt: Generated<ColumnType<Date, Date | string, Date | string>>;
 }
 
+export interface WalletActivityLogTable {
+  id: Generated<string>;
+  walletId: string;
+  tenantId: string;
+  actorUserId: string;
+  actorEmail: string;
+  entityType: ActivityEntityType;
+  entityId: string;
+  action: ActivityAction;
+  beforeJson: ColumnType<
+    Record<string, unknown> | null,
+    Record<string, unknown> | null,
+    Record<string, unknown> | null
+  >;
+  afterJson: ColumnType<Record<string, unknown> | null, Record<string, unknown> | null, Record<string, unknown> | null>;
+  walletAmountDelta: number | null;
+  createdAt: ColumnType<Date, Date | string | undefined, Date | string>;
+}
+
 export interface Database {
   wallet: WalletTable;
   walletMember: WalletMemberTable;
   transaction: TransactionTable;
   walletStatementShare: WalletStatementShareTable;
+  walletActivityLog: WalletActivityLogTable;
 }
 
 export type Wallet = Selectable<WalletTable>;
@@ -84,3 +114,6 @@ export type TransactionUpdate = Updateable<TransactionTable>;
 export type WalletStatementShare = Selectable<WalletStatementShareTable>;
 export type NewWalletStatementShare = Insertable<WalletStatementShareTable>;
 export type WalletStatementShareUpdate = Updateable<WalletStatementShareTable>;
+
+export type WalletActivityLog = Selectable<WalletActivityLogTable>;
+export type NewWalletActivityLog = Insertable<WalletActivityLogTable>;

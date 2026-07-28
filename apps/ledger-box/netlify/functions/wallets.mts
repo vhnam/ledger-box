@@ -17,7 +17,9 @@ export default async (request: Request) => {
   if (request.method === 'GET') {
     const wallets = await findAccessibleWallets(tenantId, session.user.email);
 
-    return Response.json(wallets.map((wallet) => ({ id: wallet.id, name: wallet.name, amount: wallet.amount })));
+    return Response.json(
+      wallets.map((wallet) => ({ id: wallet.id, name: wallet.name, amount: wallet.amount, role: wallet.role })),
+    );
   }
 
   if (request.method === 'POST') {
@@ -33,7 +35,7 @@ export default async (request: Request) => {
       .returning(['id', 'name'])
       .executeTakeFirstOrThrow();
 
-    return Response.json(wallet, { status: 201 });
+    return Response.json({ ...wallet, amount: 0, role: 'owner' as const }, { status: 201 });
   }
 
   return new Response('Method Not Allowed', { status: 405 });

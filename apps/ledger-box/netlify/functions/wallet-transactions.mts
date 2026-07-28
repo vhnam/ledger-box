@@ -1,5 +1,4 @@
 import type { Config, Context } from '@netlify/functions';
-import { sql } from 'kysely';
 
 import { FILTER_OPTIONS } from '#/constants/filter-options.ts';
 import { DEFAULT_SORT_BY, DEFAULT_SORT_ORDER, SORT_BY_OPTIONS, SORT_ORDER_OPTIONS } from '#/constants/sort-options.ts';
@@ -9,6 +8,7 @@ import type { TransactionType } from '#/lib/db/schema.ts';
 import { calendarDateToOccurredAtStart, resolvePeriodBounds } from '#/lib/period-bounds.ts';
 
 import { getTenantId, requireWalletAccess, requireWalletWriteAccess } from './lib/tenant-access.ts';
+import { createTransaction } from './lib/wallet-mutations.ts';
 
 function getWalletId(request: Request, context: Context): string | null {
   const paramWalletId = context.params?.walletId;
@@ -104,30 +104,17 @@ export default async (request: Request, context: Context) => {
     // keep real intraday `created_at` times, so a start-of-day default for new rows would
     // make same-day ordering inconsistent between old and new transactions.
     const occurredAt = body.occurredAt ? calendarDateToOccurredAtStart(wallet.timezone, body.occurredAt) : now;
-    const delta = type === 'income' ? amount : -amount;
 
     await db.transaction().execute(async (trx) => {
-      await trx
-        .insertInto('transaction')
-        .values({
-          walletId,
-          type,
-          amount,
-          description,
-          occurredAt,
-          createdAt: now,
-          updatedAt: now,
-        })
-        .execute();
-
-      await trx
-        .updateTable('wallet')
-        .set({
-          amount: sql`amount + ${delta}`,
-          updatedAt: now,
-        })
-        .where('id', '=', walletId)
-        .execute();
+      await createTransaction(trx, {
+        walletId,
+        tenantId: wallet.tenantId,
+        actor: { userId: session.user.id, email: session.user.email },
+        type,
+        amount,
+        description,
+        occurredAt,
+      });
     });
 
     return Response.json({ success: true }, { status: 201 });

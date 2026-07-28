@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-13 — feat/activity-log](docs/changelogs/mr-13-wallet-activity-log.md)
+
+#### Added
+
+- Append-only wallet activity log (`0007_create_wallet_activity_log`) with same-transaction recording for money mutations, wallet rename/delete, members, and statement-share create/revoke
+- Owner-only `GET /api/wallets/:walletId/activity` (paginated; statement-divergence flag at read time) and wallet settings **Activity** feed
+- Wallet list `role` on `GET /api/wallets` for owner-gated UI
+- Activity-log Vitest coverage and SPDD analysis/prompt docs
+
+#### Changed
+
+- Money handlers route ledger writes through shared `wallet-mutations` helpers that always log; transaction access selects include `description` / `occurredAt` for before-snapshots
+
 ### [mr-12 — feat/audit-wallet](docs/changelogs/mr-12-wallet-balance-concurrency-fix.md)
 
 #### Fixed
