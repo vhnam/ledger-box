@@ -9,6 +9,7 @@ interface WalletResponseDto {
   id: string;
   name: string;
   amount: number;
+  role: WalletDto['role'];
 }
 
 export async function fetchWallets(): Promise<WalletDto[]> {

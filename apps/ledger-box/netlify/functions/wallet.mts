@@ -3,6 +3,7 @@ import type { Config, Context } from '@netlify/functions';
 import { auth } from '#/lib/auth.ts';
 import { db } from '#/lib/db/index.ts';
 
+import { recordActivity } from './lib/activity-log.ts';
 import { getTenantId, requireOwnedWallet, requireWalletWriteAccess } from './lib/tenant-access.ts';
 
 function getWalletId(request: Request, context: Context): string | null {
@@ -35,6 +36,7 @@ export default async (request: Request, context: Context) => {
   }
 
   const tenantId = getTenantId(session);
+  const actor = { userId: session.user.id, email: session.user.email };
 
   if (request.method === 'DELETE') {
     const ownership = await requireOwnedWallet(tenantId, walletId);
@@ -65,6 +67,18 @@ export default async (request: Request, context: Context) => {
         .where('id', '=', walletId)
         .where('tenantId', '=', tenantId)
         .execute();
+
+      await recordActivity(trx, {
+        walletId,
+        tenantId: ownership.wallet.tenantId,
+        actorUserId: actor.userId,
+        actorEmail: actor.email,
+        entityType: 'wallet',
+        entityId: walletId,
+        action: 'delete',
+        before: { name: ownership.wallet.name },
+        after: null,
+      });
     });
 
     return Response.json({ success: true });
@@ -82,18 +96,37 @@ export default async (request: Request, context: Context) => {
     return new Response('Wallet name is required', { status: 400 });
   }
 
-  const wallet = await db
-    .updateTable('wallet')
-    .set({
-      name: body.name.trim(),
-      updatedAt: new Date(),
-    })
-    .where('id', '=', walletId)
-    .where('deletedAt', 'is', null)
-    .returning(['id', 'name', 'amount'])
-    .executeTakeFirstOrThrow();
+  const previousName = access.wallet.name;
+  const nextName = body.name.trim();
 
-  return Response.json(wallet);
+  const wallet = await db.transaction().execute(async (trx) => {
+    const updated = await trx
+      .updateTable('wallet')
+      .set({
+        name: nextName,
+        updatedAt: new Date(),
+      })
+      .where('id', '=', walletId)
+      .where('deletedAt', 'is', null)
+      .returning(['id', 'name', 'amount'])
+      .executeTakeFirstOrThrow();
+
+    await recordActivity(trx, {
+      walletId,
+      tenantId: access.wallet.tenantId,
+      actorUserId: actor.userId,
+      actorEmail: actor.email,
+      entityType: 'wallet',
+      entityId: walletId,
+      action: 'rename',
+      before: { name: previousName },
+      after: { name: nextName },
+    });
+
+    return updated;
+  });
+
+  return Response.json({ ...wallet, role: access.role });
 };
 
 export const config: Config = {

@@ -93,6 +93,13 @@ a tenancy model change, not a feature.
 - **Soft delete** for `wallet`, `transaction`, and `wallet_member`. Never hard-delete
   these. Deleting a transaction must also reverse its balance effect.
 - **Attachments are the exception** — deleting one removes the object from R2 permanently.
+- **Activity log is append-only.** `wallet_activity_log` entries are never edited and
+  never soft-deleted. Money-affecting writes go through
+  `netlify/functions/lib/wallet-mutations.ts`, which records activity in the **same**
+  Postgres transaction as the ledger change. Other in-scope mutators (wallet rename/
+  delete, members, statement shares) call `recordActivity` in the same transaction.
+  Attachment upload/delete is not logged in v1. `GET /api/wallets/:walletId/activity`
+  is **owner-only** (`requireOwnedWallet`).
 - Currency is VND by default. Use `formatCurrency`, `formatShortCurrency`,
   `formatSignedCurrency` from `@vhnam/utils`, and the `CurrencyInput` component for entry.
 
@@ -147,6 +154,8 @@ File-based, named `000N_short_description`. Current set:
 - `0003_create_wallet_member`
 - `0004_add_transaction_occurred_at_and_wallet_timezone`
 - `0005_create_wallet_statement_share`
+- `0006_add_wallet_member_user_lookup_index`
+- `0007_create_wallet_activity_log`
 
 Add new migrations; **never edit one that has been merged**. Migrations run forward with
 `pnpm --filter @vhnam/ledger-box db:migrate` and back with `db:migrate:down`. There is no
@@ -174,6 +183,7 @@ Netlify Functions under `/api/*`, in `apps/ledger-box/netlify/functions`.
 | `GET` `/api/wallets/:walletId/summary`                                     | Full-period income/expense/net balance aggregate          |
 | `GET` `POST` `/api/wallets/:walletId/statement-shares`                     | List, create/preview a statement share link               |
 | `DELETE` `/api/wallets/:walletId/statement-shares/:shareId`                | Revoke a share link                                       |
+| `GET` `/api/wallets/:walletId/activity`                                    | Owner-only paginated wallet activity log                  |
 | `GET` `/api/public/statements/:token`                                      | Public, unauthenticated statement snapshot (rate limited) |
 
 Attachment uploads accept PDF, PNG, JPG, JPEG, WEBP up to 10 MB. Images are resized

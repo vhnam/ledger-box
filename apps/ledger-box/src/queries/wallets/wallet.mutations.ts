@@ -25,6 +25,8 @@ export function useTransferMoney() {
         queryClient.invalidateQueries({ queryKey: ['wallets'] }),
         queryClient.invalidateQueries({ queryKey: ['transactions', variables.fromWalletId] }),
         queryClient.invalidateQueries({ queryKey: ['transactions', variables.toWalletId] }),
+        queryClient.invalidateQueries({ queryKey: ['activity', variables.fromWalletId] }),
+        queryClient.invalidateQueries({ queryKey: ['activity', variables.toWalletId] }),
       ]);
     },
   });
@@ -39,6 +41,7 @@ export function useUpdateWallet(walletId: string) {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['wallets'] }),
         queryClient.invalidateQueries({ queryKey: ['wallet', walletId] }),
+        queryClient.invalidateQueries({ queryKey: ['activity', walletId] }),
       ]);
     },
   });

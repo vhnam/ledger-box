@@ -6,6 +6,7 @@ import { ScrollArea } from '@vhnam/ui/components/scroll-area';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
 import { WalletHeader } from '#/modules/wallets/wallet-header';
+import { WalletSettingsActivity } from '#/modules/wallets/wallet-settings-activity';
 import { WalletSettingsDangerZone } from '#/modules/wallets/wallet-settings-danger-zone';
 import { WalletSettingsGeneral } from '#/modules/wallets/wallet-settings-general';
 import { WalletSettingsMembers } from '#/modules/wallets/wallet-settings-members';
@@ -63,6 +64,7 @@ function WalletSettingsPage({ walletId }: WalletSettingsPageProps) {
                 </div>
 
                 <WalletSettingsGeneral wallet={walletPreview} />
+                {walletPreview.role === 'owner' ? <WalletSettingsActivity walletId={walletPreview.id} /> : null}
                 <WalletSettingsMembers wallet={walletPreview} />
                 <WalletSettingsStatementShares wallet={walletPreview} />
                 <WalletSettingsDangerZone wallet={walletPreview} />

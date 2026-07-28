@@ -6,6 +6,7 @@ import { calendarDateToOccurredAtStart } from '#/lib/period-bounds.ts';
 import { generateShareToken } from '#/lib/share-token.ts';
 import { buildStatement } from '#/lib/statement.ts';
 
+import { recordActivity } from './lib/activity-log.ts';
 import { getTenantId, requireOwnedWallet } from './lib/tenant-access.ts';
 
 const DEFAULT_EXPIRY_DAYS = 90;
@@ -139,22 +140,46 @@ export default async (request: Request, context: Context) => {
       body.expiresAt === undefined ? defaultExpiresAt() : body.expiresAt ? new Date(body.expiresAt) : null;
 
     const { raw, hash } = await generateShareToken();
+    const snapshotAt = new Date();
+    const actor = { userId: session.user.id, email: session.user.email };
 
-    const share = await db
-      .insertInto('walletStatementShare')
-      .values({
+    const share = await db.transaction().execute(async (trx) => {
+      const created = await trx
+        .insertInto('walletStatementShare')
+        .values({
+          walletId,
+          tenantId,
+          periodFrom,
+          periodTo,
+          tokenHash: hash,
+          displayTitle,
+          expiresAt,
+          snapshotJson: snapshot,
+          snapshotAt,
+        })
+        .returning(['id'])
+        .executeTakeFirstOrThrow();
+
+      await recordActivity(trx, {
         walletId,
-        tenantId,
-        periodFrom,
-        periodTo,
-        tokenHash: hash,
-        displayTitle,
-        expiresAt,
-        snapshotJson: snapshot,
-        snapshotAt: new Date(),
-      })
-      .returning(['id'])
-      .executeTakeFirstOrThrow();
+        tenantId: wallet.tenantId,
+        actorUserId: actor.userId,
+        actorEmail: actor.email,
+        entityType: 'statement_share',
+        entityId: created.id,
+        action: 'create',
+        before: null,
+        after: {
+          periodFrom,
+          periodTo,
+          displayTitle,
+          expiresAt: expiresAt ? expiresAt.toISOString() : null,
+          snapshotAt: snapshotAt.toISOString(),
+        },
+      });
+
+      return created;
+    });
 
     return Response.json(
       {

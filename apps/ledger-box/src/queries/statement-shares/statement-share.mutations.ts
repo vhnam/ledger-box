@@ -19,7 +19,10 @@ export function useCreateStatementShare(walletId: string) {
   return useMutation({
     mutationFn: (payload: CreateStatementSharePayload) => createStatementShare(walletId, payload),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['wallets', walletId, 'statement-shares'] });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['wallets', walletId, 'statement-shares'] }),
+        queryClient.invalidateQueries({ queryKey: ['activity', walletId] }),
+      ]);
     },
   });
 }
@@ -30,7 +33,10 @@ export function useRevokeStatementShare(walletId: string) {
   return useMutation({
     mutationFn: (shareId: string) => revokeStatementShare(walletId, shareId),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['wallets', walletId, 'statement-shares'] });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['wallets', walletId, 'statement-shares'] }),
+        queryClient.invalidateQueries({ queryKey: ['activity', walletId] }),
+      ]);
     },
   });
 }

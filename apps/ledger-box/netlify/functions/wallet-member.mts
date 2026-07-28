@@ -5,6 +5,7 @@ import { auth } from '#/lib/auth.ts';
 import { db } from '#/lib/db/index.ts';
 import type { WalletMemberRole } from '#/lib/db/schema.ts';
 
+import { recordActivity } from './lib/activity-log.ts';
 import { getTenantId, requireOwnedWallet } from './lib/tenant-access.ts';
 import { findUserByEmail, findUserById } from './lib/user-lookup.ts';
 import { mapWalletMember } from './lib/wallet-member-response.ts';
@@ -78,18 +79,34 @@ export default async (request: Request, context: Context) => {
     return new Response('Member not found', { status: 404 });
   }
 
+  const actor = { userId: session.user.id, email: session.user.email };
+
   if (request.method === 'DELETE') {
     const now = new Date();
 
-    await db
-      .updateTable('walletMember')
-      .set({
-        deletedAt: now,
-        updatedAt: now,
-      })
-      .where('id', '=', memberId)
-      .where('walletId', '=', walletId)
-      .execute();
+    await db.transaction().execute(async (trx) => {
+      await trx
+        .updateTable('walletMember')
+        .set({
+          deletedAt: now,
+          updatedAt: now,
+        })
+        .where('id', '=', memberId)
+        .where('walletId', '=', walletId)
+        .execute();
+
+      await recordActivity(trx, {
+        walletId,
+        tenantId: ownership.wallet.tenantId,
+        actorUserId: actor.userId,
+        actorEmail: actor.email,
+        entityType: 'wallet_member',
+        entityId: memberId,
+        action: 'delete',
+        before: { email: existingMember.email, role: existingMember.role, status: existingMember.status },
+        after: null,
+      });
+    });
 
     return Response.json({ success: true });
   }
@@ -100,17 +117,35 @@ export default async (request: Request, context: Context) => {
     return new Response('Role is required', { status: 400 });
   }
 
-  const member = await db
-    .updateTable('walletMember')
-    .set({
-      role: body.role,
-      updatedAt: new Date(),
-    })
-    .where('id', '=', memberId)
-    .where('walletId', '=', walletId)
-    .where('deletedAt', 'is', null)
-    .returning(['id', 'email', 'userId', 'role', 'status'])
-    .executeTakeFirstOrThrow();
+  const nextRole = body.role;
+
+  const member = await db.transaction().execute(async (trx) => {
+    const updated = await trx
+      .updateTable('walletMember')
+      .set({
+        role: nextRole,
+        updatedAt: new Date(),
+      })
+      .where('id', '=', memberId)
+      .where('walletId', '=', walletId)
+      .where('deletedAt', 'is', null)
+      .returning(['id', 'email', 'userId', 'role', 'status'])
+      .executeTakeFirstOrThrow();
+
+    await recordActivity(trx, {
+      walletId,
+      tenantId: ownership.wallet.tenantId,
+      actorUserId: actor.userId,
+      actorEmail: actor.email,
+      entityType: 'wallet_member',
+      entityId: memberId,
+      action: 'role_change',
+      before: { email: existingMember.email, role: existingMember.role },
+      after: { email: updated.email, role: updated.role },
+    });
+
+    return updated;
+  });
 
   const user = member.userId ? await findUserById(member.userId) : await findUserByEmail(member.email.toLowerCase());
 

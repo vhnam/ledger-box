@@ -9,7 +9,10 @@ export function useInviteWalletMember(walletId: string) {
   return useMutation({
     mutationFn: (payload: InviteWalletMemberSchema) => inviteWalletMember(walletId, payload),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['wallet-members', walletId] });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['wallet-members', walletId] }),
+        queryClient.invalidateQueries({ queryKey: ['activity', walletId] }),
+      ]);
     },
   });
 }
@@ -21,7 +24,10 @@ export function useUpdateWalletMemberRole(walletId: string) {
     mutationFn: ({ memberId, ...payload }: UpdateWalletMemberRoleSchema & { memberId: string }) =>
       updateWalletMemberRole(walletId, memberId, payload),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['wallet-members', walletId] });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['wallet-members', walletId] }),
+        queryClient.invalidateQueries({ queryKey: ['activity', walletId] }),
+      ]);
     },
   });
 }
@@ -32,7 +38,10 @@ export function useRemoveWalletMember(walletId: string) {
   return useMutation({
     mutationFn: (memberId: string) => removeWalletMember(walletId, memberId),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['wallet-members', walletId] });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['wallet-members', walletId] }),
+        queryClient.invalidateQueries({ queryKey: ['activity', walletId] }),
+      ]);
     },
   });
 }

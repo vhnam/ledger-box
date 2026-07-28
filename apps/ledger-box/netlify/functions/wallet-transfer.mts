@@ -1,11 +1,11 @@
 import type { Config } from '@netlify/functions';
-import { sql } from 'kysely';
 
 import { auth } from '#/lib/auth.ts';
 import { db } from '#/lib/db/index.ts';
 import { calendarDateToOccurredAtStart } from '#/lib/period-bounds.ts';
 
 import { getTenantId, requireWalletWriteAccess } from './lib/tenant-access.ts';
+import { transferBetweenWallets } from './lib/wallet-mutations.ts';
 
 type TransferMoneyBody = {
   fromWalletId?: unknown;
@@ -84,49 +84,16 @@ export default async (request: Request) => {
   const occurredAt = body.occurredAt ? calendarDateToOccurredAtStart(fromWallet.timezone, body.occurredAt) : now;
 
   await db.transaction().execute(async (trx) => {
-    await trx
-      .insertInto('transaction')
-      .values({
-        walletId: fromWalletId,
-        type: 'expense',
-        amount,
-        description,
-        occurredAt,
-        createdAt: now,
-        updatedAt: now,
-      })
-      .execute();
-
-    await trx
-      .insertInto('transaction')
-      .values({
-        walletId: toWalletId,
-        type: 'income',
-        amount,
-        description,
-        occurredAt,
-        createdAt: now,
-        updatedAt: now,
-      })
-      .execute();
-
-    await trx
-      .updateTable('wallet')
-      .set({
-        amount: sql`amount - ${amount}`,
-        updatedAt: now,
-      })
-      .where('id', '=', fromWalletId)
-      .execute();
-
-    await trx
-      .updateTable('wallet')
-      .set({
-        amount: sql`amount + ${amount}`,
-        updatedAt: now,
-      })
-      .where('id', '=', toWalletId)
-      .execute();
+    await transferBetweenWallets(trx, {
+      actor: { userId: session.user.id, email: session.user.email },
+      fromWalletId,
+      fromTenantId: fromWallet.tenantId,
+      toWalletId,
+      toTenantId: toWallet.tenantId,
+      amount,
+      description,
+      occurredAt,
+    });
   });
 
   return Response.json({ success: true }, { status: 201 });
