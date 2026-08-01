@@ -1,6 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { inviteWalletMember, removeWalletMember, updateWalletMemberRole } from '#/queries/wallets/wallet-member.api';
+import {
+  inviteWalletMember,
+  removeWalletMember,
+  resendWalletInvite,
+  updateWalletMemberRole,
+} from '#/queries/wallets/wallet-member.api';
 import type { InviteWalletMemberSchema, UpdateWalletMemberRoleSchema } from '#/schemas/wallet-member.schema';
 
 export function useInviteWalletMember(walletId: string) {
@@ -37,6 +42,20 @@ export function useRemoveWalletMember(walletId: string) {
 
   return useMutation({
     mutationFn: (memberId: string) => removeWalletMember(walletId, memberId),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['wallet-members', walletId] }),
+        queryClient.invalidateQueries({ queryKey: ['activity', walletId] }),
+      ]);
+    },
+  });
+}
+
+export function useResendWalletInvite(walletId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (memberId: string) => resendWalletInvite(walletId, memberId),
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['wallet-members', walletId] }),

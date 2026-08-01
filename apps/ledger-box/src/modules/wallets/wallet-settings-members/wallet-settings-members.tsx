@@ -24,6 +24,7 @@ function WalletSettingsMembers({ wallet }: WalletSettingsMembersProps) {
     handleInvite,
     handleRoleChange,
     handleRemoveMember,
+    handleResendInvite,
   } = useWalletSettingsMembersActions({ wallet });
 
   return (
@@ -58,6 +59,7 @@ function WalletSettingsMembers({ wallet }: WalletSettingsMembersProps) {
                     member={member}
                     onRoleChange={handleRoleChange}
                     onRemove={handleRemoveMember}
+                    onResend={handleResendInvite}
                   />
                 ))}
               </ul>

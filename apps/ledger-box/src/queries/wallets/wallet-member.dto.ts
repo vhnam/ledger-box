@@ -11,4 +11,6 @@ export type WalletMemberDto = {
   role: WalletMemberRole;
   status: WalletMemberStatus;
   isOwner: boolean;
+  emailSent?: boolean;
+  lastInvitedAt?: string;
 };

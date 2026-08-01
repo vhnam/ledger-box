@@ -179,6 +179,8 @@ Netlify Functions under `/api/*`, in `apps/ledger-box/netlify/functions`.
 | `GET` `POST` `.../transactions/:transactionId/attachments`                 | List, upload                                              |
 | `DELETE` `.../transactions/:transactionId/attachments/:attachmentId`       | Permanent R2 delete                                       |
 | `GET` `POST` `PATCH` `DELETE` `/api/wallets/:walletId/members[/:memberId]` | Invite, update role, remove                               |
+| `POST` `/api/wallets/:walletId/members/:memberId/resend`                   | Resend a pending invite email (rate limited per owner)    |
+| `GET` `/api/wallets/invites/:token`                                        | Public invite-token verification (no auth)                |
 | `GET` `/api/users/by-email`                                                | Look up a better-auth user                                |
 | `GET` `/api/wallets/:walletId/summary`                                     | Full-period income/expense/net balance aggregate          |
 | `GET` `POST` `/api/wallets/:walletId/statement-shares`                     | List, create/preview a statement share link               |
@@ -229,6 +231,11 @@ See `.env.example`. Required: `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH
 `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and the Cloudflare R2 set
 (`CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_R2_BUCKET_NAME`, `CLOUDFLARE_R2_ACCESS_TOKEN`,
 `CLOUDFLARE_R2_SECRET_ACCESS_TOKEN`, `CLOUDFLARE_R2_PUBLIC_URL`).
+
+`RESEND_API_KEY` and `RESEND_EMAIL_FROM_ADDRESS` power outbound wallet-invite emails
+(`netlify/functions/lib/mailer.ts`). Both are optional in local dev — without them, invite
+creation and resend still persist normally, `emailSent: false` is returned in the response,
+and an `invite_email_failed` activity entry is recorded.
 
 Never commit real values. When adding a variable, add it to `.env.example` in the same
 change.

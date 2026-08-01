@@ -11,9 +11,10 @@ type WalletMemberRowProps = {
   member: WalletMemberDto;
   onRoleChange: (memberId: string, role: WalletMemberRole) => void;
   onRemove: (memberId: string) => void;
+  onResend: (memberId: string) => void;
 };
 
-function WalletMemberRow({ member, onRoleChange, onRemove }: WalletMemberRowProps) {
+function WalletMemberRow({ member, onRoleChange, onRemove, onResend }: WalletMemberRowProps) {
   return (
     <li className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
       <WalletMemberAvatar member={member} />
@@ -36,6 +37,18 @@ function WalletMemberRow({ member, onRoleChange, onRemove }: WalletMemberRowProp
           ))}
         </SelectContent>
       </Select>
+
+      {member.status === 'pending' && !member.isOwner && (
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          aria-label={`Resend invite to ${member.email}`}
+          onClick={() => onResend(member.id)}
+        >
+          <Icon name="ArrowClockwiseIcon" />
+        </Button>
+      )}
 
       {!member.isOwner && (
         <Button

@@ -46,4 +46,19 @@ export async function removeWalletMember(walletId: string, memberId: string): Pr
   }
 }
 
+export async function resendWalletInvite(
+  walletId: string,
+  memberId: string,
+): Promise<{ id: string; emailSent: boolean; lastInvitedAt: string }> {
+  try {
+    const { data } = await axios.post<{ id: string; emailSent: boolean; lastInvitedAt: string }>(
+      `/api/wallets/${walletId}/members/${memberId}/resend`,
+    );
+
+    return data;
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, 'Failed to resend invite. Please try again.'));
+  }
+}
+
 export type { WalletMemberRole };
