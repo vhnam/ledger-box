@@ -2,10 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 
 import { fetchPublicStatement, fetchStatementShares } from '#/queries/statement-shares/statement-share.api';
 
-export function useStatementShares(walletId: string) {
+export function useStatementShares(walletId: string, page = 1) {
   return useQuery({
-    queryKey: ['wallets', walletId, 'statement-shares'],
-    queryFn: () => fetchStatementShares(walletId),
+    queryKey: ['wallets', walletId, 'statement-shares', page],
+    queryFn: () => fetchStatementShares(walletId, page),
     enabled: walletId.length > 0,
   });
 }

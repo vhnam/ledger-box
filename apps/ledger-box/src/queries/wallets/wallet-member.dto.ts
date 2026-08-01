@@ -14,3 +14,10 @@ export type WalletMemberDto = {
   emailSent?: boolean;
   lastInvitedAt?: string;
 };
+
+export type WalletMemberListDto = {
+  items: WalletMemberDto[];
+  total: number;
+  page: number;
+  pageSize: number;
+};

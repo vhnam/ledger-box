@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import * as v from 'valibot';
 
 import { toast } from '@vhnam/ui/components/toast';
 
 import { WALLET_MEMBER_ROLES, type WalletMemberRole } from '#/constants/wallet-member-role-options';
+import { getPageItems } from '#/lib/pagination';
 import {
   useInviteWalletMember,
   useRemoveWalletMember,
@@ -19,7 +20,30 @@ type UseWalletSettingsMembersActionsOptions = {
 };
 
 export function useWalletSettingsMembersActions({ wallet }: UseWalletSettingsMembersActionsOptions) {
-  const { data: members = [], isPending: isLoadingMembers } = useWalletMembers(wallet.id);
+  const [page, setPage] = useState(1);
+  const { data, isPending: isLoadingMembers, isFetching: isFetchingMembers } = useWalletMembers(wallet.id, page);
+  const members = data?.items ?? [];
+  const totalPages = data ? Math.max(1, Math.ceil(data.total / data.pageSize)) : 1;
+  const pageItems = useMemo(() => getPageItems(page, totalPages), [page, totalPages]);
+  const canGoPrevious = page > 1;
+  const canGoNext = page < totalPages;
+
+  function goToPage(nextPage: number) {
+    if (nextPage < 1 || nextPage > totalPages) {
+      return;
+    }
+
+    setPage(nextPage);
+  }
+
+  function goToPreviousPage() {
+    goToPage(page - 1);
+  }
+
+  function goToNextPage() {
+    goToPage(page + 1);
+  }
+
   const { mutate: inviteMember, isPending: isInviting } = useInviteWalletMember(wallet.id);
   const { mutate: updateMemberRole } = useUpdateWalletMemberRole(wallet.id);
   const { mutate: removeMember } = useRemoveWalletMember(wallet.id);
@@ -115,6 +139,15 @@ export function useWalletSettingsMembersActions({ wallet }: UseWalletSettingsMem
   return {
     members,
     isLoadingMembers,
+    isFetchingMembers,
+    page,
+    totalPages,
+    pageItems,
+    canGoPrevious,
+    canGoNext,
+    goToPage,
+    goToPreviousPage,
+    goToNextPage,
     inviteEmail,
     setInviteEmail,
     inviteRole,

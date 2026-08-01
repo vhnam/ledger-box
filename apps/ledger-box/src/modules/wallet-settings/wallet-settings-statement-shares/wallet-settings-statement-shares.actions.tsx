@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { toast } from '@vhnam/ui/components/toast';
 
+import { getPageItems } from '#/lib/pagination';
 import type {
   CreateStatementSharePayload,
   CreateStatementShareResponse,
@@ -21,7 +22,30 @@ type UseWalletSettingsStatementSharesOptions = {
 };
 
 export function useWalletSettingsStatementSharesActions({ wallet }: UseWalletSettingsStatementSharesOptions) {
-  const { data: shares = [], isPending: isLoadingShares } = useStatementShares(wallet.id);
+  const [page, setPage] = useState(1);
+  const { data, isPending: isLoadingShares, isFetching: isFetchingShares } = useStatementShares(wallet.id, page);
+  const shares = data?.items ?? [];
+  const totalPages = data ? Math.max(1, Math.ceil(data.total / data.pageSize)) : 1;
+  const pageItems = useMemo(() => getPageItems(page, totalPages), [page, totalPages]);
+  const canGoPrevious = page > 1;
+  const canGoNext = page < totalPages;
+
+  function goToPage(nextPage: number) {
+    if (nextPage < 1 || nextPage > totalPages) {
+      return;
+    }
+
+    setPage(nextPage);
+  }
+
+  function goToPreviousPage() {
+    goToPage(page - 1);
+  }
+
+  function goToNextPage() {
+    goToPage(page + 1);
+  }
+
   const { mutate: preview, isPending: isPreviewing } = usePreviewStatementShare(wallet.id);
   const { mutate: createShare, isPending: isCreating } = useCreateStatementShare(wallet.id);
   const { mutate: revokeShare } = useRevokeStatementShare(wallet.id);
@@ -132,6 +156,15 @@ export function useWalletSettingsStatementSharesActions({ wallet }: UseWalletSet
   return {
     shares,
     isLoadingShares,
+    isFetchingShares,
+    page,
+    totalPages,
+    pageItems,
+    canGoPrevious,
+    canGoNext,
+    goToPage,
+    goToPreviousPage,
+    goToNextPage,
     periodFrom,
     setPeriodFrom,
     periodTo,

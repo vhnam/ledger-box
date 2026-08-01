@@ -8,6 +8,14 @@ danger zone — without changing any section's data, mutations, or the server-si
 rules that already govern them, so each settings area can be linked to, bookmarked, and
 reloaded directly.
 
+**Superseded since this prompt was first written**: the `danger-zone` route/section
+described throughout this prompt was later removed — its content was merged into
+`general` as a second in-page section, and its route/nav entry were deleted entirely (see
+`GGQPA-XXX-202608020200-[Refactor]-ui-merge-danger-zone-into-general.md`). This prompt is
+kept as-is for historical accuracy of the five-route design as originally shipped; treat
+every `danger-zone`/`WalletSettingsDangerZone*` reference below as **removed** in the
+current codebase, and treat "five" as **four** in the current codebase.
+
 ## Entities
 
 ```mermaid
@@ -81,6 +89,9 @@ No changes to `WalletSettingsGeneral`, `WalletSettingsActivity`,
 component is a thin wrapper that resolves `wallet`/`walletId` via the existing
 `useWallet`/`useWallets` hooks and renders the corresponding unchanged section
 component.
+
+**Superseded**: `WalletSettingsDangerZoneRoute` and `WalletSettingsDangerZone` (and every
+edge to/from them in the diagram above) no longer exist — see the Requirements note above.
 
 **Scope grew since this prompt was first written**: what shipped is not a
 settings-only layout. `WalletShellLayoutRoute` (originally `WalletSettingsLayoutRoute`)
@@ -184,14 +195,18 @@ correctly rejects `'owner'` as a value. See Norms/Safeguards below.
    along with that design.)
 4. `routes/_app/wallets/$walletId/settings/{general,activity,members,statement-shares,danger-zone}.tsx`
    — unchanged from the original plan: thin `createFileRoute` wrappers delegating to
-   their `*Route` component.
+   their `*Route` component. **Superseded**: `settings/danger-zone.tsx` was later deleted
+   (see Requirements note above) — the remaining four route files are unchanged.
 5. `src/modules/wallets/wallet-shell-layout/wallet-shell-layout.tsx`
    (`WalletShellLayout`) — replaces both the originally-planned `WalletSettingsLayout`
    _and_ effectively absorbs `WalletPage`'s header/scroll ownership. Contains the
    `SETTINGS_SECTIONS` config (value/label/icon/route/ownerOnly/destructive), the
    pending/error/not-found guards, the viewer-exclusion guard (scoped to
    `isSettingsPath`), the desktop sidebar, the mobile tab strip, and the shared
-   `ScrollArea` + `Outlet`.
+   `ScrollArea` + `Outlet`. **Superseded**: the `danger-zone` entry and the
+   `destructive?: boolean` field on `SettingsSection` were later removed entirely (see
+   Requirements note above) — `SETTINGS_SECTIONS` now holds four entries with no
+   `destructive` field.
 6. `src/modules/wallets/wallet-page/wallet-page.tsx` (`WalletPage`) — trimmed: no
    `WalletHeader`, no own height/`ScrollArea` wrapper. Still owns its own
    pending/error/not-found guards independently (accepted minor duplication with the
@@ -207,11 +222,16 @@ correctly rejects `'owner'` as a value. See Norms/Safeguards below.
    Every import of the form `#/modules/wallets/wallet-settings-*` was rewritten to
    `#/modules/wallet-settings/wallet-settings-*`. The five `*-route.tsx` wrapper
    components (`WalletSettingsGeneralRoute`, etc.) and their exporting `index.ts`
-   barrels moved with their parent folders, unchanged internally.
+   barrels moved with their parent folders, unchanged internally. **Superseded**: the
+   `wallet-settings-danger-zone` folder was later deleted outright (see Requirements note
+   above), not merely relocated — four module folders remain under
+   `src/modules/wallet-settings/`.
 9. No changes to `wallet-settings-general.tsx`, `wallet-settings-activity.tsx`,
    `wallet-settings-members.tsx`, `wallet-settings-statement-shares.tsx`,
    `wallet-settings-danger-zone.tsx`, or any `.actions.tsx` file — still true, unaffected
-   by the relocation or the shell rewrite.
+   by the relocation or the shell rewrite. **Superseded**: `wallet-settings-general.tsx`
+   was later rewritten to absorb `wallet-settings-danger-zone.tsx`'s content (see
+   Requirements note above); `wallet-settings-danger-zone.tsx` no longer exists.
 
 ### Server (`apps/ledger-box/netlify/functions`)
 
@@ -315,7 +335,10 @@ scrollRestorationId="wallet-main">` wrapper — the shell now provides all three
 component. `WalletSettingsActivityRoute` additionally redirects a non-owner to
 `/wallets/$walletId/settings/general` via `<Navigate>`. Only their file location
 changed (see Relocate Modules above); their internal logic is exactly as originally
-specified.
+specified. **Superseded**: `WalletSettingsDangerZoneRoute` was later deleted (see
+Requirements note above) — the remaining three wrapper operations
+(`WalletSettingsGeneralRoute`, `WalletSettingsMembersRoute`,
+`WalletSettingsStatementSharesRoute`) plus `WalletSettingsActivityRoute` are unaffected.
 
 ### Write Changelog (**unchanged responsibility, rewritten content across iterations**)
 

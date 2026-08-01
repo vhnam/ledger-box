@@ -24,7 +24,6 @@ import { Route as AppWalletsWalletIdSettingsIndexRouteImport } from './routes/_a
 import { Route as AppWalletsWalletIdSettingsStatementSharesRouteImport } from './routes/_app/wallets/$walletId/settings/statement-shares'
 import { Route as AppWalletsWalletIdSettingsMembersRouteImport } from './routes/_app/wallets/$walletId/settings/members'
 import { Route as AppWalletsWalletIdSettingsGeneralRouteImport } from './routes/_app/wallets/$walletId/settings/general'
-import { Route as AppWalletsWalletIdSettingsDangerZoneRouteImport } from './routes/_app/wallets/$walletId/settings/danger-zone'
 import { Route as AppWalletsWalletIdSettingsActivityRouteImport } from './routes/_app/wallets/$walletId/settings/activity'
 
 const AuthRouteRoute = AuthRouteRouteImport.update({
@@ -105,12 +104,6 @@ const AppWalletsWalletIdSettingsGeneralRoute =
     path: '/settings/general',
     getParentRoute: () => AppWalletsWalletIdRouteRoute,
   } as any)
-const AppWalletsWalletIdSettingsDangerZoneRoute =
-  AppWalletsWalletIdSettingsDangerZoneRouteImport.update({
-    id: '/settings/danger-zone',
-    path: '/settings/danger-zone',
-    getParentRoute: () => AppWalletsWalletIdRouteRoute,
-  } as any)
 const AppWalletsWalletIdSettingsActivityRoute =
   AppWalletsWalletIdSettingsActivityRouteImport.update({
     id: '/settings/activity',
@@ -130,7 +123,6 @@ export interface FileRoutesByFullPath {
   '/wallets/': typeof AppWalletsIndexRoute
   '/wallets/$walletId/': typeof AppWalletsWalletIdIndexRoute
   '/wallets/$walletId/settings/activity': typeof AppWalletsWalletIdSettingsActivityRoute
-  '/wallets/$walletId/settings/danger-zone': typeof AppWalletsWalletIdSettingsDangerZoneRoute
   '/wallets/$walletId/settings/general': typeof AppWalletsWalletIdSettingsGeneralRoute
   '/wallets/$walletId/settings/members': typeof AppWalletsWalletIdSettingsMembersRoute
   '/wallets/$walletId/settings/statement-shares': typeof AppWalletsWalletIdSettingsStatementSharesRoute
@@ -146,7 +138,6 @@ export interface FileRoutesByTo {
   '/wallets': typeof AppWalletsIndexRoute
   '/wallets/$walletId': typeof AppWalletsWalletIdIndexRoute
   '/wallets/$walletId/settings/activity': typeof AppWalletsWalletIdSettingsActivityRoute
-  '/wallets/$walletId/settings/danger-zone': typeof AppWalletsWalletIdSettingsDangerZoneRoute
   '/wallets/$walletId/settings/general': typeof AppWalletsWalletIdSettingsGeneralRoute
   '/wallets/$walletId/settings/members': typeof AppWalletsWalletIdSettingsMembersRoute
   '/wallets/$walletId/settings/statement-shares': typeof AppWalletsWalletIdSettingsStatementSharesRoute
@@ -166,7 +157,6 @@ export interface FileRoutesById {
   '/_app/wallets/': typeof AppWalletsIndexRoute
   '/_app/wallets/$walletId/': typeof AppWalletsWalletIdIndexRoute
   '/_app/wallets/$walletId/settings/activity': typeof AppWalletsWalletIdSettingsActivityRoute
-  '/_app/wallets/$walletId/settings/danger-zone': typeof AppWalletsWalletIdSettingsDangerZoneRoute
   '/_app/wallets/$walletId/settings/general': typeof AppWalletsWalletIdSettingsGeneralRoute
   '/_app/wallets/$walletId/settings/members': typeof AppWalletsWalletIdSettingsMembersRoute
   '/_app/wallets/$walletId/settings/statement-shares': typeof AppWalletsWalletIdSettingsStatementSharesRoute
@@ -186,7 +176,6 @@ export interface FileRouteTypes {
     | '/wallets/'
     | '/wallets/$walletId/'
     | '/wallets/$walletId/settings/activity'
-    | '/wallets/$walletId/settings/danger-zone'
     | '/wallets/$walletId/settings/general'
     | '/wallets/$walletId/settings/members'
     | '/wallets/$walletId/settings/statement-shares'
@@ -202,7 +191,6 @@ export interface FileRouteTypes {
     | '/wallets'
     | '/wallets/$walletId'
     | '/wallets/$walletId/settings/activity'
-    | '/wallets/$walletId/settings/danger-zone'
     | '/wallets/$walletId/settings/general'
     | '/wallets/$walletId/settings/members'
     | '/wallets/$walletId/settings/statement-shares'
@@ -221,7 +209,6 @@ export interface FileRouteTypes {
     | '/_app/wallets/'
     | '/_app/wallets/$walletId/'
     | '/_app/wallets/$walletId/settings/activity'
-    | '/_app/wallets/$walletId/settings/danger-zone'
     | '/_app/wallets/$walletId/settings/general'
     | '/_app/wallets/$walletId/settings/members'
     | '/_app/wallets/$walletId/settings/statement-shares'
@@ -342,13 +329,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWalletsWalletIdSettingsGeneralRouteImport
       parentRoute: typeof AppWalletsWalletIdRouteRoute
     }
-    '/_app/wallets/$walletId/settings/danger-zone': {
-      id: '/_app/wallets/$walletId/settings/danger-zone'
-      path: '/settings/danger-zone'
-      fullPath: '/wallets/$walletId/settings/danger-zone'
-      preLoaderRoute: typeof AppWalletsWalletIdSettingsDangerZoneRouteImport
-      parentRoute: typeof AppWalletsWalletIdRouteRoute
-    }
     '/_app/wallets/$walletId/settings/activity': {
       id: '/_app/wallets/$walletId/settings/activity'
       path: '/settings/activity'
@@ -362,7 +342,6 @@ declare module '@tanstack/react-router' {
 interface AppWalletsWalletIdRouteRouteChildren {
   AppWalletsWalletIdIndexRoute: typeof AppWalletsWalletIdIndexRoute
   AppWalletsWalletIdSettingsActivityRoute: typeof AppWalletsWalletIdSettingsActivityRoute
-  AppWalletsWalletIdSettingsDangerZoneRoute: typeof AppWalletsWalletIdSettingsDangerZoneRoute
   AppWalletsWalletIdSettingsGeneralRoute: typeof AppWalletsWalletIdSettingsGeneralRoute
   AppWalletsWalletIdSettingsMembersRoute: typeof AppWalletsWalletIdSettingsMembersRoute
   AppWalletsWalletIdSettingsStatementSharesRoute: typeof AppWalletsWalletIdSettingsStatementSharesRoute
@@ -374,8 +353,6 @@ const AppWalletsWalletIdRouteRouteChildren: AppWalletsWalletIdRouteRouteChildren
     AppWalletsWalletIdIndexRoute: AppWalletsWalletIdIndexRoute,
     AppWalletsWalletIdSettingsActivityRoute:
       AppWalletsWalletIdSettingsActivityRoute,
-    AppWalletsWalletIdSettingsDangerZoneRoute:
-      AppWalletsWalletIdSettingsDangerZoneRoute,
     AppWalletsWalletIdSettingsGeneralRoute:
       AppWalletsWalletIdSettingsGeneralRoute,
     AppWalletsWalletIdSettingsMembersRoute:

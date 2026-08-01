@@ -1,12 +1,14 @@
 import { Field as FormField, Form } from '@formisch/react';
+import { useState } from 'react';
 
+import { Alert, AlertAction, AlertDescription, AlertTitle } from '@vhnam/ui/components/alert';
 import { Button } from '@vhnam/ui/components/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@vhnam/ui/components/card';
-import { Field, FieldError, FieldGroup, FieldLabel } from '@vhnam/ui/components/field';
+import { Field, FieldError, FieldGroup } from '@vhnam/ui/components/field';
 import { Input } from '@vhnam/ui/components/input';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
 import { useWalletSettingsGeneralActions } from '#/modules/wallet-settings/wallet-settings-general/wallet-settings-general.actions';
+import { DeleteWalletDialog } from '#/modules/wallets/delete-wallet-dialog';
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
 
 type WalletSettingsGeneralProps = {
@@ -15,46 +17,71 @@ type WalletSettingsGeneralProps = {
 
 function WalletSettingsGeneral({ wallet }: WalletSettingsGeneralProps) {
   const { form, updateError, isUpdating, handleUpdateWallet } = useWalletSettingsGeneralActions({ wallet });
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>General</CardTitle>
-        <CardDescription>Update the display name for this wallet.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form of={form} onSubmit={(output) => handleUpdateWallet(output)}>
-          <FieldGroup>
-            <FormField
-              of={form}
-              path={['name']}
-              children={(field) => (
-                <Field data-invalid={!!field.errors}>
-                  <FieldLabel htmlFor={field.props.name}>Wallet name</FieldLabel>
-                  <Input
-                    id={field.props.name}
-                    placeholder="Enter wallet name"
-                    aria-invalid={!!field.errors}
-                    {...field.props}
-                    value={field.input ?? ''}
-                  />
-                  {field.errors && <FieldError>{field.errors[0]}</FieldError>}
-                </Field>
-              )}
-            />
+    <>
+      <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-1 border-b pb-4">
+          <h1 className="font-heading text-2xl font-semibold">General</h1>
+          <p className="text-sm text-muted-foreground">Rename this wallet or permanently delete it.</p>
+        </div>
 
-            {updateError && <FieldError>{updateError}</FieldError>}
+        <div className="flex flex-col gap-3 border-b pb-8">
+          <h2 className="text-base font-semibold">Wallet name</h2>
 
-            <Field className="ml-auto w-fit">
-              <Button type="submit" disabled={isUpdating}>
-                {isUpdating && <Spinner className="size-4" />}
-                {isUpdating ? 'Saving...' : 'Save changes'}
+          <Form of={form} onSubmit={(output) => handleUpdateWallet(output)}>
+            <FieldGroup>
+              <div className="flex items-start gap-2">
+                <FormField
+                  of={form}
+                  path={['name']}
+                  children={(field) => (
+                    <Field className="flex-1" data-invalid={!!field.errors}>
+                      <Input
+                        id={field.props.name}
+                        placeholder="Enter wallet name"
+                        aria-invalid={!!field.errors}
+                        {...field.props}
+                        value={field.input ?? ''}
+                      />
+                      {field.errors && <FieldError>{field.errors[0]}</FieldError>}
+                    </Field>
+                  )}
+                />
+
+                <Button type="submit" variant="outline" disabled={isUpdating}>
+                  {isUpdating && <Spinner className="size-4" />}
+                  {isUpdating ? 'Saving...' : 'Save'}
+                </Button>
+              </div>
+
+              {updateError && <FieldError>{updateError}</FieldError>}
+            </FieldGroup>
+          </Form>
+        </div>
+
+        <div className="flex flex-col">
+          <div className="mb-4">
+            <h2 className="text-lg font-semibold">Danger Zone</h2>
+          </div>
+
+          <Alert variant="destructive">
+            <AlertTitle>Delete this wallet</AlertTitle>
+            <AlertDescription>
+              Once you delete a wallet, there is no going back. All of its transactions will be permanently deleted.
+            </AlertDescription>
+            <AlertAction>
+              <Button size="xs" type="button" variant="destructive" onClick={() => setOpenDeleteDialog(true)}>
+                Delete wallet
               </Button>
-            </Field>
-          </FieldGroup>
-        </Form>
-      </CardContent>
-    </Card>
+            </AlertAction>
+          </Alert>
+        </div>
+      </div>
+
+      <DeleteWalletDialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog} wallet={wallet} />
+    </>
   );
 }
 

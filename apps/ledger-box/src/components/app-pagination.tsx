@@ -9,9 +9,9 @@ import {
 } from '@vhnam/ui/components/pagination';
 import { cn } from '@vhnam/ui/lib/utils';
 
-import type { PageItem } from '#/modules/wallets/wallet-transactions/wallet-transactions.actions';
+import type { PageItem } from '#/lib/pagination';
 
-type WalletPaginationProps = {
+type AppPaginationProps = {
   page: number;
   totalPages: number;
   canGoPrevious: boolean;
@@ -22,7 +22,7 @@ type WalletPaginationProps = {
   goToNextPage: () => void;
 };
 
-function WalletPagination({
+function AppPagination({
   page,
   totalPages,
   canGoPrevious,
@@ -31,7 +31,7 @@ function WalletPagination({
   goToPage,
   goToPreviousPage,
   goToNextPage,
-}: WalletPaginationProps) {
+}: AppPaginationProps) {
   return (
     <div className="flex items-center justify-between">
       <div className="text-xs text-muted-foreground">
@@ -88,4 +88,4 @@ function WalletPagination({
   );
 }
 
-export { WalletPagination };
+export { AppPagination };

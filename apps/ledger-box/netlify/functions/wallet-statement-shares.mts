@@ -71,28 +71,45 @@ export default async (request: Request, context: Context) => {
   const { wallet } = ownership;
 
   if (request.method === 'GET') {
-    const shares = await db
-      .selectFrom('walletStatementShare')
-      .select([
-        'id',
-        'periodFrom',
-        'periodTo',
-        'displayTitle',
-        'expiresAt',
-        'revokedAt',
-        'snapshotAt',
-        'accessCount',
-        'lastAccessedAt',
-      ])
-      .where('walletId', '=', walletId)
-      .orderBy('createdAt', 'desc')
-      .execute();
+    const url = new URL(request.url);
+    const page = Math.max(1, Number.parseInt(url.searchParams.get('page') ?? '1', 10) || 1);
+    const pageSize = Math.min(100, Math.max(1, Number.parseInt(url.searchParams.get('pageSize') ?? '20', 10) || 20));
+    const offset = (page - 1) * pageSize;
+
+    const [shares, countResult] = await Promise.all([
+      db
+        .selectFrom('walletStatementShare')
+        .select([
+          'id',
+          'periodFrom',
+          'periodTo',
+          'displayTitle',
+          'expiresAt',
+          'revokedAt',
+          'snapshotAt',
+          'accessCount',
+          'lastAccessedAt',
+        ])
+        .where('walletId', '=', walletId)
+        .orderBy('createdAt', 'desc')
+        .limit(pageSize)
+        .offset(offset)
+        .execute(),
+      db
+        .selectFrom('walletStatementShare')
+        .select((eb) => eb.fn.count('id').as('count'))
+        .where('walletId', '=', walletId)
+        .executeTakeFirst(),
+    ]);
 
     return Response.json({
       items: shares.map((share) => ({
         ...share,
         isActive: isActive(share),
       })),
+      total: Number(countResult?.count ?? 0),
+      page,
+      pageSize,
     });
   }
 

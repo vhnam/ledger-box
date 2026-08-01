@@ -6,14 +6,16 @@ import type {
   CreateStatementShareResponse,
   PreviewStatementShareResponse,
   PublicStatementResponse,
-  StatementShareDto,
+  StatementShareListDto,
 } from '#/queries/statement-shares/statement-share.dto';
 
-export async function fetchStatementShares(walletId: string): Promise<StatementShareDto[]> {
+export async function fetchStatementShares(walletId: string, page = 1, pageSize = 10): Promise<StatementShareListDto> {
   try {
-    const { data } = await axios.get<{ items: StatementShareDto[] }>(`/api/wallets/${walletId}/statement-shares`);
+    const { data } = await axios.get<StatementShareListDto>(`/api/wallets/${walletId}/statement-shares`, {
+      params: { page, pageSize },
+    });
 
-    return data.items;
+    return data;
   } catch (error) {
     throw new Error(getApiErrorMessage(error, 'Failed to load statement shares. Please try again.'));
   }

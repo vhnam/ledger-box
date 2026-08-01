@@ -23,10 +23,8 @@ type SettingsSection = {
     | '/wallets/$walletId/settings/general'
     | '/wallets/$walletId/settings/activity'
     | '/wallets/$walletId/settings/members'
-    | '/wallets/$walletId/settings/statement-shares'
-    | '/wallets/$walletId/settings/danger-zone';
+    | '/wallets/$walletId/settings/statement-shares';
   ownerOnly: boolean;
-  destructive?: boolean;
 };
 
 const SETTINGS_SECTIONS: SettingsSection[] = [
@@ -57,14 +55,6 @@ const SETTINGS_SECTIONS: SettingsSection[] = [
     icon: 'ReceiptIcon',
     to: '/wallets/$walletId/settings/statement-shares',
     ownerOnly: false,
-  },
-  {
-    value: 'danger-zone',
-    label: 'Danger zone',
-    icon: 'TrashIcon',
-    to: '/wallets/$walletId/settings/danger-zone',
-    ownerOnly: false,
-    destructive: true,
   },
 ];
 
@@ -144,8 +134,6 @@ function WalletShellLayout({ walletId }: WalletShellLayoutProps) {
                     className={cn(
                       'w-full justify-start gap-3 px-3 py-2',
                       isActive && 'bg-accent text-accent-foreground',
-                      section.destructive && !isActive && 'text-destructive hover:text-destructive',
-                      section.destructive && isActive && 'bg-destructive/10 text-destructive',
                     )}
                     nativeButton={false}
                     render={
@@ -181,7 +169,6 @@ function WalletShellLayout({ walletId }: WalletShellLayoutProps) {
                         key={section.value}
                         value={section.value}
                         nativeButton={false}
-                        className={cn(section.destructive && 'text-destructive hover:text-destructive')}
                         render={
                           <Link to={section.to} params={{ walletId }}>
                             <Icon name={section.icon} />

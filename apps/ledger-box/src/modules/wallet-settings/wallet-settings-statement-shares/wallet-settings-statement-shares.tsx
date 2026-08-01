@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import { Button } from '@vhnam/ui/components/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@vhnam/ui/components/card';
 import { DatePickerRange } from '@vhnam/ui/components/date-picker-range';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@vhnam/ui/components/dialog';
 import { Field, FieldError, FieldLabel } from '@vhnam/ui/components/field';
@@ -13,6 +12,7 @@ import { toast } from '@vhnam/ui/components/toast';
 
 import { format } from '@vhnam/utils/date';
 
+import { AppPagination } from '#/components/app-pagination';
 import { StatementSnapshotView } from '#/modules/statement/statement-snapshot-view';
 import { useWalletSettingsStatementSharesActions } from '#/modules/wallet-settings/wallet-settings-statement-shares/wallet-settings-statement-shares.actions';
 import { WalletStatementShareRow } from '#/modules/wallet-settings/wallet-settings-statement-shares/wallet-statement-share-row';
@@ -27,6 +27,14 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
   const {
     shares,
     isLoadingShares,
+    page,
+    totalPages,
+    pageItems,
+    canGoPrevious,
+    canGoNext,
+    goToPage,
+    goToPreviousPage,
+    goToNextPage,
     periodFrom,
     setPeriodFrom,
     periodTo,
@@ -65,12 +73,15 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Statement links</CardTitle>
-        <CardDescription>Share a read-only, revocable statement for a date range, without sign-in.</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <>
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-1">
+          <h1 className="font-heading text-xl font-semibold">Statement links</h1>
+          <p className="text-sm text-muted-foreground">
+            Share a read-only, revocable statement for a date range, without sign-in.
+          </p>
+        </div>
+
         <Button variant="secondary" className="w-fit" onClick={() => setDialogOpen(true)}>
           <Icon name="ShareIcon" />
           Share statement
@@ -89,10 +100,22 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
                   <WalletStatementShareRow key={share.id} walletId={wallet.id} share={share} onRevoke={handleRevoke} />
                 ))}
               </ul>
+              {totalPages > 1 ? (
+                <AppPagination
+                  page={page}
+                  totalPages={totalPages}
+                  canGoPrevious={canGoPrevious}
+                  canGoNext={canGoNext}
+                  pageItems={pageItems}
+                  goToPage={goToPage}
+                  goToPreviousPage={goToPreviousPage}
+                  goToNextPage={goToNextPage}
+                />
+              ) : null}
             </>
           )
         )}
-      </CardContent>
+      </div>
 
       <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange}>
         <DialogContent className="sm:max-w-xl">
@@ -167,7 +190,7 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
           )}
         </DialogContent>
       </Dialog>
-    </Card>
+    </>
   );
 }
 

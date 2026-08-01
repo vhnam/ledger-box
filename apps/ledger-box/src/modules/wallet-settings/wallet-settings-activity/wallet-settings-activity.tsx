@@ -1,14 +1,15 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { Badge } from '@vhnam/ui/components/badge';
 import { Button } from '@vhnam/ui/components/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@vhnam/ui/components/card';
 import { Icon } from '@vhnam/ui/components/icon';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
 import { formatCurrency } from '@vhnam/utils/currency';
 import { formatDateTime } from '@vhnam/utils/date';
 
+import { AppPagination } from '#/components/app-pagination';
+import { getPageItems } from '#/lib/pagination';
 import type { ActivityLogItemDto } from '#/queries/activity/activity.dto';
 import { useWalletActivity } from '#/queries/activity/activity.queries';
 
@@ -115,58 +116,59 @@ function ActivityRow({ item }: { item: ActivityLogItemDto }) {
 
 function WalletSettingsActivity({ walletId }: WalletSettingsActivityProps) {
   const [page, setPage] = useState(1);
-  const { data, isPending, isError, isFetching } = useWalletActivity(walletId, page, true);
+  const { data, isPending, isError } = useWalletActivity(walletId, page, true);
   const totalPages = data ? Math.max(1, Math.ceil(data.total / data.pageSize)) : 1;
+  const pageItems = useMemo(() => getPageItems(page, totalPages), [page, totalPages]);
+  const canGoPrevious = page > 1;
+  const canGoNext = page < totalPages;
+
+  function goToPage(nextPage: number) {
+    if (nextPage < 1 || nextPage > totalPages) {
+      return;
+    }
+
+    setPage(nextPage);
+  }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Activity</CardTitle>
-        <CardDescription>Audit trail of changes to this wallet. Entries are never edited or deleted.</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {isPending ? (
-          <div className="flex justify-center py-6">
-            <Spinner className="size-6 text-muted-foreground" />
-          </div>
-        ) : isError ? (
-          <p className="text-sm text-destructive">Failed to load activity.</p>
-        ) : data.items.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No activity recorded yet.</p>
-        ) : (
-          <>
-            <ul className="divide-y">
-              {data.items.map((item) => (
-                <ActivityRow key={item.id} item={item} />
-              ))}
-            </ul>
-            {totalPages > 1 ? (
-              <div className="flex items-center justify-between gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={page <= 1 || isFetching}
-                  onClick={() => setPage((current) => Math.max(1, current - 1))}
-                >
-                  Previous
-                </Button>
-                <p className="text-xs text-muted-foreground">
-                  Page {page} of {totalPages}
-                </p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={page >= totalPages || isFetching}
-                  onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
-                >
-                  Next
-                </Button>
-              </div>
-            ) : null}
-          </>
-        )}
-      </CardContent>
-    </Card>
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-1">
+        <h1 className="font-heading text-xl font-semibold">Activity</h1>
+        <p className="text-sm text-muted-foreground">
+          Audit trail of changes to this wallet. Entries are never edited or deleted.
+        </p>
+      </div>
+
+      {isPending ? (
+        <div className="flex justify-center py-6">
+          <Spinner className="size-6 text-muted-foreground" />
+        </div>
+      ) : isError ? (
+        <p className="text-sm text-destructive">Failed to load activity.</p>
+      ) : data.items.length === 0 ? (
+        <p className="text-sm text-muted-foreground">No activity recorded yet.</p>
+      ) : (
+        <>
+          <ul className="divide-y">
+            {data.items.map((item) => (
+              <ActivityRow key={item.id} item={item} />
+            ))}
+          </ul>
+          {totalPages > 1 ? (
+            <AppPagination
+              page={page}
+              totalPages={totalPages}
+              canGoPrevious={canGoPrevious}
+              canGoNext={canGoNext}
+              pageItems={pageItems}
+              goToPage={goToPage}
+              goToPreviousPage={() => goToPage(page - 1)}
+              goToNextPage={() => goToPage(page + 1)}
+            />
+          ) : null}
+        </>
+      )}
+    </div>
   );
 }
 
