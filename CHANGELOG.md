@@ -6,13 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-### [mr-18 — refactor/wallet-settings-routes](docs/changelogs/mr-18-wallet-settings-per-section-routes.md)
-
-#### Changed
-
-- Wallet transactions and settings now share one persistent shell: a left nav with Wallet (Transactions) and Settings (General/Activity/Members/Statement shares/Danger zone) groups on desktop, a horizontal scrollable tab strip on mobile, with settings split into five deep-linkable routes. Activity's owner-only rule and the settings-wide viewer exclusion are now route guards instead of conditional renders. No section component, action, or API handler changed.
-
-### [mr-17 — fix/viewer-settings-access](docs/changelogs/mr-17-viewer-settings-access-fix.md)
+### [mr-17 — wallet settings access, routing & pagination](docs/changelogs/mr-17-wallet-settings-access-routing-and-pagination.md)
 
 #### Fixed
 
@@ -20,6 +14,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 #### Changed
 
+- Wallet transactions and settings now share one persistent shell: a left nav with Wallet (Transactions) and Settings (General/Activity/Members/Statement shares) groups on desktop, a horizontal scrollable tab strip on mobile, with settings split into deep-linkable routes. Activity's owner-only rule and the settings-wide viewer exclusion are route guards instead of conditional renders.
+- `GET /api/wallets/:walletId/members` and `GET /api/wallets/:walletId/statement-shares` now paginate (`page`/`pageSize` params, `{ items, total, page, pageSize }` response), matching Activity's existing contract. A shared `AppPagination` component and `getPageItems` utility are now used by Transactions, Members, Statement Shares, and Activity alike.
+- Danger Zone (delete wallet) is no longer its own settings route — it's now a second, GitHub-styled section on the General page; the `/settings/danger-zone` route and its module were deleted, and Settings nav is four sections instead of five.
 - `AGENTS.md` — corrected the stale tenancy-scoping note; member read access has been implemented since MR 11.
 
 ### [mr-16 — feat/statement-csv-export](docs/changelogs/mr-16-statement-csv-export.md)
