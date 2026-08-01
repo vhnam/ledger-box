@@ -20,10 +20,9 @@ const preview: Preview = {
         rules: [{ id: 'aria-hidden-focus', enabled: false }],
       },
     },
-    viewport: {
-      defaultViewport: 'desktop',
-    },
+    viewport: {},
   },
+
   decorators: [
     (Story) => (
       <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
@@ -31,6 +30,13 @@ const preview: Preview = {
       </ThemeProvider>
     ),
   ],
+
+  initialGlobals: {
+    viewport: {
+      value: 'desktop',
+      isRotated: false,
+    },
+  },
 };
 
 export default preview;
