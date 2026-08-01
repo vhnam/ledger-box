@@ -3,8 +3,8 @@ import { Icon } from '@vhnam/ui/components/icon';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@vhnam/ui/components/select';
 
 import { WALLET_MEMBER_ROLE_OPTIONS, type WalletMemberRole } from '#/constants/wallet-member-role-options';
-import { WalletMemberAvatar } from '#/modules/wallets/wallet-settings-members/wallet-member-avatar';
-import { WalletMemberIdentity } from '#/modules/wallets/wallet-settings-members/wallet-member-identity';
+import { WalletMemberAvatar } from '#/modules/wallet-settings/wallet-settings-members/wallet-member-avatar';
+import { WalletMemberIdentity } from '#/modules/wallet-settings/wallet-settings-members/wallet-member-identity';
 import type { WalletMemberDto } from '#/queries/wallets/wallet-member.dto';
 
 type WalletMemberRowProps = {

@@ -1,0 +1,209 @@
+import { Link, Navigate, Outlet, useLocation } from '@tanstack/react-router';
+
+import { Button } from '@vhnam/ui/components/button';
+import { Icon, type IconName } from '@vhnam/ui/components/icon';
+import { ScrollArea } from '@vhnam/ui/components/scroll-area';
+import { Spinner } from '@vhnam/ui/components/spinner';
+import { Tabs, TabsList, TabsTrigger } from '@vhnam/ui/components/tabs';
+import { cn } from '@vhnam/ui/lib/utils';
+
+import { WALLET_MEMBER_ROLES } from '#/constants/wallet-member-role-options';
+import { WalletHeader } from '#/modules/wallets/wallet-header';
+import { useWallet, useWallets } from '#/queries/wallets/wallet.queries';
+
+type WalletShellLayoutProps = {
+  walletId: string;
+};
+
+type SettingsSection = {
+  value: string;
+  label: string;
+  icon: IconName;
+  to:
+    | '/wallets/$walletId/settings/general'
+    | '/wallets/$walletId/settings/activity'
+    | '/wallets/$walletId/settings/members'
+    | '/wallets/$walletId/settings/statement-shares'
+    | '/wallets/$walletId/settings/danger-zone';
+  ownerOnly: boolean;
+  destructive?: boolean;
+};
+
+const SETTINGS_SECTIONS: SettingsSection[] = [
+  {
+    value: 'general',
+    label: 'General',
+    icon: 'GearSixIcon',
+    to: '/wallets/$walletId/settings/general',
+    ownerOnly: false,
+  },
+  {
+    value: 'activity',
+    label: 'Activity',
+    icon: 'ClockCounterClockwiseIcon',
+    to: '/wallets/$walletId/settings/activity',
+    ownerOnly: true,
+  },
+  {
+    value: 'members',
+    label: 'Members',
+    icon: 'UsersIcon',
+    to: '/wallets/$walletId/settings/members',
+    ownerOnly: false,
+  },
+  {
+    value: 'statement-shares',
+    label: 'Statement shares',
+    icon: 'ReceiptIcon',
+    to: '/wallets/$walletId/settings/statement-shares',
+    ownerOnly: false,
+  },
+  {
+    value: 'danger-zone',
+    label: 'Danger zone',
+    icon: 'TrashIcon',
+    to: '/wallets/$walletId/settings/danger-zone',
+    ownerOnly: false,
+    destructive: true,
+  },
+];
+
+const SETTINGS_SECTION_VALUES = SETTINGS_SECTIONS.map((section) => section.value);
+
+function WalletShellLayout({ walletId }: WalletShellLayoutProps) {
+  const { data: wallets } = useWallets();
+  const { data: wallet, isPending, isError } = useWallet(walletId);
+  const walletPreview = wallet ?? wallets?.find((item) => item.id === walletId);
+  const { pathname } = useLocation();
+
+  const lastSegment = pathname.split('/').filter(Boolean).pop();
+  const matchedSettingsSection = SETTINGS_SECTION_VALUES.find((value) => value === lastSegment);
+  const isSettingsPath = pathname.includes('/settings');
+
+  if (!walletPreview && isPending) {
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <Spinner className="size-32 text-default-foreground" />
+      </div>
+    );
+  }
+
+  if (isError || !walletId) {
+    return <p className="text-sm text-destructive">Failed to load wallet.</p>;
+  }
+
+  if (!walletPreview) {
+    return <p className="text-sm text-destructive">Wallet not found.</p>;
+  }
+
+  // Transactions stay open to a viewer; only the settings sub-tree is owner/manager-only.
+  if (isSettingsPath && walletPreview.role === WALLET_MEMBER_ROLES.VIEWER) {
+    return <Navigate to="/wallets/$walletId" params={{ walletId }} replace />;
+  }
+
+  const showSettingsGroup = walletPreview.role !== WALLET_MEMBER_ROLES.VIEWER;
+  const visibleSettingsSections = SETTINGS_SECTIONS.filter(
+    (section) => !section.ownerOnly || walletPreview.role === 'owner',
+  );
+  const activeNavValue = matchedSettingsSection ?? 'transactions';
+  const scrollRestorationId = isSettingsPath ? `wallet-settings-${matchedSettingsSection ?? 'general'}` : 'wallet-main';
+
+  return (
+    <>
+      <WalletHeader wallet={walletPreview} />
+      <div className="flex h-[calc(100vh-var(--header-height))] w-full md:flex-row">
+        <div className="hidden shrink-0 flex-col gap-4 p-2 md:flex md:h-full md:w-64 md:border-r">
+          <div className="flex flex-col gap-1">
+            <p className="px-3 pt-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">Wallet</p>
+            <Button
+              variant="ghost"
+              className={cn(
+                'w-full justify-start gap-3 px-3 py-2',
+                !isSettingsPath && 'bg-accent text-accent-foreground',
+              )}
+              nativeButton={false}
+              render={
+                <Link to="/wallets/$walletId" params={{ walletId }}>
+                  <Icon name="ListBulletsIcon" />
+                  <span className="flex-1 text-left">Transactions</span>
+                </Link>
+              }
+            />
+          </div>
+
+          {showSettingsGroup ? (
+            <div className="flex flex-col gap-1">
+              <p className="px-3 pt-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">Settings</p>
+              {visibleSettingsSections.map((section) => {
+                const isActive = section.value === matchedSettingsSection;
+
+                return (
+                  <Button
+                    key={section.value}
+                    variant="ghost"
+                    className={cn(
+                      'w-full justify-start gap-3 px-3 py-2',
+                      isActive && 'bg-accent text-accent-foreground',
+                      section.destructive && !isActive && 'text-destructive hover:text-destructive',
+                      section.destructive && isActive && 'bg-destructive/10 text-destructive',
+                    )}
+                    nativeButton={false}
+                    render={
+                      <Link to={section.to} params={{ walletId }}>
+                        <Icon name={section.icon} />
+                        <span className="flex-1 text-left">{section.label}</span>
+                      </Link>
+                    }
+                  />
+                );
+              })}
+            </div>
+          ) : null}
+        </div>
+
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+          <div className="border-b md:hidden">
+            <Tabs value={activeNavValue}>
+              <TabsList variant="line" className="w-full justify-start overflow-x-auto px-2">
+                <TabsTrigger
+                  value="transactions"
+                  nativeButton={false}
+                  render={
+                    <Link to="/wallets/$walletId" params={{ walletId }}>
+                      <Icon name="ListBulletsIcon" />
+                      Transactions
+                    </Link>
+                  }
+                />
+                {showSettingsGroup
+                  ? visibleSettingsSections.map((section) => (
+                      <TabsTrigger
+                        key={section.value}
+                        value={section.value}
+                        nativeButton={false}
+                        className={cn(section.destructive && 'text-destructive hover:text-destructive')}
+                        render={
+                          <Link to={section.to} params={{ walletId }}>
+                            <Icon name={section.icon} />
+                            {section.label}
+                          </Link>
+                        }
+                      />
+                    ))
+                  : null}
+              </TabsList>
+            </Tabs>
+          </div>
+
+          <ScrollArea scrollRestorationId={scrollRestorationId} className="h-full w-full">
+            <div className="mx-auto max-w-4xl p-4 lg:p-6">
+              <Outlet />
+            </div>
+          </ScrollArea>
+        </div>
+      </div>
+    </>
+  );
+}
+
+export { WalletShellLayout };

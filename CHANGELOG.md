@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-18 — refactor/wallet-settings-routes](docs/changelogs/mr-18-wallet-settings-per-section-routes.md)
+
+#### Changed
+
+- Wallet transactions and settings now share one persistent shell: a left nav with Wallet (Transactions) and Settings (General/Activity/Members/Statement shares/Danger zone) groups on desktop, a horizontal scrollable tab strip on mobile, with settings split into five deep-linkable routes. Activity's owner-only rule and the settings-wide viewer exclusion are now route guards instead of conditional renders. No section component, action, or API handler changed.
+
 ### [mr-17 — fix/viewer-settings-access](docs/changelogs/mr-17-viewer-settings-access-fix.md)
 
 #### Fixed

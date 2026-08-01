@@ -1,9 +1,7 @@
-import { ScrollArea } from '@vhnam/ui/components/scroll-area';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
 import { WalletActions, useWalletActions } from '#/modules/wallets/wallet-actions';
 import { WalletEmpty } from '#/modules/wallets/wallet-empty';
-import { WalletHeader } from '#/modules/wallets/wallet-header';
 import { WalletSummary } from '#/modules/wallets/wallet-summary';
 import { WalletTransactions } from '#/modules/wallets/wallet-transactions';
 import { useTransactions } from '#/queries/transactions/transaction.queries';
@@ -42,26 +40,19 @@ function WalletPage({ walletId }: WalletPageProps) {
   }
 
   return (
-    <>
-      <WalletHeader wallet={walletPreview} />
-      <div className="h-[calc(100vh-var(--header-height))] w-full">
-        <ScrollArea scrollRestorationId="wallet-main" className="h-full w-full">
-          <div className="mx-auto max-w-5xl">
-            <div className="flex w-full max-w-5xl flex-col gap-4 p-4 lg:p-6">
-              <WalletActions hasTransactions={showTransactions} filters={filters} role={walletPreview.role} />
-              {!isTransactionsPending && !hasTransactions ? (
-                <WalletEmpty variant="transactions" />
-              ) : (
-                <>
-                  <WalletSummary walletId={walletId} transactionQuery={filters.transactionQuery} />
-                  <WalletTransactions walletId={walletId} transactionQuery={filters.transactionQuery} />
-                </>
-              )}
-            </div>
-          </div>
-        </ScrollArea>
+    <div className="mx-auto max-w-5xl">
+      <div className="flex w-full max-w-5xl flex-col gap-4 p-4 lg:p-6">
+        <WalletActions hasTransactions={showTransactions} filters={filters} />
+        {!isTransactionsPending && !hasTransactions ? (
+          <WalletEmpty variant="transactions" />
+        ) : (
+          <>
+            <WalletSummary walletId={walletId} transactionQuery={filters.transactionQuery} />
+            <WalletTransactions walletId={walletId} transactionQuery={filters.transactionQuery} />
+          </>
+        )}
       </div>
-    </>
+    </div>
   );
 }
 

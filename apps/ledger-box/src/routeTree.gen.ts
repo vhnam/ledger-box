@@ -18,8 +18,14 @@ import { Route as InviteTokenRouteImport } from './routes/invite/$token'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AppWalletsIndexRouteImport } from './routes/_app/wallets/index'
+import { Route as AppWalletsWalletIdRouteRouteImport } from './routes/_app/wallets/$walletId/route'
 import { Route as AppWalletsWalletIdIndexRouteImport } from './routes/_app/wallets/$walletId/index'
-import { Route as AppWalletsWalletIdSettingsRouteImport } from './routes/_app/wallets/$walletId/settings'
+import { Route as AppWalletsWalletIdSettingsIndexRouteImport } from './routes/_app/wallets/$walletId/settings/index'
+import { Route as AppWalletsWalletIdSettingsStatementSharesRouteImport } from './routes/_app/wallets/$walletId/settings/statement-shares'
+import { Route as AppWalletsWalletIdSettingsMembersRouteImport } from './routes/_app/wallets/$walletId/settings/members'
+import { Route as AppWalletsWalletIdSettingsGeneralRouteImport } from './routes/_app/wallets/$walletId/settings/general'
+import { Route as AppWalletsWalletIdSettingsDangerZoneRouteImport } from './routes/_app/wallets/$walletId/settings/danger-zone'
+import { Route as AppWalletsWalletIdSettingsActivityRouteImport } from './routes/_app/wallets/$walletId/settings/activity'
 
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/auth',
@@ -65,16 +71,51 @@ const AppWalletsIndexRoute = AppWalletsIndexRouteImport.update({
   path: '/wallets/',
   getParentRoute: () => AppRouteRoute,
 } as any)
-const AppWalletsWalletIdIndexRoute = AppWalletsWalletIdIndexRouteImport.update({
-  id: '/wallets/$walletId/',
-  path: '/wallets/$walletId/',
+const AppWalletsWalletIdRouteRoute = AppWalletsWalletIdRouteRouteImport.update({
+  id: '/wallets/$walletId',
+  path: '/wallets/$walletId',
   getParentRoute: () => AppRouteRoute,
 } as any)
-const AppWalletsWalletIdSettingsRoute =
-  AppWalletsWalletIdSettingsRouteImport.update({
-    id: '/wallets/$walletId/settings',
-    path: '/wallets/$walletId/settings',
-    getParentRoute: () => AppRouteRoute,
+const AppWalletsWalletIdIndexRoute = AppWalletsWalletIdIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppWalletsWalletIdRouteRoute,
+} as any)
+const AppWalletsWalletIdSettingsIndexRoute =
+  AppWalletsWalletIdSettingsIndexRouteImport.update({
+    id: '/settings/',
+    path: '/settings/',
+    getParentRoute: () => AppWalletsWalletIdRouteRoute,
+  } as any)
+const AppWalletsWalletIdSettingsStatementSharesRoute =
+  AppWalletsWalletIdSettingsStatementSharesRouteImport.update({
+    id: '/settings/statement-shares',
+    path: '/settings/statement-shares',
+    getParentRoute: () => AppWalletsWalletIdRouteRoute,
+  } as any)
+const AppWalletsWalletIdSettingsMembersRoute =
+  AppWalletsWalletIdSettingsMembersRouteImport.update({
+    id: '/settings/members',
+    path: '/settings/members',
+    getParentRoute: () => AppWalletsWalletIdRouteRoute,
+  } as any)
+const AppWalletsWalletIdSettingsGeneralRoute =
+  AppWalletsWalletIdSettingsGeneralRouteImport.update({
+    id: '/settings/general',
+    path: '/settings/general',
+    getParentRoute: () => AppWalletsWalletIdRouteRoute,
+  } as any)
+const AppWalletsWalletIdSettingsDangerZoneRoute =
+  AppWalletsWalletIdSettingsDangerZoneRouteImport.update({
+    id: '/settings/danger-zone',
+    path: '/settings/danger-zone',
+    getParentRoute: () => AppWalletsWalletIdRouteRoute,
+  } as any)
+const AppWalletsWalletIdSettingsActivityRoute =
+  AppWalletsWalletIdSettingsActivityRouteImport.update({
+    id: '/settings/activity',
+    path: '/settings/activity',
+    getParentRoute: () => AppWalletsWalletIdRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -85,9 +126,15 @@ export interface FileRoutesByFullPath {
   '/invite/$token': typeof InviteTokenRoute
   '/statement/$token': typeof StatementTokenRoute
   '/auth/': typeof AuthIndexRoute
+  '/wallets/$walletId': typeof AppWalletsWalletIdRouteRouteWithChildren
   '/wallets/': typeof AppWalletsIndexRoute
-  '/wallets/$walletId/settings': typeof AppWalletsWalletIdSettingsRoute
   '/wallets/$walletId/': typeof AppWalletsWalletIdIndexRoute
+  '/wallets/$walletId/settings/activity': typeof AppWalletsWalletIdSettingsActivityRoute
+  '/wallets/$walletId/settings/danger-zone': typeof AppWalletsWalletIdSettingsDangerZoneRoute
+  '/wallets/$walletId/settings/general': typeof AppWalletsWalletIdSettingsGeneralRoute
+  '/wallets/$walletId/settings/members': typeof AppWalletsWalletIdSettingsMembersRoute
+  '/wallets/$walletId/settings/statement-shares': typeof AppWalletsWalletIdSettingsStatementSharesRoute
+  '/wallets/$walletId/settings/': typeof AppWalletsWalletIdSettingsIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth/login': typeof AuthLoginRoute
@@ -97,8 +144,13 @@ export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
   '/auth': typeof AuthIndexRoute
   '/wallets': typeof AppWalletsIndexRoute
-  '/wallets/$walletId/settings': typeof AppWalletsWalletIdSettingsRoute
   '/wallets/$walletId': typeof AppWalletsWalletIdIndexRoute
+  '/wallets/$walletId/settings/activity': typeof AppWalletsWalletIdSettingsActivityRoute
+  '/wallets/$walletId/settings/danger-zone': typeof AppWalletsWalletIdSettingsDangerZoneRoute
+  '/wallets/$walletId/settings/general': typeof AppWalletsWalletIdSettingsGeneralRoute
+  '/wallets/$walletId/settings/members': typeof AppWalletsWalletIdSettingsMembersRoute
+  '/wallets/$walletId/settings/statement-shares': typeof AppWalletsWalletIdSettingsStatementSharesRoute
+  '/wallets/$walletId/settings': typeof AppWalletsWalletIdSettingsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -110,9 +162,15 @@ export interface FileRoutesById {
   '/statement/$token': typeof StatementTokenRoute
   '/_app/': typeof AppIndexRoute
   '/auth/': typeof AuthIndexRoute
+  '/_app/wallets/$walletId': typeof AppWalletsWalletIdRouteRouteWithChildren
   '/_app/wallets/': typeof AppWalletsIndexRoute
-  '/_app/wallets/$walletId/settings': typeof AppWalletsWalletIdSettingsRoute
   '/_app/wallets/$walletId/': typeof AppWalletsWalletIdIndexRoute
+  '/_app/wallets/$walletId/settings/activity': typeof AppWalletsWalletIdSettingsActivityRoute
+  '/_app/wallets/$walletId/settings/danger-zone': typeof AppWalletsWalletIdSettingsDangerZoneRoute
+  '/_app/wallets/$walletId/settings/general': typeof AppWalletsWalletIdSettingsGeneralRoute
+  '/_app/wallets/$walletId/settings/members': typeof AppWalletsWalletIdSettingsMembersRoute
+  '/_app/wallets/$walletId/settings/statement-shares': typeof AppWalletsWalletIdSettingsStatementSharesRoute
+  '/_app/wallets/$walletId/settings/': typeof AppWalletsWalletIdSettingsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -124,9 +182,15 @@ export interface FileRouteTypes {
     | '/invite/$token'
     | '/statement/$token'
     | '/auth/'
+    | '/wallets/$walletId'
     | '/wallets/'
-    | '/wallets/$walletId/settings'
     | '/wallets/$walletId/'
+    | '/wallets/$walletId/settings/activity'
+    | '/wallets/$walletId/settings/danger-zone'
+    | '/wallets/$walletId/settings/general'
+    | '/wallets/$walletId/settings/members'
+    | '/wallets/$walletId/settings/statement-shares'
+    | '/wallets/$walletId/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth/login'
@@ -136,8 +200,13 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/wallets'
-    | '/wallets/$walletId/settings'
     | '/wallets/$walletId'
+    | '/wallets/$walletId/settings/activity'
+    | '/wallets/$walletId/settings/danger-zone'
+    | '/wallets/$walletId/settings/general'
+    | '/wallets/$walletId/settings/members'
+    | '/wallets/$walletId/settings/statement-shares'
+    | '/wallets/$walletId/settings'
   id:
     | '__root__'
     | '/_app'
@@ -148,9 +217,15 @@ export interface FileRouteTypes {
     | '/statement/$token'
     | '/_app/'
     | '/auth/'
+    | '/_app/wallets/$walletId'
     | '/_app/wallets/'
-    | '/_app/wallets/$walletId/settings'
     | '/_app/wallets/$walletId/'
+    | '/_app/wallets/$walletId/settings/activity'
+    | '/_app/wallets/$walletId/settings/danger-zone'
+    | '/_app/wallets/$walletId/settings/general'
+    | '/_app/wallets/$walletId/settings/members'
+    | '/_app/wallets/$walletId/settings/statement-shares'
+    | '/_app/wallets/$walletId/settings/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -225,35 +300,106 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWalletsIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
-    '/_app/wallets/$walletId/': {
-      id: '/_app/wallets/$walletId/'
+    '/_app/wallets/$walletId': {
+      id: '/_app/wallets/$walletId'
       path: '/wallets/$walletId'
-      fullPath: '/wallets/$walletId/'
-      preLoaderRoute: typeof AppWalletsWalletIdIndexRouteImport
+      fullPath: '/wallets/$walletId'
+      preLoaderRoute: typeof AppWalletsWalletIdRouteRouteImport
       parentRoute: typeof AppRouteRoute
     }
-    '/_app/wallets/$walletId/settings': {
-      id: '/_app/wallets/$walletId/settings'
-      path: '/wallets/$walletId/settings'
-      fullPath: '/wallets/$walletId/settings'
-      preLoaderRoute: typeof AppWalletsWalletIdSettingsRouteImport
-      parentRoute: typeof AppRouteRoute
+    '/_app/wallets/$walletId/': {
+      id: '/_app/wallets/$walletId/'
+      path: '/'
+      fullPath: '/wallets/$walletId/'
+      preLoaderRoute: typeof AppWalletsWalletIdIndexRouteImport
+      parentRoute: typeof AppWalletsWalletIdRouteRoute
+    }
+    '/_app/wallets/$walletId/settings/': {
+      id: '/_app/wallets/$walletId/settings/'
+      path: '/settings'
+      fullPath: '/wallets/$walletId/settings/'
+      preLoaderRoute: typeof AppWalletsWalletIdSettingsIndexRouteImport
+      parentRoute: typeof AppWalletsWalletIdRouteRoute
+    }
+    '/_app/wallets/$walletId/settings/statement-shares': {
+      id: '/_app/wallets/$walletId/settings/statement-shares'
+      path: '/settings/statement-shares'
+      fullPath: '/wallets/$walletId/settings/statement-shares'
+      preLoaderRoute: typeof AppWalletsWalletIdSettingsStatementSharesRouteImport
+      parentRoute: typeof AppWalletsWalletIdRouteRoute
+    }
+    '/_app/wallets/$walletId/settings/members': {
+      id: '/_app/wallets/$walletId/settings/members'
+      path: '/settings/members'
+      fullPath: '/wallets/$walletId/settings/members'
+      preLoaderRoute: typeof AppWalletsWalletIdSettingsMembersRouteImport
+      parentRoute: typeof AppWalletsWalletIdRouteRoute
+    }
+    '/_app/wallets/$walletId/settings/general': {
+      id: '/_app/wallets/$walletId/settings/general'
+      path: '/settings/general'
+      fullPath: '/wallets/$walletId/settings/general'
+      preLoaderRoute: typeof AppWalletsWalletIdSettingsGeneralRouteImport
+      parentRoute: typeof AppWalletsWalletIdRouteRoute
+    }
+    '/_app/wallets/$walletId/settings/danger-zone': {
+      id: '/_app/wallets/$walletId/settings/danger-zone'
+      path: '/settings/danger-zone'
+      fullPath: '/wallets/$walletId/settings/danger-zone'
+      preLoaderRoute: typeof AppWalletsWalletIdSettingsDangerZoneRouteImport
+      parentRoute: typeof AppWalletsWalletIdRouteRoute
+    }
+    '/_app/wallets/$walletId/settings/activity': {
+      id: '/_app/wallets/$walletId/settings/activity'
+      path: '/settings/activity'
+      fullPath: '/wallets/$walletId/settings/activity'
+      preLoaderRoute: typeof AppWalletsWalletIdSettingsActivityRouteImport
+      parentRoute: typeof AppWalletsWalletIdRouteRoute
     }
   }
 }
 
+interface AppWalletsWalletIdRouteRouteChildren {
+  AppWalletsWalletIdIndexRoute: typeof AppWalletsWalletIdIndexRoute
+  AppWalletsWalletIdSettingsActivityRoute: typeof AppWalletsWalletIdSettingsActivityRoute
+  AppWalletsWalletIdSettingsDangerZoneRoute: typeof AppWalletsWalletIdSettingsDangerZoneRoute
+  AppWalletsWalletIdSettingsGeneralRoute: typeof AppWalletsWalletIdSettingsGeneralRoute
+  AppWalletsWalletIdSettingsMembersRoute: typeof AppWalletsWalletIdSettingsMembersRoute
+  AppWalletsWalletIdSettingsStatementSharesRoute: typeof AppWalletsWalletIdSettingsStatementSharesRoute
+  AppWalletsWalletIdSettingsIndexRoute: typeof AppWalletsWalletIdSettingsIndexRoute
+}
+
+const AppWalletsWalletIdRouteRouteChildren: AppWalletsWalletIdRouteRouteChildren =
+  {
+    AppWalletsWalletIdIndexRoute: AppWalletsWalletIdIndexRoute,
+    AppWalletsWalletIdSettingsActivityRoute:
+      AppWalletsWalletIdSettingsActivityRoute,
+    AppWalletsWalletIdSettingsDangerZoneRoute:
+      AppWalletsWalletIdSettingsDangerZoneRoute,
+    AppWalletsWalletIdSettingsGeneralRoute:
+      AppWalletsWalletIdSettingsGeneralRoute,
+    AppWalletsWalletIdSettingsMembersRoute:
+      AppWalletsWalletIdSettingsMembersRoute,
+    AppWalletsWalletIdSettingsStatementSharesRoute:
+      AppWalletsWalletIdSettingsStatementSharesRoute,
+    AppWalletsWalletIdSettingsIndexRoute: AppWalletsWalletIdSettingsIndexRoute,
+  }
+
+const AppWalletsWalletIdRouteRouteWithChildren =
+  AppWalletsWalletIdRouteRoute._addFileChildren(
+    AppWalletsWalletIdRouteRouteChildren,
+  )
+
 interface AppRouteRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
+  AppWalletsWalletIdRouteRoute: typeof AppWalletsWalletIdRouteRouteWithChildren
   AppWalletsIndexRoute: typeof AppWalletsIndexRoute
-  AppWalletsWalletIdSettingsRoute: typeof AppWalletsWalletIdSettingsRoute
-  AppWalletsWalletIdIndexRoute: typeof AppWalletsWalletIdIndexRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppIndexRoute: AppIndexRoute,
+  AppWalletsWalletIdRouteRoute: AppWalletsWalletIdRouteRouteWithChildren,
   AppWalletsIndexRoute: AppWalletsIndexRoute,
-  AppWalletsWalletIdSettingsRoute: AppWalletsWalletIdSettingsRoute,
-  AppWalletsWalletIdIndexRoute: AppWalletsWalletIdIndexRoute,
 }
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(

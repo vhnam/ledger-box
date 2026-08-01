@@ -1,4 +1,4 @@
-import { getRouteApi, Link } from '@tanstack/react-router';
+import { getRouteApi } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import { Button } from '@vhnam/ui/components/button';
@@ -12,7 +12,6 @@ import { DEFAULT_FILTER_VALUE, FILTER_OPTIONS_LIST } from '#/constants/filter-op
 import { AddTransactionDialog } from '#/modules/wallets/add-transaction-dialog';
 import { TransferMoneyDialog } from '#/modules/wallets/transfer-money-dialog';
 import { useWalletActions } from '#/modules/wallets/wallet-actions/wallet-actions.actions';
-import type { WalletAccessRole } from '#/queries/wallets/wallet.dto';
 import { useWallets } from '#/queries/wallets/wallet.queries';
 
 const walletRouteApi = getRouteApi('/_app/wallets/$walletId/');
@@ -20,10 +19,9 @@ const walletRouteApi = getRouteApi('/_app/wallets/$walletId/');
 type WalletActionsProps = {
   hasTransactions: boolean;
   filters: ReturnType<typeof useWalletActions>;
-  role: WalletAccessRole;
 };
 
-function WalletActions({ hasTransactions, filters, role }: WalletActionsProps) {
+function WalletActions({ hasTransactions, filters }: WalletActionsProps) {
   const {
     filterBy,
     setFilterBy,
@@ -58,18 +56,6 @@ function WalletActions({ hasTransactions, filters, role }: WalletActionsProps) {
           }
         />
         <div className="flex items-center gap-2">
-          {role !== 'viewer' ? (
-            <Button
-              variant="outline"
-              size="icon"
-              nativeButton={false}
-              render={
-                <Link to="/wallets/$walletId/settings" params={{ walletId }}>
-                  <Icon name="GearSixIcon" />
-                </Link>
-              }
-            />
-          ) : null}
           {canTransfer ? (
             <>
               <Button variant="secondary" onClick={() => setOpenTransferMoneyDialog(true)}>

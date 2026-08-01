@@ -2,9 +2,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@vhna
 import { Separator } from '@vhnam/ui/components/separator';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
-import { WalletMemberRow } from '#/modules/wallets/wallet-settings-members/wallet-member-row';
-import { WalletMembersInviteForm } from '#/modules/wallets/wallet-settings-members/wallet-members-invite-form';
-import { useWalletSettingsMembersActions } from '#/modules/wallets/wallet-settings-members/wallet-settings-members.actions';
+import { WalletMemberRow } from '#/modules/wallet-settings/wallet-settings-members/wallet-member-row';
+import { WalletMembersInviteForm } from '#/modules/wallet-settings/wallet-settings-members/wallet-members-invite-form';
+import { useWalletSettingsMembersActions } from '#/modules/wallet-settings/wallet-settings-members/wallet-settings-members.actions';
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
 
 type WalletSettingsMembersProps = {

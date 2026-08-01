@@ -14,8 +14,8 @@ import { toast } from '@vhnam/ui/components/toast';
 import { format } from '@vhnam/utils/date';
 
 import { StatementSnapshotView } from '#/modules/statement/statement-snapshot-view';
-import { useWalletSettingsStatementSharesActions } from '#/modules/wallets/wallet-settings-statement-shares/wallet-settings-statement-shares.actions';
-import { WalletStatementShareRow } from '#/modules/wallets/wallet-settings-statement-shares/wallet-statement-share-row';
+import { useWalletSettingsStatementSharesActions } from '#/modules/wallet-settings/wallet-settings-statement-shares/wallet-settings-statement-shares.actions';
+import { WalletStatementShareRow } from '#/modules/wallet-settings/wallet-settings-statement-shares/wallet-statement-share-row';
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
 
 type WalletSettingsStatementSharesProps = {
