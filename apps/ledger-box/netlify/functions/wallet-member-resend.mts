@@ -5,9 +5,9 @@ import { db } from '#/lib/db/index.ts';
 import { generateShareToken } from '#/lib/share-token.ts';
 
 import { recordActivity } from './lib/activity-log.ts';
+import { renderWalletInviteEmail } from './lib/email-templates/wallet-invite-email.tsx';
 import { sendEmail } from './lib/mailer.ts';
 import { getTenantId, requireOwnedWallet } from './lib/tenant-access.ts';
-import { buildInviteEmail } from './lib/wallet-invite-email.ts';
 
 const INVITE_TOKEN_EXPIRY_DAYS = 7;
 const RESEND_RATE_WINDOW_MS = 60_000;
@@ -120,7 +120,7 @@ export default async (request: Request, context: Context) => {
     .execute();
 
   const acceptUrl = new URL(`/invite/${rawToken}`, process.env.BETTER_AUTH_URL).toString();
-  const { subject, html, text } = buildInviteEmail({
+  const { subject, html, text } = renderWalletInviteEmail({
     inviterName: session.user.name ?? '',
     inviterEmail: session.user.email,
     walletName: ownership.wallet.name,
