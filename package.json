@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "ready": "vp check && vp run -r test && vp run -r build",
-    "dev": "netlify dev --filter @vhnam/ledger-box",
+    "dev": "dotenvx run -f .env.dev -- netlify dev --filter @vhnam/ledger-box",
+    "dev:prod": "dotenvx run -f .env.prod -- netlify dev --filter @vhnam/ledger-box",
     "prepare": "vp config"
   },
   "dependencies": {
@@ -13,18 +14,19 @@
     "@aws-sdk/s3-request-presigner": "catalog:"
   },
   "devDependencies": {
+    "@dotenvx/dotenvx": "1.75.1",
     "vite": "npm:@voidzero-dev/vite-plus-core@0.2.4",
     "vite-plus": "catalog:"
   },
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "11.12.0",
+      "version": "11.18.0",
       "onFail": "download"
     }
   },
   "engines": {
-    "node": ">=24"
+    "node": ">=26"
   },
-  "packageManager": "pnpm@11.12.0"
+  "packageManager": "pnpm@11.18.0"
 }
