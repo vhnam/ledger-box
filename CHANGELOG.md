@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-15 — feat/member-invitation-emails](docs/changelogs/mr-15-member-invitation-emails.md)
+
+#### Added
+
+- Wallet invite emails via Resend (`mailer` + `wallet-invite-email`); create/resend return `emailSent` and log `invite_email_failed` when mail is skipped or fails
+- Migration `0008_add_wallet_member_invite_token` (hashed token, expiry, send count, per-wallet invite rate window); activity actions `invite_resend` / `invite_email_failed`
+- `POST /api/wallets/:walletId/members/:memberId/resend` and public `GET /api/wallets/invites/:token`; invite page at `/invite/$token`
+- Members UI resend action; app + Storybook Ledger Box logo/favicon branding
+- Storybook `^10.5.5` viewport globals migration
+
+#### Changed
+
+- Invite persistence is independent of email delivery (optional `RESEND_API_KEY` / `RESEND_EMAIL_FROM_ADDRESS` in local dev)
+
 ### [mr-14 — docs/documentation](docs/changelogs/mr-14-getting-started-tutorial.md)
 
 #### Added

@@ -10,8 +10,8 @@
     "dev": "vp dev",
     "build": "tsc && vp build",
     "preview": "vp preview",
-    "db:migrate": "tsx --env-file ../../.env scripts/migrate.ts up",
-    "db:migrate:down": "tsx --env-file ../../.env scripts/migrate.ts down",
+    "db:migrate": "tsx --env-file ../../.env.dev scripts/migrate.ts up",
+    "db:migrate:down": "tsx --env-file ../../.env.dev scripts/migrate.ts down",
     "test": "vp test run"
   },
   "dependencies": {
@@ -28,6 +28,7 @@
     "pg": "^8.22.0",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "resend": "catalog:",
     "valibot": "catalog:"
   },
   "devDependencies": {

@@ -12,7 +12,9 @@ export type ActivityAction =
   | 'invite'
   | 'role_change'
   | 'revoke'
-  | 'rename';
+  | 'rename'
+  | 'invite_resend'
+  | 'invite_email_failed';
 
 export interface WalletTable {
   id: Generated<string>;
@@ -25,6 +27,8 @@ export interface WalletTable {
   createdAt: ColumnType<Date, Date | string, Date | string>;
   updatedAt: ColumnType<Date, Date | string, Date | string>;
   deletedAt: ColumnType<Date | null, Date | string | null, Date | string | null>;
+  inviteRateWindowStart: ColumnType<Date | null, Date | string | null, Date | string | null>;
+  inviteRateWindowCount: Generated<number>;
 }
 
 export interface WalletMemberTable {
@@ -37,6 +41,10 @@ export interface WalletMemberTable {
   createdAt: ColumnType<Date, Date | string, Date | string>;
   updatedAt: ColumnType<Date, Date | string, Date | string>;
   deletedAt: ColumnType<Date | null, Date | string | null, Date | string | null>;
+  inviteTokenHash: string | null;
+  inviteTokenExpiresAt: ColumnType<Date | null, Date | string | null, Date | string | null>;
+  lastInvitedAt: ColumnType<Date | null, Date | string | null, Date | string | null>;
+  inviteSendCount: Generated<number>;
 }
 
 export interface TransactionTable {

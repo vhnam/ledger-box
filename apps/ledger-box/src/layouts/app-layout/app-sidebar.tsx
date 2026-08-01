@@ -1,7 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import type { ComponentProps } from 'react';
 
-import { Icon } from '@vhnam/ui/components/icon';
 import {
   Sidebar,
   SidebarContent,
@@ -27,9 +26,7 @@ function AppSidebar(props: ComponentProps<typeof Sidebar>) {
               size="lg"
               render={
                 <Link to="/">
-                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                    <Icon name="WalletIcon" className="size-4" />
-                  </div>
+                  <img src="/logo.svg" alt="Ledger Box" className="size-8" />
                   <div className="flex flex-col gap-0.5 leading-none">
                     <span className="font-heading font-medium">Ledger Box</span>
                     <span className="text-xs text-muted-foreground">Wallet Management</span>

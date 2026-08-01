@@ -9,6 +9,7 @@ const config: StorybookConfig = {
   stories: ['../src/**/*.stories.@(ts|tsx|mdx)'],
   addons: ['@storybook/addon-a11y', '@storybook/addon-docs', '@storybook/addon-vitest'],
   framework: '@storybook/react-vite',
+  staticDirs: ['../public'],
   viteFinal: async (config) => {
     const plugins = (config.plugins ?? []) as PluginOption[];
     plugins.push(tailwindcss() as PluginOption, ui() as PluginOption, react() as PluginOption);

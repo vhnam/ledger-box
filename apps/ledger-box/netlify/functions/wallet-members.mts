@@ -5,11 +5,16 @@ import { WALLET_MEMBER_ROLES } from '#/constants/wallet-member-role-options.ts';
 import { auth } from '#/lib/auth.ts';
 import { db } from '#/lib/db/index.ts';
 import type { WalletMemberRole } from '#/lib/db/schema.ts';
+import { generateShareToken } from '#/lib/share-token.ts';
 
 import { recordActivity } from './lib/activity-log.ts';
+import { sendEmail } from './lib/mailer.ts';
 import { getTenantId, requireOwnedWallet } from './lib/tenant-access.ts';
 import { findUserByEmail, findUserById } from './lib/user-lookup.ts';
+import { buildInviteEmail } from './lib/wallet-invite-email.ts';
 import { mapOwnerMember, mapWalletMember } from './lib/wallet-member-response.ts';
+
+const INVITE_TOKEN_EXPIRY_DAYS = 7;
 
 type InviteWalletMemberBody = {
   email?: unknown;
@@ -150,7 +155,47 @@ export default async (request: Request, context: Context) => {
       return created;
     });
 
-    return Response.json(mapWalletMember(member, invitedUser), { status: 201 });
+    const { raw: rawToken, hash: tokenHash } = await generateShareToken();
+    const inviteTokenExpiresAt = new Date(Date.now() + INVITE_TOKEN_EXPIRY_DAYS * 24 * 60 * 60 * 1000);
+    const invitedAt = new Date();
+
+    await db
+      .updateTable('walletMember')
+      .set({
+        inviteTokenHash: tokenHash,
+        inviteTokenExpiresAt,
+        lastInvitedAt: invitedAt,
+        inviteSendCount: (eb) => eb('inviteSendCount', '+', 1),
+      })
+      .where('id', '=', member.id)
+      .execute();
+
+    const acceptUrl = new URL(`/invite/${rawToken}`, process.env.BETTER_AUTH_URL).toString();
+    const { subject, html, text } = buildInviteEmail({
+      inviterName: session.user.name ?? '',
+      inviterEmail: session.user.email,
+      walletName: ownership.wallet.name,
+      role,
+      acceptUrl,
+    });
+
+    const sendResult = await sendEmail({ to: email, subject, html, text });
+
+    if (!sendResult.ok) {
+      await recordActivity(db, {
+        walletId,
+        tenantId: ownership.wallet.tenantId,
+        actorUserId: actor.userId,
+        actorEmail: actor.email,
+        entityType: 'wallet_member',
+        entityId: member.id,
+        action: 'invite_email_failed',
+        before: null,
+        after: { email, error: sendResult.error },
+      });
+    }
+
+    return Response.json({ ...mapWalletMember(member, invitedUser), emailSent: sendResult.ok }, { status: 201 });
   }
 
   return new Response('Method Not Allowed', { status: 405 });
