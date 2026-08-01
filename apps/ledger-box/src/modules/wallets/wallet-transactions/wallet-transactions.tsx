@@ -1,7 +1,7 @@
 import { Skeleton } from '@vhnam/ui/components/skeleton';
 
+import { AppPagination } from '#/components/app-pagination';
 import { WalletEmpty } from '#/modules/wallets/wallet-empty';
-import { WalletPagination } from '#/modules/wallets/wallet-transactions/wallet-pagination';
 import { WalletTransaction } from '#/modules/wallets/wallet-transactions/wallet-transaction';
 import { useWalletTransactions } from '#/modules/wallets/wallet-transactions/wallet-transactions.actions';
 import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
@@ -59,7 +59,7 @@ function WalletTransactions({ walletId, transactionQuery }: WalletTransactionsPr
       {!isPending && !isError && transactions.length === 0 && <WalletEmpty variant="transactions" />}
 
       {showPagination && (
-        <WalletPagination
+        <AppPagination
           page={page}
           totalPages={totalPages}
           canGoPrevious={canGoPrevious}

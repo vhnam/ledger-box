@@ -64,13 +64,38 @@ export default async (request: Request, context: Context) => {
       return new Response('Wallet owner not found', { status: 500 });
     }
 
-    const members = await db
+    const url = new URL(request.url);
+    const page = Math.max(1, Number.parseInt(url.searchParams.get('page') ?? '1', 10) || 1);
+    const pageSize = Math.min(100, Math.max(1, Number.parseInt(url.searchParams.get('pageSize') ?? '20', 10) || 20));
+
+    // The owner is a synthetic entry (not stored in walletMember) that's always sorted first,
+    // so it occupies slot 0 of the combined list and DB members are offset by one place behind it.
+    const countResult = await db
       .selectFrom('walletMember')
-      .select(['id', 'email', 'userId', 'role', 'status'])
+      .select((eb) => eb.fn.count('id').as('count'))
       .where('walletId', '=', walletId)
       .where('deletedAt', 'is', null)
-      .orderBy('createdAt', 'asc')
-      .execute();
+      .executeTakeFirst();
+    const memberCount = Number(countResult?.count ?? 0);
+    const total = memberCount + 1;
+
+    const combinedOffset = (page - 1) * pageSize;
+    const includeOwner = combinedOffset === 0;
+    const dbOffset = includeOwner ? 0 : combinedOffset - 1;
+    const dbLimit = includeOwner ? pageSize - 1 : pageSize;
+
+    const members =
+      dbLimit > 0
+        ? await db
+            .selectFrom('walletMember')
+            .select(['id', 'email', 'userId', 'role', 'status'])
+            .where('walletId', '=', walletId)
+            .where('deletedAt', 'is', null)
+            .orderBy('createdAt', 'asc')
+            .limit(dbLimit)
+            .offset(dbOffset)
+            .execute()
+        : [];
 
     const memberResponses = await Promise.all(
       members.map(async (member) => {
@@ -82,7 +107,9 @@ export default async (request: Request, context: Context) => {
       }),
     );
 
-    return Response.json([mapOwnerMember(ownerUser), ...memberResponses]);
+    const items = includeOwner ? [mapOwnerMember(ownerUser), ...memberResponses] : memberResponses;
+
+    return Response.json({ items, total, page, pageSize });
   }
 
   if (request.method === 'POST') {

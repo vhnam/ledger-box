@@ -6,6 +6,7 @@ import { db } from '#/lib/db/index.ts';
 
 import {
   findAccessibleWallets,
+  requireOwnedWallet,
   requireTransactionAccess,
   requireTransactionWriteAccess,
   requireWalletAccess,
@@ -215,6 +216,49 @@ describe('requireTransactionAccess / requireTransactionWriteAccess', () => {
 
     expect(writeResult.ok).toBe(false);
     expect(!writeResult.ok && writeResult.error.status).toBe(403);
+  });
+});
+
+describe('requireOwnedWallet', () => {
+  let walletId: string;
+
+  afterEach(async () => {
+    if (walletId) {
+      await cleanup(walletId);
+    }
+  });
+
+  it('denies an active viewer member with 404, matching the settings-endpoint guard used by members, statement-shares, activity, and wallet delete', async () => {
+    const viewerId = `viewer-${randomUUID()}`;
+    const email = `viewer-owned-${randomUUID()}@example.com`;
+
+    walletId = await createWallet();
+    await inviteMember(walletId, 'viewer', { userId: viewerId, email, status: 'active' });
+
+    const result = await requireOwnedWallet(viewerId, walletId);
+
+    expect(result.ok).toBe(false);
+    expect(!result.ok && result.error.status).toBe(404);
+  });
+
+  it('denies an active manager member with 404, since requireOwnedWallet is strict-owner regardless of member role', async () => {
+    const email = `manager-owned-${randomUUID()}@example.com`;
+
+    walletId = await createWallet();
+    await inviteMember(walletId, 'manager', { userId: managerId, email, status: 'active' });
+
+    const result = await requireOwnedWallet(managerId, walletId);
+
+    expect(result.ok).toBe(false);
+    expect(!result.ok && result.error.status).toBe(404);
+  });
+
+  it('grants the owner', async () => {
+    walletId = await createWallet();
+
+    const result = await requireOwnedWallet(ownerId, walletId);
+
+    expect(result.ok).toBe(true);
   });
 });
 

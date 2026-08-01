@@ -1,3 +1,10 @@
+export type StatementShareListDto = {
+  items: StatementShareDto[];
+  total: number;
+  page: number;
+  pageSize: number;
+};
+
 export type StatementShareDto = {
   id: string;
   periodFrom: string;

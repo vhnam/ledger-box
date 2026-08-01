@@ -2,11 +2,13 @@ import axios from 'axios';
 
 import type { WalletMemberRole } from '#/constants/wallet-member-role-options';
 import { getApiErrorMessage } from '#/lib/api-error';
-import type { WalletMemberDto } from '#/queries/wallets/wallet-member.dto';
+import type { WalletMemberDto, WalletMemberListDto } from '#/queries/wallets/wallet-member.dto';
 import type { InviteWalletMemberSchema, UpdateWalletMemberRoleSchema } from '#/schemas/wallet-member.schema';
 
-export async function fetchWalletMembers(walletId: string): Promise<WalletMemberDto[]> {
-  const { data } = await axios.get<WalletMemberDto[]>(`/api/wallets/${walletId}/members`);
+export async function fetchWalletMembers(walletId: string, page = 1, pageSize = 10): Promise<WalletMemberListDto> {
+  const { data } = await axios.get<WalletMemberListDto>(`/api/wallets/${walletId}/members`, {
+    params: { page, pageSize },
+  });
 
   return data;
 }

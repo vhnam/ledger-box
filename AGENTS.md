@@ -72,11 +72,14 @@ R2 object keys are tenant-scoped too: `tenants/{tenantId}/transactions/{transact
 Read paths still resolve legacy keys under `transactions/{transactionId}/...` — keep that
 fallback.
 
-**Known gap — do not paper over it:** the `wallet_member` table records invites with
-`viewer` / `manager` roles, but member APIs still require wallet ownership via `tenant_id`.
-An invited user signing in will not see the wallet. Do not write code that assumes members
-already have read access. If a task requires real member access, say so and stop — that is
-a tenancy model change, not a feature.
+Member read/write access is real: `requireWalletAccess` and `findAccessibleWallets` in
+`tenant-access.ts` resolve an effective `owner` / `manager` / `viewer` role from
+`wallet_member` (auto-activating a matching pending invite), so an invited member does
+see the wallet once they sign in. `requireWalletWriteAccess` additionally rejects
+`viewer` for write operations. Wallet settings specifically are gated to non-viewer
+roles at the route (`WalletSettingsPage` redirects a viewer to the wallet page); the
+per-endpoint helpers (`requireOwnedWallet`, `requireWalletWriteAccess`) remain the
+server-side authorization boundary regardless of what the client renders.
 
 ---
 

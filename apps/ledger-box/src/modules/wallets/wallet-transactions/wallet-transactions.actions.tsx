@@ -1,46 +1,14 @@
 import { getRouteApi } from '@tanstack/react-router';
 import { useEffect, useMemo, useRef } from 'react';
 
+import { getPageItems } from '#/lib/pagination';
 import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
 import { useTransactions } from '#/queries/transactions/transaction.queries';
 import { resolveWalletTransactionSearch } from '#/schemas/wallet-transaction-search.schema';
 
 const TRANSACTIONS_PAGE_SIZE = 10;
 
-type PageItem = number | 'ellipsis';
-
 const walletRouteApi = getRouteApi('/_app/wallets/$walletId/');
-
-function getPageItems(currentPage: number, totalPages: number): PageItem[] {
-  if (totalPages <= 0) {
-    return [];
-  }
-
-  if (totalPages <= 7) {
-    return Array.from({ length: totalPages }, (_, index) => index + 1);
-  }
-
-  const items: PageItem[] = [1];
-
-  if (currentPage > 3) {
-    items.push('ellipsis');
-  }
-
-  const start = Math.max(2, currentPage - 1);
-  const end = Math.min(totalPages - 1, currentPage + 1);
-
-  for (let page = start; page <= end; page++) {
-    items.push(page);
-  }
-
-  if (currentPage < totalPages - 2) {
-    items.push('ellipsis');
-  }
-
-  items.push(totalPages);
-
-  return items;
-}
 
 type UseWalletTransactionsOptions = {
   walletId: string;
@@ -136,5 +104,3 @@ export function useWalletTransactions({
     goToNextPage,
   };
 }
-
-export type { PageItem };

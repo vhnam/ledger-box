@@ -1,4 +1,4 @@
-import { getRouteApi, Link } from '@tanstack/react-router';
+import { getRouteApi } from '@tanstack/react-router';
 import { useState } from 'react';
 
 import { Button } from '@vhnam/ui/components/button';
@@ -56,16 +56,6 @@ function WalletActions({ hasTransactions, filters }: WalletActionsProps) {
           }
         />
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            nativeButton={false}
-            render={
-              <Link to="/wallets/$walletId/settings" params={{ walletId }}>
-                <Icon name="GearSixIcon" />
-              </Link>
-            }
-          />
           {canTransfer ? (
             <>
               <Button variant="secondary" onClick={() => setOpenTransferMoneyDialog(true)}>
