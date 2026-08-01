@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-16 — feat/statement-csv-export](docs/changelogs/mr-16-statement-csv-export.md)
+
+#### Added
+
+- `#/lib/statement-export.ts` — CSV encoding of a statement snapshot (header-block balances, UTF-8 BOM, formula-injection escaping, wallet-timezone dates)
+- `?format=csv` on `GET /api/public/statements/:token` (frozen snapshot) and `POST /api/wallets/:walletId/statement-shares?preview=true` (fresh snapshot, not persisted)
+- `GET /api/wallets/:walletId/statement-shares/:shareId/export` — owner-only CSV download of an existing share's frozen snapshot
+- Download actions on wallet-settings share rows, the create/preview dialog, and the public statement page
+
 ### [mr-15 — feat/member-invitation-emails](docs/changelogs/mr-15-member-invitation-emails.md)
 
 #### Added
