@@ -48,7 +48,7 @@ function WalletPage({ walletId }: WalletPageProps) {
         <ScrollArea scrollRestorationId="wallet-main" className="h-full w-full">
           <div className="mx-auto max-w-5xl">
             <div className="flex w-full max-w-5xl flex-col gap-4 p-4 lg:p-6">
-              <WalletActions hasTransactions={showTransactions} filters={filters} />
+              <WalletActions hasTransactions={showTransactions} filters={filters} role={walletPreview.role} />
               {!isTransactionsPending && !hasTransactions ? (
                 <WalletEmpty variant="transactions" />
               ) : (

@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router';
+import { Link, Navigate } from '@tanstack/react-router';
 
 import { Button } from '@vhnam/ui/components/button';
 import { Icon } from '@vhnam/ui/components/icon';
@@ -36,6 +36,10 @@ function WalletSettingsPage({ walletId }: WalletSettingsPageProps) {
 
   if (!walletPreview) {
     return <p className="text-sm text-destructive">Wallet not found.</p>;
+  }
+
+  if (walletPreview.role === 'viewer') {
+    return <Navigate to="/wallets/$walletId" params={{ walletId }} replace />;
   }
 
   return (

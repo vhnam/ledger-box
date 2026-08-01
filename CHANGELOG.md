@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-17 — fix/viewer-settings-access](docs/changelogs/mr-17-viewer-settings-access-fix.md)
+
+#### Fixed
+
+- Viewer sessions can no longer reach `/wallets/$walletId/settings` (route redirects to the wallet page) or see the settings gear icon; owner/manager access and viewer's transaction/summary/attachment access are unchanged. All settings-backing API endpoints were already owner/role-scoped server-side — no data was exposed to viewers.
+
+#### Changed
+
+- `AGENTS.md` — corrected the stale tenancy-scoping note; member read access has been implemented since MR 11.
+
 ### [mr-16 — feat/statement-csv-export](docs/changelogs/mr-16-statement-csv-export.md)
 
 #### Added
