@@ -9,6 +9,7 @@ import type {
 } from '#/queries/statement-shares/statement-share.dto';
 import {
   useCreateStatementShare,
+  useDownloadStatementPreviewCsv,
   usePreviewStatementShare,
   useRevokeStatementShare,
 } from '#/queries/statement-shares/statement-share.mutations';
@@ -24,6 +25,7 @@ export function useWalletSettingsStatementSharesActions({ wallet }: UseWalletSet
   const { mutate: preview, isPending: isPreviewing } = usePreviewStatementShare(wallet.id);
   const { mutate: createShare, isPending: isCreating } = useCreateStatementShare(wallet.id);
   const { mutate: revokeShare } = useRevokeStatementShare(wallet.id);
+  const { mutate: downloadCsv, isPending: isDownloading } = useDownloadStatementPreviewCsv(wallet.id);
 
   const [periodFrom, setPeriodFrom] = useState<string | undefined>(undefined);
   const [periodTo, setPeriodTo] = useState<string | undefined>(undefined);
@@ -57,6 +59,30 @@ export function useWalletSettingsStatementSharesActions({ wallet }: UseWalletSet
       onSuccess: (response) => setPreviewSnapshot(response.preview),
       onError: (previewError) => {
         const message = previewError instanceof Error ? previewError.message : 'Failed to preview statement.';
+        setError(message);
+      },
+    });
+  }
+
+  function handleDownloadCsv() {
+    setError(null);
+    const payload = buildPayload();
+
+    if (!payload) {
+      return;
+    }
+
+    downloadCsv(payload, {
+      onSuccess: ({ blob, filename }) => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        link.click();
+        URL.revokeObjectURL(url);
+      },
+      onError: (downloadError) => {
+        const message = downloadError instanceof Error ? downloadError.message : 'Failed to download statement.';
         setError(message);
       },
     });
@@ -117,8 +143,10 @@ export function useWalletSettingsStatementSharesActions({ wallet }: UseWalletSet
     error,
     isPreviewing,
     isCreating,
+    isDownloading,
     handlePreview,
     handleCreate,
+    handleDownloadCsv,
     handleRevoke,
     resetCreateFlow,
   };

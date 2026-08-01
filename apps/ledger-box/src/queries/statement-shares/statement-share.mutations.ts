@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import {
   createStatementShare,
+  downloadStatementPreviewCsv,
   previewStatementShare,
   revokeStatementShare,
 } from '#/queries/statement-shares/statement-share.api';
@@ -10,6 +11,12 @@ import type { CreateStatementSharePayload } from '#/queries/statement-shares/sta
 export function usePreviewStatementShare(walletId: string) {
   return useMutation({
     mutationFn: (payload: CreateStatementSharePayload) => previewStatementShare(walletId, payload),
+  });
+}
+
+export function useDownloadStatementPreviewCsv(walletId: string) {
+  return useMutation({
+    mutationFn: (payload: CreateStatementSharePayload) => downloadStatementPreviewCsv(walletId, payload),
   });
 }
 

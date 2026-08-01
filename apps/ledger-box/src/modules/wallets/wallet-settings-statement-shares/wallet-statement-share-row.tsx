@@ -1,5 +1,5 @@
 import { Badge } from '@vhnam/ui/components/badge';
-import { Button } from '@vhnam/ui/components/button';
+import { Button, buttonVariants } from '@vhnam/ui/components/button';
 import { Icon } from '@vhnam/ui/components/icon';
 
 import { formatDate, formatRelative } from '@vhnam/utils/date';
@@ -7,6 +7,7 @@ import { formatDate, formatRelative } from '@vhnam/utils/date';
 import type { StatementShareDto } from '#/queries/statement-shares/statement-share.dto';
 
 type WalletStatementShareRowProps = {
+  walletId: string;
   share: StatementShareDto;
   onRevoke: (shareId: string) => void;
 };
@@ -23,7 +24,7 @@ function getStatusLabel(share: StatementShareDto): { label: string; variant: 'de
   return { label: 'Active', variant: 'default' };
 }
 
-function WalletStatementShareRow({ share, onRevoke }: WalletStatementShareRowProps) {
+function WalletStatementShareRow({ walletId, share, onRevoke }: WalletStatementShareRowProps) {
   const status = getStatusLabel(share);
 
   return (
@@ -41,12 +42,22 @@ function WalletStatementShareRow({ share, onRevoke }: WalletStatementShareRowPro
           {share.accessCount} view{share.accessCount === 1 ? '' : 's'}
         </p>
       </div>
-      {share.isActive ? (
-        <Button variant="ghost" size="sm" onClick={() => onRevoke(share.id)}>
-          <Icon name="ProhibitIcon" />
-          Revoke
-        </Button>
-      ) : null}
+      <div className="flex items-center gap-1">
+        <a
+          href={`/api/wallets/${walletId}/statement-shares/${share.id}/export`}
+          download
+          className={buttonVariants({ variant: 'ghost', size: 'sm' })}
+        >
+          <Icon name="DownloadIcon" />
+          Download
+        </a>
+        {share.isActive ? (
+          <Button variant="ghost" size="sm" onClick={() => onRevoke(share.id)}>
+            <Icon name="ProhibitIcon" />
+            Revoke
+          </Button>
+        ) : null}
+      </div>
     </li>
   );
 }

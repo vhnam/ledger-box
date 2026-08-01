@@ -38,8 +38,10 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
     error,
     isPreviewing,
     isCreating,
+    isDownloading,
     handlePreview,
     handleCreate,
+    handleDownloadCsv,
     handleRevoke,
     resetCreateFlow,
   } = useWalletSettingsStatementSharesActions({ wallet });
@@ -84,7 +86,7 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
               <Separator />
               <ul className="divide-y divide-border">
                 {shares.map((share) => (
-                  <WalletStatementShareRow key={share.id} share={share} onRevoke={handleRevoke} />
+                  <WalletStatementShareRow key={share.id} walletId={wallet.id} share={share} onRevoke={handleRevoke} />
                 ))}
               </ul>
             </>
@@ -144,6 +146,11 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
                 <Button variant="outline" className="flex-1" onClick={handlePreview} disabled={isPreviewing}>
                   {isPreviewing && <Spinner className="size-4" />}
                   Preview
+                </Button>
+                <Button variant="outline" className="flex-1" onClick={handleDownloadCsv} disabled={isDownloading}>
+                  {isDownloading && <Spinner className="size-4" />}
+                  <Icon name="DownloadIcon" />
+                  Download CSV
                 </Button>
                 <Button className="flex-1" onClick={handleCreate} disabled={isCreating}>
                   {isCreating && <Spinner className="size-4" />}
