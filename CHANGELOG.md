@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-14 — docs/documentation](docs/changelogs/mr-14-getting-started-tutorial.md)
+
+#### Added
+
+- End-user tutorial at `docs/tutorials/getting-started-with-ledger-box.md` (sign-in through activity log)
+- Diátaxis documentation-writer agent skill (`.agents/skills/documentation-writer`, `skills-lock.json`)
+- `@dotenvx/dotenvx` with `pnpm dev` (`.env.dev`) and `pnpm dev:prod` (`.env.prod`); `RESEND_API_KEY` in `.env.example`
+- `.gitignore` entries for `.env.dev` and `.env.prod` (local overlays only; never commit secrets)
+
+#### Changed
+
+- Root pnpm pin `11.12.0` → `11.18.0`; Node engine `>=24` → `>=26`; catalog AWS SDK bumps
+
 ### [mr-13 — feat/activity-log](docs/changelogs/mr-13-wallet-activity-log.md)
 
 #### Added
