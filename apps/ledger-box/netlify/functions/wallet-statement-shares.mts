@@ -4,6 +4,7 @@ import { auth } from '#/lib/auth.ts';
 import { db } from '#/lib/db/index.ts';
 import { calendarDateToOccurredAtStart } from '#/lib/period-bounds.ts';
 import { generateShareToken } from '#/lib/share-token.ts';
+import { buildStatementCsvFilename, encodeStatementCsv } from '#/lib/statement-export.ts';
 import { buildStatement } from '#/lib/statement.ts';
 
 import { recordActivity } from './lib/activity-log.ts';
@@ -132,6 +133,17 @@ export default async (request: Request, context: Context) => {
     const url = new URL(request.url);
 
     if (url.searchParams.get('preview') === 'true') {
+      if (url.searchParams.get('format') === 'csv') {
+        const filename = buildStatementCsvFilename(snapshot, wallet.name);
+
+        return new Response(encodeStatementCsv(snapshot, displayTitle), {
+          headers: {
+            'Content-Type': 'text/csv; charset=utf-8',
+            'Content-Disposition': `attachment; filename="${filename}"`,
+          },
+        });
+      }
+
       return Response.json({ preview: snapshot });
     }
 

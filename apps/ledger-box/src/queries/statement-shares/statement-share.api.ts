@@ -64,3 +64,31 @@ export async function fetchPublicStatement(token: string): Promise<PublicStateme
 
   return data;
 }
+
+export type StatementCsvDownload = {
+  blob: Blob;
+  filename: string;
+};
+
+function extractFilename(contentDisposition: string | undefined): string {
+  const match = contentDisposition?.match(/filename="([^"]+)"/);
+
+  return match?.[1] ?? 'statement.csv';
+}
+
+export async function downloadStatementPreviewCsv(
+  walletId: string,
+  payload: CreateStatementSharePayload,
+): Promise<StatementCsvDownload> {
+  try {
+    const response = await axios.post<Blob>(
+      `/api/wallets/${walletId}/statement-shares?preview=true&format=csv`,
+      payload,
+      { responseType: 'blob' },
+    );
+
+    return { blob: response.data, filename: extractFilename(response.headers['content-disposition']) };
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, 'Failed to download statement. Please try again.'));
+  }
+}

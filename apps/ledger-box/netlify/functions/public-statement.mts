@@ -2,6 +2,8 @@ import type { Config, Context } from '@netlify/functions';
 
 import { db } from '#/lib/db/index.ts';
 import { hashShareToken } from '#/lib/share-token.ts';
+import { buildStatementCsvFilename, encodeStatementCsv } from '#/lib/statement-export.ts';
+import type { StatementSnapshot } from '#/lib/statement.ts';
 
 const RATE_WINDOW_MS = 60_000;
 const RATE_WINDOW_LIMIT = 60;
@@ -89,6 +91,20 @@ export default async (request: Request, context: Context) => {
     })
     .where('id', '=', share.id)
     .execute();
+
+  const format = new URL(request.url).searchParams.get('format');
+
+  if (format === 'csv') {
+    const snapshot = share.snapshotJson as StatementSnapshot;
+    const filename = buildStatementCsvFilename(snapshot, share.displayTitle ?? 'statement');
+
+    return new Response(encodeStatementCsv(snapshot, share.displayTitle), {
+      headers: {
+        'Content-Type': 'text/csv; charset=utf-8',
+        'Content-Disposition': `attachment; filename="${filename}"`,
+      },
+    });
+  }
 
   return Response.json({
     displayTitle: share.displayTitle,
