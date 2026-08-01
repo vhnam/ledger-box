@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-18 — extract email templates into typed, component-authored modules](docs/changelogs/mr-18-extract-email-templates.md)
+
+#### Changed
+
+- Wallet invite email moved from `netlify/functions/lib/wallet-invite-email.ts` to `netlify/functions/lib/email-templates/wallet-invite-email.tsx`, converted from a string-building function (`buildInviteEmail`) to a React component (`WalletInviteEmailBody`, wrapped in a shared `EmailLayout` component), rendered server-side with `renderToStaticMarkup`. `react-email`/`@react-email/components` were evaluated and rejected (deprecated component packages; the unified `react-email` package bundles a full CLI/dev-server as runtime dependencies; Storybook preview doesn't fit this repo's `packages/ui`/Tailwind layering). No new dependency was added to the catalog. `html` output gains a table-based, inline-styled wrapper; `subject`/`text` are byte-identical to before.
+
+#### Added
+
+- `preview:email` script (`apps/ledger-box/scripts/preview-email.tsx`) to render the invite template's real component tree and inspect its HTML/text without sending mail.
+
 ### [mr-17 — wallet settings access, routing & pagination](docs/changelogs/mr-17-wallet-settings-access-routing-and-pagination.md)
 
 #### Fixed
