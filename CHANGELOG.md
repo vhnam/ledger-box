@@ -6,6 +6,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-19 — unify mobile overlay presentation behind ResponsiveDialog](docs/changelogs/mr-19-unify-mobile-overlay-with-responsive-dialog.md)
+
+#### Added
+
+- `ResponsiveDialog` in `@vhnam/ui` — renders `Sheet` (bottom) below the mobile
+  breakpoint and `Dialog` above it behind one prop shape, with `preventDismiss` /
+  `onDismissAttempt` to block incidental dismissal (backdrop, Escape, focus-out) for
+  dirty forms while the close button still works.
+
+#### Changed
+
+- Add transaction, transfer money, create wallet, and the statement-share dialog now
+  render as bottom sheets on mobile (previously dialog-only, inconsistent with edit
+  transaction and the delete confirmations). Edit transaction, transaction detail,
+  transaction attachments, and the three delete confirmations now share
+  `ResponsiveDialog` instead of a duplicated `useIsMobile` branch. Desktop appearance,
+  form logic, validation, and mutations are unchanged. The transaction attachment
+  full-screen preview and the account-level settings dialog were deliberately left as
+  plain dialogs (see the per-merge changelog for why).
+- On mobile, the wallet settings sub-header replaces the horizontally scrollable
+  General/Activity/Members/Statement shares tab strip with a single dropdown trigger
+  showing the active section, next to a plain "Transactions" link. Desktop's sidebar is
+  unchanged.
+
 ### [mr-18 — extract email templates into typed, component-authored modules](docs/changelogs/mr-18-extract-email-templates.md)
 
 #### Changed
