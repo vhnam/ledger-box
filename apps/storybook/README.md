@@ -2,7 +2,7 @@
 
 Storybook for the `@vhnam/ui` component library.
 
-See the [root README](../../README.md) for monorepo-wide setup.
+See [docs/guides/development.md](../../docs/guides/development.md) for monorepo-wide setup.
 
 ## Scripts
 

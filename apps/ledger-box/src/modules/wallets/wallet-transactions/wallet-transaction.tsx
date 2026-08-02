@@ -1,9 +1,9 @@
 import { formatSignedCurrency } from '@vhnam/utils/currency';
 import { DateTimeFormat, formatDateTime } from '@vhnam/utils/date';
 
-import { DeleteTransactionDialog } from '#/modules/wallets/delete-transaction-dialog';
-import { EditTransactionDialog } from '#/modules/wallets/edit-transaction-dialog';
-import { TransactionAttachmentsSheet } from '#/modules/wallets/transaction-attachments';
+import { DeleteTransactionDialog } from '#/modules/wallets/wallet-delete-transaction-dialog';
+import { EditTransactionDialog } from '#/modules/wallets/wallet-edit-transaction-dialog';
+import { TransactionAttachmentsSheet } from '#/modules/wallets/wallet-transaction-attachments';
 import { WalletTransactionDetailSheet } from '#/modules/wallets/wallet-transactions/wallet-transaction-detail-sheet';
 import { WalletTransactionMenu } from '#/modules/wallets/wallet-transactions/wallet-transaction-menu';
 import {

@@ -1,12 +1,10 @@
 import { Button } from '@vhnam/ui/components/button';
-import { Dialog, DialogContent } from '@vhnam/ui/components/dialog';
 import { FieldError } from '@vhnam/ui/components/field';
 import { Icon } from '@vhnam/ui/components/icon';
-import { Sheet, SheetContent, SheetDescription, SheetTitle } from '@vhnam/ui/components/sheet';
+import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
 import { Spinner } from '@vhnam/ui/components/spinner';
-import { useIsMobile } from '@vhnam/ui/hooks/use-mobile';
 
-import { useDeleteWalletDialogActions } from '#/modules/wallets/delete-wallet-dialog/delete-wallet-dialog.actions';
+import { useDeleteWalletDialogActions } from '#/modules/wallets/wallet-delete-dialog/wallet-delete-dialog.actions';
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
 
 type DeleteWalletDialogProps = {
@@ -56,7 +54,6 @@ function DeleteWalletContent({ wallet, isPending, error, onCancel, onConfirm }: 
 }
 
 function DeleteWalletDialog({ open, onOpenChange, wallet }: DeleteWalletDialogProps) {
-  const isMobile = useIsMobile();
   const { handleDeleteWallet, isPending, error } = useDeleteWalletDialogActions({ wallet });
 
   function handleCancel() {
@@ -79,25 +76,20 @@ function DeleteWalletDialog({ open, onOpenChange, wallet }: DeleteWalletDialogPr
     />
   );
 
-  if (isMobile) {
-    return (
-      <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent side="bottom" showCloseButton={false} className="gap-0 rounded-t-2xl px-4 pb-6 pt-2">
-          <div className="mx-auto mb-6 h-1 w-10 shrink-0 rounded-full bg-muted-foreground/30" />
-          <SheetTitle className="sr-only">Delete wallet?</SheetTitle>
-          <SheetDescription className="sr-only">Confirm deletion of {wallet.name}</SheetDescription>
-          {content}
-        </SheetContent>
-      </Sheet>
-    );
-  }
-
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent showCloseButton={false} className="sm:max-w-md">
-        {content}
-      </DialogContent>
-    </Dialog>
+    <ResponsiveDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Delete wallet?"
+      description={`Confirm deletion of ${wallet.name}`}
+      hideTitle
+      hideDescription
+      showCloseButton={false}
+      headerClassName="sr-only"
+      className="sm:max-w-md"
+    >
+      {content}
+    </ResponsiveDialog>
   );
 }
 

@@ -1,12 +1,10 @@
 import { Button } from '@vhnam/ui/components/button';
-import { Dialog, DialogContent } from '@vhnam/ui/components/dialog';
 import { FieldError } from '@vhnam/ui/components/field';
 import { Icon } from '@vhnam/ui/components/icon';
-import { Sheet, SheetContent, SheetDescription, SheetTitle } from '@vhnam/ui/components/sheet';
+import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
 import { Spinner } from '@vhnam/ui/components/spinner';
-import { useIsMobile } from '@vhnam/ui/hooks/use-mobile';
 
-import { useDeleteTransactionDialogActions } from '#/modules/wallets/delete-transaction-dialog/delete-transaction-dialog.actions';
+import { useDeleteTransactionDialogActions } from '#/modules/wallets/wallet-delete-transaction-dialog/wallet-delete-transaction-dialog.actions';
 import type { TransactionDto } from '#/queries/transactions/transaction.dto';
 
 type DeleteTransactionDialogProps = {
@@ -62,7 +60,6 @@ function DeleteTransactionContent({
 }
 
 function DeleteTransactionDialog({ open, onOpenChange, transaction }: DeleteTransactionDialogProps) {
-  const isMobile = useIsMobile();
   const { handleDeleteTransaction, isPending, error } = useDeleteTransactionDialogActions({ transaction });
 
   function handleCancel() {
@@ -85,25 +82,20 @@ function DeleteTransactionDialog({ open, onOpenChange, transaction }: DeleteTran
     />
   );
 
-  if (isMobile) {
-    return (
-      <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent side="bottom" showCloseButton={false} className="gap-0 rounded-t-2xl px-4 pb-6 pt-2">
-          <div className="mx-auto mb-6 h-1 w-10 shrink-0 rounded-full bg-muted-foreground/30" />
-          <SheetTitle className="sr-only">Delete transaction?</SheetTitle>
-          <SheetDescription className="sr-only">Confirm deletion of {transaction.description}</SheetDescription>
-          {content}
-        </SheetContent>
-      </Sheet>
-    );
-  }
-
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent showCloseButton={false} className="sm:max-w-md">
-        {content}
-      </DialogContent>
-    </Dialog>
+    <ResponsiveDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Delete transaction?"
+      description={`Confirm deletion of ${transaction.description}`}
+      hideTitle
+      hideDescription
+      showCloseButton={false}
+      headerClassName="sr-only"
+      className="sm:max-w-md"
+    >
+      {content}
+    </ResponsiveDialog>
   );
 }
 

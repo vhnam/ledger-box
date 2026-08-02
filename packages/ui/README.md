@@ -2,7 +2,7 @@
 
 Shared UI components for the monorepo — [shadcn](https://ui.shadcn.com)-style components built on [Base UI](https://base-ui.com), Tailwind CSS v4, and [Phosphor Icons](https://phosphoricons.com).
 
-See the [root README](../../README.md) for monorepo-wide setup. Stories for every component live in [`apps/storybook`](../../apps/storybook).
+See [docs/guides/development.md](../../docs/guides/development.md) for monorepo-wide setup. Stories for every component live in [`apps/storybook`](../../apps/storybook).
 
 ## Usage
 

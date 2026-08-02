@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { toast } from '@vhnam/ui/components/toast';
 
-import type { TransactionAttachment } from '#/modules/wallets/transaction-attachments/transaction-attachments-sheet.actions';
+import type { TransactionAttachment } from '#/modules/wallets/wallet-transaction-attachments/wallet-transaction-attachments-sheet.actions';
 import { useDeleteTransactionAttachment } from '#/queries/transactions/transaction.mutations';
 
 type UseDeleteTransactionAttachmentDialogActionsOptions = {

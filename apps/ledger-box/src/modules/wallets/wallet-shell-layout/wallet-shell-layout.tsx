@@ -1,10 +1,15 @@
 import { Link, Navigate, Outlet, useLocation } from '@tanstack/react-router';
 
 import { Button } from '@vhnam/ui/components/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@vhnam/ui/components/dropdown-menu';
 import { Icon, type IconName } from '@vhnam/ui/components/icon';
 import { ScrollArea } from '@vhnam/ui/components/scroll-area';
 import { Spinner } from '@vhnam/ui/components/spinner';
-import { Tabs, TabsList, TabsTrigger } from '@vhnam/ui/components/tabs';
 import { cn } from '@vhnam/ui/lib/utils';
 
 import { WALLET_MEMBER_ROLES } from '#/constants/wallet-member-role-options';
@@ -95,8 +100,9 @@ function WalletShellLayout({ walletId }: WalletShellLayoutProps) {
   const visibleSettingsSections = SETTINGS_SECTIONS.filter(
     (section) => !section.ownerOnly || walletPreview.role === 'owner',
   );
-  const activeNavValue = matchedSettingsSection ?? 'transactions';
   const scrollRestorationId = isSettingsPath ? `wallet-settings-${matchedSettingsSection ?? 'general'}` : 'wallet-main';
+  const activeSettingsSection =
+    visibleSettingsSections.find((section) => section.value === matchedSettingsSection) ?? visibleSettingsSections[0];
 
   return (
     <>
@@ -150,39 +156,54 @@ function WalletShellLayout({ walletId }: WalletShellLayoutProps) {
         </div>
 
         <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-          <div className="border-b md:hidden">
-            <Tabs value={activeNavValue}>
-              <TabsList variant="line" className="w-full justify-start overflow-x-auto px-2">
-                <TabsTrigger
-                  value="transactions"
-                  nativeButton={false}
-                  render={
-                    <Link to="/wallets/$walletId" params={{ walletId }}>
-                      <Icon name="ListBulletsIcon" />
-                      Transactions
-                    </Link>
-                  }
-                />
-                {showSettingsGroup
-                  ? visibleSettingsSections.map((section) => (
-                      <TabsTrigger
-                        key={section.value}
-                        value={section.value}
-                        nativeButton={false}
-                        render={
-                          <Link to={section.to} params={{ walletId }}>
-                            <Icon name={section.icon} />
-                            {section.label}
-                          </Link>
-                        }
-                      />
-                    ))
-                  : null}
-              </TabsList>
-            </Tabs>
+          <div className="flex h-(--sub-header-height) items-center justify-between gap-1 border-b px-2 md:hidden">
+            <Link
+              to="/wallets/$walletId"
+              params={{ walletId }}
+              className={cn(
+                'inline-flex shrink-0 items-center gap-1.5 rounded-md px-1.5 text-sm font-medium transition-colors',
+                !isSettingsPath ? 'text-foreground' : 'text-foreground/60 hover:text-foreground',
+              )}
+            >
+              <Icon name="ListBulletsIcon" className="size-4" />
+              Transactions
+            </Link>
+
+            {showSettingsGroup && activeSettingsSection ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  className={cn(
+                    'inline-flex shrink-0 items-center gap-1.5 rounded-md px-1.5 text-sm font-medium transition-colors',
+                    isSettingsPath ? 'text-foreground' : 'text-foreground/60 hover:text-foreground',
+                  )}
+                >
+                  <Icon name={activeSettingsSection.icon} className="size-4" />
+                  {activeSettingsSection.label}
+                  <Icon name="CaretDownIcon" className="size-3.5" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-fit">
+                  {visibleSettingsSections.map((section) => (
+                    <DropdownMenuItem
+                      key={section.value}
+                      nativeButton={false}
+                      render={<Link to={section.to} params={{ walletId }} />}
+                    >
+                      <Icon name={section.icon} />
+                      <span className="flex-1">{section.label}</span>
+                      {section.value === matchedSettingsSection ? (
+                        <span className="size-1.5 shrink-0 rounded-full bg-primary" />
+                      ) : null}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : null}
           </div>
 
-          <ScrollArea scrollRestorationId={scrollRestorationId} className="h-full w-full">
+          <ScrollArea
+            scrollRestorationId={scrollRestorationId}
+            className="h-[calc(100%-var(--sub-header-height))] w-full"
+          >
             <div className="mx-auto max-w-4xl p-4 lg:p-6">
               <Outlet />
             </div>

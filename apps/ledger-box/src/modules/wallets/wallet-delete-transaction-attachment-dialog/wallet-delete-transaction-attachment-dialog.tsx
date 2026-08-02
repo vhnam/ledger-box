@@ -1,13 +1,11 @@
 import { Button } from '@vhnam/ui/components/button';
-import { Dialog, DialogContent } from '@vhnam/ui/components/dialog';
 import { FieldError } from '@vhnam/ui/components/field';
 import { Icon } from '@vhnam/ui/components/icon';
-import { Sheet, SheetContent, SheetDescription, SheetTitle } from '@vhnam/ui/components/sheet';
+import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
 import { Spinner } from '@vhnam/ui/components/spinner';
-import { useIsMobile } from '@vhnam/ui/hooks/use-mobile';
 
-import { useDeleteTransactionAttachmentDialogActions } from '#/modules/wallets/delete-transaction-attachment-dialog/delete-transaction-attachment-dialog.actions';
-import type { TransactionAttachment } from '#/modules/wallets/transaction-attachments/transaction-attachments-sheet.actions';
+import { useDeleteTransactionAttachmentDialogActions } from '#/modules/wallets/wallet-delete-transaction-attachment-dialog/wallet-delete-transaction-attachment-dialog.actions';
+import type { TransactionAttachment } from '#/modules/wallets/wallet-transaction-attachments/wallet-transaction-attachments-sheet.actions';
 
 type DeleteTransactionAttachmentDialogProps = {
   open: boolean;
@@ -72,7 +70,6 @@ function DeleteTransactionAttachmentDialog({
   transactionId,
   onRemovePending,
 }: DeleteTransactionAttachmentDialogProps) {
-  const isMobile = useIsMobile();
   const { handleDeleteAttachment, isPending, error } = useDeleteTransactionAttachmentDialogActions({
     walletId,
     transactionId,
@@ -104,25 +101,20 @@ function DeleteTransactionAttachmentDialog({
     />
   );
 
-  if (isMobile) {
-    return (
-      <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent side="bottom" showCloseButton={false} className="gap-0 rounded-t-2xl px-4 pb-6 pt-2">
-          <div className="mx-auto mb-6 h-1 w-10 shrink-0 rounded-full bg-muted-foreground/30" />
-          <SheetTitle className="sr-only">Remove attachment?</SheetTitle>
-          <SheetDescription className="sr-only">Confirm removal of {attachment.fileName}</SheetDescription>
-          {content}
-        </SheetContent>
-      </Sheet>
-    );
-  }
-
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent showCloseButton={false} className="sm:max-w-md">
-        {content}
-      </DialogContent>
-    </Dialog>
+    <ResponsiveDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Remove attachment?"
+      description={`Confirm removal of ${attachment.fileName}`}
+      hideTitle
+      hideDescription
+      showCloseButton={false}
+      headerClassName="sr-only"
+      className="sm:max-w-md"
+    >
+      {content}
+    </ResponsiveDialog>
   );
 }
 

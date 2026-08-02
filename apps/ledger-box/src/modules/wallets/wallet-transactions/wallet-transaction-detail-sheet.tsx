@@ -1,8 +1,6 @@
 import { Button } from '@vhnam/ui/components/button';
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@vhnam/ui/components/dialog';
 import { Icon, type IconName } from '@vhnam/ui/components/icon';
-import { Sheet, SheetContent, SheetDescription, SheetTitle } from '@vhnam/ui/components/sheet';
-import { useIsMobile } from '@vhnam/ui/hooks/use-mobile';
+import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
 import { cn } from '@vhnam/ui/lib/utils';
 
 import { format, toDate } from '@vhnam/utils/date';
@@ -150,8 +148,6 @@ function WalletTransactionDetailSheet({
   onDelete,
   onOpenAttachments,
 }: WalletTransactionDetailSheetProps) {
-  const isMobile = useIsMobile();
-
   function handleEdit() {
     onOpenChange(false);
     onEdit({ returnToDetail: true });
@@ -179,29 +175,21 @@ function WalletTransactionDetailSheet({
     />
   );
 
-  if (isMobile) {
-    return (
-      <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent side="bottom" showCloseButton={false} className="gap-0 rounded-t-2xl px-0 pb-6 pt-2">
-          <SheetTitle className="sr-only">Transaction details</SheetTitle>
-          <SheetDescription className="sr-only">Details for {transaction.description}</SheetDescription>
-          <div className="mx-auto mb-4 h-1 w-10 shrink-0 rounded-full bg-muted-foreground/30" />
-          {header}
-          <div className="px-4">{content}</div>
-        </SheetContent>
-      </Sheet>
-    );
-  }
-
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent showCloseButton={false} className="gap-0 overflow-hidden p-0 sm:max-w-md">
-        <DialogTitle className="sr-only">Transaction details</DialogTitle>
-        <DialogDescription className="sr-only">Details for {transaction.description}</DialogDescription>
-        {header}
-        <div className="px-4 pb-4">{content}</div>
-      </DialogContent>
-    </Dialog>
+    <ResponsiveDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Transaction details"
+      description={`Details for ${transaction.description}`}
+      hideTitle
+      hideDescription
+      showCloseButton={false}
+      className="gap-0 overflow-hidden p-0 sm:max-w-md"
+      headerClassName="sr-only"
+    >
+      {header}
+      <div className="px-4 pb-4">{content}</div>
+    </ResponsiveDialog>
   );
 }
 
