@@ -2,10 +2,10 @@ import { useState } from 'react';
 
 import { Button } from '@vhnam/ui/components/button';
 import { DatePickerRange } from '@vhnam/ui/components/date-picker-range';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@vhnam/ui/components/dialog';
 import { Field, FieldError, FieldLabel } from '@vhnam/ui/components/field';
 import { Icon } from '@vhnam/ui/components/icon';
 import { Input } from '@vhnam/ui/components/input';
+import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
 import { Separator } from '@vhnam/ui/components/separator';
 import { Spinner } from '@vhnam/ui/components/spinner';
 import { toast } from '@vhnam/ui/components/toast';
@@ -72,6 +72,14 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
     toast.add({ title: 'Link copied to clipboard', type: 'success' });
   }
 
+  const hasUnsavedInput = !createdLink && Boolean(periodFrom || periodTo || displayTitle);
+
+  function handleDismissAttempt() {
+    if (window.confirm('Discard this statement link setup? Your selections will be lost.')) {
+      handleDialogOpenChange(false);
+    }
+  }
+
   return (
     <>
       <div className="flex flex-col gap-6">
@@ -117,79 +125,80 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
         )}
       </div>
 
-      <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange}>
-        <DialogContent className="sm:max-w-xl">
-          <DialogHeader>
-            <DialogTitle>Share statement</DialogTitle>
-          </DialogHeader>
-
-          {createdLink ? (
-            <div className="flex flex-col gap-4">
-              <p className="text-sm text-muted-foreground">
-                Copy this link now — it will not be shown again. Anyone with this link can view the statement until it
-                expires or is revoked.
-              </p>
-              <div className="flex items-center gap-2">
-                <Input readOnly value={`${window.location.origin}${createdLink.publicUrl}`} />
-                <Button variant="outline" onClick={handleCopyLink}>
-                  <Icon name="CopyIcon" />
-                  Copy
-                </Button>
-              </div>
-              <Button onClick={() => handleDialogOpenChange(false)}>Done</Button>
+      <ResponsiveDialog
+        open={dialogOpen}
+        onOpenChange={handleDialogOpenChange}
+        title="Share statement"
+        className="sm:max-w-xl"
+        preventDismiss={hasUnsavedInput}
+        onDismissAttempt={handleDismissAttempt}
+      >
+        {createdLink ? (
+          <div className="flex flex-col gap-4">
+            <p className="text-sm text-muted-foreground">
+              Copy this link now — it will not be shown again. Anyone with this link can view the statement until it
+              expires or is revoked.
+            </p>
+            <div className="flex items-center gap-2">
+              <Input readOnly value={`${window.location.origin}${createdLink.publicUrl}`} />
+              <Button variant="outline" onClick={handleCopyLink}>
+                <Icon name="CopyIcon" />
+                Copy
+              </Button>
             </div>
-          ) : (
-            <div className="flex flex-col gap-4">
-              <Field>
-                <FieldLabel>Period</FieldLabel>
-                <DatePickerRange
-                  value={periodFrom && periodTo ? { from: new Date(periodFrom), to: new Date(periodTo) } : undefined}
-                  onChange={(range) => {
-                    setPeriodFrom(range?.from ? format(range.from, 'yyyy-MM-dd') : undefined);
-                    setPeriodTo(range?.to ? format(range.to, 'yyyy-MM-dd') : undefined);
-                  }}
-                  numberOfMonths={1}
-                />
-              </Field>
+            <Button onClick={() => handleDialogOpenChange(false)}>Done</Button>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            <Field>
+              <FieldLabel>Period</FieldLabel>
+              <DatePickerRange
+                value={periodFrom && periodTo ? { from: new Date(periodFrom), to: new Date(periodTo) } : undefined}
+                onChange={(range) => {
+                  setPeriodFrom(range?.from ? format(range.from, 'yyyy-MM-dd') : undefined);
+                  setPeriodTo(range?.to ? format(range.to, 'yyyy-MM-dd') : undefined);
+                }}
+                numberOfMonths={1}
+              />
+            </Field>
 
-              <Field>
-                <FieldLabel htmlFor="display-title">Display title (optional)</FieldLabel>
-                <Input
-                  id="display-title"
-                  value={displayTitle}
-                  onChange={(event) => setDisplayTitle(event.target.value)}
-                  placeholder="e.g. March holding"
-                  maxLength={80}
-                />
-              </Field>
+            <Field>
+              <FieldLabel htmlFor="display-title">Display title (optional)</FieldLabel>
+              <Input
+                id="display-title"
+                value={displayTitle}
+                onChange={(event) => setDisplayTitle(event.target.value)}
+                placeholder="e.g. March holding"
+                maxLength={80}
+              />
+            </Field>
 
-              {error ? <FieldError>{error}</FieldError> : null}
+            {error ? <FieldError>{error}</FieldError> : null}
 
-              <div className="flex gap-2">
-                <Button variant="outline" className="flex-1" onClick={handlePreview} disabled={isPreviewing}>
-                  {isPreviewing && <Spinner className="size-4" />}
-                  Preview
-                </Button>
-                <Button variant="outline" className="flex-1" onClick={handleDownloadCsv} disabled={isDownloading}>
-                  {isDownloading && <Spinner className="size-4" />}
-                  <Icon name="DownloadIcon" />
-                  Download CSV
-                </Button>
-                <Button className="flex-1" onClick={handleCreate} disabled={isCreating}>
-                  {isCreating && <Spinner className="size-4" />}
-                  Create link
-                </Button>
-              </div>
-
-              {previewSnapshot ? (
-                <div className="max-h-96 overflow-y-auto rounded-lg border p-4">
-                  <StatementSnapshotView snapshot={previewSnapshot} />
-                </div>
-              ) : null}
+            <div className="flex gap-2">
+              <Button variant="outline" className="flex-1" onClick={handlePreview} disabled={isPreviewing}>
+                {isPreviewing && <Spinner className="size-4" />}
+                Preview
+              </Button>
+              <Button variant="outline" className="flex-1" onClick={handleDownloadCsv} disabled={isDownloading}>
+                {isDownloading && <Spinner className="size-4" />}
+                <Icon name="DownloadIcon" />
+                Download CSV
+              </Button>
+              <Button className="flex-1" onClick={handleCreate} disabled={isCreating}>
+                {isCreating && <Spinner className="size-4" />}
+                Create link
+              </Button>
             </div>
-          )}
-        </DialogContent>
-      </Dialog>
+
+            {previewSnapshot ? (
+              <div className="max-h-96 overflow-y-auto rounded-lg border p-4">
+                <StatementSnapshotView snapshot={previewSnapshot} />
+              </div>
+            ) : null}
+          </div>
+        )}
+      </ResponsiveDialog>
     </>
   );
 }

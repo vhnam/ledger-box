@@ -12,3 +12,7 @@
 [data-slot="sidebar-wrapper"]:has([data-state="collapsed"]) {
   --header-height: calc(var(--spacing) * 12);
 }
+
+:root {
+  --sub-header-height: calc(var(--spacing) * 8 + 1px);
+}

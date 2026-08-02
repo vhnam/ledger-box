@@ -1,14 +1,12 @@
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@vhnam/ui/components/dialog';
-import { Sheet, SheetContent, SheetDescription, SheetTitle } from '@vhnam/ui/components/sheet';
-import { useIsMobile } from '@vhnam/ui/hooks/use-mobile';
+import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
 
-import { DeleteTransactionAttachmentDialog } from '#/modules/wallets/delete-transaction-attachment-dialog';
-import { TransactionAttachmentEmptyState } from '#/modules/wallets/transaction-attachments/transaction-attachment-empty-state';
-import { TransactionAttachmentList } from '#/modules/wallets/transaction-attachments/transaction-attachment-list';
-import { TransactionAttachmentLoadingState } from '#/modules/wallets/transaction-attachments/transaction-attachment-loading-state';
-import { TransactionAttachmentPreview } from '#/modules/wallets/transaction-attachments/transaction-attachment-preview';
-import { TransactionAttachmentUpload } from '#/modules/wallets/transaction-attachments/transaction-attachment-upload';
-import { useTransactionAttachments } from '#/modules/wallets/transaction-attachments/transaction-attachments-sheet.actions';
+import { DeleteTransactionAttachmentDialog } from '#/modules/wallets/wallet-delete-transaction-attachment-dialog';
+import { TransactionAttachmentEmptyState } from '#/modules/wallets/wallet-transaction-attachments/wallet-transaction-attachment-empty-state';
+import { TransactionAttachmentList } from '#/modules/wallets/wallet-transaction-attachments/wallet-transaction-attachment-list';
+import { TransactionAttachmentLoadingState } from '#/modules/wallets/wallet-transaction-attachments/wallet-transaction-attachment-loading-state';
+import { TransactionAttachmentPreview } from '#/modules/wallets/wallet-transaction-attachments/wallet-transaction-attachment-preview';
+import { TransactionAttachmentUpload } from '#/modules/wallets/wallet-transaction-attachments/wallet-transaction-attachment-upload';
+import { useTransactionAttachments } from '#/modules/wallets/wallet-transaction-attachments/wallet-transaction-attachments-sheet.actions';
 import { TransactionDialogHeader } from '#/modules/wallets/wallet-transactions/wallet-transaction-dialog-header';
 import type { TransactionDto } from '#/queries/transactions/transaction.dto';
 
@@ -84,7 +82,6 @@ function TransactionAttachmentsContent({
 }
 
 function TransactionAttachmentsSheet({ open, onOpenChange, transaction, onBack }: TransactionAttachmentsSheetProps) {
-  const isMobile = useIsMobile();
   const {
     fileInputRef,
     attachments,
@@ -134,31 +131,19 @@ function TransactionAttachmentsSheet({ open, onOpenChange, transaction, onBack }
 
   return (
     <>
-      {isMobile ? (
-        <Sheet open={open} onOpenChange={onOpenChange}>
-          <SheetContent
-            side="bottom"
-            showCloseButton={false}
-            className="flex max-h-[92dvh] flex-col gap-0 overflow-hidden rounded-t-2xl px-0 pb-0 pt-2"
-          >
-            <SheetTitle className="sr-only">Transaction attachments</SheetTitle>
-            <SheetDescription className="sr-only">Attachments for {transaction.description}</SheetDescription>
-            <div className="mx-auto mb-4 h-1 w-10 shrink-0 rounded-full bg-muted-foreground/30" />
-            {content}
-          </SheetContent>
-        </Sheet>
-      ) : (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-          <DialogContent
-            showCloseButton={false}
-            className="flex max-h-[min(90dvh,640px)] flex-col gap-0 overflow-hidden p-0 sm:max-w-md"
-          >
-            <DialogTitle className="sr-only">Transaction attachments</DialogTitle>
-            <DialogDescription className="sr-only">Attachments for {transaction.description}</DialogDescription>
-            {content}
-          </DialogContent>
-        </Dialog>
-      )}
+      <ResponsiveDialog
+        open={open}
+        onOpenChange={onOpenChange}
+        title="Transaction attachments"
+        description={`Attachments for ${transaction.description}`}
+        hideTitle
+        hideDescription
+        showCloseButton={false}
+        headerClassName="sr-only"
+        className="flex max-h-[min(92dvh,640px)] flex-col gap-0 overflow-hidden p-0 sm:max-w-md"
+      >
+        {content}
+      </ResponsiveDialog>
 
       <TransactionAttachmentPreview
         open={previewOpen}

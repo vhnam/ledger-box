@@ -40,8 +40,8 @@ function WalletPage({ walletId }: WalletPageProps) {
   }
 
   return (
-    <div className="mx-auto max-w-5xl">
-      <div className="flex w-full max-w-5xl flex-col gap-4 p-4 lg:p-6">
+    <div className="mx-auto lg:max-w-5xl">
+      <div className="flex w-full max-w-5xl flex-col gap-4">
         <WalletActions hasTransactions={showTransactions} filters={filters} />
         {!isTransactionsPending && !hasTransactions ? (
           <WalletEmpty variant="transactions" />

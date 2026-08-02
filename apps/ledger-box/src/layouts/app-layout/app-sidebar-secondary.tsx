@@ -11,7 +11,7 @@ import {
 } from '@vhnam/ui/components/sidebar';
 import { cn } from '@vhnam/ui/lib/utils';
 
-import { CreateWalletDialog } from '#/modules/wallets/create-wallet-dialog';
+import { CreateWalletDialog } from '#/modules/wallets/wallet-create-dialog';
 
 function AppSidebarSecondary({ className, ...props }: ComponentProps<typeof SidebarGroup>) {
   const [createWalletOpen, setCreateWalletOpen] = useState(false);

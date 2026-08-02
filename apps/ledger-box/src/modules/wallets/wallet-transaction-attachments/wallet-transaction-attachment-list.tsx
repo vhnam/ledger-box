@@ -17,7 +17,7 @@ import {
   getFileTypeLabelFromName,
   isImageContentType,
 } from '#/lib/file';
-import type { TransactionAttachment } from '#/modules/wallets/transaction-attachments/transaction-attachments-sheet.actions';
+import type { TransactionAttachment } from '#/modules/wallets/wallet-transaction-attachments/wallet-transaction-attachments-sheet.actions';
 
 type TransactionAttachmentListProps = {
   attachments: TransactionAttachment[];
