@@ -113,13 +113,12 @@ Those two legs stay linked — treat them as one move of money, not two unrelate
 
 ## 7. Invite a member
 
-1. On a wallet you own, open settings with the gear icon next to **Add transaction**.
-2. Find the **Members** section.
-3. Under **Invite by email**, enter a colleague’s email.
-4. Choose a role:
+1. On a wallet you own, use the **Settings** group in the wallet nav (left column on desktop, tab strip on mobile) and choose **Members**.
+2. Under **Invite by email**, enter a colleague’s email.
+3. Choose a role:
    - **Viewer** — can see balances and transactions; cannot change money
    - **Manager** — can add, edit, and delete transactions (and related money actions); cannot delete the wallet or manage members / statement links
-5. Choose **Invite**.
+4. Choose **Invite**.
 
 You should see **Invite sent**. When that person signs in with the same email, the invite activates and the wallet appears for them.
 
@@ -129,25 +128,27 @@ You can change a member’s role or remove them from the same list later. Only t
 
 ## 8. Share a statement link
 
-1. Stay in wallet settings and open **Statement links**.
+1. In the wallet nav, choose **Settings** → **Statement shares**.
 2. Choose **Share statement**.
 3. Pick a **Period** that includes some of the transactions you created.
 4. Optionally set a **Display title** (for example `March holding`).
-5. Choose **Preview** and check opening balance, transactions, and closing balance.
+5. Choose **Preview** and check opening balance, transactions, and closing balance. From the same dialog you can choose **Download CSV** to save the statement as a file instead of (or before) sharing a link.
 6. Choose **Create link**.
 7. **Copy** the URL immediately — it is shown once — then choose **Done**.
 
-Open the link in a private window (no sign-in). You should see the same read-only statement.
+Open the link in a private window (no sign-in). You should see the same read-only statement, with its own **Download CSV** button.
 
-When you are finished sharing, return to **Statement links** and revoke the link so it can no longer be opened.
+Each share row also has a **Download** action, so the owner can re-download the frozen statement later without needing the original link.
+
+When you are finished sharing, return to **Statement shares** and revoke the link so it can no longer be opened.
 
 ---
 
 ## 9. Review the activity log
 
-Activity is available to the wallet **owner** only.
+Activity is available to the wallet **owner** only — the nav item is hidden for other roles.
 
-1. In wallet settings, open the **Activity** section.
+1. In the wallet nav, choose **Settings** → **Activity**.
 2. Scan the chronological list. You should recognize recent actions such as created transactions, a transfer, an invited member, and a statement share.
 3. Expand **Details** on a row if you want before/after values.
 4. If a change falls inside an active shared period, you may see an **Affects shared statement** badge — the public snapshot stays frozen; the badge warns that live wallet data has moved on.
@@ -167,7 +168,7 @@ You have completed a full Ledger Box loop:
 5. Attach supporting files
 6. Transfer between wallets
 7. Invite a viewer or manager
-8. Share and revoke a statement link
+8. Share, download, and revoke a statement link
 9. Read the owner activity log
 
 Keep using description text instead of categories, treat transfers as a pair, and open **Activity** whenever you need to account for a balance change.

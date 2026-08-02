@@ -2,7 +2,7 @@
 
 The Ledger Box app — TanStack Router + React frontend, better-auth for authentication, Postgres via Kysely, served through Netlify Functions.
 
-See the [root README](../../README.md) for monorepo-wide setup (install, Postgres via Docker, `.env`).
+See [docs/guides/development.md](../../docs/guides/development.md) for monorepo-wide setup (install, Postgres via Docker, `.env`).
 
 ## Structure
 

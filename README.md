@@ -1,6 +1,82 @@
 # Ledger Box
 
-A personal finance tracker built as a Vite+ monorepo.
+A ledger for money you hold on behalf of other people.
+
+Most personal finance apps answer "what did I spend it on". Ledger Box answers a
+different question: **how much is in this wallet right now, and can I account for every
+change to it?** It's built for the person in the middle — someone holding a shared pot of
+money and answerable to the people who put it there.
+
+## The situation it's built for
+
+Someone funds a wallet. You hold the money and spend it on their behalf. A third person
+receives some of it. Everyone eventually wants the same thing: a clear account of what
+came in, what went out, and what's left.
+
+Ledger Box gives you three ways to answer that:
+
+- **You** record income, expenses, and transfers, and attach receipts to any of them.
+- **The recipient** gets a viewer account and checks the wallet themselves, so they don't
+  have to ask you every time.
+- **The funder** gets a statement link — a read-only web page, no account needed, showing
+  opening balance, every transaction with a running balance, and closing balance. The
+  numbers are frozen at the moment you generate it, so what they see today is what they'll
+  see next month.
+
+> _[Screenshot: wallet page]_
+>
+> _[Screenshot: shared statement]_
+
+## Features
+
+**Wallets** — multiple wallets, each with its own balance, timezone, and members.
+
+**Transactions** — income and expenses with a user-set date, editable and soft-deleted,
+filtered by period and sorted, with file attachments stored in Cloudflare R2.
+
+**Transfers** — move money between two wallets as a linked expense/income pair.
+
+**Statements** — opening balance, running balance per row, closing balance, and period
+totals, computed in the wallet's timezone. Exportable as CSV.
+
+**Statement links** — share a statement publicly without requiring an account. Links are
+scoped to one wallet and one period, expire by default, can be revoked at any time, and
+record when they were last opened.
+
+**Members** — invite people by email as `viewer` (read-only) or `manager` (read/write).
+Invites are sent by email and activate when the invited person signs in.
+
+**Activity log** — an owner-only record of who changed what, so a balance never moves
+without a trace.
+
+## Design decisions
+
+Some things are deliberately absent. If you're evaluating this against other finance
+apps, these are the trade-offs:
+
+**No spending categories or tags.** The transaction description is free text and carries
+that information. Categories add friction at entry time and a taxonomy to maintain, and
+this project cares about balances and accountability rather than spending analysis.
+
+**Statements are snapshots, not live views.** A statement is a document you hand to
+someone, so its numbers are frozen when it's generated and labelled with that timestamp.
+Correcting something means issuing a new statement, not silently changing an old one.
+
+**Soft deletes everywhere.** Wallets, transactions, and members are never hard-deleted,
+so a balance can always be reconciled against its history. Attachments are the one
+exception — deleting one removes the file from object storage permanently.
+
+**Timezone lives on the wallet.** Period boundaries are computed server-side from the
+wallet's timezone rather than the viewer's clock, so "this month" means the same thing to
+everyone looking at the same wallet.
+
+## Status
+
+Ledger Box is built and maintained for the author's own use, and shared here as a
+showcase. It is not currently open to issues or pull requests. The source is published
+for reference only, all rights reserved.
+
+---
 
 ## Structure
 
@@ -9,87 +85,7 @@ A personal finance tracker built as a Vite+ monorepo.
 - [`packages/ui`](packages/ui/README.md) — shared UI components (shadcn-style, base-ui + Tailwind)
 - [`packages/utils`](packages/utils/README.md) — shared currency/date formatting utilities (date-fns)
 
-## Prerequisites
+## Documentation
 
-- Node.js >= 24
-- pnpm 11.12.0 (pinned via `packageManager`)
-- Docker (for local Postgres)
-
-## Setup
-
-1. Install dependencies:
-
-```bash
-pnpm install
-```
-
-2. Start Postgres:
-
-```bash
-docker compose up -d
-```
-
-3. Copy the env file and fill in the values:
-
-```bash
-cp .env.example .env
-```
-
-| Variable               | Description                                                                                               |
-| ---------------------- | --------------------------------------------------------------------------------------------------------- |
-| `DATABASE_URL`         | Postgres connection string (matches `compose.yml` by default)                                             |
-| `BETTER_AUTH_SECRET`   | Secret used by better-auth to sign sessions                                                               |
-| `BETTER_AUTH_URL`      | Base URL the app is served on, e.g. `http://localhost:8888` or `http://192.168.1.209:8888` for LAN access |
-| `GOOGLE_CLIENT_ID`     | Google OAuth client ID (for social sign-in)                                                               |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret                                                                                |
-
-`.env` must live at the repo root — `netlify dev` loads it from there, not from `apps/ledger-box`.
-
-4. Run database migrations:
-
-```bash
-pnpm --filter @vhnam/ledger-box db:migrate
-```
-
-## Development
-
-- Check everything is ready (lint, typecheck, format):
-
-```bash
-vp run ready
-```
-
-- Run the tests:
-
-```bash
-vp run -r test
-```
-
-- Build the monorepo:
-
-```bash
-vp run -r build
-```
-
-- Run the app (via Netlify Dev, so `/api/*` functions work):
-
-```bash
-pnpm dev
-```
-
-Open `http://localhost:8888` locally, or `http://<your-lan-ip>:8888` from another device on the same network. Set `BETTER_AUTH_URL` in `.env` to the URL you actually use (e.g. `http://192.168.1.209:8888`).
-
-- Run Storybook:
-
-```bash
-pnpm --filter @vhnam/storybook dev
-```
-
-## Database migrations
-
-Migrations live in `apps/ledger-box/src/lib/db/migrations` and run via Kysely's migrator:
-
-```bash
-pnpm --filter @vhnam/ledger-box db:migrate       # apply pending migrations
-pnpm --filter @vhnam/ledger-box db:migrate:down  # roll back the last migration
-```
+- [Getting started tutorial](docs/tutorials/getting-started-with-ledger-box.md) — walkthrough for end users
+- [Development guideline](docs/guides/development.md) — setup, running the app, and coding conventions
