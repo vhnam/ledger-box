@@ -55,6 +55,14 @@ export const Variants: Story = {
   play: async ({ canvas, userEvent }) => {
     await userEvent.click(canvas.getByRole('button', { name: 'Success' }));
     await waitFor(() => expect(within(document.body).getByText('Wallet created')).toBeVisible());
+    await userEvent.click(canvas.getByRole('button', { name: 'Info' }));
+    await waitFor(() => expect(within(document.body).getByText('Syncing wallets...')).toBeVisible());
+    await userEvent.click(canvas.getByRole('button', { name: 'Warning' }));
+    await waitFor(() => expect(within(document.body).getByText('Balance is low')).toBeVisible());
+    await userEvent.click(canvas.getByRole('button', { name: 'Error' }));
+    await waitFor(() => expect(within(document.body).getByText('Failed to save wallet')).toBeVisible());
+    await userEvent.click(canvas.getByRole('button', { name: 'Loading' }));
+    await waitFor(() => expect(within(document.body).getByText('Saving wallet...')).toBeVisible());
   },
 };
 
@@ -92,6 +100,14 @@ export const WithAction: Story = {
       Show toast
     </Button>
   ),
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole('button', { name: 'Show toast' }));
+    await waitFor(() => expect(within(document.body).getByText('Wallet deleted')).toBeVisible());
+    await userEvent.click(within(document.body).getByRole('button', { name: 'Undo' }));
+    await waitFor(() => expect(within(document.body).getByText('Wallet restored')).toBeVisible());
+    const closeButtons = within(document.body).getAllByRole('button', { name: 'Close toast' });
+    await userEvent.click(closeButtons[0]);
+  },
 };
 
 export const WithPromise: Story = {
