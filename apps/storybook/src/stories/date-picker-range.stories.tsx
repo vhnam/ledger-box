@@ -44,6 +44,36 @@ export const WithDefaultValue: Story = {
   },
 };
 
+export const SelectOnlyFromDate: Story = {
+  args: {
+    defaultValue: {
+      from: new Date(2026, 6, 12),
+    },
+  },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByRole('button')).toHaveTextContent('12/07/2026');
+    await expect(canvas.getByRole('button')).not.toHaveTextContent(' - ');
+  },
+};
+
+export const SelectRangeInteractively: Story = {
+  args: {
+    placeholder: 'Pick a date range',
+  },
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole('button'));
+    const grids = await waitFor(() => within(document.body).getAllByRole('grid'));
+    await expect(grids[0]).toBeVisible();
+    const startDay = within(document.body).getAllByRole('gridcell', { name: '10' })[0];
+    await userEvent.click(startDay.querySelector('button') ?? startDay);
+    const endDay = within(document.body).getAllByRole('gridcell', { name: '20' })[0];
+    await userEvent.click(endDay.querySelector('button') ?? endDay);
+    await waitFor(() => expect(canvas.getByRole('button')).not.toHaveTextContent('Pick a date range'));
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(within(document.body).queryByRole('dialog')).toBeNull());
+  },
+};
+
 export const Disabled: Story = {
   args: {
     label: 'Date range',

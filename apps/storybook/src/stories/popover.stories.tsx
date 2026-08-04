@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, waitFor, within } from 'storybook/test';
 
 import { Button } from '@vhnam/ui/components/button';
 import { Input } from '@vhnam/ui/components/input';
@@ -46,6 +47,13 @@ export const Default: Story = {
       </PopoverContent>
     </Popover>
   ),
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole('button', { name: 'Open popover' }));
+    await waitFor(() => expect(within(document.body).getByText('Dimensions')).toBeVisible());
+    await expect(within(document.body).getByText('Set the dimensions for the layer.')).toBeVisible();
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(within(document.body).queryByText('Dimensions')).toBeNull());
+  },
 };
 
 export const Simple: Story = {
@@ -57,4 +65,14 @@ export const Simple: Story = {
       </PopoverContent>
     </Popover>
   ),
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole('button', { name: 'Open' }));
+    await waitFor(() =>
+      expect(within(document.body).getByText('This is a simple popover with just some text content.')).toBeVisible(),
+    );
+    await userEvent.click(document.body);
+    await waitFor(() =>
+      expect(within(document.body).queryByText('This is a simple popover with just some text content.')).toBeNull(),
+    );
+  },
 };

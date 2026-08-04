@@ -99,6 +99,13 @@ export const WithGroups: Story = {
       </SelectContent>
     </Select>
   ),
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole('combobox'));
+    const listbox = await waitFor(() => within(document.body).getByRole('listbox'));
+    await userEvent.click(within(listbox).getByRole('option', { name: 'Central European Time (CET)' }));
+    await expect(canvas.getByRole('combobox')).toHaveTextContent('Central European Time (CET)');
+    await waitFor(() => expect(within(document.body).queryByRole('listbox')).toBeNull());
+  },
 };
 
 export const Small: Story = {
@@ -116,6 +123,13 @@ export const Small: Story = {
       </SelectContent>
     </Select>
   ),
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole('combobox'));
+    const listbox = await waitFor(() => within(document.body).getByRole('listbox'));
+    await expect(listbox).toBeVisible();
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(within(document.body).queryByRole('listbox')).toBeNull());
+  },
 };
 
 export const Disabled: Story = {
@@ -133,4 +147,7 @@ export const Disabled: Story = {
       </SelectContent>
     </Select>
   ),
+  play: async ({ canvas }) => {
+    await expect(canvas.getByRole('combobox')).toBeDisabled();
+  },
 };

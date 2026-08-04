@@ -6,6 +6,36 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-20 — Storybook & @vhnam/utils test coverage, link color-contrast fix](docs/changelogs/mr-20-storybook-and-utils-test-coverage.md)
+
+#### Added
+
+- `packages/utils` now has its own vitest setup and 71 tests covering the
+  currency/date formatting helpers (`parseCurrencyInput`, `formatCurrency`,
+  `formatDate*`, `isDateInRange`, etc.), previously untested outside of indirect UI
+  interaction.
+- `play` functions added/extended across 10 Storybook stories (calendar,
+  currency-input, date-picker, date-picker-range, dropdown-menu, field, popover,
+  select, sidebar, toast) to exercise interactive code paths that a closed/default
+  render never touches.
+
+#### Fixed
+
+- `Badge`/`Button` `link` variant failed a color-contrast a11y check in dark mode
+  (~2.2:1, under WCAG AA's 4.5:1) — `text-primary` was reused from a token tuned as a
+  button _fill_ color, not text on the page background. Introduced a `--link` token
+  (aliases to `--primary` in light mode; a brighter blue in dark mode) instead.
+- Flaky `ThemeProvider` story — `next-themes` seeds its state from `localStorage`,
+  which persists across story runs in the same browser session, so the story's
+  "starts on `light`" assumption wasn't reliable.
+
+#### Changed
+
+- `apps/storybook`'s vitest coverage config now also measures `@vhnam/ui` (previously
+  it only measured files inside the storybook app itself, so the report said nothing
+  about the component library the stories exist to test). Storybook coverage:
+  72.49% → 84.51% statements.
+
 ### [mr-19 — unify mobile overlay presentation behind ResponsiveDialog](docs/changelogs/mr-19-unify-mobile-overlay-with-responsive-dialog.md)
 
 #### Added

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
+import { expect, waitFor, within } from 'storybook/test';
 
 import { Button } from '@vhnam/ui/components/button';
 import {
@@ -54,6 +55,13 @@ export const Default: Story = {
       </DropdownMenuContent>
     </DropdownMenu>
   ),
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole('button', { name: 'Open menu' }));
+    const menu = await waitFor(() => within(document.body).getByRole('menu'));
+    await waitFor(() => expect(within(menu).getByText('My account')).toBeVisible());
+    await userEvent.click(within(menu).getByText('Profile'));
+    await waitFor(() => expect(within(document.body).queryByRole('menu')).toBeNull());
+  },
 };
 
 export const WithSubmenu: Story = {
@@ -72,6 +80,16 @@ export const WithSubmenu: Story = {
       </DropdownMenuContent>
     </DropdownMenu>
   ),
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole('button', { name: 'Open menu' }));
+    const menu = await waitFor(() => within(document.body).getByRole('menu'));
+    const subTrigger = within(menu).getByText('More tools');
+    await userEvent.hover(subTrigger);
+    await waitFor(() => expect(within(document.body).getByText('Save page as...')).toBeVisible());
+    await userEvent.keyboard('{Escape}');
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(within(document.body).queryByRole('menu')).toBeNull());
+  },
 };
 
 export const CheckboxesAndRadios: Story = {
@@ -100,5 +118,18 @@ export const CheckboxesAndRadios: Story = {
     }
 
     return <DropdownMenuDemo />;
+  },
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole('button', { name: 'View options' }));
+    const menu = await waitFor(() => within(document.body).getByRole('menu'));
+    await userEvent.click(within(menu).getByText('Status bar'));
+    await waitFor(() => expect(within(document.body).getByRole('menu')).toBeVisible());
+    await userEvent.click(within(document.body).getByText('Top'));
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(within(document.body).queryByRole('menu')).toBeNull());
+    await userEvent.click(canvas.getByRole('button', { name: 'View options' }));
+    const menu2 = await waitFor(() => within(document.body).getByRole('menu'));
+    await waitFor(() => expect(within(menu2).getByText('Panel position')).toBeVisible());
+    await userEvent.keyboard('{Escape}');
   },
 };

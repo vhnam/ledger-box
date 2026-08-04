@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useTheme } from 'next-themes';
-import { expect } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 
 import { Button } from '@vhnam/ui/components/button';
 
@@ -40,8 +40,12 @@ function ThemeToggleDemo() {
 export const Default: Story = {
   render: () => <ThemeToggleDemo />,
   play: async ({ canvas, userEvent }) => {
-    await expect(canvas.getByText(/Current theme: light/)).toBeVisible();
+    // `theme` is seeded from localStorage on mount, which persists across
+    // story runs in the same browser session — force a known state instead
+    // of assuming the initial render reflects the `light` default.
+    await userEvent.click(canvas.getByRole('button', { name: 'Light' }));
+    await waitFor(() => expect(canvas.getByText(/Current theme: light/)).toBeVisible());
     await userEvent.click(canvas.getByRole('button', { name: 'Dark' }));
-    await expect(canvas.getByText(/Current theme: dark/)).toBeVisible();
+    await waitFor(() => expect(canvas.getByText(/Current theme: dark/)).toBeVisible());
   },
 };

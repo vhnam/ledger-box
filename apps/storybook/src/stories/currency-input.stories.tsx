@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useState, type ComponentProps } from 'react';
+import { useRef, useState, type ComponentProps } from 'react';
 import { expect } from 'storybook/test';
 
 import { CurrencyInput } from '@vhnam/ui/components/currency-input';
@@ -34,6 +34,49 @@ export const Default: Story = {
     await userEvent.clear(input);
     await userEvent.type(input, '1234567');
     await expect(input).toHaveValue('1.234.567');
+    await userEvent.clear(input);
+    await userEvent.type(input, '000123');
+    await expect(input).toHaveValue('123');
+    await userEvent.clear(input);
+    await userEvent.type(input, '0');
+    await expect(input).toHaveValue('0');
+    await userEvent.clear(input);
+    await userEvent.type(input, '1,5');
+    await expect(input).toHaveValue('15');
+    await userEvent.clear(input);
+    await expect(input).toHaveValue('');
+  },
+};
+
+export const RefCallback: Story = {
+  render: () => {
+    function CurrencyInputRefDemo() {
+      const [value, setValue] = useState('');
+      const lastNode = useRef<HTMLInputElement | null>(null);
+
+      return (
+        <CurrencyInput
+          value={value}
+          onValueChange={setValue}
+          placeholder="Enter amount"
+          ref={(node) => {
+            lastNode.current = node;
+          }}
+        />
+      );
+    }
+
+    return <CurrencyInputRefDemo />;
+  },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByPlaceholderText('Enter amount')).toBeVisible();
+  },
+};
+
+export const InvalidRawValue: Story = {
+  render: () => <CurrencyInput value="abc" onValueChange={() => {}} placeholder="Enter amount" />,
+  play: async ({ canvas }) => {
+    await expect(canvas.getByPlaceholderText('Enter amount')).toHaveValue('');
   },
 };
 
