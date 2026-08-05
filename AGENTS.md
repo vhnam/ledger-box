@@ -163,6 +163,9 @@ File-based, named `000N_short_description`. Current set:
 - `0005_create_wallet_statement_share`
 - `0006_add_wallet_member_user_lookup_index`
 - `0007_create_wallet_activity_log`
+- `0008_add_wallet_member_invite_token`
+- `0009_add_wallet_currency`
+- `0010_create_user_settings`
 
 Add new migrations; **never edit one that has been merged**. Migrations run forward with
 `pnpm --filter @vhnam/ledger-box db:migrate` and back with `db:migrate:down`. There is no
@@ -194,6 +197,7 @@ Netlify Functions under `/api/*`, in `apps/ledger-box/netlify/functions`.
 | `DELETE` `/api/wallets/:walletId/statement-shares/:shareId`                | Revoke a share link                                       |
 | `GET` `/api/wallets/:walletId/activity`                                    | Owner-only paginated wallet activity log                  |
 | `GET` `/api/public/statements/:token`                                      | Public, unauthenticated statement snapshot (rate limited) |
+| `GET` `PATCH` `/api/users/locale`                                          | Read/update the signed-in user's locale preference        |
 
 Attachment uploads accept PDF, PNG, JPG, JPEG, WEBP up to 10 MB. Images are resized
 client-side (2048px max, JPEG compression) before upload.

@@ -1,3 +1,5 @@
+import { FormattedMessage } from 'react-intl';
+
 import { Icon, type IconName } from '@vhnam/ui/components/icon';
 import { useTheme } from '@vhnam/ui/hooks/use-theme';
 import { cn } from '@vhnam/ui/lib/utils';
@@ -6,13 +8,32 @@ type Theme = 'dark' | 'light' | 'system';
 
 const themeOptions: {
   value: Theme;
-  label: string;
+  labelId: string;
+  defaultLabel: string;
   icon: IconName;
   preview: [string, string, string];
 }[] = [
-  { value: 'light', label: 'Light', icon: 'SunIcon', preview: ['bg-gray-100', 'bg-white', 'bg-gray-200'] },
-  { value: 'system', label: 'System', icon: 'DesktopIcon', preview: ['bg-gray-300', 'bg-gray-100', 'bg-gray-400'] },
-  { value: 'dark', label: 'Dark', icon: 'MoonIcon', preview: ['bg-zinc-900', 'bg-zinc-800', 'bg-zinc-700'] },
+  {
+    value: 'light',
+    labelId: 'settings.appearance.theme.light',
+    defaultLabel: 'Light',
+    icon: 'SunIcon',
+    preview: ['bg-gray-100', 'bg-white', 'bg-gray-200'],
+  },
+  {
+    value: 'system',
+    labelId: 'settings.appearance.theme.system',
+    defaultLabel: 'System',
+    icon: 'DesktopIcon',
+    preview: ['bg-gray-300', 'bg-gray-100', 'bg-gray-400'],
+  },
+  {
+    value: 'dark',
+    labelId: 'settings.appearance.theme.dark',
+    defaultLabel: 'Dark',
+    icon: 'MoonIcon',
+    preview: ['bg-zinc-900', 'bg-zinc-800', 'bg-zinc-700'],
+  },
 ];
 
 function ThemePreview({ preview }: { preview: [string, string, string] }) {
@@ -26,7 +47,8 @@ function ThemePreview({ preview }: { preview: [string, string, string] }) {
 
 function ThemeOption({
   value,
-  label,
+  labelId,
+  defaultLabel,
   icon,
   preview,
   selected,
@@ -49,7 +71,9 @@ function ThemeOption({
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center gap-1.5">
           <Icon name={icon} className="size-3.5 text-muted-foreground" />
-          <span className="text-xs font-medium">{label}</span>
+          <span className="text-xs font-medium">
+            <FormattedMessage id={labelId} defaultMessage={defaultLabel} />
+          </span>
         </div>
         {selected && (
           <div className="flex size-3.5 items-center justify-center rounded-full bg-foreground">
@@ -67,8 +91,12 @@ function SettingsAppearance() {
   return (
     <div className="flex flex-col gap-4 px-4">
       <div className="flex flex-col gap-1">
-        <h2 className="font-heading text-lg font-medium">Appearance</h2>
-        <p className="text-sm text-muted-foreground">Choose your preferred color theme.</p>
+        <h2 className="font-heading text-lg font-medium">
+          <FormattedMessage id="settings.appearance.title" defaultMessage="Appearance" />
+        </h2>
+        <p className="text-sm text-muted-foreground">
+          <FormattedMessage id="settings.appearance.description" defaultMessage="Choose your preferred color theme." />
+        </p>
       </div>
       <div className="grid grid-cols-3 gap-3">
         {themeOptions.map((option) => (

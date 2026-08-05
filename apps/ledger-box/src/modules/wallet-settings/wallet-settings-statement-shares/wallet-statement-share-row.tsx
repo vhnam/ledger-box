@@ -4,6 +4,7 @@ import { Icon } from '@vhnam/ui/components/icon';
 
 import { formatDate, formatRelative } from '@vhnam/utils/date';
 
+import { useAppLocale } from '#/lib/locale-context';
 import type { StatementShareDto } from '#/queries/statement-shares/statement-share.dto';
 
 type WalletStatementShareRowProps = {
@@ -26,6 +27,7 @@ function getStatusLabel(share: StatementShareDto): { label: string; variant: 'de
 
 function WalletStatementShareRow({ walletId, share, onRevoke }: WalletStatementShareRowProps) {
   const status = getStatusLabel(share);
+  const locale = useAppLocale();
 
   return (
     <li className="flex items-center justify-between gap-3 py-3">
@@ -35,10 +37,10 @@ function WalletStatementShareRow({ walletId, share, onRevoke }: WalletStatementS
           <Badge variant={status.variant}>{status.label}</Badge>
         </div>
         <p className="text-xs text-muted-foreground">
-          {formatDate(share.periodFrom)} – {formatDate(share.periodTo)}
+          {formatDate(share.periodFrom, undefined, locale)} – {formatDate(share.periodTo, undefined, locale)}
         </p>
         <p className="text-xs text-muted-foreground">
-          {share.lastAccessedAt ? `Last viewed ${formatRelative(share.lastAccessedAt)}` : 'Not yet viewed'} ·{' '}
+          {share.lastAccessedAt ? `Last viewed ${formatRelative(share.lastAccessedAt, locale)}` : 'Not yet viewed'} ·{' '}
           {share.accessCount} view{share.accessCount === 1 ? '' : 's'}
         </p>
       </div>

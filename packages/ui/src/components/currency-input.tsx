@@ -14,6 +14,7 @@ import { cn } from '#/lib/utils';
 type CurrencyInputProps = Omit<React.ComponentProps<'input'>, 'defaultValue' | 'onChange' | 'type' | 'value'> & {
   value?: string;
   currency?: string;
+  locale?: string;
   onValueChange?: (value: string) => void;
 };
 
@@ -32,10 +33,18 @@ function mergeRefs<T>(...refs: Array<React.Ref<T> | undefined>) {
   };
 }
 
-function CurrencyInput({ className, currency = 'VND', onValueChange, ref, value = '', ...props }: CurrencyInputProps) {
+function CurrencyInput({
+  className,
+  currency = 'VND',
+  locale = DEFAULT_CURRENCY_LOCALE,
+  onValueChange,
+  ref,
+  value = '',
+  ...props
+}: CurrencyInputProps) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const caretPositionRef = React.useRef<number | null>(null);
-  const inputOptions = { locale: DEFAULT_CURRENCY_LOCALE, maximumFractionDigits: getCurrencyFractionDigits(currency) };
+  const inputOptions = { locale, maximumFractionDigits: getCurrencyFractionDigits(currency) };
   const displayValue = formatCurrencyInput(value, inputOptions);
 
   React.useLayoutEffect(() => {

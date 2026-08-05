@@ -7,6 +7,7 @@ import { ThemeProvider } from '@vhnam/ui/components/theme-provider';
 import { Toaster } from '@vhnam/ui/components/toast';
 import { TooltipProvider } from '@vhnam/ui/components/tooltip';
 
+import { LocaleProvider } from '#/lib/locale-context';
 import { routeTree } from '#/routeTree.gen';
 
 import './style.css';
@@ -27,10 +28,12 @@ createRoot(document.getElementById('app')!).render(
   <StrictMode>
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <RouterProvider router={router} />
-          <Toaster />
-        </TooltipProvider>
+        <LocaleProvider>
+          <TooltipProvider>
+            <RouterProvider router={router} />
+            <Toaster />
+          </TooltipProvider>
+        </LocaleProvider>
       </QueryClientProvider>
     </ThemeProvider>
   </StrictMode>,

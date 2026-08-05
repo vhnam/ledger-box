@@ -1,5 +1,7 @@
 import type { Config, Context } from '@netlify/functions';
 
+import { parseAcceptLanguage } from '@vhnam/utils/locale';
+
 import { db } from '#/lib/db/index.ts';
 import { hashShareToken } from '#/lib/share-token.ts';
 import { buildStatementCsvFilename, encodeStatementCsv } from '#/lib/statement-export.ts';
@@ -97,8 +99,9 @@ export default async (request: Request, context: Context) => {
   if (format === 'csv') {
     const snapshot = share.snapshotJson as StatementSnapshot;
     const filename = buildStatementCsvFilename(snapshot, share.displayTitle ?? 'statement');
+    const locale = parseAcceptLanguage(request.headers.get('accept-language'));
 
-    return new Response(encodeStatementCsv(snapshot, share.displayTitle), {
+    return new Response(encodeStatementCsv(snapshot, share.displayTitle, { locale }), {
       headers: {
         'Content-Type': 'text/csv; charset=utf-8',
         'Content-Disposition': `attachment; filename="${filename}"`,

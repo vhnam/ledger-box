@@ -81,6 +81,14 @@ export interface WalletStatementShareTable {
   createdAt: Generated<ColumnType<Date, Date | string, Date | string>>;
 }
 
+export interface UserSettingsTable {
+  id: Generated<string>;
+  tenantId: string;
+  locale: string;
+  createdAt: ColumnType<Date, Date | string, Date | string>;
+  updatedAt: ColumnType<Date, Date | string, Date | string>;
+}
+
 export interface WalletActivityLogTable {
   id: Generated<string>;
   walletId: string;
@@ -106,6 +114,7 @@ export interface Database {
   transaction: TransactionTable;
   walletStatementShare: WalletStatementShareTable;
   walletActivityLog: WalletActivityLogTable;
+  userSettings: UserSettingsTable;
 }
 
 export type Wallet = Selectable<WalletTable>;
@@ -126,3 +135,7 @@ export type WalletStatementShareUpdate = Updateable<WalletStatementShareTable>;
 
 export type WalletActivityLog = Selectable<WalletActivityLogTable>;
 export type NewWalletActivityLog = Insertable<WalletActivityLogTable>;
+
+export type UserSettings = Selectable<UserSettingsTable>;
+export type NewUserSettings = Insertable<UserSettingsTable>;
+export type UserSettingsUpdate = Updateable<UserSettingsTable>;

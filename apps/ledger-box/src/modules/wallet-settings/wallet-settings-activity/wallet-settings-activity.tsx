@@ -7,8 +7,10 @@ import { Spinner } from '@vhnam/ui/components/spinner';
 
 import { formatCurrency } from '@vhnam/utils/currency';
 import { formatDateTime } from '@vhnam/utils/date';
+import type { SupportedLocale } from '@vhnam/utils/locale';
 
 import { AppPagination } from '#/components/app-pagination';
+import { useAppLocale } from '#/lib/locale-context';
 import { getPageItems } from '#/lib/pagination';
 import type { ActivityLogItemDto } from '#/queries/activity/activity.dto';
 import { useWalletActivity } from '#/queries/activity/activity.queries';
@@ -80,7 +82,15 @@ function entitySummary(item: ActivityLogItemDto): string {
   return item.entityId;
 }
 
-function ActivityRow({ item, currency }: { item: ActivityLogItemDto; currency: string }) {
+function ActivityRow({
+  item,
+  currency,
+  locale,
+}: {
+  item: ActivityLogItemDto;
+  currency: string;
+  locale: SupportedLocale;
+}) {
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -93,9 +103,9 @@ function ActivityRow({ item, currency }: { item: ActivityLogItemDto; currency: s
           </div>
           <p className="truncate text-sm text-muted-foreground">{entitySummary(item)}</p>
           <p className="text-xs text-muted-foreground">
-            {item.actorEmail} · {formatDateTime(item.createdAt)}
+            {item.actorEmail} · {formatDateTime(item.createdAt, undefined, locale)}
             {item.walletAmountDelta != null && item.walletAmountDelta !== 0
-              ? ` · ${formatCurrency(item.walletAmountDelta, { currency })}`
+              ? ` · ${formatCurrency(item.walletAmountDelta, { currency, locale })}`
               : null}
           </p>
         </div>
@@ -117,6 +127,7 @@ function ActivityRow({ item, currency }: { item: ActivityLogItemDto; currency: s
 
 function WalletSettingsActivity({ walletId, currency }: WalletSettingsActivityProps) {
   const [page, setPage] = useState(1);
+  const locale = useAppLocale();
   const { data, isPending, isError } = useWalletActivity(walletId, page, true);
   const totalPages = data ? Math.max(1, Math.ceil(data.total / data.pageSize)) : 1;
   const pageItems = useMemo(() => getPageItems(page, totalPages), [page, totalPages]);
@@ -152,7 +163,7 @@ function WalletSettingsActivity({ walletId, currency }: WalletSettingsActivityPr
         <>
           <ul className="divide-y">
             {data.items.map((item) => (
-              <ActivityRow key={item.id} item={item} currency={currency} />
+              <ActivityRow key={item.id} item={item} currency={currency} locale={locale} />
             ))}
           </ul>
           {totalPages > 1 ? (

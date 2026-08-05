@@ -159,13 +159,14 @@ export function resolvePeriodBounds(
   }
 }
 
-/** Formats a UTC instant as a calendar date/time string in `timezone`. */
+/** Formats a UTC instant as a calendar date/time string in `timezone`, for the given viewer `locale`. */
 export function formatDateInTimezone(
   date: Date,
   timezone: string,
+  locale: string = 'en-US',
   pattern: Intl.DateTimeFormatOptions = { dateStyle: 'medium' },
 ): string {
-  return new Intl.DateTimeFormat('en-US', { ...pattern, timeZone: timezone }).format(date);
+  return new Intl.DateTimeFormat(locale, { ...pattern, timeZone: timezone }).format(date);
 }
 
 export type { PeriodBounds };

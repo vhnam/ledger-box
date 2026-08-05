@@ -4,6 +4,7 @@ import { cn } from '@vhnam/ui/lib/utils';
 
 import { formatCurrency } from '@vhnam/utils/currency';
 
+import { useAppLocale } from '#/lib/locale-context';
 import { useWalletSummary } from '#/modules/wallets/wallet-summary/wallet-summary.actions';
 import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
 import { useWallets } from '#/queries/wallets/wallet.queries';
@@ -54,7 +55,15 @@ type WalletSummaryProps = {
   transactionQuery: Omit<TransactionQueryParams, 'page' | 'pageSize'>;
 };
 
-function WalletSummaryStatCard({ stat, currency }: { stat: WalletSummaryStat; currency: string }) {
+function WalletSummaryStatCard({
+  stat,
+  currency,
+  locale,
+}: {
+  stat: WalletSummaryStat;
+  currency: string;
+  locale: string;
+}) {
   const isNegative = stat.highlightWhenNegative === true && stat.value < 0;
   const styles = isNegative ? { ...toneStyles[stat.tone], ...negativeTextStyles } : toneStyles[stat.tone];
 
@@ -72,7 +81,7 @@ function WalletSummaryStatCard({ stat, currency }: { stat: WalletSummaryStat; cu
       <div>
         <p className={cn('mb-0.5 text-xs', styles.label)}>{stat.label}</p>
         <p className={cn('font-mono truncate text-sm font-semibold leading-tight md:text-base', styles.value)}>
-          {formatCurrency(stat.value, { currency })}
+          {formatCurrency(stat.value, { currency, locale })}
         </p>
       </div>
     </div>
@@ -82,6 +91,7 @@ function WalletSummaryStatCard({ stat, currency }: { stat: WalletSummaryStat; cu
 function WalletSummary({ walletId, transactionQuery }: WalletSummaryProps) {
   const { data: wallets = [] } = useWallets();
   const currency = wallets.find((wallet) => wallet.id === walletId)?.currency ?? 'VND';
+  const locale = useAppLocale();
   const { stats, isPending, isError } = useWalletSummary({ walletId, transactionQuery });
 
   if (isPending) {
@@ -127,7 +137,7 @@ function WalletSummary({ walletId, transactionQuery }: WalletSummaryProps) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 md:gap-3 mb-4 md:mb-6">
       {walletSummaryStats.map((stat) => (
-        <WalletSummaryStatCard key={stat.label} stat={stat} currency={currency} />
+        <WalletSummaryStatCard key={stat.label} stat={stat} currency={currency} locale={locale} />
       ))}
     </div>
   );

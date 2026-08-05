@@ -13,11 +13,13 @@ import { cn } from '@vhnam/ui/lib/utils';
 
 import { formatCurrency } from '@vhnam/utils/currency';
 
+import { useAppLocale } from '#/lib/locale-context';
 import { useWallets } from '#/queries/wallets/wallet.queries';
 
 function AppSidebarWallets(props: ComponentProps<typeof SidebarGroup>) {
   const { data: wallets, isPending } = useWallets();
   const { walletId } = useParams({ strict: false });
+  const locale = useAppLocale();
 
   if (isPending) {
     return (
@@ -66,7 +68,7 @@ function AppSidebarWallets(props: ComponentProps<typeof SidebarGroup>) {
                           wallet.amount >= 0 ? 'text-emerald-400' : 'text-rose-400',
                         )}
                       >
-                        {formatCurrency(wallet.amount, { currency: wallet.currency })}
+                        {formatCurrency(wallet.amount, { currency: wallet.currency, locale })}
                       </span>
                     </div>
                   </Link>

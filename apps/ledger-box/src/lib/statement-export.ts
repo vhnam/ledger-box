@@ -45,7 +45,23 @@ function formatPeriodLabel(snapshot: StatementSnapshot): string {
   return `${formatCsvDate(snapshot.periodFrom, snapshot.timezone)} to ${formatCsvDate(snapshot.periodTo, snapshot.timezone)}`;
 }
 
-export function encodeStatementCsv(snapshot: StatementSnapshot, displayTitle: string | null): string {
+type EncodeStatementCsvOptions = {
+  /**
+   * Reserved for the viewer's detected locale. Not currently applied to numeric/date
+   * cells: those are deliberately locale-*independent* (`en-CA` for ISO-sortable dates,
+   * unlocalized `toFixed` for amounts) so the CSV stays machine-parseable by spreadsheet
+   * tools regardless of viewer — a locale-grouped number (e.g. `fr-FR`'s space/comma
+   * separators) would corrupt the unescaped, comma-delimited numeric/date columns.
+   */
+  locale?: string;
+};
+
+export function encodeStatementCsv(
+  snapshot: StatementSnapshot,
+  displayTitle: string | null,
+  // Accepted for API forward-compatibility; see `EncodeStatementCsvOptions` for why it's unused today.
+  _options: EncodeStatementCsvOptions = {},
+): string {
   const lines: string[] = [];
 
   lines.push(`Statement,${escapeCsvField(displayTitle ?? 'Account statement')}`);
