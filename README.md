@@ -23,9 +23,9 @@ Ledger Box gives you three ways to answer that:
   numbers are frozen at the moment you generate it, so what they see today is what they'll
   see next month.
 
-> _[Screenshot: wallet page]_
->
-> _[Screenshot: shared statement]_
+![Screenshot: wallet page](docs/screenshots/wallet-page.png)
+
+![Screenshot: shared statement](docs/screenshots/shared-statement.png)
 
 ## Features
 
