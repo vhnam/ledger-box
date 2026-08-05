@@ -13,6 +13,7 @@
     "db:migrate": "tsx --env-file ../../.env.dev scripts/migrate.ts up",
     "db:migrate:down": "tsx --env-file ../../.env.dev scripts/migrate.ts down",
     "preview:email": "tsx scripts/preview-email.tsx",
+    "db:seed": "tsx --env-file ../../.env.dev scripts/seed.ts",
     "test": "vp test run"
   },
   "dependencies": {
