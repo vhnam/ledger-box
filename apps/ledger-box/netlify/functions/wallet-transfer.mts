@@ -77,6 +77,10 @@ export default async (request: Request) => {
   const fromWallet = fromAccess.wallet;
   const toWallet = toAccess.wallet;
 
+  if (fromWallet.currency !== toWallet.currency) {
+    return new Response('Cannot transfer between wallets with different currencies', { status: 400 });
+  }
+
   const description = buildTransferDescription(fromWallet.name, toWallet.name, note);
   const now = new Date();
   // Matches the add-transaction default rule: current instant unless the user picks a date,

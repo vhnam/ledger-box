@@ -22,6 +22,7 @@ export interface WalletTable {
   tenantId: string;
   name: string;
   amount: number;
+  currency: Generated<string>;
   /** IANA timezone name; authoritative zone for all calendar-day/month period boundaries. */
   timezone: Generated<string>;
   createdAt: ColumnType<Date, Date | string, Date | string>;

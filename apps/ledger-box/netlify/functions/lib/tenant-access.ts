@@ -14,6 +14,7 @@ type OwnedWallet = {
   tenantId: string;
   name: string;
   amount: number;
+  currency: string;
   timezone: string;
 };
 
@@ -50,7 +51,7 @@ function getTenantId(session: SessionLike): string {
 async function findOwnedWallet(tenantId: string, walletId: string): Promise<OwnedWallet | undefined> {
   return db
     .selectFrom('wallet')
-    .select(['id', 'tenantId', 'name', 'amount', 'timezone'])
+    .select(['id', 'tenantId', 'name', 'amount', 'currency', 'timezone'])
     .where('id', '=', walletId)
     .where('tenantId', '=', tenantId)
     .where('deletedAt', 'is', null)
@@ -109,7 +110,7 @@ async function requireWalletAccess(
 ): Promise<WalletAccessResult> {
   const wallet = await db
     .selectFrom('wallet')
-    .select(['id', 'tenantId', 'name', 'amount', 'timezone'])
+    .select(['id', 'tenantId', 'name', 'amount', 'currency', 'timezone'])
     .where('id', '=', walletId)
     .where('deletedAt', 'is', null)
     .executeTakeFirst();
@@ -222,14 +223,22 @@ async function findAccessibleWallets(tenantId: string, sessionEmail: string): Pr
 
   const owned = db
     .selectFrom('wallet')
-    .select(['id', 'tenantId', 'name', 'amount', 'timezone', sql<WalletAccessRole>`'owner'`.as('role')])
+    .select(['id', 'tenantId', 'name', 'amount', 'currency', 'timezone', sql<WalletAccessRole>`'owner'`.as('role')])
     .where('tenantId', '=', tenantId)
     .where('deletedAt', 'is', null);
 
   const member = db
     .selectFrom('wallet')
     .innerJoin('walletMember', 'walletMember.walletId', 'wallet.id')
-    .select(['wallet.id', 'wallet.tenantId', 'wallet.name', 'wallet.amount', 'wallet.timezone', 'walletMember.role'])
+    .select([
+      'wallet.id',
+      'wallet.tenantId',
+      'wallet.name',
+      'wallet.amount',
+      'wallet.currency',
+      'wallet.timezone',
+      'walletMember.role',
+    ])
     .where('wallet.deletedAt', 'is', null)
     .where('walletMember.deletedAt', 'is', null)
     .where('walletMember.status', 'in', ['active', 'pending'])

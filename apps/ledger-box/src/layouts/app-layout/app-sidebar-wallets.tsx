@@ -66,7 +66,7 @@ function AppSidebarWallets(props: ComponentProps<typeof SidebarGroup>) {
                           wallet.amount >= 0 ? 'text-emerald-400' : 'text-rose-400',
                         )}
                       >
-                        {formatCurrency(wallet.amount)}
+                        {formatCurrency(wallet.amount, { currency: wallet.currency })}
                       </span>
                     </div>
                   </Link>

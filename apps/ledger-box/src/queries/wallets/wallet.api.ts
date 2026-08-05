@@ -9,6 +9,7 @@ interface WalletResponseDto {
   id: string;
   name: string;
   amount: number;
+  currency: string;
   role: WalletDto['role'];
 }
 

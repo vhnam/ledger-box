@@ -13,6 +13,7 @@ type StatementRow = {
 
 type StatementSnapshot = {
   timezone: string;
+  currency: string;
   periodFrom: string | null;
   periodTo: string | null;
   snapshotAt: string;
@@ -46,7 +47,7 @@ export async function buildStatement(
 ): Promise<StatementSnapshot> {
   const wallet = await db
     .selectFrom('wallet')
-    .select(['amount', 'deletedAt'])
+    .select(['amount', 'currency', 'deletedAt'])
     .where('id', '=', walletId)
     .executeTakeFirst();
 
@@ -116,6 +117,7 @@ export async function buildStatement(
 
   return {
     timezone,
+    currency: wallet.currency,
     periodFrom: bounds ? bounds.start.toISOString() : null,
     periodTo: bounds ? bounds.endExclusive.toISOString() : null,
     snapshotAt: new Date().toISOString(),

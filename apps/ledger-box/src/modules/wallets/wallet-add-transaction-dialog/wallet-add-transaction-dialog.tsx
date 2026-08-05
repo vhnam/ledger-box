@@ -23,6 +23,7 @@ interface AddTransactionDialogProps {
 
 function AddTransactionDialog({ open, onOpenChange, walletId }: AddTransactionDialogProps) {
   const { data: wallets = [] } = useWallets();
+  const currency = wallets.find((wallet) => wallet.id === walletId)?.currency ?? 'VND';
   const { form, handleOpenChange, handleAddTransaction, isPending, error } = useAddTransactionDialogActions({
     open,
     walletId,
@@ -108,6 +109,7 @@ function AddTransactionDialog({ open, onOpenChange, walletId }: AddTransactionDi
                 <CurrencyInput
                   id={field.props.name}
                   value={field.input ?? ''}
+                  currency={currency}
                   aria-invalid={!!field.errors}
                   placeholder="Enter the amount"
                   name={field.props.name}

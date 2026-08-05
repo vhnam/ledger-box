@@ -23,7 +23,7 @@ function WalletHeader({ wallet }: WalletHeaderProps) {
               wallet.amount >= 0 ? 'text-muted-foreground' : 'text-rose-400',
             )}
           >
-            New balance: {formatCurrency(wallet.amount)}
+            New balance: {formatCurrency(wallet.amount, { currency: wallet.currency })}
           </p>
         </div>
       </div>

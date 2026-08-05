@@ -90,7 +90,11 @@ export default async (request: Request, context: Context) => {
     return access.error;
   }
 
-  const body = (await request.json()) as { name?: unknown };
+  const body = (await request.json()) as { name?: unknown; currency?: unknown };
+
+  if ('currency' in body) {
+    return new Response('Currency cannot be changed after wallet creation', { status: 400 });
+  }
 
   if (typeof body.name !== 'string' || body.name.trim().length === 0) {
     return new Response('Wallet name is required', { status: 400 });
@@ -108,7 +112,7 @@ export default async (request: Request, context: Context) => {
       })
       .where('id', '=', walletId)
       .where('deletedAt', 'is', null)
-      .returning(['id', 'name', 'amount'])
+      .returning(['id', 'name', 'amount', 'currency'])
       .executeTakeFirstOrThrow();
 
     await recordActivity(trx, {

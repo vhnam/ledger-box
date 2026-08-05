@@ -39,19 +39,27 @@ function StatementSnapshotView({ snapshot }: StatementSnapshotViewProps) {
       <div className="grid grid-cols-2 gap-4 rounded-xl border bg-muted/30 p-4 sm:grid-cols-4">
         <div>
           <p className="text-xs text-muted-foreground">Opening</p>
-          <p className="font-mono text-sm font-medium">{formatCurrency(snapshot.openingBalance)}</p>
+          <p className="font-mono text-sm font-medium">
+            {formatCurrency(snapshot.openingBalance, { currency: snapshot.currency })}
+          </p>
         </div>
         <div>
           <p className="text-xs text-muted-foreground">Closing</p>
-          <p className="font-mono text-sm font-medium">{formatCurrency(snapshot.closingBalance)}</p>
+          <p className="font-mono text-sm font-medium">
+            {formatCurrency(snapshot.closingBalance, { currency: snapshot.currency })}
+          </p>
         </div>
         <div>
           <p className="text-xs text-muted-foreground">Total in</p>
-          <p className="font-mono text-sm font-medium text-emerald-600">{formatCurrency(snapshot.totalIn)}</p>
+          <p className="font-mono text-sm font-medium text-emerald-600">
+            {formatCurrency(snapshot.totalIn, { currency: snapshot.currency })}
+          </p>
         </div>
         <div>
           <p className="text-xs text-muted-foreground">Total out</p>
-          <p className="font-mono text-sm font-medium text-rose-600">{formatCurrency(snapshot.totalOut)}</p>
+          <p className="font-mono text-sm font-medium text-rose-600">
+            {formatCurrency(snapshot.totalOut, { currency: snapshot.currency })}
+          </p>
         </div>
       </div>
 
@@ -71,9 +79,11 @@ function StatementSnapshotView({ snapshot }: StatementSnapshotViewProps) {
                     row.type === 'income' ? 'font-mono text-sm text-emerald-600' : 'font-mono text-sm text-rose-600'
                   }
                 >
-                  {formatSignedCurrency(row.amount, row.type)}
+                  {formatSignedCurrency(row.amount, row.type, { currency: snapshot.currency })}
                 </p>
-                <p className="text-xs text-muted-foreground">{formatCurrency(row.runningBalance)}</p>
+                <p className="text-xs text-muted-foreground">
+                  {formatCurrency(row.runningBalance, { currency: snapshot.currency })}
+                </p>
               </div>
             </div>
           ))

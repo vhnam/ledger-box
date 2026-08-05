@@ -29,7 +29,9 @@ function TransferMoneyDialog({ open, onOpenChange, walletId }: TransferMoneyDial
     () => walletOptions.filter((option) => option.value !== walletId),
     [walletId, walletOptions],
   );
-  const fromWalletName = wallets.find((wallet) => wallet.id === walletId)?.name ?? '';
+  const fromWallet = wallets.find((wallet) => wallet.id === walletId);
+  const fromWalletName = fromWallet?.name ?? '';
+  const fromWalletCurrency = fromWallet?.currency ?? 'VND';
   const { form, handleOpenChange, handleTransfer, isPending, error } = useTransferMoneyDialogActions({
     open,
     walletId,
@@ -123,6 +125,7 @@ function TransferMoneyDialog({ open, onOpenChange, walletId }: TransferMoneyDial
                 <CurrencyInput
                   id={field.props.name}
                   value={field.input ?? ''}
+                  currency={fromWalletCurrency}
                   aria-invalid={!!field.errors}
                   placeholder="Enter the amount"
                   name={field.props.name}

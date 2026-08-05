@@ -1,3 +1,5 @@
+import { getCurrencyFractionDigits } from '@vhnam/utils/currency';
+
 import type { StatementSnapshot } from '#/lib/statement';
 
 const CSV_BOM = '﻿';
@@ -14,8 +16,8 @@ function escapeCsvField(value: string): string {
   return guarded;
 }
 
-function formatCsvAmount(amount: number): string {
-  return amount.toFixed(0);
+function formatCsvAmount(amount: number, currency: string): string {
+  return amount.toFixed(getCurrencyFractionDigits(currency));
 }
 
 function formatCsvDate(isoValue: string | null, timezone: string): string {
@@ -49,11 +51,12 @@ export function encodeStatementCsv(snapshot: StatementSnapshot, displayTitle: st
   lines.push(`Statement,${escapeCsvField(displayTitle ?? 'Account statement')}`);
   lines.push(`Period,${escapeCsvField(formatPeriodLabel(snapshot))}`);
   lines.push(`Timezone,${escapeCsvField(snapshot.timezone)}`);
+  lines.push(`Currency,${escapeCsvField(snapshot.currency)}`);
   lines.push(`Generated at,${escapeCsvField(formatCsvDate(snapshot.snapshotAt, snapshot.timezone))}`);
-  lines.push(`Opening balance,${formatCsvAmount(snapshot.openingBalance)}`);
-  lines.push(`Closing balance,${formatCsvAmount(snapshot.closingBalance)}`);
-  lines.push(`Total in,${formatCsvAmount(snapshot.totalIn)}`);
-  lines.push(`Total out,${formatCsvAmount(snapshot.totalOut)}`);
+  lines.push(`Opening balance,${formatCsvAmount(snapshot.openingBalance, snapshot.currency)}`);
+  lines.push(`Closing balance,${formatCsvAmount(snapshot.closingBalance, snapshot.currency)}`);
+  lines.push(`Total in,${formatCsvAmount(snapshot.totalIn, snapshot.currency)}`);
+  lines.push(`Total out,${formatCsvAmount(snapshot.totalOut, snapshot.currency)}`);
   lines.push('');
   lines.push('Date,Description,Type,Amount,Running balance');
 
@@ -65,8 +68,8 @@ export function encodeStatementCsv(snapshot: StatementSnapshot, displayTitle: st
         formatCsvDate(row.occurredAt, snapshot.timezone),
         escapeCsvField(row.description),
         row.type,
-        formatCsvAmount(signedAmount),
-        formatCsvAmount(row.runningBalance),
+        formatCsvAmount(signedAmount, snapshot.currency),
+        formatCsvAmount(row.runningBalance, snapshot.currency),
       ].join(','),
     );
   }

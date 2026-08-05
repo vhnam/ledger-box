@@ -20,7 +20,7 @@ function WalletSettingsActivityRoute({ walletId }: WalletSettingsActivityRoutePr
     return <Navigate to="/wallets/$walletId/settings/general" params={{ walletId }} replace />;
   }
 
-  return <WalletSettingsActivity walletId={walletPreview.id} />;
+  return <WalletSettingsActivity walletId={walletPreview.id} currency={walletPreview.currency} />;
 }
 
 export { WalletSettingsActivityRoute };

@@ -28,6 +28,7 @@ export type StatementRowDto = {
 
 export type StatementSnapshotDto = {
   timezone: string;
+  currency: string;
   periodFrom: string | null;
   periodTo: string | null;
   snapshotAt: string;

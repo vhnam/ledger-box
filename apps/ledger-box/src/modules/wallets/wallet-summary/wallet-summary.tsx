@@ -6,6 +6,7 @@ import { formatCurrency } from '@vhnam/utils/currency';
 
 import { useWalletSummary } from '#/modules/wallets/wallet-summary/wallet-summary.actions';
 import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
+import { useWallets } from '#/queries/wallets/wallet.queries';
 
 type WalletSummaryTone = 'income' | 'expense' | 'neutral';
 
@@ -53,7 +54,7 @@ type WalletSummaryProps = {
   transactionQuery: Omit<TransactionQueryParams, 'page' | 'pageSize'>;
 };
 
-function WalletSummaryStatCard({ stat }: { stat: WalletSummaryStat }) {
+function WalletSummaryStatCard({ stat, currency }: { stat: WalletSummaryStat; currency: string }) {
   const isNegative = stat.highlightWhenNegative === true && stat.value < 0;
   const styles = isNegative ? { ...toneStyles[stat.tone], ...negativeTextStyles } : toneStyles[stat.tone];
 
@@ -71,7 +72,7 @@ function WalletSummaryStatCard({ stat }: { stat: WalletSummaryStat }) {
       <div>
         <p className={cn('mb-0.5 text-xs', styles.label)}>{stat.label}</p>
         <p className={cn('font-mono truncate text-sm font-semibold leading-tight md:text-base', styles.value)}>
-          {formatCurrency(stat.value)}
+          {formatCurrency(stat.value, { currency })}
         </p>
       </div>
     </div>
@@ -79,6 +80,8 @@ function WalletSummaryStatCard({ stat }: { stat: WalletSummaryStat }) {
 }
 
 function WalletSummary({ walletId, transactionQuery }: WalletSummaryProps) {
+  const { data: wallets = [] } = useWallets();
+  const currency = wallets.find((wallet) => wallet.id === walletId)?.currency ?? 'VND';
   const { stats, isPending, isError } = useWalletSummary({ walletId, transactionQuery });
 
   if (isPending) {
@@ -124,7 +127,7 @@ function WalletSummary({ walletId, transactionQuery }: WalletSummaryProps) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 md:gap-3 mb-4 md:mb-6">
       {walletSummaryStats.map((stat) => (
-        <WalletSummaryStatCard key={stat.label} stat={stat} />
+        <WalletSummaryStatCard key={stat.label} stat={stat} currency={currency} />
       ))}
     </div>
   );

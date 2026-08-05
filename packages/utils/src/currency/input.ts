@@ -1,12 +1,13 @@
-import { DEFAULT_CURRENCY_LOCALE, DEFAULT_MAXIMUM_FRACTION_DIGITS } from './constants.ts';
+import { DEFAULT_CURRENCY_LOCALE } from './constants.ts';
 import type { FormatCurrencyOptions } from './types.ts';
+import { getCurrencyFractionDigits } from './utils.ts';
 
-type CurrencyInputFormatOptions = Pick<FormatCurrencyOptions, 'locale' | 'maximumFractionDigits'>;
+type CurrencyInputFormatOptions = Pick<FormatCurrencyOptions, 'currency' | 'locale' | 'maximumFractionDigits'>;
 
 function resolveCurrencyInputOptions(options: CurrencyInputFormatOptions = {}) {
   return {
     locale: options.locale ?? DEFAULT_CURRENCY_LOCALE,
-    maximumFractionDigits: options.maximumFractionDigits ?? DEFAULT_MAXIMUM_FRACTION_DIGITS,
+    maximumFractionDigits: options.maximumFractionDigits ?? getCurrencyFractionDigits(options.currency),
   };
 }
 
@@ -176,5 +177,5 @@ export function getCurrencyInputCaretPosition(
 
 export const DEFAULT_CURRENCY_INPUT_OPTIONS: CurrencyInputFormatOptions = {
   locale: DEFAULT_CURRENCY_LOCALE,
-  maximumFractionDigits: DEFAULT_MAXIMUM_FRACTION_DIGITS,
+  maximumFractionDigits: getCurrencyFractionDigits(),
 };

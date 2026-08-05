@@ -6,6 +6,7 @@ import { formatSignedCurrency } from '@vhnam/utils/currency';
 
 import { getTransactionAmountClassName } from '#/modules/wallets/wallet-transactions/wallet-transaction.actions';
 import type { TransactionDto } from '#/queries/transactions/transaction.dto';
+import { useWallets } from '#/queries/wallets/wallet.queries';
 
 type TransactionDialogHeaderProps = {
   transaction: TransactionDto;
@@ -22,6 +23,8 @@ function TransactionDialogHeader({
   bordered = false,
   className,
 }: TransactionDialogHeaderProps) {
+  const { data: wallets = [] } = useWallets();
+  const currency = wallets.find((wallet) => wallet.id === transaction.walletId)?.currency ?? 'VND';
   const isExpense = transaction.type === 'expense';
   const typeLabel = isExpense ? 'Expense' : 'Income';
 
@@ -67,7 +70,7 @@ function TransactionDialogHeader({
       </div>
 
       <p className={cn('mt-4 px-4 pb-4', getTransactionAmountClassName(transaction.type, 'xl'))}>
-        {formatSignedCurrency(transaction.amount, transaction.type, { notation: 'standard' })}
+        {formatSignedCurrency(transaction.amount, transaction.type, { notation: 'standard', currency })}
       </p>
     </div>
   );

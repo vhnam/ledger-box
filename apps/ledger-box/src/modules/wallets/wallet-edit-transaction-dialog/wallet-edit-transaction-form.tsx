@@ -18,9 +18,10 @@ type EditTransactionFormProps = Pick<
   'form' | 'isPending' | 'error'
 > & {
   onSubmit: (output: EditTransactionOutput) => void;
+  currency: string;
 };
 
-function EditTransactionForm({ form, onSubmit, isPending, error }: EditTransactionFormProps) {
+function EditTransactionForm({ form, onSubmit, isPending, error, currency }: EditTransactionFormProps) {
   return (
     <Form of={form} onSubmit={onSubmit} className="flex flex-col gap-4">
       <FieldGroup>
@@ -77,6 +78,7 @@ function EditTransactionForm({ form, onSubmit, isPending, error }: EditTransacti
               <CurrencyInput
                 id={field.props.name}
                 value={field.input ?? ''}
+                currency={currency}
                 aria-invalid={!!field.errors}
                 placeholder="Enter the amount"
                 name={field.props.name}

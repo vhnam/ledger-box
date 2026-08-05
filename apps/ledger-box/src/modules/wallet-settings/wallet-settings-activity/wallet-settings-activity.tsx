@@ -15,6 +15,7 @@ import { useWalletActivity } from '#/queries/activity/activity.queries';
 
 type WalletSettingsActivityProps = {
   walletId: string;
+  currency: string;
 };
 
 function actionLabel(item: ActivityLogItemDto): string {
@@ -79,7 +80,7 @@ function entitySummary(item: ActivityLogItemDto): string {
   return item.entityId;
 }
 
-function ActivityRow({ item }: { item: ActivityLogItemDto }) {
+function ActivityRow({ item, currency }: { item: ActivityLogItemDto; currency: string }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -94,7 +95,7 @@ function ActivityRow({ item }: { item: ActivityLogItemDto }) {
           <p className="text-xs text-muted-foreground">
             {item.actorEmail} · {formatDateTime(item.createdAt)}
             {item.walletAmountDelta != null && item.walletAmountDelta !== 0
-              ? ` · ${formatCurrency(item.walletAmountDelta)}`
+              ? ` · ${formatCurrency(item.walletAmountDelta, { currency })}`
               : null}
           </p>
         </div>
@@ -114,7 +115,7 @@ function ActivityRow({ item }: { item: ActivityLogItemDto }) {
   );
 }
 
-function WalletSettingsActivity({ walletId }: WalletSettingsActivityProps) {
+function WalletSettingsActivity({ walletId, currency }: WalletSettingsActivityProps) {
   const [page, setPage] = useState(1);
   const { data, isPending, isError } = useWalletActivity(walletId, page, true);
   const totalPages = data ? Math.max(1, Math.ceil(data.total / data.pageSize)) : 1;
@@ -151,7 +152,7 @@ function WalletSettingsActivity({ walletId }: WalletSettingsActivityProps) {
         <>
           <ul className="divide-y">
             {data.items.map((item) => (
-              <ActivityRow key={item.id} item={item} />
+              <ActivityRow key={item.id} item={item} currency={currency} />
             ))}
           </ul>
           {totalPages > 1 ? (

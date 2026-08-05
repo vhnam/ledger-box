@@ -10,21 +10,21 @@ interface SeedTransaction {
 }
 
 const TRANSACTIONS: SeedTransaction[] = [
-  { type: 'income', amount: 4500, description: 'Monthly salary', daysAgo: 28 },
-  { type: 'income', amount: 250, description: 'Freelance web design project', daysAgo: 21 },
-  { type: 'expense', amount: 1200, description: 'Rent payment', daysAgo: 27 },
-  { type: 'expense', amount: 85.5, description: 'Grocery shopping at Whole Foods', daysAgo: 25 },
-  { type: 'expense', amount: 42.3, description: 'Electricity bill', daysAgo: 24 },
-  { type: 'expense', amount: 15.99, description: 'Netflix subscription', daysAgo: 20 },
-  { type: 'expense', amount: 60, description: 'Dinner with friends', daysAgo: 18 },
-  { type: 'expense', amount: 120, description: 'Gas and car maintenance', daysAgo: 16 },
-  { type: 'expense', amount: 35.75, description: 'Pharmacy purchase', daysAgo: 14 },
-  { type: 'income', amount: 100, description: 'Cashback reward', daysAgo: 12 },
-  { type: 'expense', amount: 22.4, description: 'Coffee and lunch', daysAgo: 10 },
-  { type: 'expense', amount: 300, description: 'New running shoes', daysAgo: 8 },
-  { type: 'expense', amount: 18.5, description: 'Book purchase from Amazon', daysAgo: 6 },
-  { type: 'expense', amount: 55, description: 'Gym membership', daysAgo: 4 },
-  { type: 'income', amount: 75, description: 'Sold old furniture', daysAgo: 2 },
+  { type: 'income', amount: 45_000_000, description: 'Monthly salary', daysAgo: 28 },
+  { type: 'income', amount: 2_500_000, description: 'Freelance web design project', daysAgo: 21 },
+  { type: 'expense', amount: 12_000_000, description: 'Rent payment', daysAgo: 27 },
+  { type: 'expense', amount: 855_000, description: 'Grocery shopping at the market', daysAgo: 25 },
+  { type: 'expense', amount: 423_000, description: 'Electricity bill', daysAgo: 24 },
+  { type: 'expense', amount: 159_000, description: 'Netflix subscription', daysAgo: 20 },
+  { type: 'expense', amount: 600_000, description: 'Dinner with friends', daysAgo: 18 },
+  { type: 'expense', amount: 1_200_000, description: 'Gas and car maintenance', daysAgo: 16 },
+  { type: 'expense', amount: 357_000, description: 'Pharmacy purchase', daysAgo: 14 },
+  { type: 'income', amount: 1_000_000, description: 'Cashback reward', daysAgo: 12 },
+  { type: 'expense', amount: 224_000, description: 'Coffee and lunch', daysAgo: 10 },
+  { type: 'expense', amount: 3_000_000, description: 'New running shoes', daysAgo: 8 },
+  { type: 'expense', amount: 185_000, description: 'Book purchase', daysAgo: 6 },
+  { type: 'expense', amount: 550_000, description: 'Gym membership', daysAgo: 4 },
+  { type: 'income', amount: 750_000, description: 'Sold old furniture', daysAgo: 2 },
 ];
 
 function daysAgoToDate(daysAgo: number): Date {

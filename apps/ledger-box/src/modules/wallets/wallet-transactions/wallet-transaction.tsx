@@ -11,12 +11,15 @@ import {
   useWalletTransaction,
 } from '#/modules/wallets/wallet-transactions/wallet-transaction.actions';
 import type { TransactionDto } from '#/queries/transactions/transaction.dto';
+import { useWallets } from '#/queries/wallets/wallet.queries';
 
 type WalletTransactionProps = {
   transaction: TransactionDto;
 };
 
 function WalletTransaction({ transaction }: WalletTransactionProps) {
+  const { data: wallets = [] } = useWallets();
+  const currency = wallets.find((wallet) => wallet.id === transaction.walletId)?.currency ?? 'VND';
   const {
     isMobile,
     editOpen,
@@ -50,7 +53,7 @@ function WalletTransaction({ transaction }: WalletTransactionProps) {
             </p>
           </div>
           <p className={getTransactionAmountClassName(transaction.type)}>
-            {formatSignedCurrency(transaction.amount, transaction.type)}
+            {formatSignedCurrency(transaction.amount, transaction.type, { currency })}
           </p>
           {!isMobile && (
             <div onClick={(event) => event.stopPropagation()}>
