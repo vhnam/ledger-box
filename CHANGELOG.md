@@ -6,6 +6,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-21 — Dependency updates & icon component hardening](docs/changelogs/mr-21-update-dependencies.md)
+
+#### Added
+
+- `apps/ledger-box/scripts/seed.ts` (`pnpm --filter ledger-box db:seed <tenant-id>`):
+  seeds a wallet with 15 English-language sample transactions for local development.
+- `docs/screenshots/wallet-page.png`, `docs/screenshots/shared-statement.png`: real
+  screenshots in place of the `README.md` placeholder text.
+
+#### Changed
+
+- Bumped `vite`/`vite-plus`, Storybook, TanStack Router/Query, AWS SDK, `better-auth`,
+  `playwright`, `typescript`, `@base-ui/react`, `@fontsource/*`, and other workspace
+  dependencies; consolidated `@dotenvx/dotenvx`, `better-auth`, `vite`, and `@types/pg`
+  onto the shared `pnpm-workspace.yaml` catalog instead of package-local pins.
+- `Icon` (`packages/ui`): reworked `IconName`/`IconBaseProps` to match
+  `@phosphor-icons/react`'s updated exports (it no longer exports a shared `Icon`
+  type); now renders `null` instead of throwing on an unresolved icon name.
+- `ThemeProvider`, `Toast` (`packages/ui`): updated for `next-themes`' stricter
+  `children` typing and switched `Toast`'s direct phosphor-icon imports to the shared
+  `Icon` component.
+
 ### [mr-20 — Storybook & @vhnam/utils test coverage, link color-contrast fix](docs/changelogs/mr-20-storybook-and-utils-test-coverage.md)
 
 #### Added
