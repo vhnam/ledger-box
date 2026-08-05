@@ -14,8 +14,8 @@
     "@aws-sdk/s3-request-presigner": "catalog:"
   },
   "devDependencies": {
-    "@dotenvx/dotenvx": "1.75.1",
-    "vite": "npm:@voidzero-dev/vite-plus-core@0.2.4",
+    "@dotenvx/dotenvx": "catalog:",
+    "vite": "catalog:",
     "vite-plus": "catalog:"
   },
   "devEngines": {

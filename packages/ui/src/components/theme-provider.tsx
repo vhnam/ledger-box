@@ -1,11 +1,18 @@
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
-import type { ComponentProps } from 'react';
+import type { ThemeProviderProps as NextThemesProviderProps } from 'next-themes';
+import type { ComponentType, ReactNode } from 'react';
 
-function ThemeProvider({ children, ...props }: ComponentProps<typeof NextThemesProvider>) {
+type ThemeProviderProps = Omit<NextThemesProviderProps, 'children'> & {
+  children?: ReactNode;
+};
+
+const Provider = NextThemesProvider as ComponentType<ThemeProviderProps>;
+
+function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return (
-    <NextThemesProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange {...props}>
+    <Provider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange {...props}>
       {children}
-    </NextThemesProvider>
+    </Provider>
   );
 }
 

@@ -24,7 +24,7 @@
     "@vhnam/ui": "workspace:*",
     "@vhnam/utils": "workspace:*",
     "axios": "catalog:",
-    "better-auth": "^1.6.23",
+    "better-auth": "catalog:",
     "kysely": "catalog:",
     "pg": "^8.22.0",
     "react": "catalog:",
@@ -37,14 +37,14 @@
     "@tailwindcss/vite": "catalog:",
     "@tanstack/router-devtools": "catalog:",
     "@tanstack/router-plugin": "catalog:",
-    "@types/pg": "^8.20.0",
+    "@types/pg": "^8.20.3",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "tailwindcss": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:",
-    "vite": "catalog:",
+    "vite": "npm:@voidzero-dev/vite-plus-core@0.2.8",
     "vite-plus": "catalog:"
   }
 }

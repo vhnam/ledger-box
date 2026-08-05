@@ -9,61 +9,61 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
-import { Route as AuthIndexRouteImport } from './routes/auth/index'
+import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
-import { Route as StatementTokenRouteImport } from './routes/statement/$token'
-import { Route as InviteTokenRouteImport } from './routes/invite/$token'
-import { Route as AuthRegisterRouteImport } from './routes/auth/register'
+import { Route as AuthIndexRouteImport } from './routes/auth/index'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as AuthRegisterRouteImport } from './routes/auth/register'
+import { Route as InviteTokenRouteImport } from './routes/invite/$token'
+import { Route as StatementTokenRouteImport } from './routes/statement/$token'
 import { Route as AppWalletsIndexRouteImport } from './routes/_app/wallets/index'
 import { Route as AppWalletsWalletIdRouteRouteImport } from './routes/_app/wallets/$walletId/route'
 import { Route as AppWalletsWalletIdIndexRouteImport } from './routes/_app/wallets/$walletId/index'
 import { Route as AppWalletsWalletIdSettingsIndexRouteImport } from './routes/_app/wallets/$walletId/settings/index'
-import { Route as AppWalletsWalletIdSettingsStatementSharesRouteImport } from './routes/_app/wallets/$walletId/settings/statement-shares'
-import { Route as AppWalletsWalletIdSettingsMembersRouteImport } from './routes/_app/wallets/$walletId/settings/members'
-import { Route as AppWalletsWalletIdSettingsGeneralRouteImport } from './routes/_app/wallets/$walletId/settings/general'
 import { Route as AppWalletsWalletIdSettingsActivityRouteImport } from './routes/_app/wallets/$walletId/settings/activity'
+import { Route as AppWalletsWalletIdSettingsGeneralRouteImport } from './routes/_app/wallets/$walletId/settings/general'
+import { Route as AppWalletsWalletIdSettingsMembersRouteImport } from './routes/_app/wallets/$walletId/settings/members'
+import { Route as AppWalletsWalletIdSettingsStatementSharesRouteImport } from './routes/_app/wallets/$walletId/settings/statement-shares'
 
-const AuthRouteRoute = AuthRouteRouteImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AppRouteRoute = AppRouteRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthIndexRoute = AuthIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AuthRouteRoute,
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppRouteRoute,
 } as any)
-const StatementTokenRoute = StatementTokenRouteImport.update({
-  id: '/statement/$token',
-  path: '/statement/$token',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const InviteTokenRoute = InviteTokenRouteImport.update({
-  id: '/invite/$token',
-  path: '/invite/$token',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRegisterRoute = AuthRegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
+const AuthIndexRoute = AuthIndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthRegisterRoute = AuthRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const InviteTokenRoute = InviteTokenRouteImport.update({
+  id: '/invite/$token',
+  path: '/invite/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StatementTokenRoute = StatementTokenRouteImport.update({
+  id: '/statement/$token',
+  path: '/statement/$token',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AppWalletsIndexRoute = AppWalletsIndexRouteImport.update({
   id: '/wallets/',
@@ -86,16 +86,10 @@ const AppWalletsWalletIdSettingsIndexRoute =
     path: '/settings/',
     getParentRoute: () => AppWalletsWalletIdRouteRoute,
   } as any)
-const AppWalletsWalletIdSettingsStatementSharesRoute =
-  AppWalletsWalletIdSettingsStatementSharesRouteImport.update({
-    id: '/settings/statement-shares',
-    path: '/settings/statement-shares',
-    getParentRoute: () => AppWalletsWalletIdRouteRoute,
-  } as any)
-const AppWalletsWalletIdSettingsMembersRoute =
-  AppWalletsWalletIdSettingsMembersRouteImport.update({
-    id: '/settings/members',
-    path: '/settings/members',
+const AppWalletsWalletIdSettingsActivityRoute =
+  AppWalletsWalletIdSettingsActivityRouteImport.update({
+    id: '/settings/activity',
+    path: '/settings/activity',
     getParentRoute: () => AppWalletsWalletIdRouteRoute,
   } as any)
 const AppWalletsWalletIdSettingsGeneralRoute =
@@ -104,10 +98,16 @@ const AppWalletsWalletIdSettingsGeneralRoute =
     path: '/settings/general',
     getParentRoute: () => AppWalletsWalletIdRouteRoute,
   } as any)
-const AppWalletsWalletIdSettingsActivityRoute =
-  AppWalletsWalletIdSettingsActivityRouteImport.update({
-    id: '/settings/activity',
-    path: '/settings/activity',
+const AppWalletsWalletIdSettingsMembersRoute =
+  AppWalletsWalletIdSettingsMembersRouteImport.update({
+    id: '/settings/members',
+    path: '/settings/members',
+    getParentRoute: () => AppWalletsWalletIdRouteRoute,
+  } as any)
+const AppWalletsWalletIdSettingsStatementSharesRoute =
+  AppWalletsWalletIdSettingsStatementSharesRouteImport.update({
+    id: '/settings/statement-shares',
+    path: '/settings/statement-shares',
     getParentRoute: () => AppWalletsWalletIdRouteRoute,
   } as any)
 
@@ -224,13 +224,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_app': {
       id: '/_app'
       path: ''
@@ -238,12 +231,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth/': {
-      id: '/auth/'
-      path: '/'
-      fullPath: '/auth/'
-      preLoaderRoute: typeof AuthIndexRouteImport
-      parentRoute: typeof AuthRouteRoute
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_app/': {
       id: '/_app/'
@@ -252,25 +245,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
-    '/statement/$token': {
-      id: '/statement/$token'
-      path: '/statement/$token'
-      fullPath: '/statement/$token'
-      preLoaderRoute: typeof StatementTokenRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/invite/$token': {
-      id: '/invite/$token'
-      path: '/invite/$token'
-      fullPath: '/invite/$token'
-      preLoaderRoute: typeof InviteTokenRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/register': {
-      id: '/auth/register'
-      path: '/register'
-      fullPath: '/auth/register'
-      preLoaderRoute: typeof AuthRegisterRouteImport
+    '/auth/': {
+      id: '/auth/'
+      path: '/'
+      fullPath: '/auth/'
+      preLoaderRoute: typeof AuthIndexRouteImport
       parentRoute: typeof AuthRouteRoute
     }
     '/auth/login': {
@@ -279,6 +258,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth/login'
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof AuthRouteRoute
+    }
+    '/auth/register': {
+      id: '/auth/register'
+      path: '/register'
+      fullPath: '/auth/register'
+      preLoaderRoute: typeof AuthRegisterRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/invite/$token': {
+      id: '/invite/$token'
+      path: '/invite/$token'
+      fullPath: '/invite/$token'
+      preLoaderRoute: typeof InviteTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/statement/$token': {
+      id: '/statement/$token'
+      path: '/statement/$token'
+      fullPath: '/statement/$token'
+      preLoaderRoute: typeof StatementTokenRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_app/wallets/': {
       id: '/_app/wallets/'
@@ -308,18 +308,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWalletsWalletIdSettingsIndexRouteImport
       parentRoute: typeof AppWalletsWalletIdRouteRoute
     }
-    '/_app/wallets/$walletId/settings/statement-shares': {
-      id: '/_app/wallets/$walletId/settings/statement-shares'
-      path: '/settings/statement-shares'
-      fullPath: '/wallets/$walletId/settings/statement-shares'
-      preLoaderRoute: typeof AppWalletsWalletIdSettingsStatementSharesRouteImport
-      parentRoute: typeof AppWalletsWalletIdRouteRoute
-    }
-    '/_app/wallets/$walletId/settings/members': {
-      id: '/_app/wallets/$walletId/settings/members'
-      path: '/settings/members'
-      fullPath: '/wallets/$walletId/settings/members'
-      preLoaderRoute: typeof AppWalletsWalletIdSettingsMembersRouteImport
+    '/_app/wallets/$walletId/settings/activity': {
+      id: '/_app/wallets/$walletId/settings/activity'
+      path: '/settings/activity'
+      fullPath: '/wallets/$walletId/settings/activity'
+      preLoaderRoute: typeof AppWalletsWalletIdSettingsActivityRouteImport
       parentRoute: typeof AppWalletsWalletIdRouteRoute
     }
     '/_app/wallets/$walletId/settings/general': {
@@ -329,11 +322,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWalletsWalletIdSettingsGeneralRouteImport
       parentRoute: typeof AppWalletsWalletIdRouteRoute
     }
-    '/_app/wallets/$walletId/settings/activity': {
-      id: '/_app/wallets/$walletId/settings/activity'
-      path: '/settings/activity'
-      fullPath: '/wallets/$walletId/settings/activity'
-      preLoaderRoute: typeof AppWalletsWalletIdSettingsActivityRouteImport
+    '/_app/wallets/$walletId/settings/members': {
+      id: '/_app/wallets/$walletId/settings/members'
+      path: '/settings/members'
+      fullPath: '/wallets/$walletId/settings/members'
+      preLoaderRoute: typeof AppWalletsWalletIdSettingsMembersRouteImport
+      parentRoute: typeof AppWalletsWalletIdRouteRoute
+    }
+    '/_app/wallets/$walletId/settings/statement-shares': {
+      id: '/_app/wallets/$walletId/settings/statement-shares'
+      path: '/settings/statement-shares'
+      fullPath: '/wallets/$walletId/settings/statement-shares'
+      preLoaderRoute: typeof AppWalletsWalletIdSettingsStatementSharesRouteImport
       parentRoute: typeof AppWalletsWalletIdRouteRoute
     }
   }
