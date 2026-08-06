@@ -1,8 +1,10 @@
 import { reset, useForm } from '@formisch/react';
 import { useEffect, useState } from 'react';
+import { useIntl } from 'react-intl';
 
 import { toast } from '@vhnam/ui/components/toast';
 
+import { formatErrorMessage } from '#/lib/intl-message';
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
 import { useTransferMoney } from '#/queries/wallets/wallet.mutations';
 import {
@@ -30,6 +32,7 @@ function getDefaultInput(walletId: string, wallets: WalletDto[]): TransferMoneyI
 }
 
 export function useTransferMoneyDialogActions({ open, walletId, wallets }: UseTransferMoneyDialogActionsOptions) {
+  const intl = useIntl();
   const form = useForm({ schema: transferMoneySchema });
   const { mutate: transferMoney, isPending } = useTransferMoney();
   const [error, setError] = useState<string | null>(null);
@@ -58,20 +61,31 @@ export function useTransferMoneyDialogActions({ open, walletId, wallets }: UseTr
 
     const fromWallet = wallets.find((wallet) => wallet.id === output.fromWalletId);
     const toWallet = wallets.find((wallet) => wallet.id === output.toWalletId);
+    const walletFallback = intl.formatMessage({ id: 'common.walletFallback', defaultMessage: 'Wallet' });
 
     transferMoney(output, {
       onSuccess: () => {
         toast.add({
-          title: 'Transfer completed',
-          description: `${fromWallet?.name ?? 'Wallet'} → ${toWallet?.name ?? 'wallet'}`,
+          title: intl.formatMessage({ id: 'toast.transfer.completed', defaultMessage: 'Transfer completed' }),
+          description: intl.formatMessage(
+            { id: 'toast.transfer.completedDescription', defaultMessage: '{fromName} → {toName}' },
+            {
+              fromName: fromWallet?.name ?? walletFallback,
+              toName: toWallet?.name ?? walletFallback,
+            },
+          ),
           type: 'success',
         });
         onSuccess();
       },
       onError: (transferError) => {
-        const message = transferError instanceof Error ? transferError.message : 'Transfer failed. Please try again.';
+        const message = transferError instanceof Error ? transferError.message : 'transfer.errorFallback';
         setError(message);
-        toast.add({ title: 'Transfer failed', description: message, type: 'error' });
+        toast.add({
+          title: intl.formatMessage({ id: 'toast.transfer.failed', defaultMessage: 'Transfer failed' }),
+          description: formatErrorMessage(intl, message),
+          type: 'error',
+        });
       },
     });
   }

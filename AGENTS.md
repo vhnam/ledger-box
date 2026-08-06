@@ -144,6 +144,15 @@ Variants: `success`, `info`, `warning`, `error`, `loading`.
 **Forms are Formisch + Valibot.** Not React Hook Form, not Zod. Valibot schemas live in
 `apps/ledger-box/src/schemas/` as `*.schema.ts`.
 
+**UI strings use `react-intl`.** Message catalogs live in
+`packages/utils/src/i18n/messages/{en,vi,fr,ja}.json` (language codes; `en-US`/`en-GB`
+share `en`). Prefer `<FormattedMessage id="…" defaultMessage="…" />` in JSX and
+`useIntl().formatMessage` for toasts, placeholders, and other imperative copy. Phase 1
+Valibot schemas store **message ids** (e.g. `validation.amount.required`) — render them
+with `formatErrorMessage` from `#/lib/intl-message` (known ids translate; raw API English
+passes through until error codes land). Do not put `react-intl` inside `@vhnam/ui`; pass
+translated props from the app. Keep the brand name "Ledger Box" untranslated.
+
 **The database layer is Kysely.** Query builder, not an ORM. No Prisma, no Drizzle, no
 raw string SQL.
 

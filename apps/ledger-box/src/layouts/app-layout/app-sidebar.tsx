@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import type { ComponentProps } from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import {
   Sidebar,
@@ -29,7 +30,9 @@ function AppSidebar(props: ComponentProps<typeof Sidebar>) {
                   <img src="/logo.svg" alt="Ledger Box" className="size-8" />
                   <div className="flex flex-col gap-0.5 leading-none">
                     <span className="font-heading font-medium">Ledger Box</span>
-                    <span className="text-xs text-muted-foreground">Wallet Management</span>
+                    <span className="text-xs text-muted-foreground">
+                      <FormattedMessage id="brand.tagline" defaultMessage="Wallet Management" />
+                    </span>
                   </div>
                 </Link>
               }

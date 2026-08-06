@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-22 — i18n Phase 1: app chrome + wallets/transactions UI strings](docs/changelogs/mr-22-i18n-phase1-ui-strings.md)
+
+#### Added
+
+- Phase 1 `react-intl` message keys (`en`/`vi`/`fr`/`ja`) for app chrome, wallets,
+  transactions, transfers, attachments, validation, and related toasts; bidirectional
+  catalog key-parity tests; `formatErrorMessage` helper for Valibot message ids.
+
+#### Changed
+
+- App shell and wallets/transactions UI use `FormattedMessage` / `useIntl`; filter/sort
+  constants and Phase 1 Valibot schemas store message ids; wallet/transaction toasts are
+  localized. `AGENTS.md` documents the i18n conventions.
+
 ### [mr-21 — Dependency updates & icon component hardening](docs/changelogs/mr-21-update-dependencies.md)
 
 #### Added

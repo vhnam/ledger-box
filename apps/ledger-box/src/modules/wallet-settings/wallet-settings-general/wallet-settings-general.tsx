@@ -1,5 +1,6 @@
 import { Field as FormField, Form } from '@formisch/react';
 import { useState } from 'react';
+import { useIntl } from 'react-intl';
 
 import { Alert, AlertAction, AlertDescription, AlertTitle } from '@vhnam/ui/components/alert';
 import { Button } from '@vhnam/ui/components/button';
@@ -7,6 +8,7 @@ import { Field, FieldError, FieldGroup } from '@vhnam/ui/components/field';
 import { Input } from '@vhnam/ui/components/input';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
+import { formatErrorMessage } from '#/lib/intl-message';
 import { useWalletSettingsGeneralActions } from '#/modules/wallet-settings/wallet-settings-general/wallet-settings-general.actions';
 import { DeleteWalletDialog } from '#/modules/wallets/wallet-delete-dialog';
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
@@ -16,6 +18,7 @@ type WalletSettingsGeneralProps = {
 };
 
 function WalletSettingsGeneral({ wallet }: WalletSettingsGeneralProps) {
+  const intl = useIntl();
   const { form, updateError, isUpdating, handleUpdateWallet } = useWalletSettingsGeneralActions({ wallet });
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
@@ -45,7 +48,7 @@ function WalletSettingsGeneral({ wallet }: WalletSettingsGeneralProps) {
                         {...field.props}
                         value={field.input ?? ''}
                       />
-                      {field.errors && <FieldError>{field.errors[0]}</FieldError>}
+                      {field.errors && <FieldError>{formatErrorMessage(intl, field.errors[0])}</FieldError>}
                     </Field>
                   )}
                 />
@@ -56,7 +59,7 @@ function WalletSettingsGeneral({ wallet }: WalletSettingsGeneralProps) {
                 </Button>
               </div>
 
-              {updateError && <FieldError>{updateError}</FieldError>}
+              {updateError && <FieldError>{formatErrorMessage(intl, updateError)}</FieldError>}
             </FieldGroup>
           </Form>
         </div>

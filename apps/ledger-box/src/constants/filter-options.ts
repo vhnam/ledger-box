@@ -7,11 +7,11 @@ export const FILTER_OPTIONS = {
 } as const;
 
 export const FILTER_OPTIONS_LIST = [
-  { label: 'All time', value: FILTER_OPTIONS.ALL_TIME },
-  { label: 'Today', value: FILTER_OPTIONS.TODAY },
-  { label: 'This month', value: FILTER_OPTIONS.THIS_MONTH },
-  { label: 'Last month', value: FILTER_OPTIONS.LAST_MONTH },
-  { label: 'Date range', value: FILTER_OPTIONS.DATE_RANGE },
+  { labelId: 'filter.allTime', defaultLabel: 'All time', value: FILTER_OPTIONS.ALL_TIME },
+  { labelId: 'filter.today', defaultLabel: 'Today', value: FILTER_OPTIONS.TODAY },
+  { labelId: 'filter.thisMonth', defaultLabel: 'This month', value: FILTER_OPTIONS.THIS_MONTH },
+  { labelId: 'filter.lastMonth', defaultLabel: 'Last month', value: FILTER_OPTIONS.LAST_MONTH },
+  { labelId: 'filter.dateRange', defaultLabel: 'Date range', value: FILTER_OPTIONS.DATE_RANGE },
 ] as const;
 
 export type FilterOptionValue = (typeof FILTER_OPTIONS)[keyof typeof FILTER_OPTIONS];

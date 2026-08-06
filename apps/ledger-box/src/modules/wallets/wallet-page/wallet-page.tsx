@@ -1,3 +1,5 @@
+import { FormattedMessage } from 'react-intl';
+
 import { Spinner } from '@vhnam/ui/components/spinner';
 
 import { WalletActions, useWalletActions } from '#/modules/wallets/wallet-actions';
@@ -32,11 +34,19 @@ function WalletPage({ walletId }: WalletPageProps) {
   }
 
   if (isError || !walletId) {
-    return <p className="text-sm text-destructive">Failed to load wallet.</p>;
+    return (
+      <p className="text-sm text-destructive">
+        <FormattedMessage id="wallet.error.loadFailed" defaultMessage="Failed to load wallet." />
+      </p>
+    );
   }
 
   if (!walletPreview) {
-    return <p className="text-sm text-destructive">Wallet not found.</p>;
+    return (
+      <p className="text-sm text-destructive">
+        <FormattedMessage id="wallet.error.notFound" defaultMessage="Wallet not found." />
+      </p>
+    );
   }
 
   return (

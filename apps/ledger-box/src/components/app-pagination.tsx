@@ -1,3 +1,5 @@
+import { FormattedMessage } from 'react-intl';
+
 import {
   Pagination,
   PaginationContent,
@@ -35,7 +37,11 @@ function AppPagination({
   return (
     <div className="flex items-center justify-between">
       <div className="text-xs text-muted-foreground">
-        Page {page} of {totalPages}
+        <FormattedMessage
+          id="transaction.list.pageOf"
+          defaultMessage="Page {page} of {totalPages}"
+          values={{ page, totalPages }}
+        />
       </div>
       <Pagination className="mx-0 w-auto justify-end">
         <PaginationContent>

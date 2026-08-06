@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useIntl } from 'react-intl';
 
 import { Button } from '@vhnam/ui/components/button';
 import { Dialog, DialogContent } from '@vhnam/ui/components/dialog';
@@ -27,6 +28,7 @@ function TransactionAttachmentPreview({
   attachments,
   initialAttachmentId,
 }: TransactionAttachmentPreviewProps) {
+  const intl = useIntl();
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
@@ -78,7 +80,9 @@ function TransactionAttachmentPreview({
               onClick={handleOpenInNewTab}
             >
               <Icon name="ArrowSquareOutIcon" />
-              <span className="sr-only">Open in new tab</span>
+              <span className="sr-only">
+                {intl.formatMessage({ id: 'attachment.preview.openInNewTab', defaultMessage: 'Open in new tab' })}
+              </span>
             </Button>
             <Button
               type="button"
@@ -88,7 +92,9 @@ function TransactionAttachmentPreview({
               onClick={() => onOpenChange(false)}
             >
               <Icon name="XIcon" />
-              <span className="sr-only">Close preview</span>
+              <span className="sr-only">
+                {intl.formatMessage({ id: 'attachment.preview.close', defaultMessage: 'Close preview' })}
+              </span>
             </Button>
           </div>
         </div>
@@ -119,7 +125,9 @@ function TransactionAttachmentPreview({
               onClick={() => setActiveIndex((index) => index - 1)}
             >
               <Icon name="CaretLeftIcon" className="size-5" />
-              <span className="sr-only">Previous attachment</span>
+              <span className="sr-only">
+                {intl.formatMessage({ id: 'attachment.preview.previous', defaultMessage: 'Previous attachment' })}
+              </span>
             </Button>
           ) : null}
 
@@ -132,7 +140,9 @@ function TransactionAttachmentPreview({
               onClick={() => setActiveIndex((index) => index + 1)}
             >
               <Icon name="CaretRightIcon" className="size-5" />
-              <span className="sr-only">Next attachment</span>
+              <span className="sr-only">
+                {intl.formatMessage({ id: 'attachment.preview.next', defaultMessage: 'Next attachment' })}
+              </span>
             </Button>
           ) : null}
         </div>

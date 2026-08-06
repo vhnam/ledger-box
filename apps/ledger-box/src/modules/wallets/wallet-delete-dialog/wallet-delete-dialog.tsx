@@ -1,9 +1,12 @@
+import { FormattedMessage, useIntl } from 'react-intl';
+
 import { Button } from '@vhnam/ui/components/button';
 import { FieldError } from '@vhnam/ui/components/field';
 import { Icon } from '@vhnam/ui/components/icon';
 import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
+import { formatErrorMessage } from '#/lib/intl-message';
 import { useDeleteWalletDialogActions } from '#/modules/wallets/wallet-delete-dialog/wallet-delete-dialog.actions';
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
 
@@ -22,6 +25,8 @@ type DeleteWalletContentProps = {
 };
 
 function DeleteWalletContent({ wallet, isPending, error, onCancel, onConfirm }: DeleteWalletContentProps) {
+  const intl = useIntl();
+
   return (
     <div className="flex flex-col items-center gap-4 text-center">
       <div className="flex size-12 items-center justify-center rounded-xl bg-destructive/10">
@@ -29,24 +34,33 @@ function DeleteWalletContent({ wallet, isPending, error, onCancel, onConfirm }: 
       </div>
 
       <div className="space-y-2">
-        <h2 className="text-base font-medium">Delete wallet?</h2>
+        <h2 className="text-base font-medium">
+          <FormattedMessage id="wallet.delete.title" defaultMessage="Delete wallet?" />
+        </h2>
         <p className="text-sm text-muted-foreground">
-          <span className="font-medium text-foreground">&quot;{wallet.name}&quot;</span> and all of its transactions
-          will be permanently removed.
+          <FormattedMessage
+            id="wallet.delete.body"
+            defaultMessage='"{name}" and all of its transactions will be permanently removed.'
+            values={{ name: wallet.name }}
+          />
           <br />
-          This can&apos;t be undone.
+          <FormattedMessage id="common.cannotBeUndone" defaultMessage="This can't be undone." />
         </p>
       </div>
 
-      {error ? <FieldError>{error}</FieldError> : null}
+      {error ? <FieldError>{formatErrorMessage(intl, error)}</FieldError> : null}
 
       <div className="flex w-full gap-2">
         <Button type="button" variant="outline" className="flex-1" onClick={onCancel} disabled={isPending}>
-          Cancel
+          <FormattedMessage id="common.cancel" defaultMessage="Cancel" />
         </Button>
         <Button type="button" variant="destructive" className="flex-1" onClick={onConfirm} disabled={isPending}>
           {isPending ? <Spinner className="size-4" /> : null}
-          {isPending ? 'Deleting...' : 'Delete'}
+          {isPending ? (
+            <FormattedMessage id="common.deleting" defaultMessage="Deleting..." />
+          ) : (
+            <FormattedMessage id="common.delete" defaultMessage="Delete" />
+          )}
         </Button>
       </div>
     </div>
@@ -54,6 +68,7 @@ function DeleteWalletContent({ wallet, isPending, error, onCancel, onConfirm }: 
 }
 
 function DeleteWalletDialog({ open, onOpenChange, wallet }: DeleteWalletDialogProps) {
+  const intl = useIntl();
   const { handleDeleteWallet, isPending, error } = useDeleteWalletDialogActions({ wallet });
 
   function handleCancel() {
@@ -80,8 +95,11 @@ function DeleteWalletDialog({ open, onOpenChange, wallet }: DeleteWalletDialogPr
     <ResponsiveDialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Delete wallet?"
-      description={`Confirm deletion of ${wallet.name}`}
+      title={intl.formatMessage({ id: 'wallet.delete.title', defaultMessage: 'Delete wallet?' })}
+      description={intl.formatMessage(
+        { id: 'wallet.delete.description', defaultMessage: 'Confirm deletion of {name}' },
+        { name: wallet.name },
+      )}
       hideTitle
       hideDescription
       showCloseButton={false}

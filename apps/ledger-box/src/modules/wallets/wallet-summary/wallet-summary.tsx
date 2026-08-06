@@ -1,3 +1,5 @@
+import { FormattedMessage } from 'react-intl';
+
 import { Icon, type IconName } from '@vhnam/ui/components/icon';
 import { Skeleton } from '@vhnam/ui/components/skeleton';
 import { cn } from '@vhnam/ui/lib/utils';
@@ -12,7 +14,8 @@ import { useWallets } from '#/queries/wallets/wallet.queries';
 type WalletSummaryTone = 'income' | 'expense' | 'neutral';
 
 interface WalletSummaryStat {
-  label: string;
+  labelId: string;
+  defaultLabel: string;
   value: number;
   icon: IconName;
   tone: WalletSummaryTone;
@@ -79,7 +82,9 @@ function WalletSummaryStatCard({
         <Icon name={stat.icon} className={cn('size-6', styles.icon)} />
       </div>
       <div>
-        <p className={cn('mb-0.5 text-xs', styles.label)}>{stat.label}</p>
+        <p className={cn('mb-0.5 text-xs', styles.label)}>
+          <FormattedMessage id={stat.labelId} defaultMessage={stat.defaultLabel} />
+        </p>
         <p className={cn('font-mono truncate text-sm font-semibold leading-tight md:text-base', styles.value)}>
           {formatCurrency(stat.value, { currency, locale })}
         </p>
@@ -108,24 +113,31 @@ function WalletSummary({ walletId, transactionQuery }: WalletSummaryProps) {
   }
 
   if (isError) {
-    return <p className="mb-6 text-sm text-destructive">Failed to load wallet summary.</p>;
+    return (
+      <p className="mb-6 text-sm text-destructive">
+        <FormattedMessage id="wallet.summary.loadFailed" defaultMessage="Failed to load wallet summary." />
+      </p>
+    );
   }
 
   const walletSummaryStats: WalletSummaryStat[] = [
     {
-      label: 'Income',
+      labelId: 'wallet.summary.income',
+      defaultLabel: 'Income',
       value: stats.income,
       icon: 'TrendUpIcon',
       tone: 'income',
     },
     {
-      label: 'Expenses',
+      labelId: 'wallet.summary.expenses',
+      defaultLabel: 'Expenses',
       value: stats.expenses,
       icon: 'TrendDownIcon',
       tone: 'expense',
     },
     {
-      label: 'Net balance',
+      labelId: 'wallet.summary.netBalance',
+      defaultLabel: 'Net balance',
       value: stats.netBalance,
       icon: 'ScalesIcon',
       tone: 'neutral',
@@ -137,7 +149,7 @@ function WalletSummary({ walletId, transactionQuery }: WalletSummaryProps) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 md:gap-3 mb-4 md:mb-6">
       {walletSummaryStats.map((stat) => (
-        <WalletSummaryStatCard key={stat.label} stat={stat} currency={currency} locale={locale} />
+        <WalletSummaryStatCard key={stat.labelId} stat={stat} currency={currency} locale={locale} />
       ))}
     </div>
   );

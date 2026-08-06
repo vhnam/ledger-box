@@ -1,4 +1,5 @@
 import type { ChangeEvent, RefObject } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import {
   Attachment,
@@ -25,6 +26,8 @@ function TransactionAttachmentUpload({
   onFileChange,
   isUploading = false,
 }: TransactionAttachmentUploadProps) {
+  const intl = useIntl();
+
   return (
     <div className="border-t p-4">
       <input
@@ -44,12 +47,25 @@ function TransactionAttachmentUpload({
           <Icon name="UploadSimpleIcon" className="text-muted-foreground" />
         </AttachmentMedia>
         <AttachmentContent className="text-center">
-          <AttachmentTitle>{isUploading ? 'Uploading files...' : 'Upload files'}</AttachmentTitle>
+          <AttachmentTitle>
+            {isUploading ? (
+              <FormattedMessage id="attachment.upload.uploading" defaultMessage="Uploading files..." />
+            ) : (
+              <FormattedMessage id="attachment.upload.title" defaultMessage="Upload files" />
+            )}
+          </AttachmentTitle>
           <AttachmentDescription className="whitespace-normal">
-            PDF, PNG, JPG, WEBP · multiple files supported
+            <FormattedMessage
+              id="attachment.upload.hint"
+              defaultMessage="PDF, PNG, JPG, WEBP · multiple files supported"
+            />
           </AttachmentDescription>
         </AttachmentContent>
-        <AttachmentTrigger aria-label="Upload files" disabled={isUploading} onClick={onUploadClick} />
+        <AttachmentTrigger
+          aria-label={intl.formatMessage({ id: 'attachment.upload.ariaLabel', defaultMessage: 'Upload files' })}
+          disabled={isUploading}
+          onClick={onUploadClick}
+        />
       </Attachment>
     </div>
   );

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import { Button } from '@vhnam/ui/components/button';
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@vhnam/ui/components/empty';
@@ -22,9 +23,14 @@ function WalletEmpty({ variant = 'wallets' }: WalletEmptyProps) {
           <EmptyMedia variant="icon">
             <Icon name="ArrowsLeftRightIcon" />
           </EmptyMedia>
-          <EmptyTitle className="font-heading text-lg">No transactions yet</EmptyTitle>
+          <EmptyTitle className="font-heading text-lg">
+            <FormattedMessage id="wallet.empty.transactions.title" defaultMessage="No transactions yet" />
+          </EmptyTitle>
           <EmptyDescription>
-            Add your first income or expense to start tracking activity in this wallet.
+            <FormattedMessage
+              id="wallet.empty.transactions.description"
+              defaultMessage="Add your first income or expense to start tracking activity in this wallet."
+            />
           </EmptyDescription>
         </EmptyHeader>
       </Empty>
@@ -38,13 +44,22 @@ function WalletEmpty({ variant = 'wallets' }: WalletEmptyProps) {
           <EmptyMedia variant="icon">
             <Icon name="WalletIcon" />
           </EmptyMedia>
-          <EmptyTitle className="font-heading text-lg">No wallets yet</EmptyTitle>
-          <EmptyDescription>Create your first wallet to start tracking balances and transactions.</EmptyDescription>
+          <EmptyTitle className="font-heading text-lg">
+            <FormattedMessage id="wallet.empty.wallets.title" defaultMessage="No wallets yet" />
+          </EmptyTitle>
+          <EmptyDescription>
+            <FormattedMessage
+              id="wallet.empty.wallets.description"
+              defaultMessage="Create your first wallet to start tracking balances and transactions."
+            />
+          </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
           <Button variant="outline" onClick={() => setCreateWalletOpen(true)}>
             <Icon name="PlusIcon" />
-            <span>New wallet</span>
+            <span>
+              <FormattedMessage id="wallet.empty.wallets.cta" defaultMessage="New wallet" />
+            </span>
           </Button>
         </EmptyContent>
       </Empty>

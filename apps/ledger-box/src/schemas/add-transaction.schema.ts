@@ -5,12 +5,12 @@ export const addTransactionSchema = v.object({
   amount: v.pipe(
     v.string(),
     v.trim(),
-    v.nonEmpty('Amount is required'),
-    v.regex(/^(?:0|[1-9]\d*)(?:\.\d{1,2})?$/, 'Amount must be a valid number'),
+    v.nonEmpty('validation.amount.required'),
+    v.regex(/^(?:0|[1-9]\d*)(?:\.\d{1,2})?$/, 'validation.amount.invalid'),
     v.transform(Number),
-    v.minValue(0.01, 'Amount must be greater than 0'),
+    v.minValue(0.01, 'validation.amount.min'),
   ),
-  description: v.pipe(v.string(), v.trim(), v.nonEmpty('Description is required')),
+  description: v.pipe(v.string(), v.trim(), v.nonEmpty('validation.description.required')),
   occurredAt: v.optional(v.pipe(v.string(), v.isoDate())),
 });
 

@@ -62,7 +62,7 @@ function SettingsDialogTrigger({ onOpen }: { onOpen: () => void }) {
   return (
     <DropdownMenuItem onClick={onOpen}>
       <Icon name="GearIcon" />
-      Settings
+      <FormattedMessage id="settings.dialog.title" defaultMessage="Settings" />
     </DropdownMenuItem>
   );
 }

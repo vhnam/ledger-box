@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useIntl } from 'react-intl';
 
 import { toast } from '@vhnam/ui/components/toast';
 
+import { formatErrorMessage } from '#/lib/intl-message';
 import type { TransactionAttachment } from '#/modules/wallets/wallet-transaction-attachments/wallet-transaction-attachments-sheet.actions';
 import { useDeleteTransactionAttachment } from '#/queries/transactions/transaction.mutations';
 
@@ -18,6 +20,7 @@ export function useDeleteTransactionAttachmentDialogActions({
   attachment,
   onRemovePending,
 }: UseDeleteTransactionAttachmentDialogActionsOptions) {
+  const intl = useIntl();
   const { mutate: deleteAttachment, isPending } = useDeleteTransactionAttachment();
   const [error, setError] = useState<string | null>(null);
 
@@ -42,14 +45,23 @@ export function useDeleteTransactionAttachmentDialogActions({
       },
       {
         onSuccess: () => {
-          toast.add({ title: 'Attachment removed', type: 'success' });
+          toast.add({
+            title: intl.formatMessage({ id: 'toast.attachment.removed', defaultMessage: 'Attachment removed' }),
+            type: 'success',
+          });
           onSuccess();
         },
         onError: (removeError) => {
-          const message =
-            removeError instanceof Error ? removeError.message : 'Failed to remove attachment. Please try again.';
+          const message = removeError instanceof Error ? removeError.message : 'attachment.delete.errorFallback';
           setError(message);
-          toast.add({ title: 'Failed to remove attachment', description: message, type: 'error' });
+          toast.add({
+            title: intl.formatMessage({
+              id: 'toast.attachment.removeFailed',
+              defaultMessage: 'Failed to remove attachment',
+            }),
+            description: formatErrorMessage(intl, message),
+            type: 'error',
+          });
         },
       },
     );

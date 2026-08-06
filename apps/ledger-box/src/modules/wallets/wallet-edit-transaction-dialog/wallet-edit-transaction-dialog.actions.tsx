@@ -1,8 +1,10 @@
 import { reset, useForm } from '@formisch/react';
 import { useEffect, useState } from 'react';
+import { useIntl } from 'react-intl';
 
 import { toast } from '@vhnam/ui/components/toast';
 
+import { formatErrorMessage } from '#/lib/intl-message';
 import type { TransactionDto } from '#/queries/transactions/transaction.dto';
 import { useUpdateTransaction } from '#/queries/transactions/transaction.mutations';
 import {
@@ -30,6 +32,7 @@ function getInitialInput(transaction: TransactionDto): EditTransactionInput {
 }
 
 export function useEditTransactionDialogActions({ open, transaction }: UseEditTransactionDialogActionsOptions) {
+  const intl = useIntl();
   const form = useForm({ schema: editTransactionSchema });
   const { mutate: updateTransaction, isPending } = useUpdateTransaction();
   const [error, setError] = useState<string | null>(null);
@@ -59,14 +62,23 @@ export function useEditTransactionDialogActions({ open, transaction }: UseEditTr
       { walletId: transaction.walletId, transactionId: transaction.id, ...output },
       {
         onSuccess: () => {
-          toast.add({ title: 'Transaction updated', type: 'success' });
+          toast.add({
+            title: intl.formatMessage({ id: 'toast.transaction.updated', defaultMessage: 'Transaction updated' }),
+            type: 'success',
+          });
           onSuccess();
         },
         onError: (updateError) => {
-          const message =
-            updateError instanceof Error ? updateError.message : 'Failed to update transaction. Please try again.';
+          const message = updateError instanceof Error ? updateError.message : 'transaction.edit.errorFallback';
           setError(message);
-          toast.add({ title: 'Failed to update transaction', description: message, type: 'error' });
+          toast.add({
+            title: intl.formatMessage({
+              id: 'toast.transaction.updateFailed',
+              defaultMessage: 'Failed to update transaction',
+            }),
+            description: formatErrorMessage(intl, message),
+            type: 'error',
+          });
         },
       },
     );

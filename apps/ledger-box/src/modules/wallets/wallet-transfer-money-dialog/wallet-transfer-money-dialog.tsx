@@ -1,5 +1,6 @@
 import { Field as FormField, Form, isDirty } from '@formisch/react';
 import { useMemo } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { Button } from '@vhnam/ui/components/button';
 import { CurrencyInput } from '@vhnam/ui/components/currency-input';
@@ -12,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Spinner } from '@vhnam/ui/components/spinner';
 import { Textarea } from '@vhnam/ui/components/textarea';
 
+import { formatErrorMessage } from '#/lib/intl-message';
 import { useTransferMoneyDialogActions } from '#/modules/wallets/wallet-transfer-money-dialog/wallet-transfer-money-dialog.actions';
 import { useWallets } from '#/queries/wallets/wallet.queries';
 import type { TransferMoneyOutput } from '#/schemas/transfer-money.schema';
@@ -23,6 +25,7 @@ interface TransferMoneyDialogProps {
 }
 
 function TransferMoneyDialog({ open, onOpenChange, walletId }: TransferMoneyDialogProps) {
+  const intl = useIntl();
   const { data: wallets = [] } = useWallets();
   const walletOptions = useMemo(() => wallets.map((wallet) => ({ value: wallet.id, label: wallet.name })), [wallets]);
   const toWalletOptions = useMemo(
@@ -50,7 +53,14 @@ function TransferMoneyDialog({ open, onOpenChange, walletId }: TransferMoneyDial
   }
 
   function handleDismissAttempt() {
-    if (window.confirm('Discard this transfer? Your changes will be lost.')) {
+    if (
+      window.confirm(
+        intl.formatMessage({
+          id: 'transfer.discardConfirm',
+          defaultMessage: 'Discard this transfer? Your changes will be lost.',
+        }),
+      )
+    ) {
       handleDialogOpenChange(false);
     }
   }
@@ -60,7 +70,7 @@ function TransferMoneyDialog({ open, onOpenChange, walletId }: TransferMoneyDial
       <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted">
         <Icon name="ArrowsLeftRightIcon" />
       </div>
-      Transfer Money
+      <FormattedMessage id="transfer.title" defaultMessage="Transfer Money" />
     </div>
   );
 
@@ -81,12 +91,16 @@ function TransferMoneyDialog({ open, onOpenChange, walletId }: TransferMoneyDial
               children={(field) => <input type="hidden" {...field.props} value={field.input ?? ''} readOnly />}
             />
             <Field className="flex-1">
-              <FieldLabel>From</FieldLabel>
+              <FieldLabel>
+                <FormattedMessage id="transfer.from" defaultMessage="From" />
+              </FieldLabel>
               <Input name="fromWalletId" className="flex-1" disabled defaultValue={fromWalletName} />
             </Field>
             <Icon name="ArrowsLeftRightIcon" className="mb-2 shrink-0 text-muted-foreground" />
             <Field className="flex-1">
-              <FieldLabel>To</FieldLabel>
+              <FieldLabel>
+                <FormattedMessage id="transfer.to" defaultMessage="To" />
+              </FieldLabel>
               <FormField
                 of={form}
                 path={['toWalletId']}
@@ -99,7 +113,12 @@ function TransferMoneyDialog({ open, onOpenChange, walletId }: TransferMoneyDial
                       onValueChange={(value) => field.onChange(value ?? '')}
                     >
                       <SelectTrigger className="w-full" aria-invalid={!!field.errors}>
-                        <SelectValue placeholder="Select wallet" />
+                        <SelectValue
+                          placeholder={intl.formatMessage({
+                            id: 'transfer.to.placeholder',
+                            defaultMessage: 'Select wallet',
+                          })}
+                        />
                       </SelectTrigger>
                       <SelectContent>
                         {toWalletOptions.map((option) => (
@@ -109,7 +128,7 @@ function TransferMoneyDialog({ open, onOpenChange, walletId }: TransferMoneyDial
                         ))}
                       </SelectContent>
                     </Select>
-                    {field.errors && <FieldError>{field.errors[0]}</FieldError>}
+                    {field.errors && <FieldError>{formatErrorMessage(intl, field.errors[0])}</FieldError>}
                   </>
                 )}
               />
@@ -121,20 +140,25 @@ function TransferMoneyDialog({ open, onOpenChange, walletId }: TransferMoneyDial
             path={['amount']}
             children={(field) => (
               <Field data-invalid={!!field.errors}>
-                <FieldLabel htmlFor={field.props.name}>Amount</FieldLabel>
+                <FieldLabel htmlFor={field.props.name}>
+                  <FormattedMessage id="transfer.amount.label" defaultMessage="Amount" />
+                </FieldLabel>
                 <CurrencyInput
                   id={field.props.name}
                   value={field.input ?? ''}
                   currency={fromWalletCurrency}
                   aria-invalid={!!field.errors}
-                  placeholder="Enter the amount"
+                  placeholder={intl.formatMessage({
+                    id: 'transfer.amount.placeholder',
+                    defaultMessage: 'Enter the amount',
+                  })}
                   name={field.props.name}
                   ref={field.props.ref}
                   onFocus={field.props.onFocus}
                   onBlur={field.props.onBlur}
                   onValueChange={field.onChange}
                 />
-                {field.errors && <FieldError>{field.errors[0]}</FieldError>}
+                {field.errors && <FieldError>{formatErrorMessage(intl, field.errors[0])}</FieldError>}
               </Field>
             )}
           />
@@ -144,15 +168,20 @@ function TransferMoneyDialog({ open, onOpenChange, walletId }: TransferMoneyDial
             path={['note']}
             children={(field) => (
               <Field data-invalid={!!field.errors}>
-                <FieldLabel htmlFor={field.props.name}>Note</FieldLabel>
+                <FieldLabel htmlFor={field.props.name}>
+                  <FormattedMessage id="transfer.note.label" defaultMessage="Note" />
+                </FieldLabel>
                 <Textarea
                   id={field.props.name}
                   defaultValue={field.input}
                   aria-invalid={!!field.errors}
-                  placeholder="Enter a note for this transfer"
+                  placeholder={intl.formatMessage({
+                    id: 'transfer.note.placeholder',
+                    defaultMessage: 'Enter a note for this transfer',
+                  })}
                   {...field.props}
                 />
-                {field.errors && <FieldError>{field.errors[0]}</FieldError>}
+                {field.errors && <FieldError>{formatErrorMessage(intl, field.errors[0])}</FieldError>}
               </Field>
             )}
           />
@@ -162,24 +191,33 @@ function TransferMoneyDialog({ open, onOpenChange, walletId }: TransferMoneyDial
             path={['occurredAt']}
             children={(field) => (
               <Field data-invalid={!!field.errors}>
-                <FieldLabel htmlFor={field.props.name}>Date (optional)</FieldLabel>
+                <FieldLabel htmlFor={field.props.name}>
+                  <FormattedMessage id="transfer.date.label" defaultMessage="Date (optional)" />
+                </FieldLabel>
                 <DatePicker
                   id={field.props.name}
                   value={field.input ? new Date(field.input) : undefined}
-                  placeholder="Today"
+                  placeholder={intl.formatMessage({
+                    id: 'transfer.date.placeholder',
+                    defaultMessage: 'Today',
+                  })}
                   onChange={(date) => field.onChange(date ? date.toISOString().slice(0, 10) : undefined)}
                 />
-                {field.errors && <FieldError>{field.errors[0]}</FieldError>}
+                {field.errors && <FieldError>{formatErrorMessage(intl, field.errors[0])}</FieldError>}
               </Field>
             )}
           />
         </FieldGroup>
 
-        {error ? <FieldError>{error}</FieldError> : null}
+        {error ? <FieldError>{formatErrorMessage(intl, error)}</FieldError> : null}
 
         <Button type="submit" variant="default" size="lg" className="w-full" disabled={!form.isValid || isPending}>
           {isPending && <Spinner className="size-4" />}
-          {isPending ? 'Transferring...' : 'Confirm Transfer'}
+          {isPending ? (
+            <FormattedMessage id="transfer.submitting" defaultMessage="Transferring..." />
+          ) : (
+            <FormattedMessage id="transfer.submit" defaultMessage="Confirm Transfer" />
+          )}
         </Button>
       </Form>
     </ResponsiveDialog>

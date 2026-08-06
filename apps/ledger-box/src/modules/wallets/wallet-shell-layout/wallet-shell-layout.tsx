@@ -1,4 +1,5 @@
 import { Link, Navigate, Outlet, useLocation } from '@tanstack/react-router';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { Button } from '@vhnam/ui/components/button';
 import {
@@ -22,7 +23,8 @@ type WalletShellLayoutProps = {
 
 type SettingsSection = {
   value: string;
-  label: string;
+  labelId: string;
+  defaultLabel: string;
   icon: IconName;
   to:
     | '/wallets/$walletId/settings/general'
@@ -35,28 +37,32 @@ type SettingsSection = {
 const SETTINGS_SECTIONS: SettingsSection[] = [
   {
     value: 'general',
-    label: 'General',
+    labelId: 'wallet.shell.settings.general',
+    defaultLabel: 'General',
     icon: 'GearSixIcon',
     to: '/wallets/$walletId/settings/general',
     ownerOnly: false,
   },
   {
     value: 'activity',
-    label: 'Activity',
+    labelId: 'wallet.shell.settings.activity',
+    defaultLabel: 'Activity',
     icon: 'ClockCounterClockwiseIcon',
     to: '/wallets/$walletId/settings/activity',
     ownerOnly: true,
   },
   {
     value: 'members',
-    label: 'Members',
+    labelId: 'wallet.shell.settings.members',
+    defaultLabel: 'Members',
     icon: 'UsersIcon',
     to: '/wallets/$walletId/settings/members',
     ownerOnly: false,
   },
   {
     value: 'statement-shares',
-    label: 'Statement shares',
+    labelId: 'wallet.shell.settings.statementShares',
+    defaultLabel: 'Statement shares',
     icon: 'ReceiptIcon',
     to: '/wallets/$walletId/settings/statement-shares',
     ownerOnly: false,
@@ -66,6 +72,7 @@ const SETTINGS_SECTIONS: SettingsSection[] = [
 const SETTINGS_SECTION_VALUES = SETTINGS_SECTIONS.map((section) => section.value);
 
 function WalletShellLayout({ walletId }: WalletShellLayoutProps) {
+  const intl = useIntl();
   const { data: wallets } = useWallets();
   const { data: wallet, isPending, isError } = useWallet(walletId);
   const walletPreview = wallet ?? wallets?.find((item) => item.id === walletId);
@@ -84,11 +91,19 @@ function WalletShellLayout({ walletId }: WalletShellLayoutProps) {
   }
 
   if (isError || !walletId) {
-    return <p className="text-sm text-destructive">Failed to load wallet.</p>;
+    return (
+      <p className="text-sm text-destructive">
+        <FormattedMessage id="wallet.error.loadFailed" defaultMessage="Failed to load wallet." />
+      </p>
+    );
   }
 
   if (!walletPreview) {
-    return <p className="text-sm text-destructive">Wallet not found.</p>;
+    return (
+      <p className="text-sm text-destructive">
+        <FormattedMessage id="wallet.error.notFound" defaultMessage="Wallet not found." />
+      </p>
+    );
   }
 
   // Transactions stay open to a viewer; only the settings sub-tree is owner/manager-only.
@@ -110,7 +125,9 @@ function WalletShellLayout({ walletId }: WalletShellLayoutProps) {
       <div className="flex h-[calc(100vh-var(--header-height))] w-full md:flex-row">
         <div className="hidden shrink-0 flex-col gap-4 p-2 md:flex md:h-full md:w-64 md:border-r">
           <div className="flex flex-col gap-1">
-            <p className="px-3 pt-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">Wallet</p>
+            <p className="px-3 pt-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
+              <FormattedMessage id="wallet.shell.groupWallet" defaultMessage="Wallet" />
+            </p>
             <Button
               variant="ghost"
               className={cn(
@@ -121,7 +138,9 @@ function WalletShellLayout({ walletId }: WalletShellLayoutProps) {
               render={
                 <Link to="/wallets/$walletId" params={{ walletId }}>
                   <Icon name="ListBulletsIcon" />
-                  <span className="flex-1 text-left">Transactions</span>
+                  <span className="flex-1 text-left">
+                    <FormattedMessage id="wallet.shell.transactions" defaultMessage="Transactions" />
+                  </span>
                 </Link>
               }
             />
@@ -129,7 +148,9 @@ function WalletShellLayout({ walletId }: WalletShellLayoutProps) {
 
           {showSettingsGroup ? (
             <div className="flex flex-col gap-1">
-              <p className="px-3 pt-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">Settings</p>
+              <p className="px-3 pt-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
+                <FormattedMessage id="wallet.shell.groupSettings" defaultMessage="Settings" />
+              </p>
               {visibleSettingsSections.map((section) => {
                 const isActive = section.value === matchedSettingsSection;
 
@@ -145,7 +166,9 @@ function WalletShellLayout({ walletId }: WalletShellLayoutProps) {
                     render={
                       <Link to={section.to} params={{ walletId }}>
                         <Icon name={section.icon} />
-                        <span className="flex-1 text-left">{section.label}</span>
+                        <span className="flex-1 text-left">
+                          <FormattedMessage id={section.labelId} defaultMessage={section.defaultLabel} />
+                        </span>
                       </Link>
                     }
                   />
@@ -166,7 +189,7 @@ function WalletShellLayout({ walletId }: WalletShellLayoutProps) {
               )}
             >
               <Icon name="ListBulletsIcon" className="size-4" />
-              Transactions
+              <FormattedMessage id="wallet.shell.transactions" defaultMessage="Transactions" />
             </Link>
 
             {showSettingsGroup && activeSettingsSection ? (
@@ -178,7 +201,10 @@ function WalletShellLayout({ walletId }: WalletShellLayoutProps) {
                   )}
                 >
                   <Icon name={activeSettingsSection.icon} className="size-4" />
-                  {activeSettingsSection.label}
+                  {intl.formatMessage({
+                    id: activeSettingsSection.labelId,
+                    defaultMessage: activeSettingsSection.defaultLabel,
+                  })}
                   <Icon name="CaretDownIcon" className="size-3.5" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-fit">
@@ -189,7 +215,9 @@ function WalletShellLayout({ walletId }: WalletShellLayoutProps) {
                       render={<Link to={section.to} params={{ walletId }} />}
                     >
                       <Icon name={section.icon} />
-                      <span className="flex-1">{section.label}</span>
+                      <span className="flex-1">
+                        <FormattedMessage id={section.labelId} defaultMessage={section.defaultLabel} />
+                      </span>
                       {section.value === matchedSettingsSection ? (
                         <span className="size-1.5 shrink-0 rounded-full bg-primary" />
                       ) : null}
