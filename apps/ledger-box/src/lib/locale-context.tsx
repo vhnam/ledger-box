@@ -1,15 +1,10 @@
-import { DEFAULT_LOCALE, MESSAGES, type MessageLanguage, type SupportedLocale } from '@vhnam/utils';
+import { DEFAULT_LOCALE, MESSAGES, toMessageLanguage, type SupportedLocale } from '@vhnam/utils';
 import { useMemo, type ReactNode } from 'react';
 import { IntlProvider } from 'react-intl';
 
 import { useSession } from '#/lib/auth-client';
 import { resolveClientLocale } from '#/lib/client-locale';
 import { useUserLocale } from '#/queries/user-settings/user-settings.queries';
-
-/** `en-US`/`en-GB` share the `en` message catalog — see the language vs. locale key split in AGENTS.md. */
-function toMessageLanguage(locale: SupportedLocale): MessageLanguage {
-  return locale.split('-')[0] as MessageLanguage;
-}
 
 type LocaleProviderProps = {
   children: ReactNode;

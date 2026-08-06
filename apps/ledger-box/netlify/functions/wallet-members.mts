@@ -12,6 +12,7 @@ import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { renderWalletInviteEmail } from './lib/email-templates/wallet-invite-email.tsx';
 import { sendEmail } from './lib/mailer.ts';
 import { getTenantId, requireOwnedWallet } from './lib/tenant-access.ts';
+import { getUserLocale } from './lib/user-locale.ts';
 import { findUserByEmail, findUserById } from './lib/user-lookup.ts';
 import { mapOwnerMember, mapWalletMember } from './lib/wallet-member-response.ts';
 
@@ -199,12 +200,14 @@ export default async (request: Request, context: Context) => {
       .execute();
 
     const acceptUrl = new URL(`/invite/${rawToken}`, process.env.BETTER_AUTH_URL).toString();
+    const inviterLocale = await getUserLocale(tenantId);
     const { subject, html, text } = renderWalletInviteEmail({
       inviterName: session.user.name ?? '',
       inviterEmail: session.user.email,
       walletName: ownership.wallet.name,
       role,
       acceptUrl,
+      locale: inviterLocale,
     });
 
     const sendResult = await sendEmail({ to: email, subject, html, text });

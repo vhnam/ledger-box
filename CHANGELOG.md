@@ -6,21 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-### [mr-22 — i18n UI strings + API error codes](docs/changelogs/mr-22-i18n-ui-strings.md)
+### [mr-22 — full app i18n (UI, API errors, invite emails)](docs/changelogs/mr-22-i18n-ui-strings.md)
 
 #### Added
 
 - `react-intl` message keys (`en`/`vi`/`fr`/`ja`) for app chrome, wallets/transactions,
-  wallet settings, auth, public invite/statement, validation, toasts, and `errors.{CODE}`;
-  bidirectional catalog key-parity tests; `formatErrorMessage` helper; shared API error
-  codes with JSON `{ code, message }` Netlify responses and client `getApiError` mapping.
+  wallet settings, auth, public invite/statement, validation, toasts, `errors.{CODE}`, and
+  `email.invite.*`; bidirectional catalog key-parity tests; `formatErrorMessage` helper;
+  shared API error codes with JSON `{ code, message }` Netlify responses and client
+  `getApiError` mapping; server `createServerIntl` / `getUserLocale` for invite emails.
 
 #### Changed
 
 - App shell, wallets, wallet settings, auth, and public pages use `FormattedMessage` /
   `useIntl`; unauthenticated routes resolve locale from the browser; filter/sort/role
   constants and Valibot schemas store message ids; Netlify handlers (except better-auth /
-  CSV) return coded JSON errors. `AGENTS.md` documents the i18n and API error conventions.
+  CSV) return coded JSON errors; invite emails use the inviter’s stored locale.
+  `AGENTS.md` documents the i18n, API error, and invite-email conventions.
 
 #### Fixed
 

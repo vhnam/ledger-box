@@ -153,6 +153,11 @@ schemas store **message ids** (e.g. `validation.amount.required`) — render the
 pass through). Do not put `react-intl` inside `@vhnam/ui`; pass translated props from the
 app. Keep the brand name "Ledger Box" untranslated.
 
+**Invite emails use the inviter’s locale.** `renderWalletInviteEmail` reads catalog keys
+(`email.invite.*`, `members.role.*`) via `createServerIntl` in
+`netlify/functions/lib/server-intl.ts`. Invite and resend handlers resolve locale from
+the owner’s `user_settings.locale` (`getUserLocale`, fallback `en-US`).
+
 **API errors are coded JSON.** Netlify app handlers return
 `{ code, message }` via `apiError` / `ApiErrors` in
 `netlify/functions/lib/api-error-response.ts` (codes in `#/lib/api-error-codes.ts`). The
