@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { FormattedMessage, useIntl, type IntlShape } from 'react-intl';
 
 import { Badge } from '@vhnam/ui/components/badge';
 import { Button } from '@vhnam/ui/components/button';
@@ -20,38 +21,47 @@ type WalletSettingsActivityProps = {
   currency: string;
 };
 
-function actionLabel(item: ActivityLogItemDto): string {
-  const entity = item.entityType.replaceAll('_', ' ');
+const ENTITY_DEFAULTS: Record<string, string> = {
+  transaction: 'transaction',
+  wallet: 'wallet',
+  wallet_member: 'wallet member',
+  statement_share: 'statement share',
+  transfer: 'transfer',
+};
 
-  if (item.action === 'create') {
-    return `Created ${entity}`;
+const ACTION_DEFAULTS: Record<string, string> = {
+  create: 'Created {entity}',
+  update: 'Updated {entity}',
+  delete: 'Deleted {entity}',
+  transfer: 'Transfer',
+  invite: 'Invited member',
+  role_change: 'Changed member role',
+  revoke: 'Revoked statement share',
+  rename: 'Renamed wallet',
+  invite_resend: 'Resent invite',
+  invite_email_failed: 'Invite email failed',
+};
+
+function actionLabel(intl: IntlShape, item: ActivityLogItemDto): string {
+  const entity = intl.formatMessage({
+    id: `activity.entity.${item.entityType}`,
+    defaultMessage: ENTITY_DEFAULTS[item.entityType] ?? item.entityType,
+  });
+
+  if (item.action === 'create' || item.action === 'update' || item.action === 'delete') {
+    return intl.formatMessage(
+      {
+        id: `activity.action.${item.action}`,
+        defaultMessage: ACTION_DEFAULTS[item.action],
+      },
+      { entity },
+    );
   }
 
-  if (item.action === 'update') {
-    return `Updated ${entity}`;
-  }
-
-  if (item.action === 'delete') {
-    return `Deleted ${entity}`;
-  }
-
-  if (item.action === 'transfer') {
-    return 'Transfer';
-  }
-
-  if (item.action === 'invite') {
-    return 'Invited member';
-  }
-
-  if (item.action === 'role_change') {
-    return 'Changed member role';
-  }
-
-  if (item.action === 'revoke') {
-    return 'Revoked statement share';
-  }
-
-  return 'Renamed wallet';
+  return intl.formatMessage({
+    id: `activity.action.${item.action}`,
+    defaultMessage: ACTION_DEFAULTS[item.action] ?? item.action,
+  });
 }
 
 function entitySummary(item: ActivityLogItemDto): string {
@@ -91,6 +101,7 @@ function ActivityRow({
   currency: string;
   locale: SupportedLocale;
 }) {
+  const intl = useIntl();
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -98,8 +109,15 @@ function ActivityRow({
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 space-y-1">
           <div className="flex flex-wrap items-center gap-2">
-            <p className="text-sm font-medium">{actionLabel(item)}</p>
-            {item.affectsActiveStatementShare ? <Badge variant="secondary">Affects shared statement</Badge> : null}
+            <p className="text-sm font-medium">{actionLabel(intl, item)}</p>
+            {item.affectsActiveStatementShare ? (
+              <Badge variant="secondary">
+                <FormattedMessage
+                  id="wallet.settings.activity.affectsShare"
+                  defaultMessage="Affects shared statement"
+                />
+              </Badge>
+            ) : null}
           </div>
           <p className="truncate text-sm text-muted-foreground">{entitySummary(item)}</p>
           <p className="text-xs text-muted-foreground">
@@ -111,7 +129,11 @@ function ActivityRow({
         </div>
         <Button variant="ghost" size="sm" onClick={() => setExpanded((value) => !value)}>
           <Icon name={expanded ? 'CaretUpIcon' : 'CaretDownIcon'} />
-          {expanded ? 'Hide' : 'Details'}
+          {expanded ? (
+            <FormattedMessage id="wallet.settings.activity.hide" defaultMessage="Hide" />
+          ) : (
+            <FormattedMessage id="wallet.settings.activity.details" defaultMessage="Details" />
+          )}
         </Button>
       </div>
       {expanded ? (
@@ -145,9 +167,14 @@ function WalletSettingsActivity({ walletId, currency }: WalletSettingsActivityPr
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-1">
-        <h1 className="font-heading text-xl font-semibold">Activity</h1>
+        <h1 className="font-heading text-xl font-semibold">
+          <FormattedMessage id="wallet.settings.activity.title" defaultMessage="Activity" />
+        </h1>
         <p className="text-sm text-muted-foreground">
-          Audit trail of changes to this wallet. Entries are never edited or deleted.
+          <FormattedMessage
+            id="wallet.settings.activity.description"
+            defaultMessage="Audit trail of changes to this wallet. Entries are never edited or deleted."
+          />
         </p>
       </div>
 
@@ -156,9 +183,13 @@ function WalletSettingsActivity({ walletId, currency }: WalletSettingsActivityPr
           <Spinner className="size-6 text-muted-foreground" />
         </div>
       ) : isError ? (
-        <p className="text-sm text-destructive">Failed to load activity.</p>
+        <p className="text-sm text-destructive">
+          <FormattedMessage id="wallet.settings.activity.loadFailed" defaultMessage="Failed to load activity." />
+        </p>
       ) : data.items.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No activity recorded yet.</p>
+        <p className="text-sm text-muted-foreground">
+          <FormattedMessage id="wallet.settings.activity.empty" defaultMessage="No activity recorded yet." />
+        </p>
       ) : (
         <>
           <ul className="divide-y">

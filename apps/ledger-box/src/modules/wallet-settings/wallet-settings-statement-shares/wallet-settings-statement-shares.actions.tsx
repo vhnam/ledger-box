@@ -1,7 +1,9 @@
 import { useMemo, useState } from 'react';
+import { useIntl } from 'react-intl';
 
 import { toast } from '@vhnam/ui/components/toast';
 
+import { formatErrorMessage } from '#/lib/intl-message';
 import { getPageItems } from '#/lib/pagination';
 import type {
   CreateStatementSharePayload,
@@ -22,6 +24,7 @@ type UseWalletSettingsStatementSharesOptions = {
 };
 
 export function useWalletSettingsStatementSharesActions({ wallet }: UseWalletSettingsStatementSharesOptions) {
+  const intl = useIntl();
   const [page, setPage] = useState(1);
   const { data, isPending: isLoadingShares, isFetching: isFetchingShares } = useStatementShares(wallet.id, page);
   const shares = data?.items ?? [];
@@ -60,7 +63,7 @@ export function useWalletSettingsStatementSharesActions({ wallet }: UseWalletSet
 
   function buildPayload(): CreateStatementSharePayload | null {
     if (!periodFrom || !periodTo) {
-      setError('Pick a start and end date');
+      setError('validation.share.period.required');
       return null;
     }
 
@@ -82,7 +85,8 @@ export function useWalletSettingsStatementSharesActions({ wallet }: UseWalletSet
     preview(payload, {
       onSuccess: (response) => setPreviewSnapshot(response.preview),
       onError: (previewError) => {
-        const message = previewError instanceof Error ? previewError.message : 'Failed to preview statement.';
+        const message =
+          previewError instanceof Error ? previewError.message : 'wallet.settings.shares.previewErrorFallback';
         setError(message);
       },
     });
@@ -106,7 +110,8 @@ export function useWalletSettingsStatementSharesActions({ wallet }: UseWalletSet
         URL.revokeObjectURL(url);
       },
       onError: (downloadError) => {
-        const message = downloadError instanceof Error ? downloadError.message : 'Failed to download statement.';
+        const message =
+          downloadError instanceof Error ? downloadError.message : 'wallet.settings.shares.downloadErrorFallback';
         setError(message);
       },
     });
@@ -124,22 +129,43 @@ export function useWalletSettingsStatementSharesActions({ wallet }: UseWalletSet
       onSuccess: (response) => {
         setCreatedLink(response);
         setPreviewSnapshot(null);
-        toast.add({ title: 'Share link created', type: 'success' });
+        toast.add({
+          title: intl.formatMessage({ id: 'toast.shares.created', defaultMessage: 'Share link created' }),
+          type: 'success',
+        });
       },
       onError: (createError) => {
-        const message = createError instanceof Error ? createError.message : 'Failed to create share link.';
+        const message = createError instanceof Error ? createError.message : 'toast.shares.createErrorFallback';
         setError(message);
-        toast.add({ title: 'Failed to create share link', description: message, type: 'error' });
+        toast.add({
+          title: intl.formatMessage({
+            id: 'toast.shares.createFailed',
+            defaultMessage: 'Failed to create share link',
+          }),
+          description: formatErrorMessage(intl, message),
+          type: 'error',
+        });
       },
     });
   }
 
   function handleRevoke(shareId: string) {
     revokeShare(shareId, {
-      onSuccess: () => toast.add({ title: 'Share link revoked', type: 'success' }),
+      onSuccess: () =>
+        toast.add({
+          title: intl.formatMessage({ id: 'toast.shares.revoked', defaultMessage: 'Share link revoked' }),
+          type: 'success',
+        }),
       onError: (revokeError) => {
-        const message = revokeError instanceof Error ? revokeError.message : 'Failed to revoke share link.';
-        toast.add({ title: 'Failed to revoke share link', description: message, type: 'error' });
+        const message = revokeError instanceof Error ? revokeError.message : 'toast.shares.revokeErrorFallback';
+        toast.add({
+          title: intl.formatMessage({
+            id: 'toast.shares.revokeFailed',
+            defaultMessage: 'Failed to revoke share link',
+          }),
+          description: formatErrorMessage(intl, message),
+          type: 'error',
+        });
       },
     });
   }

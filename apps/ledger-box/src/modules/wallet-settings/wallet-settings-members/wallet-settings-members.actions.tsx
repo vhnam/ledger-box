@@ -1,9 +1,11 @@
 import { useMemo, useState } from 'react';
+import { useIntl } from 'react-intl';
 import * as v from 'valibot';
 
 import { toast } from '@vhnam/ui/components/toast';
 
 import { WALLET_MEMBER_ROLES, type WalletMemberRole } from '#/constants/wallet-member-role-options';
+import { formatErrorMessage } from '#/lib/intl-message';
 import { getPageItems } from '#/lib/pagination';
 import {
   useInviteWalletMember,
@@ -20,6 +22,7 @@ type UseWalletSettingsMembersActionsOptions = {
 };
 
 export function useWalletSettingsMembersActions({ wallet }: UseWalletSettingsMembersActionsOptions) {
+  const intl = useIntl();
   const [page, setPage] = useState(1);
   const { data, isPending: isLoadingMembers, isFetching: isFetchingMembers } = useWalletMembers(wallet.id, page);
   const members = data?.items ?? [];
@@ -59,7 +62,7 @@ export function useWalletSettingsMembersActions({ wallet }: UseWalletSettingsMem
     const result = v.safeParse(inviteWalletMemberSchema, { email: inviteEmail, role: inviteRole });
 
     if (!result.success) {
-      const message = result.issues[0]?.message ?? 'Enter a valid email address';
+      const message = result.issues[0]?.message ?? 'validation.member.email.invalid';
       setInviteError(message);
       return;
     }
@@ -70,23 +73,43 @@ export function useWalletSettingsMembersActions({ wallet }: UseWalletSettingsMem
 
         if (member.emailSent === false) {
           toast.add({
-            title: 'Invite created, email not sent',
-            description: `${member.email} was added as a pending member, but the notification email could not be delivered. Check the wallet activity log or resend later.`,
+            title: intl.formatMessage({
+              id: 'toast.members.inviteCreatedNoEmail',
+              defaultMessage: 'Invite created, email not sent',
+            }),
+            description: intl.formatMessage(
+              {
+                id: 'toast.members.inviteCreatedNoEmail.description',
+                defaultMessage:
+                  '{email} was added as a pending member, but the notification email could not be delivered. Check the wallet activity log or resend later.',
+              },
+              { email: member.email },
+            ),
             type: 'warning',
           });
           return;
         }
 
         toast.add({
-          title: 'Invite sent',
-          description: `Invitation sent to ${member.email} for ${wallet.name}.`,
+          title: intl.formatMessage({ id: 'toast.members.inviteSent', defaultMessage: 'Invite sent' }),
+          description: intl.formatMessage(
+            {
+              id: 'toast.members.inviteSent.description',
+              defaultMessage: 'Invitation sent to {email} for {walletName}.',
+            },
+            { email: member.email, walletName: wallet.name },
+          ),
           type: 'success',
         });
       },
       onError: (error) => {
-        const message = error instanceof Error ? error.message : 'Failed to send invite. Please try again.';
+        const message = error instanceof Error ? error.message : 'toast.members.inviteErrorFallback';
         setInviteError(message);
-        toast.add({ title: 'Failed to send invite', description: message, type: 'error' });
+        toast.add({
+          title: intl.formatMessage({ id: 'toast.members.inviteFailed', defaultMessage: 'Failed to send invite' }),
+          description: formatErrorMessage(intl, message),
+          type: 'error',
+        });
       },
     });
   }
@@ -96,8 +119,15 @@ export function useWalletSettingsMembersActions({ wallet }: UseWalletSettingsMem
       { memberId, role },
       {
         onError: (error) => {
-          const message = error instanceof Error ? error.message : 'Failed to update member role. Please try again.';
-          toast.add({ title: 'Failed to update role', description: message, type: 'error' });
+          const message = error instanceof Error ? error.message : 'toast.members.roleUpdateErrorFallback';
+          toast.add({
+            title: intl.formatMessage({
+              id: 'toast.members.roleUpdateFailed',
+              defaultMessage: 'Failed to update role',
+            }),
+            description: formatErrorMessage(intl, message),
+            type: 'error',
+          });
         },
       },
     );
@@ -106,11 +136,18 @@ export function useWalletSettingsMembersActions({ wallet }: UseWalletSettingsMem
   function handleRemoveMember(memberId: string) {
     removeMember(memberId, {
       onSuccess: () => {
-        toast.add({ title: 'Member removed', type: 'success' });
+        toast.add({
+          title: intl.formatMessage({ id: 'toast.members.removed', defaultMessage: 'Member removed' }),
+          type: 'success',
+        });
       },
       onError: (error) => {
-        const message = error instanceof Error ? error.message : 'Failed to remove member. Please try again.';
-        toast.add({ title: 'Failed to remove member', description: message, type: 'error' });
+        const message = error instanceof Error ? error.message : 'toast.members.removeErrorFallback';
+        toast.add({
+          title: intl.formatMessage({ id: 'toast.members.removeFailed', defaultMessage: 'Failed to remove member' }),
+          description: formatErrorMessage(intl, message),
+          type: 'error',
+        });
       },
     });
   }
@@ -120,18 +157,31 @@ export function useWalletSettingsMembersActions({ wallet }: UseWalletSettingsMem
       onSuccess: (result) => {
         if (!result.emailSent) {
           toast.add({
-            title: 'Invite refreshed, email not sent',
-            description: 'The invite link was renewed, but the notification email could not be delivered.',
+            title: intl.formatMessage({
+              id: 'toast.members.inviteRefreshedNoEmail',
+              defaultMessage: 'Invite refreshed, email not sent',
+            }),
+            description: intl.formatMessage({
+              id: 'toast.members.inviteRefreshedNoEmail.description',
+              defaultMessage: 'The invite link was renewed, but the notification email could not be delivered.',
+            }),
             type: 'warning',
           });
           return;
         }
 
-        toast.add({ title: 'Invite resent', type: 'success' });
+        toast.add({
+          title: intl.formatMessage({ id: 'toast.members.inviteResent', defaultMessage: 'Invite resent' }),
+          type: 'success',
+        });
       },
       onError: (error) => {
-        const message = error instanceof Error ? error.message : 'Failed to resend invite. Please try again.';
-        toast.add({ title: 'Failed to resend invite', description: message, type: 'error' });
+        const message = error instanceof Error ? error.message : 'toast.members.resendErrorFallback';
+        toast.add({
+          title: intl.formatMessage({ id: 'toast.members.resendFailed', defaultMessage: 'Failed to resend invite' }),
+          description: formatErrorMessage(intl, message),
+          type: 'error',
+        });
       },
     });
   }

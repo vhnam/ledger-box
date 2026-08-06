@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import { WALLET_MEMBER_ROLE_DESCRIPTIONS, WALLET_MEMBER_ROLE_OPTIONS } from '#/constants/wallet-member-role-options.ts';
+import { WALLET_MEMBER_ROLE_OPTIONS } from '#/constants/wallet-member-role-options.ts';
 import type { WalletMemberRole } from '#/lib/db/schema.ts';
 
 import { EmailLayout } from './email-layout.tsx';
@@ -21,14 +21,22 @@ type EmailContent = {
 
 const paragraphStyle = { margin: '0 0 16px' };
 
+function roleOption(role: WalletMemberRole) {
+  return WALLET_MEMBER_ROLE_OPTIONS.find((option) => option.value === role);
+}
+
 function roleLabel(role: WalletMemberRole): string {
-  return WALLET_MEMBER_ROLE_OPTIONS.find((option) => option.value === role)?.label ?? role;
+  return roleOption(role)?.defaultLabel ?? role;
+}
+
+function roleDescription(role: WalletMemberRole): string {
+  return roleOption(role)?.defaultDescription ?? '';
 }
 
 function WalletInviteEmailBody({ inviterName, inviterEmail, walletName, role, acceptUrl }: WalletInviteEmailInput) {
   const inviterDisplay = inviterName.trim() || inviterEmail;
   const label = roleLabel(role);
-  const description = WALLET_MEMBER_ROLE_DESCRIPTIONS[role];
+  const description = roleDescription(role);
 
   return (
     <EmailLayout>
@@ -50,7 +58,7 @@ function WalletInviteEmailBody({ inviterName, inviterEmail, walletName, role, ac
 function renderWalletInviteEmail(input: WalletInviteEmailInput): EmailContent {
   const inviterDisplay = input.inviterName.trim() || input.inviterEmail;
   const label = roleLabel(input.role);
-  const description = WALLET_MEMBER_ROLE_DESCRIPTIONS[input.role];
+  const description = roleDescription(input.role);
 
   const subject = `${inviterDisplay} invited you to ${input.walletName} on Ledger Box`;
 

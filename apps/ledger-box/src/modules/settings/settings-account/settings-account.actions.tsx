@@ -1,5 +1,6 @@
 import { reset, useForm } from '@formisch/react';
 import { useState } from 'react';
+import { useIntl } from 'react-intl';
 
 import { toast } from '@vhnam/ui/components/toast';
 
@@ -7,6 +8,7 @@ import { authClient } from '#/lib/auth-client';
 import { changePasswordSchema } from '#/schemas/auth.schema';
 
 export function useSettingsAccountActions() {
+  const intl = useIntl();
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm({ schema: changePasswordSchema });
@@ -28,14 +30,17 @@ export function useSettingsAccountActions() {
     setIsSubmitting(false);
 
     if (authError) {
-      setError(authError.message ?? 'Failed to update password. Please try again.');
+      setError(authError.message ?? 'settings.account.passwordUpdateErrorFallback');
       return;
     }
 
     reset(form);
     toast.add({
-      title: 'Password updated',
-      description: 'Your password has been changed successfully.',
+      title: intl.formatMessage({ id: 'toast.settings.passwordUpdated', defaultMessage: 'Password updated' }),
+      description: intl.formatMessage({
+        id: 'toast.settings.passwordUpdated.description',
+        defaultMessage: 'Your password has been changed successfully.',
+      }),
       type: 'success',
     });
   }

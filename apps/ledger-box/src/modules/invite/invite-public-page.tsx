@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import axios from 'axios';
+import { useIntl } from 'react-intl';
 
 import { Button } from '@vhnam/ui/components/button';
 import { Spinner } from '@vhnam/ui/components/spinner';
@@ -24,11 +25,13 @@ function getErrorMessage(error: unknown): string {
 }
 
 function InvitePublicPage({ token }: InvitePublicPageProps) {
+  const intl = useIntl();
   const { data, isPending, isError, error } = useWalletInviteVerification(token);
 
-  const roleLabel = data
-    ? (WALLET_MEMBER_ROLE_OPTIONS.find((option) => option.value === data.role)?.label ?? data.role)
-    : null;
+  const roleOption = data ? WALLET_MEMBER_ROLE_OPTIONS.find((option) => option.value === data.role) : undefined;
+  const roleLabel = roleOption
+    ? intl.formatMessage({ id: roleOption.labelId, defaultMessage: roleOption.defaultLabel })
+    : data?.role;
 
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-md flex-col items-center justify-center gap-6 p-4 text-center">

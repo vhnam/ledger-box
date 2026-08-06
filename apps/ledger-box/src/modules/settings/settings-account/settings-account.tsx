@@ -6,6 +6,7 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '@vhnam/ui/components/
 import { Input } from '@vhnam/ui/components/input';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
+import { formatErrorMessage } from '#/lib/intl-message';
 import { useSettingsAccountActions } from '#/modules/settings/settings-account/settings-account.actions';
 
 function SettingsAccount() {
@@ -58,7 +59,7 @@ function SettingsAccount() {
                     aria-invalid={!!field.errors}
                     {...field.props}
                   />
-                  {field.errors && <FieldError>{field.errors[0]}</FieldError>}
+                  {field.errors && <FieldError>{formatErrorMessage(intl, field.errors[0])}</FieldError>}
                 </Field>
               )}
             />
@@ -83,7 +84,7 @@ function SettingsAccount() {
                     aria-invalid={!!field.errors}
                     {...field.props}
                   />
-                  {field.errors && <FieldError>{field.errors[0]}</FieldError>}
+                  {field.errors && <FieldError>{formatErrorMessage(intl, field.errors[0])}</FieldError>}
                 </Field>
               )}
             />
@@ -111,12 +112,12 @@ function SettingsAccount() {
                     aria-invalid={!!field.errors}
                     {...field.props}
                   />
-                  {field.errors && <FieldError>{field.errors[0]}</FieldError>}
+                  {field.errors && <FieldError>{formatErrorMessage(intl, field.errors[0])}</FieldError>}
                 </Field>
               )}
             />
 
-            {error && <FieldError>{error}</FieldError>}
+            {error && <FieldError>{formatErrorMessage(intl, error)}</FieldError>}
 
             <Field>
               <Button type="submit" disabled={isSubmitting}>
