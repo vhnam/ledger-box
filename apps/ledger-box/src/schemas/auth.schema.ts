@@ -1,21 +1,21 @@
 import * as v from 'valibot';
 
 export const loginSchema = v.object({
-  email: v.pipe(v.string(), v.trim(), v.nonEmpty('Email is required'), v.email('Enter a valid email address')),
+  email: v.pipe(v.string(), v.trim(), v.nonEmpty('validation.email.required'), v.email('validation.email.invalid')),
   password: v.pipe(
     v.string(),
-    v.nonEmpty('Password is required'),
-    v.minLength(8, 'Password must be at least 8 characters'),
+    v.nonEmpty('validation.password.required'),
+    v.minLength(8, 'validation.password.minLength'),
   ),
 });
 
 export const registerSchema = v.object({
-  name: v.pipe(v.string(), v.trim(), v.nonEmpty('Name is required')),
-  email: v.pipe(v.string(), v.trim(), v.nonEmpty('Email is required'), v.email('Enter a valid email address')),
+  name: v.pipe(v.string(), v.trim(), v.nonEmpty('validation.name.required')),
+  email: v.pipe(v.string(), v.trim(), v.nonEmpty('validation.email.required'), v.email('validation.email.invalid')),
   password: v.pipe(
     v.string(),
-    v.nonEmpty('Password is required'),
-    v.minLength(8, 'Password must be at least 8 characters'),
+    v.nonEmpty('validation.password.required'),
+    v.minLength(8, 'validation.password.minLength'),
   ),
 });
 

@@ -1,7 +1,9 @@
 import { DEFAULT_LOCALE, MESSAGES, type MessageLanguage, type SupportedLocale } from '@vhnam/utils';
-import type { ReactNode } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import { IntlProvider } from 'react-intl';
 
+import { useSession } from '#/lib/auth-client';
+import { resolveClientLocale } from '#/lib/client-locale';
 import { useUserLocale } from '#/queries/user-settings/user-settings.queries';
 
 /** `en-US`/`en-GB` share the `en` message catalog — see the language vs. locale key split in AGENTS.md. */
@@ -14,13 +16,46 @@ type LocaleProviderProps = {
 };
 
 /**
- * Provides translated strings (via `react-intl`) sourced from the signed-in user's stored
- * locale. Before the locale query resolves, falls back to `en-US`/`en` messages, matching
- * the loading-state convention used elsewhere in the app shell.
+ * Resolves the active locale: signed-in users use their stored preference; unauthenticated
+ * viewers (auth, invite, public statement) use the browser Accept-Language via
+ * `resolveClientLocale`. While the signed-in locale query is still loading, keep the
+ * previous signed-in fallback of `DEFAULT_LOCALE` to avoid a flash of browser locale on
+ * first paint after login.
+ */
+function useResolvedLocale(): SupportedLocale {
+  const { data: session, isPending: isSessionPending } = useSession();
+  const isSignedIn = Boolean(session?.user);
+  const { data, isPending: isLocalePending, isError } = useUserLocale({ enabled: isSignedIn });
+
+  const browserLocale = useMemo(() => resolveClientLocale() as SupportedLocale, []);
+
+  if (isSignedIn) {
+    if (data?.locale) {
+      return data.locale;
+    }
+
+    // Signed in but locale still loading (or failed) — prefer default over browser so the
+    // shell does not briefly flip languages before the stored preference arrives.
+    if (isLocalePending || isSessionPending) {
+      return DEFAULT_LOCALE;
+    }
+
+    if (isError) {
+      return browserLocale;
+    }
+
+    return DEFAULT_LOCALE;
+  }
+
+  return browserLocale;
+}
+
+/**
+ * Provides translated strings (via `react-intl`) from the signed-in user's stored locale,
+ * or from the viewer's browser locale on unauthenticated routes.
  */
 function LocaleProvider({ children }: LocaleProviderProps) {
-  const { data } = useUserLocale();
-  const locale = data?.locale ?? DEFAULT_LOCALE;
+  const locale = useResolvedLocale();
 
   return (
     <IntlProvider locale={locale} messages={MESSAGES[toMessageLanguage(locale)]}>
@@ -30,16 +65,13 @@ function LocaleProvider({ children }: LocaleProviderProps) {
 }
 
 /**
- * Resolves the signed-in viewer's stored locale for use with `formatCurrency`/date
- * formatting — independent of `react-intl`'s own context, since those functions never
- * route through `react-intl` (see AGENTS.md's formatting-ownership rule). Safe to call
- * from any component under `QueryClientProvider`; the underlying query is cached and
- * shared, not re-fetched per call site.
+ * Resolves the viewer's locale for `formatCurrency`/date formatting — independent of
+ * `react-intl`'s own context, since those functions never route through `react-intl`
+ * (see AGENTS.md's formatting-ownership rule). Matches `LocaleProvider` resolution so
+ * messages and number/date formatting stay aligned.
  */
 function useAppLocale(): SupportedLocale {
-  const { data } = useUserLocale();
-
-  return data?.locale ?? DEFAULT_LOCALE;
+  return useResolvedLocale();
 }
 
 export { LocaleProvider, useAppLocale };

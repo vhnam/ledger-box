@@ -1,9 +1,8 @@
-import { useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { formatCurrency, formatSignedCurrency } from '@vhnam/utils/currency';
 
-import { resolveClientLocale } from '#/lib/client-locale';
+import { useAppLocale } from '#/lib/locale-context';
 import type { StatementSnapshotDto } from '#/queries/statement-shares/statement-share.dto';
 
 type StatementSnapshotViewProps = {
@@ -20,7 +19,7 @@ function formatSnapshotDate(value: string | null, timezone: string, locale: stri
 
 function StatementSnapshotView({ snapshot }: StatementSnapshotViewProps) {
   const intl = useIntl();
-  const locale = useMemo(() => resolveClientLocale(), []);
+  const locale = useAppLocale();
   const allTimeLabel = intl.formatMessage({ id: 'statement.snapshot.allTime', defaultMessage: 'All time' });
 
   const periodFromLabel = formatSnapshotDate(snapshot.periodFrom, snapshot.timezone, locale);

@@ -6,19 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-### [mr-22 — i18n UI strings (app chrome, wallets, wallet settings)](docs/changelogs/mr-22-i18n-ui-strings.md)
+### [mr-22 — i18n UI strings (app chrome, wallets, settings, auth, public)](docs/changelogs/mr-22-i18n-ui-strings.md)
 
 #### Added
 
 - `react-intl` message keys (`en`/`vi`/`fr`/`ja`) for app chrome, wallets/transactions,
-  wallet settings, member roles, statement snapshot preview, validation, and related toasts;
-  bidirectional catalog key-parity tests; `formatErrorMessage` helper for Valibot message ids.
+  wallet settings, auth, public invite/statement, member roles, statement snapshot,
+  validation, and related toasts; bidirectional catalog key-parity tests;
+  `formatErrorMessage` helper for Valibot message ids.
 
 #### Changed
 
-- App shell, wallets/transactions, and wallet settings use `FormattedMessage` / `useIntl`;
-  filter/sort/role constants and related Valibot schemas store message ids; toasts and
-  Settings password flow are localized. `AGENTS.md` documents the i18n conventions.
+- App shell, wallets, wallet settings, auth, and public pages use `FormattedMessage` /
+  `useIntl`; unauthenticated routes resolve locale from the browser; filter/sort/role
+  constants and related Valibot schemas store message ids; toasts and Settings password
+  flow are localized. `AGENTS.md` documents the i18n conventions.
 
 #### Fixed
 
