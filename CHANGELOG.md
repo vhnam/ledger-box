@@ -6,21 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-### [mr-22 — i18n UI strings (app chrome, wallets, settings, auth, public)](docs/changelogs/mr-22-i18n-ui-strings.md)
+### [mr-22 — i18n UI strings + API error codes](docs/changelogs/mr-22-i18n-ui-strings.md)
 
 #### Added
 
 - `react-intl` message keys (`en`/`vi`/`fr`/`ja`) for app chrome, wallets/transactions,
-  wallet settings, auth, public invite/statement, member roles, statement snapshot,
-  validation, and related toasts; bidirectional catalog key-parity tests;
-  `formatErrorMessage` helper for Valibot message ids.
+  wallet settings, auth, public invite/statement, validation, toasts, and `errors.{CODE}`;
+  bidirectional catalog key-parity tests; `formatErrorMessage` helper; shared API error
+  codes with JSON `{ code, message }` Netlify responses and client `getApiError` mapping.
 
 #### Changed
 
 - App shell, wallets, wallet settings, auth, and public pages use `FormattedMessage` /
   `useIntl`; unauthenticated routes resolve locale from the browser; filter/sort/role
-  constants and related Valibot schemas store message ids; toasts and Settings password
-  flow are localized. `AGENTS.md` documents the i18n conventions.
+  constants and Valibot schemas store message ids; Netlify handlers (except better-auth /
+  CSV) return coded JSON errors. `AGENTS.md` documents the i18n and API error conventions.
 
 #### Fixed
 

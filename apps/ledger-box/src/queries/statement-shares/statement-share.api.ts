@@ -17,7 +17,7 @@ export async function fetchStatementShares(walletId: string, page = 1, pageSize 
 
     return data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, 'Failed to load statement shares. Please try again.'));
+    throw new Error(getApiErrorMessage(error, 'wallet.settings.shares.loadErrorFallback'));
   }
 }
 
@@ -33,7 +33,7 @@ export async function previewStatementShare(
 
     return data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, 'Failed to preview statement. Please try again.'));
+    throw new Error(getApiErrorMessage(error, 'wallet.settings.shares.previewErrorFallback'));
   }
 }
 
@@ -49,7 +49,7 @@ export async function createStatementShare(
 
     return data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, 'Failed to create share link. Please try again.'));
+    throw new Error(getApiErrorMessage(error, 'toast.shares.createErrorFallback'));
   }
 }
 
@@ -57,7 +57,7 @@ export async function revokeStatementShare(walletId: string, shareId: string): P
   try {
     await axios.delete(`/api/wallets/${walletId}/statement-shares/${shareId}`);
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, 'Failed to revoke share link. Please try again.'));
+    throw new Error(getApiErrorMessage(error, 'toast.shares.revokeErrorFallback'));
   }
 }
 
@@ -91,6 +91,6 @@ export async function downloadStatementPreviewCsv(
 
     return { blob: response.data, filename: extractFilename(response.headers['content-disposition']) };
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, 'Failed to download statement. Please try again.'));
+    throw new Error(getApiErrorMessage(error, 'wallet.settings.shares.downloadErrorFallback'));
   }
 }

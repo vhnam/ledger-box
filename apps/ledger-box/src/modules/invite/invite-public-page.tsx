@@ -1,41 +1,17 @@
 import { Link } from '@tanstack/react-router';
-import axios from 'axios';
-import { FormattedMessage, useIntl, type IntlShape } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { Button } from '@vhnam/ui/components/button';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
 import { WALLET_MEMBER_ROLE_OPTIONS } from '#/constants/wallet-member-role-options';
+import { getApiErrorMessage } from '#/lib/api-error';
 import { formatErrorMessage } from '#/lib/intl-message';
 import { useWalletInviteVerification } from '#/queries/wallet-invites/wallet-invite.queries';
 
 type InvitePublicPageProps = {
   token: string;
 };
-
-const INVITE_API_MESSAGE_IDS: Record<string, string> = {
-  'This invite link is not valid.': 'invite.error.invalid',
-  'This invite has already been used.': 'invite.error.alreadyUsed',
-  'This invite link has expired.': 'invite.error.expired',
-  'This wallet is no longer available.': 'invite.error.walletUnavailable',
-};
-
-function getInviteErrorMessage(intl: IntlShape, error: unknown): string {
-  if (axios.isAxiosError(error)) {
-    const data = error.response?.data;
-
-    if (typeof data === 'string' && data.length > 0) {
-      const messageId = INVITE_API_MESSAGE_IDS[data];
-      if (messageId) {
-        return formatErrorMessage(intl, messageId);
-      }
-
-      return formatErrorMessage(intl, data);
-    }
-  }
-
-  return formatErrorMessage(intl, 'invite.error.invalid');
-}
 
 function InvitePublicPage({ token }: InvitePublicPageProps) {
   const intl = useIntl();
@@ -52,7 +28,9 @@ function InvitePublicPage({ token }: InvitePublicPageProps) {
         <Spinner className="size-12 text-muted-foreground" />
       ) : isError ? (
         <>
-          <p className="text-sm text-destructive">{getInviteErrorMessage(intl, error)}</p>
+          <p className="text-sm text-destructive">
+            {formatErrorMessage(intl, getApiErrorMessage(error, 'errors.INVITE_NOT_VALID'))}
+          </p>
           <Button
             variant="secondary"
             nativeButton={false}

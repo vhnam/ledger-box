@@ -3,6 +3,7 @@ import type { Config } from '@netlify/functions';
 import { auth } from '#/lib/auth.ts';
 import { db } from '#/lib/db/index.ts';
 
+import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { isAllowedCurrency } from './lib/currency.ts';
 import { findAccessibleWallets, getTenantId } from './lib/tenant-access.ts';
 
@@ -10,7 +11,7 @@ export default async (request: Request) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response('Unauthorized', { status: 401 });
+    return ApiErrors.unauthorized();
   }
 
   const tenantId = getTenantId(session);
@@ -33,11 +34,11 @@ export default async (request: Request) => {
     const body = (await request.json()) as { name?: unknown; currency?: unknown };
 
     if (typeof body.name !== 'string' || body.name.trim().length === 0) {
-      return new Response('Wallet name is required', { status: 400 });
+      return apiError('WALLET_NAME_REQUIRED', 400);
     }
 
     if (body.currency !== undefined && !isAllowedCurrency(body.currency)) {
-      return new Response('Unsupported currency', { status: 400 });
+      return apiError('UNSUPPORTED_CURRENCY', 400);
     }
 
     const currency = isAllowedCurrency(body.currency) ? body.currency : 'VND';
@@ -51,7 +52,7 @@ export default async (request: Request) => {
     return Response.json({ ...wallet, amount: 0, role: 'owner' as const }, { status: 201 });
   }
 
-  return new Response('Method Not Allowed', { status: 405 });
+  return ApiErrors.methodNotAllowed();
 };
 
 export const config: Config = {

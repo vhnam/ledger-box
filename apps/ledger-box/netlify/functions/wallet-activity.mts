@@ -4,6 +4,7 @@ import { auth } from '#/lib/auth.ts';
 import { db } from '#/lib/db/index.ts';
 
 import { activityAffectsActiveShare } from './lib/activity-statement-overlap.ts';
+import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { getTenantId, requireOwnedWallet } from './lib/tenant-access.ts';
 
 function getWalletId(request: Request, context: Context): string | null {
@@ -22,17 +23,17 @@ export default async (request: Request, context: Context) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response('Unauthorized', { status: 401 });
+    return ApiErrors.unauthorized();
   }
 
   if (request.method !== 'GET') {
-    return new Response('Method Not Allowed', { status: 405 });
+    return ApiErrors.methodNotAllowed();
   }
 
   const walletId = getWalletId(request, context);
 
   if (!walletId) {
-    return new Response('Wallet id is required', { status: 400 });
+    return apiError('WALLET_ID_REQUIRED', 400);
   }
 
   const tenantId = getTenantId(session);

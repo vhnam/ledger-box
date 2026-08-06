@@ -11,7 +11,7 @@ export async function fetchUserLocale(): Promise<UserLocaleDto> {
 
     return data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, 'Failed to load locale preference. Please try again.'));
+    throw new Error(getApiErrorMessage(error, 'settings.locale.loadErrorFallback'));
   }
 }
 
@@ -21,6 +21,6 @@ export async function updateUserLocale(locale: SupportedLocale): Promise<UserLoc
 
     return data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, 'Failed to update locale preference. Please try again.'));
+    throw new Error(getApiErrorMessage(error, 'settings.locale.updateErrorFallback'));
   }
 }

@@ -7,6 +7,7 @@ import { db } from '#/lib/db/index.ts';
 import type { TransactionType } from '#/lib/db/schema.ts';
 import { calendarDateToOccurredAtStart, resolvePeriodBounds } from '#/lib/period-bounds.ts';
 
+import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { getTenantId, requireWalletAccess, requireWalletWriteAccess } from './lib/tenant-access.ts';
 import { createTransaction } from './lib/wallet-mutations.ts';
 
@@ -58,13 +59,13 @@ export default async (request: Request, context: Context) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response('Unauthorized', { status: 401 });
+    return ApiErrors.unauthorized();
   }
 
   const walletId = getWalletId(request, context);
 
   if (!walletId) {
-    return new Response('Wallet id is required', { status: 400 });
+    return apiError('WALLET_ID_REQUIRED', 400);
   }
 
   const tenantId = getTenantId(session);
@@ -73,19 +74,19 @@ export default async (request: Request, context: Context) => {
     const body = (await request.json()) as AddTransactionBody;
 
     if (!isValidTransactionType(body.type)) {
-      return new Response('Transaction type must be income or expense', { status: 400 });
+      return apiError('INVALID_TRANSACTION_TYPE', 400);
     }
 
     if (typeof body.amount !== 'number' || !Number.isFinite(body.amount) || body.amount <= 0) {
-      return new Response('Amount must be greater than 0', { status: 400 });
+      return apiError('AMOUNT_MUST_BE_POSITIVE', 400);
     }
 
     if (typeof body.description !== 'string' || body.description.trim().length === 0) {
-      return new Response('Description is required', { status: 400 });
+      return apiError('DESCRIPTION_REQUIRED', 400);
     }
 
     if (body.occurredAt !== undefined && typeof body.occurredAt !== 'string') {
-      return new Response('Occurred at must be a date string', { status: 400 });
+      return apiError('OCCURRED_AT_INVALID', 400);
     }
 
     const type = body.type;
@@ -171,7 +172,7 @@ export default async (request: Request, context: Context) => {
     });
   }
 
-  return new Response('Method Not Allowed', { status: 405 });
+  return ApiErrors.methodNotAllowed();
 };
 
 export const config: Config = {

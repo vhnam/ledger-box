@@ -4,6 +4,8 @@ import { sql } from 'kysely';
 import { auth } from '#/lib/auth.ts';
 import { db } from '#/lib/db/index.ts';
 
+import { ApiErrors, apiError } from './lib/api-error-response.ts';
+
 type UserRow = {
   id: string;
   name: string | null;
@@ -15,17 +17,17 @@ export default async (request: Request) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response('Unauthorized', { status: 401 });
+    return ApiErrors.unauthorized();
   }
 
   if (request.method !== 'GET') {
-    return new Response('Method Not Allowed', { status: 405 });
+    return ApiErrors.methodNotAllowed();
   }
 
   const email = new URL(request.url).searchParams.get('email')?.trim().toLowerCase() ?? '';
 
   if (!email) {
-    return new Response('Email is required', { status: 400 });
+    return apiError('EMAIL_REQUIRED', 400);
   }
 
   const result = await sql<UserRow>`

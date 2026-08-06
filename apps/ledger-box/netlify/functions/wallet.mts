@@ -4,6 +4,7 @@ import { auth } from '#/lib/auth.ts';
 import { db } from '#/lib/db/index.ts';
 
 import { recordActivity } from './lib/activity-log.ts';
+import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { getTenantId, requireOwnedWallet, requireWalletWriteAccess } from './lib/tenant-access.ts';
 
 function getWalletId(request: Request, context: Context): string | null {
@@ -22,17 +23,17 @@ export default async (request: Request, context: Context) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response('Unauthorized', { status: 401 });
+    return ApiErrors.unauthorized();
   }
 
   if (request.method !== 'PATCH' && request.method !== 'DELETE') {
-    return new Response('Method Not Allowed', { status: 405 });
+    return ApiErrors.methodNotAllowed();
   }
 
   const walletId = getWalletId(request, context);
 
   if (!walletId) {
-    return new Response('Wallet id is required', { status: 400 });
+    return apiError('WALLET_ID_REQUIRED', 400);
   }
 
   const tenantId = getTenantId(session);
@@ -93,11 +94,11 @@ export default async (request: Request, context: Context) => {
   const body = (await request.json()) as { name?: unknown; currency?: unknown };
 
   if ('currency' in body) {
-    return new Response('Currency cannot be changed after wallet creation', { status: 400 });
+    return apiError('CURRENCY_IMMUTABLE', 400);
   }
 
   if (typeof body.name !== 'string' || body.name.trim().length === 0) {
-    return new Response('Wallet name is required', { status: 400 });
+    return apiError('WALLET_NAME_REQUIRED', 400);
   }
 
   const previousName = access.wallet.name;

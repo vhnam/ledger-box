@@ -5,6 +5,7 @@ import { auth } from '#/lib/auth.ts';
 import { db } from '#/lib/db/index.ts';
 import { updateUserLocaleSchema } from '#/schemas/user-locale.schema.ts';
 
+import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { getTenantId } from './lib/tenant-access.ts';
 
 /**
@@ -18,7 +19,7 @@ export default async (request: Request) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response('Unauthorized', { status: 401 });
+    return ApiErrors.unauthorized();
   }
 
   const tenantId = getTenantId(session);
@@ -38,7 +39,11 @@ export default async (request: Request) => {
     const result = v.safeParse(updateUserLocaleSchema, body);
 
     if (!result.success) {
-      return Response.json({ error: result.issues[0]?.message ?? 'Invalid request body' }, { status: 400 });
+      const issue = result.issues[0]?.message;
+      if (issue === 'validation.locale.unsupported' || issue === 'Unsupported locale') {
+        return apiError('UNSUPPORTED_LOCALE', 400);
+      }
+      return apiError('INVALID_REQUEST_BODY', 400);
     }
 
     const { locale } = result.output;
@@ -52,7 +57,7 @@ export default async (request: Request) => {
     return Response.json({ locale });
   }
 
-  return new Response('Method Not Allowed', { status: 405 });
+  return ApiErrors.methodNotAllowed();
 };
 
 export const config: Config = {

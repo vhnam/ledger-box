@@ -22,7 +22,7 @@ export async function inviteWalletMember(
 
     return data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, 'Failed to send invite. Please try again.'));
+    throw new Error(getApiErrorMessage(error, 'toast.members.inviteErrorFallback'));
   }
 }
 
@@ -36,7 +36,7 @@ export async function updateWalletMemberRole(
 
     return data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, 'Failed to update member role. Please try again.'));
+    throw new Error(getApiErrorMessage(error, 'toast.members.roleUpdateErrorFallback'));
   }
 }
 
@@ -44,7 +44,7 @@ export async function removeWalletMember(walletId: string, memberId: string): Pr
   try {
     await axios.delete(`/api/wallets/${walletId}/members/${memberId}`);
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, 'Failed to remove member. Please try again.'));
+    throw new Error(getApiErrorMessage(error, 'toast.members.removeErrorFallback'));
   }
 }
 
@@ -59,7 +59,7 @@ export async function resendWalletInvite(
 
     return data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, 'Failed to resend invite. Please try again.'));
+    throw new Error(getApiErrorMessage(error, 'toast.members.resendErrorFallback'));
   }
 }
 

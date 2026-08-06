@@ -3,6 +3,7 @@ import type { Config, Context } from '@netlify/functions';
 import { auth } from '#/lib/auth.ts';
 import { listTransactionAttachments, uploadTransactionAttachment } from '#/lib/r2.ts';
 
+import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { getTenantId, requireTransactionAccess, requireTransactionWriteAccess } from './lib/tenant-access.ts';
 
 const ACCEPTED_ATTACHMENT_TYPES = new Set(['application/pdf', 'image/png', 'image/jpeg', 'image/webp']);
@@ -45,17 +46,17 @@ export default async (request: Request, context: Context) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response('Unauthorized', { status: 401 });
+    return ApiErrors.unauthorized();
   }
 
   const { walletId, transactionId } = getIds(request, context);
 
   if (!walletId) {
-    return new Response('Wallet id is required', { status: 400 });
+    return apiError('WALLET_ID_REQUIRED', 400);
   }
 
   if (!transactionId) {
-    return new Response('Transaction id is required', { status: 400 });
+    return apiError('TRANSACTION_ID_REQUIRED', 400);
   }
 
   const tenantId = getTenantId(session);
@@ -74,12 +75,12 @@ export default async (request: Request, context: Context) => {
     } catch (error) {
       console.error('Failed to list transaction attachments', error);
 
-      return new Response('Failed to load attachments', { status: 500 });
+      return apiError('ATTACHMENTS_LOAD_FAILED', 500);
     }
   }
 
   if (request.method !== 'POST') {
-    return new Response('Method Not Allowed', { status: 405 });
+    return ApiErrors.methodNotAllowed();
   }
 
   const access = await requireTransactionWriteAccess(tenantId, walletId, transactionId, session.user.email);
@@ -93,7 +94,7 @@ export default async (request: Request, context: Context) => {
   try {
     formData = await request.formData();
   } catch {
-    return new Response('Invalid multipart form data', { status: 400 });
+    return apiError('INVALID_MULTIPART', 400);
   }
 
   const files = [...formData.getAll('file'), ...formData.getAll('files')].filter(
@@ -101,22 +102,22 @@ export default async (request: Request, context: Context) => {
   );
 
   if (files.length === 0) {
-    return new Response('At least one file is required', { status: 400 });
+    return apiError('FILE_REQUIRED', 400);
   }
 
   const uploads = [];
 
   for (const file of files) {
     if (!isAcceptedAttachment(file)) {
-      return new Response('Only PDF, PNG, JPG, JPEG, and WEBP files are supported', { status: 400 });
+      return apiError('UNSUPPORTED_FILE_TYPE', 400);
     }
 
     if (file.size <= 0) {
-      return new Response('File must not be empty', { status: 400 });
+      return apiError('FILE_EMPTY', 400);
     }
 
     if (file.size > MAX_ATTACHMENT_SIZE_BYTES) {
-      return new Response('File size must be 10 MB or less', { status: 400 });
+      return apiError('FILE_TOO_LARGE', 400);
     }
 
     const attachmentId = crypto.randomUUID();
@@ -147,7 +148,7 @@ export default async (request: Request, context: Context) => {
   } catch (error) {
     console.error('Failed to upload transaction attachment', error);
 
-    return new Response('Failed to upload attachment', { status: 500 });
+    return apiError('ATTACHMENT_UPLOAD_FAILED', 500);
   }
 };
 

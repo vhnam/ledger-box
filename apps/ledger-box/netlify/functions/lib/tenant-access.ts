@@ -2,6 +2,8 @@ import { sql } from 'kysely';
 
 import { db } from '#/lib/db/index.ts';
 
+import { ApiErrors } from './api-error-response.ts';
+
 type SessionLike = {
   user: {
     id: string;
@@ -39,10 +41,6 @@ type TransactionAccessResult =
   | { ok: true; wallet: OwnedWallet; role: WalletAccessRole; transaction: OwnedTransaction }
   | { ok: false; error: Response };
 
-const WALLET_NOT_FOUND = new Response('Wallet not found', { status: 404 });
-const TRANSACTION_NOT_FOUND = new Response('Transaction not found', { status: 404 });
-const READ_ONLY_ACCESS = new Response('Read-only access', { status: 403 });
-
 /** v1: tenant id is the authenticated user id. */
 function getTenantId(session: SessionLike): string {
   return session.user.id;
@@ -65,7 +63,7 @@ async function requireOwnedWallet(
   const wallet = await findOwnedWallet(tenantId, walletId);
 
   if (!wallet) {
-    return { ok: false, error: WALLET_NOT_FOUND };
+    return { ok: false, error: ApiErrors.walletNotFound() };
   }
 
   return { ok: true, wallet };
@@ -91,7 +89,7 @@ async function requireOwnedTransaction(
     .executeTakeFirst();
 
   if (!transaction) {
-    return { ok: false, error: TRANSACTION_NOT_FOUND };
+    return { ok: false, error: ApiErrors.transactionNotFound() };
   }
 
   return { ok: true, wallet: ownership.wallet, transaction };
@@ -116,7 +114,7 @@ async function requireWalletAccess(
     .executeTakeFirst();
 
   if (!wallet) {
-    return { ok: false, error: WALLET_NOT_FOUND };
+    return { ok: false, error: ApiErrors.walletNotFound() };
   }
 
   if (wallet.tenantId === tenantId) {
@@ -139,7 +137,7 @@ async function requireWalletAccess(
     .executeTakeFirst();
 
   if (!member) {
-    return { ok: false, error: WALLET_NOT_FOUND };
+    return { ok: false, error: ApiErrors.walletNotFound() };
   }
 
   if (member.status === 'pending') {
@@ -165,7 +163,7 @@ async function requireWalletWriteAccess(
   }
 
   if (access.role === 'viewer') {
-    return { ok: false, error: READ_ONLY_ACCESS };
+    return { ok: false, error: ApiErrors.readOnlyAccess() };
   }
 
   return access;
@@ -192,7 +190,7 @@ async function requireTransactionAccess(
     .executeTakeFirst();
 
   if (!transaction) {
-    return { ok: false, error: TRANSACTION_NOT_FOUND };
+    return { ok: false, error: ApiErrors.transactionNotFound() };
   }
 
   return { ok: true, wallet: access.wallet, role: access.role, transaction };
@@ -211,7 +209,7 @@ async function requireTransactionWriteAccess(
   }
 
   if (access.role === 'viewer') {
-    return { ok: false, error: READ_ONLY_ACCESS };
+    return { ok: false, error: ApiErrors.readOnlyAccess() };
   }
 
   return access;
