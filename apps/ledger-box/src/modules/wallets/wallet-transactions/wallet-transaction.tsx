@@ -1,6 +1,7 @@
 import { formatSignedCurrency } from '@vhnam/utils/currency';
 import { DateTimeFormat, formatDateTime } from '@vhnam/utils/date';
 
+import { useAppLocale } from '#/lib/locale-context';
 import { DeleteTransactionDialog } from '#/modules/wallets/wallet-delete-transaction-dialog';
 import { EditTransactionDialog } from '#/modules/wallets/wallet-edit-transaction-dialog';
 import { TransactionAttachmentsSheet } from '#/modules/wallets/wallet-transaction-attachments';
@@ -11,12 +12,16 @@ import {
   useWalletTransaction,
 } from '#/modules/wallets/wallet-transactions/wallet-transaction.actions';
 import type { TransactionDto } from '#/queries/transactions/transaction.dto';
+import { useWallets } from '#/queries/wallets/wallet.queries';
 
 type WalletTransactionProps = {
   transaction: TransactionDto;
 };
 
 function WalletTransaction({ transaction }: WalletTransactionProps) {
+  const { data: wallets = [] } = useWallets();
+  const currency = wallets.find((wallet) => wallet.id === transaction.walletId)?.currency ?? 'VND';
+  const locale = useAppLocale();
   const {
     isMobile,
     editOpen,
@@ -46,11 +51,11 @@ function WalletTransaction({ transaction }: WalletTransactionProps) {
           <div className="min-w-0">
             <p className="truncate text-sm font-medium">{transaction.description}</p>
             <p className="text-xs font-mono text-muted-foreground">
-              {formatDateTime(transaction.occurredAt, DateTimeFormat.Numeric)}
+              {formatDateTime(transaction.occurredAt, DateTimeFormat.Numeric, locale)}
             </p>
           </div>
           <p className={getTransactionAmountClassName(transaction.type)}>
-            {formatSignedCurrency(transaction.amount, transaction.type)}
+            {formatSignedCurrency(transaction.amount, transaction.type, { currency, locale })}
           </p>
           {!isMobile && (
             <div onClick={(event) => event.stopPropagation()}>

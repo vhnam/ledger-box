@@ -1,3 +1,5 @@
+import { FormattedMessage } from 'react-intl';
+
 import { Badge } from '@vhnam/ui/components/badge';
 
 import { hasRegisteredWalletMember } from '#/modules/wallet-settings/wallet-settings-members/wallet-member.utils';
@@ -23,7 +25,7 @@ function WalletMemberIdentity({ member }: WalletMemberIdentityProps) {
             variant="secondary"
             className="border-transparent bg-yellow-500/15 text-yellow-600 hover:bg-yellow-500/15"
           >
-            Owner
+            <FormattedMessage id="wallet.settings.members.badge.owner" defaultMessage="Owner" />
           </Badge>
         )}
       </div>
@@ -33,7 +35,7 @@ function WalletMemberIdentity({ member }: WalletMemberIdentityProps) {
           variant="secondary"
           className="mt-1 border-transparent bg-amber-500/15 text-amber-600 hover:bg-amber-500/15 dark:text-amber-400"
         >
-          Pending invite
+          <FormattedMessage id="wallet.settings.members.badge.pending" defaultMessage="Pending invite" />
         </Badge>
       )}
     </div>

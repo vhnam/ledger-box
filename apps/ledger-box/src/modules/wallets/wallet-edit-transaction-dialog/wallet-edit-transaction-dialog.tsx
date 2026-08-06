@@ -1,4 +1,5 @@
 import { isDirty } from '@formisch/react';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { Button } from '@vhnam/ui/components/button';
 import { Icon } from '@vhnam/ui/components/icon';
@@ -7,6 +8,7 @@ import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
 import { useEditTransactionDialogActions } from '#/modules/wallets/wallet-edit-transaction-dialog/wallet-edit-transaction-dialog.actions';
 import { EditTransactionForm } from '#/modules/wallets/wallet-edit-transaction-dialog/wallet-edit-transaction-form';
 import type { TransactionDto } from '#/queries/transactions/transaction.dto';
+import { useWallets } from '#/queries/wallets/wallet.queries';
 import type { EditTransactionOutput } from '#/schemas/edit-transaction.schema';
 
 interface EditTransactionDialogProps {
@@ -17,6 +19,9 @@ interface EditTransactionDialogProps {
 }
 
 function EditTransactionDialog({ open, onOpenChange, transaction, onBack }: EditTransactionDialogProps) {
+  const intl = useIntl();
+  const { data: wallets = [] } = useWallets();
+  const currency = wallets.find((wallet) => wallet.id === transaction.walletId)?.currency ?? 'VND';
   const { form, handleOpenChange, handleEditTransaction, isPending, error } = useEditTransactionDialogActions({
     open,
     transaction,
@@ -39,7 +44,14 @@ function EditTransactionDialog({ open, onOpenChange, transaction, onBack }: Edit
   }
 
   function handleDismissAttempt() {
-    if (window.confirm('Discard these changes? Your edits will be lost.')) {
+    if (
+      window.confirm(
+        intl.formatMessage({
+          id: 'transaction.edit.discardConfirm',
+          defaultMessage: 'Discard these changes? Your edits will be lost.',
+        }),
+      )
+    ) {
       handleDialogOpenChange(false);
     }
   }
@@ -49,14 +61,20 @@ function EditTransactionDialog({ open, onOpenChange, transaction, onBack }: Edit
       {onBack && (
         <Button type="button" variant="ghost" size="icon-sm" className="-ml-1 shrink-0" onClick={handleBack}>
           <Icon name="ArrowLeftIcon" />
-          <span className="sr-only">Back</span>
+          <span className="sr-only">
+            <FormattedMessage id="common.back" defaultMessage="Back" />
+          </span>
         </Button>
       )}
-      <span>Edit Transaction</span>
+      <span>
+        <FormattedMessage id="transaction.edit.title" defaultMessage="Edit Transaction" />
+      </span>
     </>
   );
 
-  const formContent = <EditTransactionForm form={form} onSubmit={handleSubmit} isPending={isPending} error={error} />;
+  const formContent = (
+    <EditTransactionForm form={form} onSubmit={handleSubmit} isPending={isPending} error={error} currency={currency} />
+  );
 
   return (
     <ResponsiveDialog

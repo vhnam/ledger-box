@@ -12,6 +12,7 @@ import {
   type SortByValue,
   type SortOrderValue,
 } from '#/constants/sort-options';
+import { useAppLocale } from '#/lib/locale-context';
 import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
 import {
   resolveWalletTransactionSearch,
@@ -64,18 +65,20 @@ export function useWalletActions() {
     });
   };
 
+  const locale = useAppLocale();
+
   const filterPreview = useMemo(() => {
     switch (search.filter) {
       case FILTER_OPTIONS.TODAY:
-        return formatDate(new Date());
+        return formatDate(new Date(), undefined, locale);
       case FILTER_OPTIONS.THIS_MONTH:
-        return formatDate(new Date(), DateFormat.Month);
+        return formatDate(new Date(), DateFormat.Month, locale);
       case FILTER_OPTIONS.LAST_MONTH:
-        return formatDate(subMonths(new Date(), 1), DateFormat.Month);
+        return formatDate(subMonths(new Date(), 1), DateFormat.Month, locale);
       default:
         return null;
     }
-  }, [search.filter]);
+  }, [search.filter, locale]);
 
   const isDateRangeFilter = search.filter === FILTER_OPTIONS.DATE_RANGE;
   const dateRange = useMemo(() => toDateRange(search), [search.from, search.to]);

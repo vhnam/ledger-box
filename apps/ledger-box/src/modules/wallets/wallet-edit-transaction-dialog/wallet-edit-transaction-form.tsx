@@ -1,4 +1,5 @@
 import { Field as FormField, Form } from '@formisch/react';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { Button } from '@vhnam/ui/components/button';
 import { CurrencyInput } from '@vhnam/ui/components/currency-input';
@@ -10,6 +11,7 @@ import { Textarea } from '@vhnam/ui/components/textarea';
 import { ToggleGroup, ToggleGroupItem } from '@vhnam/ui/components/toggle-group';
 import { cn } from '@vhnam/ui/lib/utils';
 
+import { formatErrorMessage } from '#/lib/intl-message';
 import type { useEditTransactionDialogActions } from '#/modules/wallets/wallet-edit-transaction-dialog/wallet-edit-transaction-dialog.actions';
 import type { EditTransactionOutput } from '#/schemas/edit-transaction.schema';
 
@@ -18,9 +20,12 @@ type EditTransactionFormProps = Pick<
   'form' | 'isPending' | 'error'
 > & {
   onSubmit: (output: EditTransactionOutput) => void;
+  currency: string;
 };
 
-function EditTransactionForm({ form, onSubmit, isPending, error }: EditTransactionFormProps) {
+function EditTransactionForm({ form, onSubmit, isPending, error, currency }: EditTransactionFormProps) {
+  const intl = useIntl();
+
   return (
     <Form of={form} onSubmit={onSubmit} className="flex flex-col gap-4">
       <FieldGroup>
@@ -50,7 +55,7 @@ function EditTransactionForm({ form, onSubmit, isPending, error }: EditTransacti
                   )}
                 >
                   <Icon name="ArrowDownIcon" />
-                  Expense
+                  <FormattedMessage id="transaction.type.expense" defaultMessage="Expense" />
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   value="income"
@@ -60,10 +65,10 @@ function EditTransactionForm({ form, onSubmit, isPending, error }: EditTransacti
                   )}
                 >
                   <Icon name="ArrowUpIcon" />
-                  Income
+                  <FormattedMessage id="transaction.type.income" defaultMessage="Income" />
                 </ToggleGroupItem>
               </ToggleGroup>
-              {field.errors && <FieldError>{field.errors[0]}</FieldError>}
+              {field.errors && <FieldError>{formatErrorMessage(intl, field.errors[0])}</FieldError>}
             </Field>
           )}
         />
@@ -73,19 +78,25 @@ function EditTransactionForm({ form, onSubmit, isPending, error }: EditTransacti
           path={['amount']}
           children={(field) => (
             <Field data-invalid={!!field.errors}>
-              <FieldLabel htmlFor={field.props.name}>Amount</FieldLabel>
+              <FieldLabel htmlFor={field.props.name}>
+                <FormattedMessage id="transaction.edit.amount.label" defaultMessage="Amount" />
+              </FieldLabel>
               <CurrencyInput
                 id={field.props.name}
                 value={field.input ?? ''}
+                currency={currency}
                 aria-invalid={!!field.errors}
-                placeholder="Enter the amount"
+                placeholder={intl.formatMessage({
+                  id: 'transaction.edit.amount.placeholder',
+                  defaultMessage: 'Enter the amount',
+                })}
                 name={field.props.name}
                 ref={field.props.ref}
                 onFocus={field.props.onFocus}
                 onBlur={field.props.onBlur}
                 onValueChange={field.onChange}
               />
-              {field.errors && <FieldError>{field.errors[0]}</FieldError>}
+              {field.errors && <FieldError>{formatErrorMessage(intl, field.errors[0])}</FieldError>}
             </Field>
           )}
         />
@@ -95,15 +106,20 @@ function EditTransactionForm({ form, onSubmit, isPending, error }: EditTransacti
           path={['description']}
           children={(field) => (
             <Field data-invalid={!!field.errors}>
-              <FieldLabel htmlFor={field.props.name}>Description</FieldLabel>
+              <FieldLabel htmlFor={field.props.name}>
+                <FormattedMessage id="transaction.edit.description.label" defaultMessage="Description" />
+              </FieldLabel>
               <Textarea
                 id={field.props.name}
-                placeholder="Enter description"
+                placeholder={intl.formatMessage({
+                  id: 'transaction.edit.description.placeholder',
+                  defaultMessage: 'Enter description',
+                })}
                 defaultValue={field.input}
                 aria-invalid={!!field.errors}
                 {...field.props}
               />
-              {field.errors && <FieldError>{field.errors[0]}</FieldError>}
+              {field.errors && <FieldError>{formatErrorMessage(intl, field.errors[0])}</FieldError>}
             </Field>
           )}
         />
@@ -113,24 +129,33 @@ function EditTransactionForm({ form, onSubmit, isPending, error }: EditTransacti
           path={['occurredAt']}
           children={(field) => (
             <Field data-invalid={!!field.errors}>
-              <FieldLabel htmlFor={field.props.name}>Date</FieldLabel>
+              <FieldLabel htmlFor={field.props.name}>
+                <FormattedMessage id="transaction.edit.date.label" defaultMessage="Date" />
+              </FieldLabel>
               <DatePicker
                 id={field.props.name}
                 value={field.input ? new Date(field.input) : undefined}
-                placeholder="Pick a date"
+                placeholder={intl.formatMessage({
+                  id: 'transaction.edit.date.placeholder',
+                  defaultMessage: 'Pick a date',
+                })}
                 onChange={(date) => field.onChange(date ? date.toISOString().slice(0, 10) : undefined)}
               />
-              {field.errors && <FieldError>{field.errors[0]}</FieldError>}
+              {field.errors && <FieldError>{formatErrorMessage(intl, field.errors[0])}</FieldError>}
             </Field>
           )}
         />
       </FieldGroup>
 
-      {error ? <FieldError>{error}</FieldError> : null}
+      {error ? <FieldError>{formatErrorMessage(intl, error)}</FieldError> : null}
 
       <Button type="submit" variant="default" size="lg" className="w-full" disabled={!form.isValid || isPending}>
         {isPending && <Spinner className="size-4" />}
-        {isPending ? 'Saving...' : 'Save changes'}
+        {isPending ? (
+          <FormattedMessage id="transaction.edit.submitting" defaultMessage="Saving..." />
+        ) : (
+          <FormattedMessage id="transaction.edit.submit" defaultMessage="Save changes" />
+        )}
       </Button>
     </Form>
   );

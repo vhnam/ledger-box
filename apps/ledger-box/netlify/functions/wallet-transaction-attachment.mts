@@ -3,6 +3,7 @@ import type { Config, Context } from '@netlify/functions';
 import { auth } from '#/lib/auth.ts';
 import { deleteTransactionAttachment } from '#/lib/r2.ts';
 
+import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { getTenantId, requireTransactionWriteAccess } from './lib/tenant-access.ts';
 
 function getIds(
@@ -43,25 +44,25 @@ export default async (request: Request, context: Context) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response('Unauthorized', { status: 401 });
+    return ApiErrors.unauthorized();
   }
 
   if (request.method !== 'DELETE') {
-    return new Response('Method Not Allowed', { status: 405 });
+    return ApiErrors.methodNotAllowed();
   }
 
   const { walletId, transactionId, attachmentId } = getIds(request, context);
 
   if (!walletId) {
-    return new Response('Wallet id is required', { status: 400 });
+    return apiError('WALLET_ID_REQUIRED', 400);
   }
 
   if (!transactionId) {
-    return new Response('Transaction id is required', { status: 400 });
+    return apiError('TRANSACTION_ID_REQUIRED', 400);
   }
 
   if (!attachmentId) {
-    return new Response('Attachment id is required', { status: 400 });
+    return apiError('ATTACHMENT_ID_REQUIRED', 400);
   }
 
   const tenantId = getTenantId(session);
@@ -75,14 +76,14 @@ export default async (request: Request, context: Context) => {
     const deleted = await deleteTransactionAttachment(access.wallet.tenantId, transactionId, attachmentId);
 
     if (!deleted) {
-      return new Response('Attachment not found', { status: 404 });
+      return apiError('ATTACHMENT_NOT_FOUND', 404);
     }
 
     return Response.json({ success: true });
   } catch (error) {
     console.error('Failed to delete transaction attachment', error);
 
-    return new Response('Failed to delete attachment', { status: 500 });
+    return apiError('ATTACHMENT_DELETE_FAILED', 500);
   }
 };
 

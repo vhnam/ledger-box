@@ -5,9 +5,11 @@ import { db } from '#/lib/db/index.ts';
 import { generateShareToken } from '#/lib/share-token.ts';
 
 import { recordActivity } from './lib/activity-log.ts';
+import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { renderWalletInviteEmail } from './lib/email-templates/wallet-invite-email.tsx';
 import { sendEmail } from './lib/mailer.ts';
 import { getTenantId, requireOwnedWallet } from './lib/tenant-access.ts';
+import { getUserLocale } from './lib/user-locale.ts';
 
 const INVITE_TOKEN_EXPIRY_DAYS = 7;
 const RESEND_RATE_WINDOW_MS = 60_000;
@@ -38,21 +40,21 @@ export default async (request: Request, context: Context) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response('Unauthorized', { status: 401 });
+    return ApiErrors.unauthorized();
   }
 
   if (request.method !== 'POST') {
-    return new Response('Method Not Allowed', { status: 405 });
+    return ApiErrors.methodNotAllowed();
   }
 
   const { walletId, memberId } = getIds(request, context);
 
   if (!walletId) {
-    return new Response('Wallet id is required', { status: 400 });
+    return apiError('WALLET_ID_REQUIRED', 400);
   }
 
   if (!memberId) {
-    return new Response('Member id is required', { status: 400 });
+    return apiError('MEMBER_ID_REQUIRED', 400);
   }
 
   const tenantId = getTenantId(session);
@@ -71,11 +73,11 @@ export default async (request: Request, context: Context) => {
     .executeTakeFirst();
 
   if (!existingMember) {
-    return new Response('Member not found', { status: 404 });
+    return apiError('MEMBER_NOT_FOUND', 404);
   }
 
   if (existingMember.status !== 'pending') {
-    return new Response('Only pending invites can be resent', { status: 400 });
+    return apiError('INVITE_NOT_PENDING', 400);
   }
 
   const now = Date.now();
@@ -89,7 +91,7 @@ export default async (request: Request, context: Context) => {
   const withinWindow = windowStart !== null && now - windowStart < RESEND_RATE_WINDOW_MS;
 
   if (withinWindow && rateInfo.inviteRateWindowCount >= RESEND_RATE_WINDOW_LIMIT) {
-    return new Response('Too many invite emails sent. Please try again shortly.', { status: 429 });
+    return apiError('INVITE_EMAIL_RATE_LIMITED', 429);
   }
 
   const nextRateWindowStart = withinWindow ? new Date(windowStart) : new Date(now);
@@ -120,12 +122,14 @@ export default async (request: Request, context: Context) => {
     .execute();
 
   const acceptUrl = new URL(`/invite/${rawToken}`, process.env.BETTER_AUTH_URL).toString();
+  const inviterLocale = await getUserLocale(tenantId);
   const { subject, html, text } = renderWalletInviteEmail({
     inviterName: session.user.name ?? '',
     inviterEmail: session.user.email,
     walletName: ownership.wallet.name,
     role: existingMember.role,
     acceptUrl,
+    locale: inviterLocale,
   });
 
   const sendResult = await sendEmail({ to: existingMember.email, subject, html, text });

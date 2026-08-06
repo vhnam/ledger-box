@@ -1,3 +1,5 @@
+import { FormattedMessage } from 'react-intl';
+
 import { Button } from '@vhnam/ui/components/button';
 import { Icon } from '@vhnam/ui/components/icon';
 import { cn } from '@vhnam/ui/lib/utils';
@@ -6,6 +8,7 @@ import { formatSignedCurrency } from '@vhnam/utils/currency';
 
 import { getTransactionAmountClassName } from '#/modules/wallets/wallet-transactions/wallet-transaction.actions';
 import type { TransactionDto } from '#/queries/transactions/transaction.dto';
+import { useWallets } from '#/queries/wallets/wallet.queries';
 
 type TransactionDialogHeaderProps = {
   transaction: TransactionDto;
@@ -22,8 +25,9 @@ function TransactionDialogHeader({
   bordered = false,
   className,
 }: TransactionDialogHeaderProps) {
+  const { data: wallets = [] } = useWallets();
+  const currency = wallets.find((wallet) => wallet.id === transaction.walletId)?.currency ?? 'VND';
   const isExpense = transaction.type === 'expense';
-  const typeLabel = isExpense ? 'Expense' : 'Income';
 
   return (
     <div className={cn(bordered && 'border-b', className)}>
@@ -31,7 +35,9 @@ function TransactionDialogHeader({
         {onBack ? (
           <Button type="button" variant="ghost" size="icon-sm" className="shrink-0" onClick={onBack}>
             <Icon name="ArrowLeftIcon" />
-            <span className="sr-only">Back</span>
+            <span className="sr-only">
+              <FormattedMessage id="common.back" defaultMessage="Back" />
+            </span>
           </Button>
         ) : null}
 
@@ -52,7 +58,11 @@ function TransactionDialogHeader({
                 isExpense ? 'text-rose-500' : 'text-emerald-500',
               )}
             >
-              {typeLabel}
+              {isExpense ? (
+                <FormattedMessage id="transaction.type.expense" defaultMessage="Expense" />
+              ) : (
+                <FormattedMessage id="transaction.type.income" defaultMessage="Income" />
+              )}
             </p>
             <p className="text-base font-medium leading-snug">{transaction.description}</p>
           </div>
@@ -61,13 +71,15 @@ function TransactionDialogHeader({
         {onClose ? (
           <Button type="button" variant="ghost" size="icon-sm" className="shrink-0" onClick={onClose}>
             <Icon name="XIcon" />
-            <span className="sr-only">Close</span>
+            <span className="sr-only">
+              <FormattedMessage id="common.close" defaultMessage="Close" />
+            </span>
           </Button>
         ) : null}
       </div>
 
       <p className={cn('mt-4 px-4 pb-4', getTransactionAmountClassName(transaction.type, 'xl'))}>
-        {formatSignedCurrency(transaction.amount, transaction.type, { notation: 'standard' })}
+        {formatSignedCurrency(transaction.amount, transaction.type, { notation: 'standard', currency })}
       </p>
     </div>
   );

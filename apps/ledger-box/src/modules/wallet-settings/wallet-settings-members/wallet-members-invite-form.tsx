@@ -1,3 +1,6 @@
+import { useMemo } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
+
 import { Button } from '@vhnam/ui/components/button';
 import { Field, FieldDescription, FieldError, FieldLabel } from '@vhnam/ui/components/field';
 import { Icon } from '@vhnam/ui/components/icon';
@@ -5,11 +8,8 @@ import { Input } from '@vhnam/ui/components/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@vhnam/ui/components/select';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
-import {
-  WALLET_MEMBER_ROLE_DESCRIPTIONS,
-  WALLET_MEMBER_ROLE_OPTIONS,
-  type WalletMemberRole,
-} from '#/constants/wallet-member-role-options';
+import { WALLET_MEMBER_ROLE_OPTIONS, type WalletMemberRole } from '#/constants/wallet-member-role-options';
+import { formatErrorMessage } from '#/lib/intl-message';
 
 type WalletMembersInviteFormProps = {
   inviteEmail: string;
@@ -30,13 +30,29 @@ function WalletMembersInviteForm({
   onInviteRoleChange,
   onInvite,
 }: WalletMembersInviteFormProps) {
+  const intl = useIntl();
+
+  const roleItems = useMemo(
+    () =>
+      WALLET_MEMBER_ROLE_OPTIONS.map((option) => ({
+        value: option.value,
+        label: intl.formatMessage({ id: option.labelId, defaultMessage: option.defaultLabel }),
+      })),
+    [intl],
+  );
+
   return (
     <Field>
-      <FieldLabel>Invite by email</FieldLabel>
+      <FieldLabel>
+        <FormattedMessage id="wallet.settings.members.invite.label" defaultMessage="Invite by email" />
+      </FieldLabel>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start">
         <Input
           type="email"
-          placeholder="colleague@email.com"
+          placeholder={intl.formatMessage({
+            id: 'wallet.settings.members.invite.placeholder',
+            defaultMessage: 'colleague@email.com',
+          })}
           value={inviteEmail}
           onChange={(event) => onInviteEmailChange(event.target.value)}
           onKeyDown={(event) => {
@@ -51,7 +67,7 @@ function WalletMembersInviteForm({
         />
 
         <Select
-          items={WALLET_MEMBER_ROLE_OPTIONS}
+          items={roleItems}
           value={inviteRole}
           onValueChange={(value) => onInviteRoleChange(value as WalletMemberRole)}
           disabled={isInviting}
@@ -62,7 +78,7 @@ function WalletMembersInviteForm({
           <SelectContent>
             {WALLET_MEMBER_ROLE_OPTIONS.map((option) => (
               <SelectItem key={option.value} value={option.value}>
-                {option.label}
+                <FormattedMessage id={option.labelId} defaultMessage={option.defaultLabel} />
               </SelectItem>
             ))}
           </SelectContent>
@@ -70,16 +86,18 @@ function WalletMembersInviteForm({
 
         <Button type="button" variant="secondary" onClick={onInvite} className="w-full sm:w-auto" disabled={isInviting}>
           {isInviting ? <Spinner className="size-4" /> : <Icon name="PlusIcon" />}
-          Invite
+          <FormattedMessage id="wallet.settings.members.invite.submit" defaultMessage="Invite" />
         </Button>
       </div>
-      {inviteError && <FieldError>{inviteError}</FieldError>}
+      {inviteError && <FieldError>{formatErrorMessage(intl, inviteError)}</FieldError>}
       <FieldDescription className="space-y-1">
         {WALLET_MEMBER_ROLE_OPTIONS.map((option) => (
           <span key={option.value} className="block">
-            <span className="font-medium text-foreground">{option.label}</span>
+            <span className="font-medium text-foreground">
+              <FormattedMessage id={option.labelId} defaultMessage={option.defaultLabel} />
+            </span>
             {' — '}
-            {WALLET_MEMBER_ROLE_DESCRIPTIONS[option.value]}
+            <FormattedMessage id={option.descriptionId} defaultMessage={option.defaultDescription} />
           </span>
         ))}
       </FieldDescription>

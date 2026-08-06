@@ -56,14 +56,34 @@ describe('formatDateShort', () => {
 });
 
 describe('formatDateLong', () => {
-  it('formats using the long pattern', () => {
-    expect(formatDateLong(sampleDate)).toBe('13 July 2026');
+  it('formats using the long pattern with the default locale (vi-VN)', () => {
+    expect(formatDateLong(sampleDate)).toBe('13 tháng 07 2026');
+  });
+
+  it('formats using the long pattern and month-order for en-US', () => {
+    expect(formatDateLong(sampleDate, 'en-US')).toBe('July 13, 2026');
+  });
+
+  it('formats using the day-first order for en-GB', () => {
+    expect(formatDateLong(sampleDate, 'en-GB')).toBe('13 July 2026');
   });
 });
 
 describe('formatDateNumeric', () => {
-  it('formats using the numeric pattern', () => {
+  it('formats using the numeric pattern (default vi-VN, day-first)', () => {
     expect(formatDateNumeric(sampleDate)).toBe('13/07/2026');
+  });
+
+  it('formats month-first for en-US', () => {
+    expect(formatDateNumeric(sampleDate, 'en-US')).toBe('07/13/2026');
+  });
+
+  it('formats day-first for en-GB, distinct from en-US', () => {
+    expect(formatDateNumeric(sampleDate, 'en-GB')).toBe('13/07/2026');
+  });
+
+  it('formats year-first for ja-JP', () => {
+    expect(formatDateNumeric(sampleDate, 'ja-JP')).toBe('2026/07/13');
   });
 });
 
@@ -73,7 +93,7 @@ describe('formatDateTime', () => {
   });
 
   it('formats with a custom pattern', () => {
-    expect(formatDateTime(sampleDate, DateTimeFormat.Text)).toBe('13 Jul 2026 19:30');
+    expect(formatDateTime(sampleDate, DateTimeFormat.Text)).toBe('13 thg 7 2026 19:30');
   });
 });
 
@@ -84,10 +104,16 @@ describe('formatDateTimeShort', () => {
 });
 
 describe('formatRelative', () => {
-  it('formats a past date relative to now with a suffix', () => {
+  it('formats a past date relative to now with a suffix (default vi-VN)', () => {
     const past = new Date(Date.now() - 1000 * 60 * 60 * 24 * 2);
 
-    expect(formatRelative(past)).toContain('ago');
+    expect(formatRelative(past)).toContain('trước');
+  });
+
+  it('formats with an English suffix for en-US', () => {
+    const past = new Date(Date.now() - 1000 * 60 * 60 * 24 * 2);
+
+    expect(formatRelative(past, 'en-US')).toContain('ago');
   });
 });
 

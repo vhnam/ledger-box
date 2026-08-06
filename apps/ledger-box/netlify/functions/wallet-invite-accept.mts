@@ -3,9 +3,8 @@ import type { Config, Context } from '@netlify/functions';
 import { db } from '#/lib/db/index.ts';
 import { hashShareToken } from '#/lib/share-token.ts';
 
+import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { findUserByEmail } from './lib/user-lookup.ts';
-
-const INVITE_NOT_VALID = new Response('This invite link is not valid.', { status: 404 });
 
 function getToken(request: Request, context: Context): string | null {
   const paramToken = context.params?.token;
@@ -21,13 +20,13 @@ function getToken(request: Request, context: Context): string | null {
 
 export default async (request: Request, context: Context) => {
   if (request.method !== 'GET') {
-    return new Response('Method Not Allowed', { status: 405 });
+    return ApiErrors.methodNotAllowed();
   }
 
   const token = getToken(request, context);
 
   if (!token) {
-    return INVITE_NOT_VALID;
+    return apiError('INVITE_NOT_VALID', 404);
   }
 
   const tokenHash = await hashShareToken(token);
@@ -40,15 +39,15 @@ export default async (request: Request, context: Context) => {
     .executeTakeFirst();
 
   if (!member) {
-    return INVITE_NOT_VALID;
+    return apiError('INVITE_NOT_VALID', 404);
   }
 
   if (member.status !== 'pending') {
-    return new Response('This invite has already been used.', { status: 410 });
+    return apiError('INVITE_ALREADY_USED', 410);
   }
 
   if (member.inviteTokenExpiresAt && new Date(member.inviteTokenExpiresAt).getTime() <= Date.now()) {
-    return new Response('This invite link has expired.', { status: 410 });
+    return apiError('INVITE_EXPIRED', 410);
   }
 
   const wallet = await db
@@ -58,7 +57,7 @@ export default async (request: Request, context: Context) => {
     .executeTakeFirst();
 
   if (!wallet || wallet.deletedAt) {
-    return new Response('This wallet is no longer available.', { status: 410 });
+    return apiError('INVITE_WALLET_UNAVAILABLE', 410);
   }
 
   const existingUser = await findUserByEmail(member.email.toLowerCase());

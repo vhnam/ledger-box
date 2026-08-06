@@ -36,8 +36,8 @@ export const WithDefaultValue: Story = {
   play: async ({ canvas, userEvent }) => {
     await expect(canvas.getByRole('button')).toHaveTextContent('15/07/2026');
     await userEvent.click(canvas.getByRole('button'));
-    const grid = await waitFor(() => within(document.body).getByRole('grid'));
-    await expect(grid).toBeVisible();
+    // Wait until the popover calendar is visible (presence alone can race the open animation).
+    await waitFor(() => expect(within(document.body).getByRole('grid')).toBeVisible());
     const day = within(document.body).getByRole('gridcell', { name: '20' });
     await userEvent.click(day.querySelector('button') ?? day);
     await waitFor(() => expect(canvas.getByRole('button')).toHaveTextContent('20/07/2026'));

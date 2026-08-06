@@ -99,6 +99,20 @@ export const Disabled: Story = {
   },
 };
 
+export const FrenchLocale: Story = {
+  render: () => (
+    <div className="w-80">
+      <CurrencyInputDemo locale="fr-FR" currency="EUR" value="1234.56" aria-label="Amount" />
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    // fr-FR's Intl group separator is U+202F (narrow no-break space), not a regular space.
+    // Parsing edge cases for fr-FR separators are covered by input.test.ts, not keystroke
+    // simulation here — simulated typing is unreliable for a non-ASCII group separator.
+    await expect(canvas.getByRole('textbox')).toHaveValue('1 234,56');
+  },
+};
+
 export const InField: Story = {
   render: () => (
     <div className="w-80">

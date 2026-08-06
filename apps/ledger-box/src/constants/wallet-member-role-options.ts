@@ -5,12 +5,25 @@ export const WALLET_MEMBER_ROLES = {
 
 export type WalletMemberRole = (typeof WALLET_MEMBER_ROLES)[keyof typeof WALLET_MEMBER_ROLES];
 
-export const WALLET_MEMBER_ROLE_OPTIONS: { value: WalletMemberRole; label: string }[] = [
-  { value: WALLET_MEMBER_ROLES.VIEWER, label: 'Viewer' },
-  { value: WALLET_MEMBER_ROLES.MANAGER, label: 'Manager' },
+export const WALLET_MEMBER_ROLE_OPTIONS: {
+  value: WalletMemberRole;
+  labelId: string;
+  defaultLabel: string;
+  descriptionId: string;
+  defaultDescription: string;
+}[] = [
+  {
+    value: WALLET_MEMBER_ROLES.VIEWER,
+    labelId: 'members.role.viewer',
+    defaultLabel: 'Viewer',
+    descriptionId: 'members.role.viewer.description',
+    defaultDescription: 'Can view transactions and balances. Cannot add, edit, or delete.',
+  },
+  {
+    value: WALLET_MEMBER_ROLES.MANAGER,
+    labelId: 'members.role.manager',
+    defaultLabel: 'Manager',
+    descriptionId: 'members.role.manager.description',
+    defaultDescription: 'Full access: add, edit, delete transactions and invite others.',
+  },
 ];
-
-export const WALLET_MEMBER_ROLE_DESCRIPTIONS: Record<WalletMemberRole, string> = {
-  [WALLET_MEMBER_ROLES.VIEWER]: 'Can view transactions and balances. Cannot add, edit, or delete.',
-  [WALLET_MEMBER_ROLES.MANAGER]: 'Full access: add, edit, delete transactions and invite others.',
-};

@@ -2,24 +2,24 @@ import * as v from 'valibot';
 
 export const transferMoneySchema = v.pipe(
   v.object({
-    fromWalletId: v.pipe(v.string(), v.nonEmpty('Source wallet is required')),
-    toWalletId: v.pipe(v.string(), v.nonEmpty('Destination wallet is required')),
+    fromWalletId: v.pipe(v.string(), v.nonEmpty('validation.transfer.from.required')),
+    toWalletId: v.pipe(v.string(), v.nonEmpty('validation.transfer.to.required')),
     amount: v.pipe(
       v.string(),
       v.trim(),
-      v.nonEmpty('Amount is required'),
-      v.regex(/^(?:0|[1-9]\d*)(?:\.\d{1,2})?$/, 'Amount must be a valid number'),
+      v.nonEmpty('validation.amount.required'),
+      v.regex(/^(?:0|[1-9]\d*)(?:\.\d{1,2})?$/, 'validation.amount.invalid'),
       v.transform(Number),
-      v.minValue(0.01, 'Amount must be greater than 0'),
+      v.minValue(0.01, 'validation.amount.min'),
     ),
-    note: v.pipe(v.string(), v.trim(), v.nonEmpty('Note is required')),
+    note: v.pipe(v.string(), v.trim(), v.nonEmpty('validation.note.required')),
     occurredAt: v.optional(v.pipe(v.string(), v.isoDate())),
   }),
   v.forward(
     v.partialCheck(
       [['fromWalletId'], ['toWalletId']],
       (input) => input.fromWalletId !== input.toWalletId,
-      'Source and destination wallets must be different',
+      'validation.transfer.walletsDifferent',
     ),
     ['toWalletId'],
   ),

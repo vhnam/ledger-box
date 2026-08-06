@@ -20,7 +20,7 @@ export function useLoginActions() {
     setIsSubmitting(false);
 
     if (authError) {
-      setError(authError.message ?? 'Something went wrong. Please try again.');
+      setError(authError.message ?? 'auth.error.generic');
       return;
     }
 

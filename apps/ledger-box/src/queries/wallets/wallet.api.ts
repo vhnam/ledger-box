@@ -9,6 +9,7 @@ interface WalletResponseDto {
   id: string;
   name: string;
   amount: number;
+  currency: string;
   role: WalletDto['role'];
 }
 
@@ -23,23 +24,27 @@ export async function fetchWallet(walletId: string): Promise<WalletDto> {
   const wallet = wallets.find((item) => item.id === walletId);
 
   if (!wallet) {
-    throw new Error('Wallet not found');
+    throw new Error('errors.WALLET_NOT_FOUND');
   }
 
   return wallet;
 }
 
 export async function createWallet(payload: CreateWalletSchema): Promise<WalletDto> {
-  const { data } = await axios.post<WalletResponseDto>('/api/wallets', payload);
+  try {
+    const { data } = await axios.post<WalletResponseDto>('/api/wallets', payload);
 
-  return data;
+    return data;
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, 'errors.WALLET_NAME_REQUIRED'));
+  }
 }
 
 export async function transferMoney(payload: TransferMoneyOutput): Promise<void> {
   try {
     await axios.post('/api/wallets/transfer', payload);
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, 'Transfer failed. Please try again.'));
+    throw new Error(getApiErrorMessage(error, 'transfer.errorFallback'));
   }
 }
 
@@ -49,7 +54,7 @@ export async function updateWallet(walletId: string, payload: UpdateWalletSchema
 
     return data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, 'Failed to update wallet. Please try again.'));
+    throw new Error(getApiErrorMessage(error, 'wallet.settings.general.updateErrorFallback'));
   }
 }
 
@@ -57,6 +62,6 @@ export async function deleteWallet(walletId: string): Promise<void> {
   try {
     await axios.delete(`/api/wallets/${walletId}`);
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, 'Failed to delete wallet. Please try again.'));
+    throw new Error(getApiErrorMessage(error, 'wallet.delete.errorFallback'));
   }
 }

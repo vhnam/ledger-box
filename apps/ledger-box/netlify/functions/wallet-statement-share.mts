@@ -4,6 +4,7 @@ import { auth } from '#/lib/auth.ts';
 import { db } from '#/lib/db/index.ts';
 
 import { recordActivity } from './lib/activity-log.ts';
+import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { getTenantId, requireOwnedWallet } from './lib/tenant-access.ts';
 
 function getIds(request: Request, context: Context): { walletId: string | null; shareId: string | null } {
@@ -31,21 +32,21 @@ export default async (request: Request, context: Context) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response('Unauthorized', { status: 401 });
+    return ApiErrors.unauthorized();
   }
 
   if (request.method !== 'DELETE') {
-    return new Response('Method Not Allowed', { status: 405 });
+    return ApiErrors.methodNotAllowed();
   }
 
   const { walletId, shareId } = getIds(request, context);
 
   if (!walletId) {
-    return new Response('Wallet id is required', { status: 400 });
+    return apiError('WALLET_ID_REQUIRED', 400);
   }
 
   if (!shareId) {
-    return new Response('Share id is required', { status: 400 });
+    return apiError('SHARE_ID_REQUIRED', 400);
   }
 
   const tenantId = getTenantId(session);
@@ -63,7 +64,7 @@ export default async (request: Request, context: Context) => {
     .executeTakeFirst();
 
   if (!existingShare) {
-    return new Response('Share not found', { status: 404 });
+    return apiError('SHARE_NOT_FOUND', 404);
   }
 
   const revokedAt = new Date();

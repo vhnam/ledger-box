@@ -1,9 +1,11 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
+import { useIntl } from 'react-intl';
 
 import { toast } from '@vhnam/ui/components/toast';
 
+import { formatErrorMessage } from '#/lib/intl-message';
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
 import { useDeleteWallet } from '#/queries/wallets/wallet.mutations';
 
@@ -12,6 +14,7 @@ type DeleteWalletDialogProps = {
 };
 
 export function useDeleteWalletDialogActions({ wallet }: DeleteWalletDialogProps) {
+  const intl = useIntl();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { mutate: deleteWallet, isPending } = useDeleteWallet();
@@ -25,7 +28,10 @@ export function useDeleteWalletDialogActions({ wallet }: DeleteWalletDialogProps
         const wallets = queryClient.getQueryData<WalletDto[]>(['wallets']) ?? [];
         const remaining = wallets.filter((item) => item.id !== wallet.id);
 
-        toast.add({ title: 'Wallet deleted', type: 'success' });
+        toast.add({
+          title: intl.formatMessage({ id: 'toast.wallet.deleted', defaultMessage: 'Wallet deleted' }),
+          type: 'success',
+        });
         onSuccess();
 
         if (remaining.length > 0) {
@@ -36,10 +42,13 @@ export function useDeleteWalletDialogActions({ wallet }: DeleteWalletDialogProps
         await navigate({ to: '/wallets' });
       },
       onError: (deleteError) => {
-        const message =
-          deleteError instanceof Error ? deleteError.message : 'Failed to delete wallet. Please try again.';
+        const message = deleteError instanceof Error ? deleteError.message : 'wallet.delete.errorFallback';
         setError(message);
-        toast.add({ title: 'Failed to delete wallet', description: message, type: 'error' });
+        toast.add({
+          title: intl.formatMessage({ id: 'toast.wallet.deleteFailed', defaultMessage: 'Failed to delete wallet' }),
+          description: formatErrorMessage(intl, message),
+          type: 'error',
+        });
       },
     });
   }

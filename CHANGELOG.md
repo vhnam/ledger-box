@@ -6,6 +6,34 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-22 — per-wallet currency + full app i18n](docs/changelogs/mr-22-per-wallet-currency-and-i18n.md)
+
+#### Added
+
+- Per-wallet `currency` (migration `0009`, default `VND`); create-wallet currency select;
+  fraction digits for `VND`/`JPY`/`USD`/`EUR`; transfer rejects cross-currency pairs.
+- Locale preference: `user_settings` (migration `0010`), `GET`/`PATCH` `/api/users/locale`,
+  Settings Language tab, Accept-Language signup detection.
+- Message catalogs per locale (`en-US`/`en-GB`/`vi-VN`/`fr-FR`/`ja-JP`/`zh-CN`/`zh-TW`)
+  for app chrome, wallets/transactions, wallet settings, auth, public invite/statement,
+  validation, toasts, `errors.{CODE}`, and `email.invite.*`; catalog key-parity tests;
+  `formatErrorMessage`; coded API errors + client `getApiError`; server
+  `createServerIntl` / `getUserLocale` for invite emails.
+
+#### Changed
+
+- Formatting and `CurrencyInput` use each wallet’s currency; wallet PATCH cannot change
+  currency; statements/seed use the wallet currency.
+- UI uses `FormattedMessage` / `useIntl`; unauthenticated routes use browser locale;
+  schemas/constants store message ids; date/number formatting is locale-aware; Netlify
+  handlers return `{ code, message }`; invite emails use the inviter’s stored locale.
+  `AGENTS.md` documents currency, i18n, API error, and invite-email conventions.
+
+#### Fixed
+
+- Activity log no longer labels `invite_resend` / `invite_email_failed` as “Renamed wallet”.
+- Storybook DatePicker “With Default Value” waits for calendar visibility after open.
+
 ### [mr-21 — Dependency updates & icon component hardening](docs/changelogs/mr-21-update-dependencies.md)
 
 #### Added

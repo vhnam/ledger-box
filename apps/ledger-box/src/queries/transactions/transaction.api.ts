@@ -30,7 +30,7 @@ export async function addTransaction(walletId: string, payload: AddTransactionOu
   try {
     await axios.post(`/api/wallets/${walletId}/transactions`, payload);
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, 'Failed to add transaction. Please try again.'));
+    throw new Error(getApiErrorMessage(error, 'transaction.add.errorFallback'));
   }
 }
 
@@ -42,7 +42,7 @@ export async function updateTransaction(
   try {
     await axios.patch(`/api/wallets/${walletId}/transactions/${transactionId}`, payload);
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, 'Failed to update transaction. Please try again.'));
+    throw new Error(getApiErrorMessage(error, 'transaction.edit.errorFallback'));
   }
 }
 
@@ -50,7 +50,7 @@ export async function deleteTransaction(walletId: string, transactionId: string)
   try {
     await axios.delete(`/api/wallets/${walletId}/transactions/${transactionId}`);
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, 'Failed to delete transaction. Please try again.'));
+    throw new Error(getApiErrorMessage(error, 'transaction.delete.errorFallback'));
   }
 }
 
@@ -70,7 +70,7 @@ export async function uploadTransactionAttachment(
 
     return data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, 'Failed to upload attachment. Please try again.'));
+    throw new Error(getApiErrorMessage(error, 'attachment.upload.errorFallback'));
   }
 }
 
@@ -85,7 +85,7 @@ export async function fetchTransactionAttachments(
 
     return data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, 'Failed to load attachments. Please try again.'));
+    throw new Error(getApiErrorMessage(error, 'attachment.loadFailed'));
   }
 }
 
@@ -97,6 +97,6 @@ export async function deleteTransactionAttachment(
   try {
     await axios.delete(`/api/wallets/${walletId}/transactions/${transactionId}/attachments/${attachmentId}`);
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, 'Failed to remove attachment. Please try again.'));
+    throw new Error(getApiErrorMessage(error, 'attachment.delete.errorFallback'));
   }
 }

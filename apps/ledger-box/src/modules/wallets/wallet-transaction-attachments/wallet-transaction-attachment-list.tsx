@@ -1,3 +1,5 @@
+import { useIntl } from 'react-intl';
+
 import {
   Attachment,
   AttachmentAction,
@@ -17,6 +19,7 @@ import {
   getFileTypeLabelFromName,
   isImageContentType,
 } from '#/lib/file';
+import { formatErrorMessage } from '#/lib/intl-message';
 import type { TransactionAttachment } from '#/modules/wallets/wallet-transaction-attachments/wallet-transaction-attachments-sheet.actions';
 
 type TransactionAttachmentListProps = {
@@ -42,6 +45,8 @@ function getAttachmentState(status: TransactionAttachment['status']) {
 }
 
 function TransactionAttachmentList({ attachments, onPreview, onRemove }: TransactionAttachmentListProps) {
+  const intl = useIntl();
+
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto p-4">
       {attachments.map((attachment) => {
@@ -67,18 +72,33 @@ function TransactionAttachmentList({ attachments, onPreview, onRemove }: Transac
               <AttachmentTitle>{attachment.fileName}</AttachmentTitle>
               <AttachmentDescription>
                 {attachment.status === 'error'
-                  ? (attachment.error ?? 'Upload failed')
+                  ? formatErrorMessage(intl, attachment.error ?? 'attachment.status.uploadFailed')
                   : attachment.status === 'processing'
-                    ? 'Optimizing...'
+                    ? intl.formatMessage({
+                        id: 'attachment.status.optimizing',
+                        defaultMessage: 'Optimizing...',
+                      })
                     : `${getFileTypeLabelFromName(attachment.fileName, attachment.contentType)} · ${formatFileSize(attachment.size)}`}
               </AttachmentDescription>
             </AttachmentContent>
             {isPreviewable ? (
-              <AttachmentTrigger aria-label={`View ${attachment.fileName}`} onClick={() => onPreview(attachment)} />
+              <AttachmentTrigger
+                aria-label={intl.formatMessage(
+                  { id: 'attachment.viewAria', defaultMessage: 'View {fileName}' },
+                  { fileName: attachment.fileName },
+                )}
+                onClick={() => onPreview(attachment)}
+              />
             ) : null}
             <AttachmentActions>
               {attachment.status !== 'processing' && attachment.status !== 'uploading' ? (
-                <AttachmentAction aria-label={`Remove ${attachment.fileName}`} onClick={() => onRemove(attachment.id)}>
+                <AttachmentAction
+                  aria-label={intl.formatMessage(
+                    { id: 'attachment.removeAria', defaultMessage: 'Remove {fileName}' },
+                    { fileName: attachment.fileName },
+                  )}
+                  onClick={() => onRemove(attachment.id)}
+                >
                   <Icon name="TrashIcon" />
                 </AttachmentAction>
               ) : null}

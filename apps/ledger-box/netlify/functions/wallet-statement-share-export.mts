@@ -5,6 +5,7 @@ import { db } from '#/lib/db/index.ts';
 import { buildStatementCsvFilename, encodeStatementCsv } from '#/lib/statement-export.ts';
 import type { StatementSnapshot } from '#/lib/statement.ts';
 
+import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { getTenantId, requireOwnedWallet } from './lib/tenant-access.ts';
 
 function getIds(request: Request, context: Context): { walletId: string | null; shareId: string | null } {
@@ -27,19 +28,19 @@ function getIds(request: Request, context: Context): { walletId: string | null; 
 
 export default async (request: Request, context: Context) => {
   if (request.method !== 'GET') {
-    return new Response('Method Not Allowed', { status: 405 });
+    return ApiErrors.methodNotAllowed();
   }
 
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response('Unauthorized', { status: 401 });
+    return ApiErrors.unauthorized();
   }
 
   const { walletId, shareId } = getIds(request, context);
 
   if (!walletId || !shareId) {
-    return new Response('Wallet id and share id are required', { status: 400 });
+    return apiError('WALLET_AND_SHARE_ID_REQUIRED', 400);
   }
 
   const tenantId = getTenantId(session);
@@ -59,7 +60,7 @@ export default async (request: Request, context: Context) => {
     .executeTakeFirst();
 
   if (!share) {
-    return new Response('Statement share not found', { status: 404 });
+    return apiError('SHARE_NOT_FOUND', 404);
   }
 
   const snapshot = share.snapshotJson as StatementSnapshot;

@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useIntl } from 'react-intl';
 
 import { toast } from '@vhnam/ui/components/toast';
 
 import { isPreviewableContentType, isPreviewableFile } from '#/lib/file';
 import { optimizeImageForUpload } from '#/lib/image';
+import { formatErrorMessage } from '#/lib/intl-message';
 import type { TransactionAttachmentDto } from '#/queries/transactions/transaction-attachment.dto';
 import { useUploadTransactionAttachment } from '#/queries/transactions/transaction.mutations';
 import { useTransactionAttachments as useTransactionAttachmentsQuery } from '#/queries/transactions/transaction.queries';
@@ -64,6 +66,7 @@ function mapRemoteAttachment(attachment: TransactionAttachmentDto): TransactionA
 }
 
 export function useTransactionAttachments({ open, walletId, transactionId }: UseTransactionAttachmentsOptions) {
+  const intl = useIntl();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const attachmentsRef = useRef<TransactionAttachment[]>([]);
   const [pendingAttachments, setPendingAttachments] = useState<TransactionAttachment[]>([]);
@@ -157,14 +160,20 @@ export function useTransactionAttachments({ open, walletId, transactionId }: Use
           removePendingAttachment(attachment.id);
         },
         onError: (uploadError) => {
-          const message =
-            uploadError instanceof Error ? uploadError.message : 'Failed to upload attachment. Please try again.';
+          const message = uploadError instanceof Error ? uploadError.message : 'attachment.upload.errorFallback';
 
           updatePendingAttachment(attachment.id, {
             status: 'error',
             error: message,
           });
-          toast.add({ title: 'Failed to upload attachment', description: message, type: 'error' });
+          toast.add({
+            title: intl.formatMessage({
+              id: 'toast.attachment.uploadFailed',
+              defaultMessage: 'Failed to upload attachment',
+            }),
+            description: formatErrorMessage(intl, message),
+            type: 'error',
+          });
         },
       },
     );

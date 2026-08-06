@@ -144,6 +144,29 @@ Variants: `success`, `info`, `warning`, `error`, `loading`.
 **Forms are Formisch + Valibot.** Not React Hook Form, not Zod. Valibot schemas live in
 `apps/ledger-box/src/schemas/` as `*.schema.ts`.
 
+**UI strings use `react-intl`.** Message catalogs live in
+`packages/utils/src/i18n/messages/{en-US,en-GB,vi-VN,fr-FR,ja-JP,zh-CN,zh-TW}.json` (one
+file per `SupportedLocale`). Prefer
+`<FormattedMessage id="…" defaultMessage="…" />` in JSX and `useIntl().formatMessage` for
+toasts, placeholders, and other imperative copy. Valibot schemas store **message ids**
+(e.g. `validation.amount.required`) — render them with `formatErrorMessage` from
+`#/lib/intl-message` (known ids translate; unknown strings pass through). Do not put
+`react-intl` inside `@vhnam/ui`; pass translated props from the app. Keep the brand name
+"Ledger Box" untranslated.
+
+**Invite emails use the inviter’s locale.** `renderWalletInviteEmail` reads catalog keys
+(`email.invite.*`, `members.role.*`) via `createServerIntl` in
+`netlify/functions/lib/server-intl.ts`. Invite and resend handlers resolve locale from
+the owner’s `user_settings.locale` (`getUserLocale`, fallback `en-US`).
+
+**API errors are coded JSON.** Netlify app handlers return
+`{ code, message }` via `apiError` / `ApiErrors` in
+`netlify/functions/lib/api-error-response.ts` (codes in `#/lib/api-error-codes.ts`). The
+English `message` is for logs/fallback; the client maps `code` → catalog id
+`errors.{CODE}` through `getApiError` / `getApiErrorMessage`, then `formatErrorMessage`.
+Do not introduce new plain-text `Response('…')` error bodies for app handlers (CSV
+success and better-auth excepted).
+
 **The database layer is Kysely.** Query builder, not an ORM. No Prisma, no Drizzle, no
 raw string SQL.
 
@@ -163,6 +186,9 @@ File-based, named `000N_short_description`. Current set:
 - `0005_create_wallet_statement_share`
 - `0006_add_wallet_member_user_lookup_index`
 - `0007_create_wallet_activity_log`
+- `0008_add_wallet_member_invite_token`
+- `0009_add_wallet_currency`
+- `0010_create_user_settings`
 
 Add new migrations; **never edit one that has been merged**. Migrations run forward with
 `pnpm --filter @vhnam/ledger-box db:migrate` and back with `db:migrate:down`. There is no
@@ -194,6 +220,7 @@ Netlify Functions under `/api/*`, in `apps/ledger-box/netlify/functions`.
 | `DELETE` `/api/wallets/:walletId/statement-shares/:shareId`                | Revoke a share link                                       |
 | `GET` `/api/wallets/:walletId/activity`                                    | Owner-only paginated wallet activity log                  |
 | `GET` `/api/public/statements/:token`                                      | Public, unauthenticated statement snapshot (rate limited) |
+| `GET` `PATCH` `/api/users/locale`                                          | Read/update the signed-in user's locale preference        |
 
 Attachment uploads accept PDF, PNG, JPG, JPEG, WEBP up to 10 MB. Images are resized
 client-side (2048px max, JPEG compression) before upload.

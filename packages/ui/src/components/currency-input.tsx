@@ -1,8 +1,9 @@
 import * as React from 'react';
 
 import {
-  DEFAULT_CURRENCY_INPUT_OPTIONS,
+  DEFAULT_CURRENCY_LOCALE,
   formatCurrencyInput,
+  getCurrencyFractionDigits,
   getCurrencyInputCaretPosition,
   parseCurrencyInput,
 } from '@vhnam/utils/currency';
@@ -12,6 +13,8 @@ import { cn } from '#/lib/utils';
 
 type CurrencyInputProps = Omit<React.ComponentProps<'input'>, 'defaultValue' | 'onChange' | 'type' | 'value'> & {
   value?: string;
+  currency?: string;
+  locale?: string;
   onValueChange?: (value: string) => void;
 };
 
@@ -30,10 +33,19 @@ function mergeRefs<T>(...refs: Array<React.Ref<T> | undefined>) {
   };
 }
 
-function CurrencyInput({ className, onValueChange, ref, value = '', ...props }: CurrencyInputProps) {
+function CurrencyInput({
+  className,
+  currency = 'VND',
+  locale = DEFAULT_CURRENCY_LOCALE,
+  onValueChange,
+  ref,
+  value = '',
+  ...props
+}: CurrencyInputProps) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const caretPositionRef = React.useRef<number | null>(null);
-  const displayValue = formatCurrencyInput(value, DEFAULT_CURRENCY_INPUT_OPTIONS);
+  const inputOptions = { locale, maximumFractionDigits: getCurrencyFractionDigits(currency) };
+  const displayValue = formatCurrencyInput(value, inputOptions);
 
   React.useLayoutEffect(() => {
     if (caretPositionRef.current === null || !inputRef.current) {
@@ -47,8 +59,8 @@ function CurrencyInput({ className, onValueChange, ref, value = '', ...props }: 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const nextDisplayValue = event.target.value;
     const caretPosition = event.target.selectionStart ?? nextDisplayValue.length;
-    const rawValue = parseCurrencyInput(nextDisplayValue, DEFAULT_CURRENCY_INPUT_OPTIONS);
-    const formattedValue = formatCurrencyInput(rawValue, DEFAULT_CURRENCY_INPUT_OPTIONS);
+    const rawValue = parseCurrencyInput(nextDisplayValue, inputOptions);
+    const formattedValue = formatCurrencyInput(rawValue, inputOptions);
 
     caretPositionRef.current = getCurrencyInputCaretPosition(nextDisplayValue, formattedValue, caretPosition);
     onValueChange?.(rawValue);

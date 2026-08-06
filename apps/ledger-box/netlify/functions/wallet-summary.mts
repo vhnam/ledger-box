@@ -6,6 +6,7 @@ import { db } from '#/lib/db/index.ts';
 import { resolvePeriodBounds } from '#/lib/period-bounds.ts';
 import { computeWalletSummary } from '#/lib/wallet-summary.ts';
 
+import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { requireWalletAccess } from './lib/tenant-access.ts';
 
 function getWalletId(request: Request, context: Context): string | null {
@@ -22,19 +23,19 @@ function getWalletId(request: Request, context: Context): string | null {
 
 export default async (request: Request, context: Context) => {
   if (request.method !== 'GET') {
-    return new Response('Method Not Allowed', { status: 405 });
+    return ApiErrors.methodNotAllowed();
   }
 
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response('Unauthorized', { status: 401 });
+    return ApiErrors.unauthorized();
   }
 
   const walletId = getWalletId(request, context);
 
   if (!walletId) {
-    return new Response('Wallet id is required', { status: 400 });
+    return apiError('WALLET_ID_REQUIRED', 400);
   }
 
   const tenantId = session.user.id;

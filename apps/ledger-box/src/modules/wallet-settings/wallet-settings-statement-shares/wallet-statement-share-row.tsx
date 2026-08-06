@@ -1,9 +1,12 @@
+import { FormattedMessage, useIntl } from 'react-intl';
+
 import { Badge } from '@vhnam/ui/components/badge';
 import { Button, buttonVariants } from '@vhnam/ui/components/button';
 import { Icon } from '@vhnam/ui/components/icon';
 
 import { formatDate, formatRelative } from '@vhnam/utils/date';
 
+import { useAppLocale } from '#/lib/locale-context';
 import type { StatementShareDto } from '#/queries/statement-shares/statement-share.dto';
 
 type WalletStatementShareRowProps = {
@@ -12,34 +15,62 @@ type WalletStatementShareRowProps = {
   onRevoke: (shareId: string) => void;
 };
 
-function getStatusLabel(share: StatementShareDto): { label: string; variant: 'default' | 'secondary' | 'destructive' } {
+function getStatusVariant(share: StatementShareDto): 'default' | 'secondary' | 'destructive' {
   if (share.revokedAt) {
-    return { label: 'Revoked', variant: 'destructive' };
+    return 'destructive';
   }
 
   if (!share.isActive) {
-    return { label: 'Expired', variant: 'secondary' };
+    return 'secondary';
   }
 
-  return { label: 'Active', variant: 'default' };
+  return 'default';
 }
 
 function WalletStatementShareRow({ walletId, share, onRevoke }: WalletStatementShareRowProps) {
-  const status = getStatusLabel(share);
+  const intl = useIntl();
+  const locale = useAppLocale();
+  const statusVariant = getStatusVariant(share);
+
+  const statusLabel = share.revokedAt
+    ? intl.formatMessage({ id: 'wallet.settings.shares.row.status.revoked', defaultMessage: 'Revoked' })
+    : !share.isActive
+      ? intl.formatMessage({ id: 'wallet.settings.shares.row.status.expired', defaultMessage: 'Expired' })
+      : intl.formatMessage({ id: 'wallet.settings.shares.row.status.active', defaultMessage: 'Active' });
+
+  const viewsLabel =
+    share.accessCount === 1
+      ? intl.formatMessage({ id: 'wallet.settings.shares.row.viewsOne', defaultMessage: '1 view' })
+      : intl.formatMessage(
+          { id: 'wallet.settings.shares.row.viewsOther', defaultMessage: '{count} views' },
+          { count: share.accessCount },
+        );
+
+  const lastViewedLabel = share.lastAccessedAt
+    ? intl.formatMessage(
+        { id: 'wallet.settings.shares.row.lastViewed', defaultMessage: 'Last viewed {relative}' },
+        { relative: formatRelative(share.lastAccessedAt, locale) },
+      )
+    : intl.formatMessage({ id: 'wallet.settings.shares.row.notYetViewed', defaultMessage: 'Not yet viewed' });
 
   return (
     <li className="flex items-center justify-between gap-3 py-3">
       <div className="min-w-0">
         <div className="flex items-center gap-2">
-          <p className="truncate text-sm font-medium">{share.displayTitle ?? 'Account statement'}</p>
-          <Badge variant={status.variant}>{status.label}</Badge>
+          <p className="truncate text-sm font-medium">
+            {share.displayTitle ??
+              intl.formatMessage({
+                id: 'wallet.settings.shares.row.fallbackTitle',
+                defaultMessage: 'Account statement',
+              })}
+          </p>
+          <Badge variant={statusVariant}>{statusLabel}</Badge>
         </div>
         <p className="text-xs text-muted-foreground">
-          {formatDate(share.periodFrom)} – {formatDate(share.periodTo)}
+          {formatDate(share.periodFrom, undefined, locale)} – {formatDate(share.periodTo, undefined, locale)}
         </p>
         <p className="text-xs text-muted-foreground">
-          {share.lastAccessedAt ? `Last viewed ${formatRelative(share.lastAccessedAt)}` : 'Not yet viewed'} ·{' '}
-          {share.accessCount} view{share.accessCount === 1 ? '' : 's'}
+          {lastViewedLabel} · {viewsLabel}
         </p>
       </div>
       <div className="flex items-center gap-1">
@@ -49,12 +80,12 @@ function WalletStatementShareRow({ walletId, share, onRevoke }: WalletStatementS
           className={buttonVariants({ variant: 'ghost', size: 'sm' })}
         >
           <Icon name="DownloadIcon" />
-          Download
+          <FormattedMessage id="wallet.settings.shares.row.download" defaultMessage="Download" />
         </a>
         {share.isActive ? (
           <Button variant="ghost" size="sm" onClick={() => onRevoke(share.id)}>
             <Icon name="ProhibitIcon" />
-            Revoke
+            <FormattedMessage id="wallet.settings.shares.row.revoke" defaultMessage="Revoke" />
           </Button>
         ) : null}
       </div>

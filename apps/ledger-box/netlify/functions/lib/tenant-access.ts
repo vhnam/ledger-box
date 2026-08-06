@@ -2,6 +2,8 @@ import { sql } from 'kysely';
 
 import { db } from '#/lib/db/index.ts';
 
+import { ApiErrors } from './api-error-response.ts';
+
 type SessionLike = {
   user: {
     id: string;
@@ -14,6 +16,7 @@ type OwnedWallet = {
   tenantId: string;
   name: string;
   amount: number;
+  currency: string;
   timezone: string;
 };
 
@@ -38,10 +41,6 @@ type TransactionAccessResult =
   | { ok: true; wallet: OwnedWallet; role: WalletAccessRole; transaction: OwnedTransaction }
   | { ok: false; error: Response };
 
-const WALLET_NOT_FOUND = new Response('Wallet not found', { status: 404 });
-const TRANSACTION_NOT_FOUND = new Response('Transaction not found', { status: 404 });
-const READ_ONLY_ACCESS = new Response('Read-only access', { status: 403 });
-
 /** v1: tenant id is the authenticated user id. */
 function getTenantId(session: SessionLike): string {
   return session.user.id;
@@ -50,7 +49,7 @@ function getTenantId(session: SessionLike): string {
 async function findOwnedWallet(tenantId: string, walletId: string): Promise<OwnedWallet | undefined> {
   return db
     .selectFrom('wallet')
-    .select(['id', 'tenantId', 'name', 'amount', 'timezone'])
+    .select(['id', 'tenantId', 'name', 'amount', 'currency', 'timezone'])
     .where('id', '=', walletId)
     .where('tenantId', '=', tenantId)
     .where('deletedAt', 'is', null)
@@ -64,7 +63,7 @@ async function requireOwnedWallet(
   const wallet = await findOwnedWallet(tenantId, walletId);
 
   if (!wallet) {
-    return { ok: false, error: WALLET_NOT_FOUND };
+    return { ok: false, error: ApiErrors.walletNotFound() };
   }
 
   return { ok: true, wallet };
@@ -90,7 +89,7 @@ async function requireOwnedTransaction(
     .executeTakeFirst();
 
   if (!transaction) {
-    return { ok: false, error: TRANSACTION_NOT_FOUND };
+    return { ok: false, error: ApiErrors.transactionNotFound() };
   }
 
   return { ok: true, wallet: ownership.wallet, transaction };
@@ -109,13 +108,13 @@ async function requireWalletAccess(
 ): Promise<WalletAccessResult> {
   const wallet = await db
     .selectFrom('wallet')
-    .select(['id', 'tenantId', 'name', 'amount', 'timezone'])
+    .select(['id', 'tenantId', 'name', 'amount', 'currency', 'timezone'])
     .where('id', '=', walletId)
     .where('deletedAt', 'is', null)
     .executeTakeFirst();
 
   if (!wallet) {
-    return { ok: false, error: WALLET_NOT_FOUND };
+    return { ok: false, error: ApiErrors.walletNotFound() };
   }
 
   if (wallet.tenantId === tenantId) {
@@ -138,7 +137,7 @@ async function requireWalletAccess(
     .executeTakeFirst();
 
   if (!member) {
-    return { ok: false, error: WALLET_NOT_FOUND };
+    return { ok: false, error: ApiErrors.walletNotFound() };
   }
 
   if (member.status === 'pending') {
@@ -164,7 +163,7 @@ async function requireWalletWriteAccess(
   }
 
   if (access.role === 'viewer') {
-    return { ok: false, error: READ_ONLY_ACCESS };
+    return { ok: false, error: ApiErrors.readOnlyAccess() };
   }
 
   return access;
@@ -191,7 +190,7 @@ async function requireTransactionAccess(
     .executeTakeFirst();
 
   if (!transaction) {
-    return { ok: false, error: TRANSACTION_NOT_FOUND };
+    return { ok: false, error: ApiErrors.transactionNotFound() };
   }
 
   return { ok: true, wallet: access.wallet, role: access.role, transaction };
@@ -210,7 +209,7 @@ async function requireTransactionWriteAccess(
   }
 
   if (access.role === 'viewer') {
-    return { ok: false, error: READ_ONLY_ACCESS };
+    return { ok: false, error: ApiErrors.readOnlyAccess() };
   }
 
   return access;
@@ -222,14 +221,22 @@ async function findAccessibleWallets(tenantId: string, sessionEmail: string): Pr
 
   const owned = db
     .selectFrom('wallet')
-    .select(['id', 'tenantId', 'name', 'amount', 'timezone', sql<WalletAccessRole>`'owner'`.as('role')])
+    .select(['id', 'tenantId', 'name', 'amount', 'currency', 'timezone', sql<WalletAccessRole>`'owner'`.as('role')])
     .where('tenantId', '=', tenantId)
     .where('deletedAt', 'is', null);
 
   const member = db
     .selectFrom('wallet')
     .innerJoin('walletMember', 'walletMember.walletId', 'wallet.id')
-    .select(['wallet.id', 'wallet.tenantId', 'wallet.name', 'wallet.amount', 'wallet.timezone', 'walletMember.role'])
+    .select([
+      'wallet.id',
+      'wallet.tenantId',
+      'wallet.name',
+      'wallet.amount',
+      'wallet.currency',
+      'wallet.timezone',
+      'walletMember.role',
+    ])
     .where('wallet.deletedAt', 'is', null)
     .where('walletMember.deletedAt', 'is', null)
     .where('walletMember.status', 'in', ['active', 'pending'])

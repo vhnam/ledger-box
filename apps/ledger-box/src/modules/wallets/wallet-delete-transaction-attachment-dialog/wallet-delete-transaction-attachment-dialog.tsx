@@ -1,9 +1,12 @@
+import { FormattedMessage, useIntl } from 'react-intl';
+
 import { Button } from '@vhnam/ui/components/button';
 import { FieldError } from '@vhnam/ui/components/field';
 import { Icon } from '@vhnam/ui/components/icon';
 import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
+import { formatErrorMessage } from '#/lib/intl-message';
 import { useDeleteTransactionAttachmentDialogActions } from '#/modules/wallets/wallet-delete-transaction-attachment-dialog/wallet-delete-transaction-attachment-dialog.actions';
 import type { TransactionAttachment } from '#/modules/wallets/wallet-transaction-attachments/wallet-transaction-attachments-sheet.actions';
 
@@ -31,6 +34,8 @@ function DeleteTransactionAttachmentContent({
   onCancel,
   onConfirm,
 }: DeleteTransactionAttachmentContentProps) {
+  const intl = useIntl();
+
   return (
     <div className="flex flex-col items-center gap-4 text-center">
       <div className="flex size-12 items-center justify-center rounded-xl bg-destructive/10">
@@ -38,24 +43,33 @@ function DeleteTransactionAttachmentContent({
       </div>
 
       <div className="space-y-2">
-        <h2 className="text-base font-medium">Remove attachment?</h2>
+        <h2 className="text-base font-medium">
+          <FormattedMessage id="attachment.delete.title" defaultMessage="Remove attachment?" />
+        </h2>
         <p className="text-sm text-muted-foreground">
-          <span className="font-medium text-foreground">&quot;{attachment.fileName}&quot;</span> will be permanently
-          removed.
+          <FormattedMessage
+            id="attachment.delete.body"
+            defaultMessage='"{fileName}" will be permanently removed.'
+            values={{ fileName: attachment.fileName }}
+          />
           <br />
-          This can&apos;t be undone.
+          <FormattedMessage id="common.cannotBeUndone" defaultMessage="This can't be undone." />
         </p>
       </div>
 
-      {error ? <FieldError>{error}</FieldError> : null}
+      {error ? <FieldError>{formatErrorMessage(intl, error)}</FieldError> : null}
 
       <div className="flex w-full gap-2">
         <Button type="button" variant="outline" className="flex-1" onClick={onCancel} disabled={isPending}>
-          Cancel
+          <FormattedMessage id="common.cancel" defaultMessage="Cancel" />
         </Button>
         <Button type="button" variant="destructive" className="flex-1" onClick={onConfirm} disabled={isPending}>
           {isPending ? <Spinner className="size-4" /> : null}
-          {isPending ? 'Removing...' : 'Remove'}
+          {isPending ? (
+            <FormattedMessage id="common.removing" defaultMessage="Removing..." />
+          ) : (
+            <FormattedMessage id="common.remove" defaultMessage="Remove" />
+          )}
         </Button>
       </div>
     </div>
@@ -70,6 +84,7 @@ function DeleteTransactionAttachmentDialog({
   transactionId,
   onRemovePending,
 }: DeleteTransactionAttachmentDialogProps) {
+  const intl = useIntl();
   const { handleDeleteAttachment, isPending, error } = useDeleteTransactionAttachmentDialogActions({
     walletId,
     transactionId,
@@ -105,8 +120,11 @@ function DeleteTransactionAttachmentDialog({
     <ResponsiveDialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Remove attachment?"
-      description={`Confirm removal of ${attachment.fileName}`}
+      title={intl.formatMessage({ id: 'attachment.delete.title', defaultMessage: 'Remove attachment?' })}
+      description={intl.formatMessage(
+        { id: 'attachment.delete.description', defaultMessage: 'Confirm removal of {fileName}' },
+        { fileName: attachment.fileName },
+      )}
       hideTitle
       hideDescription
       showCloseButton={false}

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { Button } from '@vhnam/ui/components/button';
 import { DatePickerRange } from '@vhnam/ui/components/date-picker-range';
@@ -13,6 +14,7 @@ import { toast } from '@vhnam/ui/components/toast';
 import { format } from '@vhnam/utils/date';
 
 import { AppPagination } from '#/components/app-pagination';
+import { formatErrorMessage } from '#/lib/intl-message';
 import { StatementSnapshotView } from '#/modules/statement/statement-snapshot-view';
 import { useWalletSettingsStatementSharesActions } from '#/modules/wallet-settings/wallet-settings-statement-shares/wallet-settings-statement-shares.actions';
 import { WalletStatementShareRow } from '#/modules/wallet-settings/wallet-settings-statement-shares/wallet-statement-share-row';
@@ -23,6 +25,7 @@ type WalletSettingsStatementSharesProps = {
 };
 
 function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementSharesProps) {
+  const intl = useIntl();
   const [dialogOpen, setDialogOpen] = useState(false);
   const {
     shares,
@@ -69,13 +72,23 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
 
     const url = `${window.location.origin}${createdLink.publicUrl}`;
     void navigator.clipboard.writeText(url);
-    toast.add({ title: 'Link copied to clipboard', type: 'success' });
+    toast.add({
+      title: intl.formatMessage({ id: 'toast.shares.linkCopied', defaultMessage: 'Link copied to clipboard' }),
+      type: 'success',
+    });
   }
 
   const hasUnsavedInput = !createdLink && Boolean(periodFrom || periodTo || displayTitle);
 
   function handleDismissAttempt() {
-    if (window.confirm('Discard this statement link setup? Your selections will be lost.')) {
+    if (
+      window.confirm(
+        intl.formatMessage({
+          id: 'wallet.settings.shares.dialog.discardConfirm',
+          defaultMessage: 'Discard this statement link setup? Your selections will be lost.',
+        }),
+      )
+    ) {
       handleDialogOpenChange(false);
     }
   }
@@ -84,15 +97,20 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
     <>
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-1">
-          <h1 className="font-heading text-xl font-semibold">Statement links</h1>
+          <h1 className="font-heading text-xl font-semibold">
+            <FormattedMessage id="wallet.settings.shares.title" defaultMessage="Statement links" />
+          </h1>
           <p className="text-sm text-muted-foreground">
-            Share a read-only, revocable statement for a date range, without sign-in.
+            <FormattedMessage
+              id="wallet.settings.shares.description"
+              defaultMessage="Share a read-only, revocable statement for a date range, without sign-in."
+            />
           </p>
         </div>
 
         <Button variant="secondary" className="w-fit" onClick={() => setDialogOpen(true)}>
           <Icon name="ShareIcon" />
-          Share statement
+          <FormattedMessage id="wallet.settings.shares.cta" defaultMessage="Share statement" />
         </Button>
 
         {isLoadingShares ? (
@@ -128,7 +146,7 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
       <ResponsiveDialog
         open={dialogOpen}
         onOpenChange={handleDialogOpenChange}
-        title="Share statement"
+        title={intl.formatMessage({ id: 'wallet.settings.shares.dialog.title', defaultMessage: 'Share statement' })}
         className="sm:max-w-xl"
         preventDismiss={hasUnsavedInput}
         onDismissAttempt={handleDismissAttempt}
@@ -136,22 +154,28 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
         {createdLink ? (
           <div className="flex flex-col gap-4">
             <p className="text-sm text-muted-foreground">
-              Copy this link now — it will not be shown again. Anyone with this link can view the statement until it
-              expires or is revoked.
+              <FormattedMessage
+                id="wallet.settings.shares.dialog.createdHint"
+                defaultMessage="Copy this link now — it will not be shown again. Anyone with this link can view the statement until it expires or is revoked."
+              />
             </p>
             <div className="flex items-center gap-2">
               <Input readOnly value={`${window.location.origin}${createdLink.publicUrl}`} />
               <Button variant="outline" onClick={handleCopyLink}>
                 <Icon name="CopyIcon" />
-                Copy
+                <FormattedMessage id="wallet.settings.shares.dialog.copy" defaultMessage="Copy" />
               </Button>
             </div>
-            <Button onClick={() => handleDialogOpenChange(false)}>Done</Button>
+            <Button onClick={() => handleDialogOpenChange(false)}>
+              <FormattedMessage id="wallet.settings.shares.dialog.done" defaultMessage="Done" />
+            </Button>
           </div>
         ) : (
           <div className="flex flex-col gap-4">
             <Field>
-              <FieldLabel>Period</FieldLabel>
+              <FieldLabel>
+                <FormattedMessage id="wallet.settings.shares.dialog.period" defaultMessage="Period" />
+              </FieldLabel>
               <DatePickerRange
                 value={periodFrom && periodTo ? { from: new Date(periodFrom), to: new Date(periodTo) } : undefined}
                 onChange={(range) => {
@@ -163,31 +187,39 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
             </Field>
 
             <Field>
-              <FieldLabel htmlFor="display-title">Display title (optional)</FieldLabel>
+              <FieldLabel htmlFor="display-title">
+                <FormattedMessage
+                  id="wallet.settings.shares.dialog.displayTitle.label"
+                  defaultMessage="Display title (optional)"
+                />
+              </FieldLabel>
               <Input
                 id="display-title"
                 value={displayTitle}
                 onChange={(event) => setDisplayTitle(event.target.value)}
-                placeholder="e.g. March holding"
+                placeholder={intl.formatMessage({
+                  id: 'wallet.settings.shares.dialog.displayTitle.placeholder',
+                  defaultMessage: 'e.g. March holding',
+                })}
                 maxLength={80}
               />
             </Field>
 
-            {error ? <FieldError>{error}</FieldError> : null}
+            {error ? <FieldError>{formatErrorMessage(intl, error)}</FieldError> : null}
 
             <div className="flex gap-2">
               <Button variant="outline" className="flex-1" onClick={handlePreview} disabled={isPreviewing}>
                 {isPreviewing && <Spinner className="size-4" />}
-                Preview
+                <FormattedMessage id="wallet.settings.shares.dialog.preview" defaultMessage="Preview" />
               </Button>
               <Button variant="outline" className="flex-1" onClick={handleDownloadCsv} disabled={isDownloading}>
                 {isDownloading && <Spinner className="size-4" />}
                 <Icon name="DownloadIcon" />
-                Download CSV
+                <FormattedMessage id="wallet.settings.shares.dialog.downloadCsv" defaultMessage="Download CSV" />
               </Button>
               <Button className="flex-1" onClick={handleCreate} disabled={isCreating}>
                 {isCreating && <Spinner className="size-4" />}
-                Create link
+                <FormattedMessage id="wallet.settings.shares.dialog.createLink" defaultMessage="Create link" />
               </Button>
             </div>
 

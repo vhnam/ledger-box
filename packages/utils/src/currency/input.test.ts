@@ -75,6 +75,10 @@ describe('parseCurrencyInput', () => {
   it('normalizes a plain integer with fraction digits allowed but none typed', () => {
     expect(parseCurrencyInput('1234', { locale: 'en-US', maximumFractionDigits: 2 })).toBe('1234');
   });
+
+  it('handles fr-FR (space-group, comma-decimal) parsing', () => {
+    expect(parseCurrencyInput('1 234,56', { locale: 'fr-FR', maximumFractionDigits: 2 })).toBe('1234.56');
+  });
 });
 
 describe('formatCurrencyInput', () => {
@@ -112,6 +116,10 @@ describe('formatCurrencyInput', () => {
 
   it('formats a plain integer with fraction digits allowed but none typed', () => {
     expect(formatCurrencyInput('1234', { locale: 'en-US', maximumFractionDigits: 2 })).toBe('1,234');
+  });
+
+  it('formats using fr-FR separators (space group, comma decimal)', () => {
+    expect(formatCurrencyInput('1234.56', { locale: 'fr-FR', maximumFractionDigits: 2 })).toBe('1 234,56');
   });
 });
 

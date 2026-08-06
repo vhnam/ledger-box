@@ -1,9 +1,13 @@
 import type { Config, Context } from '@netlify/functions';
 
+import { parseAcceptLanguage } from '@vhnam/utils/locale';
+
 import { db } from '#/lib/db/index.ts';
 import { hashShareToken } from '#/lib/share-token.ts';
 import { buildStatementCsvFilename, encodeStatementCsv } from '#/lib/statement-export.ts';
 import type { StatementSnapshot } from '#/lib/statement.ts';
+
+import { ApiErrors, apiError } from './lib/api-error-response.ts';
 
 const RATE_WINDOW_MS = 60_000;
 const RATE_WINDOW_LIMIT = 60;
@@ -22,13 +26,13 @@ function getToken(request: Request, context: Context): string | null {
 
 export default async (request: Request, context: Context) => {
   if (request.method !== 'GET') {
-    return new Response('Method Not Allowed', { status: 405 });
+    return ApiErrors.methodNotAllowed();
   }
 
   const token = getToken(request, context);
 
   if (!token) {
-    return new Response('This link is not valid.', { status: 404 });
+    return apiError('STATEMENT_LINK_INVALID', 404);
   }
 
   const tokenHash = await hashShareToken(token);
@@ -49,15 +53,15 @@ export default async (request: Request, context: Context) => {
     .executeTakeFirst();
 
   if (!share) {
-    return new Response('This link is not valid.', { status: 404 });
+    return apiError('STATEMENT_LINK_INVALID', 404);
   }
 
   if (share.revokedAt) {
-    return new Response('This link has been revoked.', { status: 410 });
+    return apiError('STATEMENT_LINK_REVOKED', 410);
   }
 
   if (share.expiresAt && new Date(share.expiresAt).getTime() <= Date.now()) {
-    return new Response('This link has expired.', { status: 410 });
+    return apiError('STATEMENT_LINK_EXPIRED', 410);
   }
 
   const wallet = await db
@@ -67,7 +71,7 @@ export default async (request: Request, context: Context) => {
     .executeTakeFirst();
 
   if (!wallet || wallet.deletedAt) {
-    return new Response('This statement is no longer available.', { status: 410 });
+    return apiError('STATEMENT_UNAVAILABLE', 410);
   }
 
   const now = Date.now();
@@ -75,7 +79,7 @@ export default async (request: Request, context: Context) => {
   const withinWindow = windowStart !== null && now - windowStart < RATE_WINDOW_MS;
 
   if (withinWindow && share.rateWindowCount >= RATE_WINDOW_LIMIT) {
-    return new Response('Too many requests. Please try again shortly.', { status: 429 });
+    return apiError('STATEMENT_RATE_LIMITED', 429);
   }
 
   const nextRateWindowStart = withinWindow ? new Date(windowStart) : new Date(now);
@@ -97,8 +101,9 @@ export default async (request: Request, context: Context) => {
   if (format === 'csv') {
     const snapshot = share.snapshotJson as StatementSnapshot;
     const filename = buildStatementCsvFilename(snapshot, share.displayTitle ?? 'statement');
+    const locale = parseAcceptLanguage(request.headers.get('accept-language'));
 
-    return new Response(encodeStatementCsv(snapshot, share.displayTitle), {
+    return new Response(encodeStatementCsv(snapshot, share.displayTitle, { locale }), {
       headers: {
         'Content-Type': 'text/csv; charset=utf-8',
         'Content-Disposition': `attachment; filename="${filename}"`,

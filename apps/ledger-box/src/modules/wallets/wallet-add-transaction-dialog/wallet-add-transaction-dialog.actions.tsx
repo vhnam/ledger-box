@@ -1,8 +1,10 @@
 import { reset, useForm } from '@formisch/react';
 import { useEffect, useState } from 'react';
+import { useIntl } from 'react-intl';
 
 import { toast } from '@vhnam/ui/components/toast';
 
+import { formatErrorMessage } from '#/lib/intl-message';
 import { useAddTransaction } from '#/queries/transactions/transaction.mutations';
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
 import {
@@ -27,6 +29,7 @@ function getDefaultInput(): AddTransactionInput {
 }
 
 export function useAddTransactionDialogActions({ open, walletId, wallets }: UseAddTransactionDialogActionsOptions) {
+  const intl = useIntl();
   const form = useForm({ schema: addTransactionSchema });
   const { mutate: addTransaction, isPending } = useAddTransaction();
   const [error, setError] = useState<string | null>(null);
@@ -59,16 +62,23 @@ export function useAddTransactionDialogActions({ open, walletId, wallets }: UseA
       {
         onSuccess: () => {
           toast.add({
-            title: 'Transaction added',
-            description: wallet?.name ?? 'Wallet',
+            title: intl.formatMessage({ id: 'toast.transaction.added', defaultMessage: 'Transaction added' }),
+            description: wallet?.name ?? intl.formatMessage({ id: 'common.walletFallback', defaultMessage: 'Wallet' }),
             type: 'success',
           });
           onSuccess();
         },
         onError: (addError) => {
-          const message = addError instanceof Error ? addError.message : 'Failed to add transaction. Please try again.';
+          const message = addError instanceof Error ? addError.message : 'transaction.add.errorFallback';
           setError(message);
-          toast.add({ title: 'Failed to add transaction', description: message, type: 'error' });
+          toast.add({
+            title: intl.formatMessage({
+              id: 'toast.transaction.addFailed',
+              defaultMessage: 'Failed to add transaction',
+            }),
+            description: formatErrorMessage(intl, message),
+            type: 'error',
+          });
         },
       },
     );

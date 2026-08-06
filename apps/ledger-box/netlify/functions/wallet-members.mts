@@ -8,9 +8,11 @@ import type { WalletMemberRole } from '#/lib/db/schema.ts';
 import { generateShareToken } from '#/lib/share-token.ts';
 
 import { recordActivity } from './lib/activity-log.ts';
+import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { renderWalletInviteEmail } from './lib/email-templates/wallet-invite-email.tsx';
 import { sendEmail } from './lib/mailer.ts';
 import { getTenantId, requireOwnedWallet } from './lib/tenant-access.ts';
+import { getUserLocale } from './lib/user-locale.ts';
 import { findUserByEmail, findUserById } from './lib/user-lookup.ts';
 import { mapOwnerMember, mapWalletMember } from './lib/wallet-member-response.ts';
 
@@ -41,13 +43,13 @@ export default async (request: Request, context: Context) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response('Unauthorized', { status: 401 });
+    return ApiErrors.unauthorized();
   }
 
   const walletId = getWalletId(request, context);
 
   if (!walletId) {
-    return new Response('Wallet id is required', { status: 400 });
+    return apiError('WALLET_ID_REQUIRED', 400);
   }
 
   const tenantId = getTenantId(session);
@@ -61,7 +63,7 @@ export default async (request: Request, context: Context) => {
     const ownerUser = await findUserById(tenantId);
 
     if (!ownerUser) {
-      return new Response('Wallet owner not found', { status: 500 });
+      return apiError('WALLET_OWNER_NOT_FOUND', 500);
     }
 
     const url = new URL(request.url);
@@ -116,11 +118,11 @@ export default async (request: Request, context: Context) => {
     const body = (await request.json()) as InviteWalletMemberBody;
 
     if (typeof body.email !== 'string' || body.email.trim().length === 0) {
-      return new Response('Email is required', { status: 400 });
+      return apiError('EMAIL_REQUIRED', 400);
     }
 
     if (!isWalletMemberRole(body.role)) {
-      return new Response('Role is required', { status: 400 });
+      return apiError('ROLE_REQUIRED', 400);
     }
 
     const email = body.email.trim().toLowerCase();
@@ -129,11 +131,11 @@ export default async (request: Request, context: Context) => {
     const ownerUser = await findUserById(tenantId);
 
     if (!ownerUser) {
-      return new Response('Wallet owner not found', { status: 500 });
+      return apiError('WALLET_OWNER_NOT_FOUND', 500);
     }
 
     if (email === ownerUser.email.toLowerCase()) {
-      return new Response('Wallet owner is already a member', { status: 400 });
+      return apiError('OWNER_ALREADY_MEMBER', 400);
     }
 
     const existingMember = await db
@@ -145,7 +147,7 @@ export default async (request: Request, context: Context) => {
       .executeTakeFirst();
 
     if (existingMember) {
-      return new Response('This person is already a member or has a pending invite.', { status: 400 });
+      return apiError('MEMBER_ALREADY_EXISTS', 400);
     }
 
     const invitedUser = await findUserByEmail(email);
@@ -198,12 +200,14 @@ export default async (request: Request, context: Context) => {
       .execute();
 
     const acceptUrl = new URL(`/invite/${rawToken}`, process.env.BETTER_AUTH_URL).toString();
+    const inviterLocale = await getUserLocale(tenantId);
     const { subject, html, text } = renderWalletInviteEmail({
       inviterName: session.user.name ?? '',
       inviterEmail: session.user.email,
       walletName: ownership.wallet.name,
       role,
       acceptUrl,
+      locale: inviterLocale,
     });
 
     const sendResult = await sendEmail({ to: email, subject, html, text });
@@ -225,7 +229,7 @@ export default async (request: Request, context: Context) => {
     return Response.json({ ...mapWalletMember(member, invitedUser), emailSent: sendResult.ok }, { status: 201 });
   }
 
-  return new Response('Method Not Allowed', { status: 405 });
+  return ApiErrors.methodNotAllowed();
 };
 
 export const config: Config = {

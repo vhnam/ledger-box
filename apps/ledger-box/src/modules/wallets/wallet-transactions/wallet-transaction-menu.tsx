@@ -1,3 +1,5 @@
+import { FormattedMessage } from 'react-intl';
+
 import { Button } from '@vhnam/ui/components/button';
 import {
   DropdownMenu,
@@ -29,12 +31,12 @@ function WalletTransactionMenu({ onEdit, onDelete }: WalletTransactionMenuProps)
           <DropdownMenuGroup>
             <DropdownMenuItem onClick={onEdit}>
               <Icon name="PencilLineIcon" className="size-4" />
-              Edit
+              <FormattedMessage id="transaction.menu.edit" defaultMessage="Edit" />
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem variant="destructive" onClick={onDelete}>
               <Icon name="TrashIcon" className="size-4" />
-              Delete
+              <FormattedMessage id="transaction.menu.delete" defaultMessage="Delete" />
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>

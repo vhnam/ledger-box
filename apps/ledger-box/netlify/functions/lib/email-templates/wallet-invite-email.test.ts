@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vite-plus/test';
 import { renderWalletInviteEmail } from './wallet-invite-email.tsx';
 
 describe('renderWalletInviteEmail', () => {
-  it('renders subject, html, and text for a named inviter', () => {
+  it('renders subject, html, and text for a named inviter (default en-US)', () => {
     const result = renderWalletInviteEmail({
       inviterName: 'Alice Nguyen',
       inviterEmail: 'alice@example.com',
@@ -13,9 +13,12 @@ describe('renderWalletInviteEmail', () => {
     });
 
     expect(result.subject).toBe('Alice Nguyen invited you to Family Fund on Ledger Box');
-    expect(result.html).toBe(
-      '<table role="presentation" width="100%" cellPadding="0" cellSpacing="0" style="background-color:#f4f4f5"><tbody><tr><td align="center" style="padding:24px 16px"><table role="presentation" width="100%" cellPadding="0" cellSpacing="0" style="max-width:480px;background-color:#ffffff;font-family:Arial, Helvetica, sans-serif;font-size:14px;line-height:1.5;color:#18181b"><tbody><tr><td style="padding:24px"><p style="margin:0 0 16px">Alice Nguyen (alice@example.com) invited you to the &quot;Family Fund&quot; wallet on Ledger Box as a <strong>Manager</strong>.</p><p style="margin:0 0 16px">Full access: add, edit, delete transactions and invite others.</p><p style="margin:0 0 16px"><a href="https://ledgerbox.example/invite/token123">Accept the invite</a></p><p style="margin:0 0 16px;margin-bottom:0">If you weren&#x27;t expecting this invite, you can ignore this email.</p></td></tr></tbody></table></td></tr></tbody></table>',
+    expect(result.html).toContain(
+      'Alice Nguyen (alice@example.com) invited you to the &quot;Family Fund&quot; wallet on Ledger Box as a Manager.',
     );
+    expect(result.html).toContain('Full access: add, edit, delete transactions and invite others.');
+    expect(result.html).toContain('<a href="https://ledgerbox.example/invite/token123">Accept the invite</a>');
+    expect(result.html).toContain('If you weren&#x27;t expecting this invite, you can ignore this email.');
     expect(result.text).toBe(
       [
         'Alice Nguyen (alice@example.com) invited you to the "Family Fund" wallet on Ledger Box as a Manager.',
@@ -38,5 +41,22 @@ describe('renderWalletInviteEmail', () => {
     expect(result.subject).toBe('bob@example.com invited you to Trip Wallet on Ledger Box');
     expect(result.html).toContain('bob@example.com (bob@example.com)');
     expect(result.text).toContain('bob@example.com (bob@example.com)');
+  });
+
+  it('localizes subject and body from the inviter locale', () => {
+    const result = renderWalletInviteEmail({
+      inviterName: 'Alice Nguyen',
+      inviterEmail: 'alice@example.com',
+      walletName: 'Family Fund',
+      role: 'manager',
+      acceptUrl: 'https://ledgerbox.example/invite/token123',
+      locale: 'vi-VN',
+    });
+
+    expect(result.subject).toBe('Alice Nguyen đã mời bạn vào Family Fund trên Ledger Box');
+    expect(result.html).toContain('với vai trò Quản lý');
+    expect(result.html).toContain('Toàn quyền: thêm, sửa, xóa giao dịch và mời người khác.');
+    expect(result.html).toContain('Chấp nhận lời mời');
+    expect(result.text).toContain('Chấp nhận lời mời: https://ledgerbox.example/invite/token123');
   });
 });

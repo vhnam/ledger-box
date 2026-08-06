@@ -8,6 +8,7 @@ import { buildStatementCsvFilename, encodeStatementCsv } from '#/lib/statement-e
 import { buildStatement } from '#/lib/statement.ts';
 
 import { recordActivity } from './lib/activity-log.ts';
+import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { getTenantId, requireOwnedWallet } from './lib/tenant-access.ts';
 
 const DEFAULT_EXPIRY_DAYS = 90;
@@ -52,13 +53,13 @@ export default async (request: Request, context: Context) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response('Unauthorized', { status: 401 });
+    return ApiErrors.unauthorized();
   }
 
   const walletId = getWalletId(request, context);
 
   if (!walletId) {
-    return new Response('Wallet id is required', { status: 400 });
+    return apiError('WALLET_ID_REQUIRED', 400);
   }
 
   const tenantId = getTenantId(session);
@@ -117,23 +118,23 @@ export default async (request: Request, context: Context) => {
     const body = (await request.json()) as CreateStatementShareBody;
 
     if (typeof body.periodFrom !== 'string' || body.periodFrom.length === 0) {
-      return new Response('Period start is required', { status: 400 });
+      return apiError('PERIOD_START_REQUIRED', 400);
     }
 
     if (typeof body.periodTo !== 'string' || body.periodTo.length === 0) {
-      return new Response('Period end is required', { status: 400 });
+      return apiError('PERIOD_END_REQUIRED', 400);
     }
 
     if (body.displayTitle !== undefined && typeof body.displayTitle !== 'string') {
-      return new Response('Display title must be a string', { status: 400 });
+      return apiError('DISPLAY_TITLE_TYPE_INVALID', 400);
     }
 
     if (typeof body.displayTitle === 'string' && body.displayTitle.length > MAX_DISPLAY_TITLE_LENGTH) {
-      return new Response(`Display title must be ${MAX_DISPLAY_TITLE_LENGTH} characters or fewer`, { status: 400 });
+      return apiError('DISPLAY_TITLE_TOO_LONG', 400);
     }
 
     if (body.expiresAt !== undefined && body.expiresAt !== null && typeof body.expiresAt !== 'string') {
-      return new Response('Expiry must be a date string or null', { status: 400 });
+      return apiError('EXPIRY_INVALID', 400);
     }
 
     const periodFrom = body.periodFrom;
@@ -220,7 +221,7 @@ export default async (request: Request, context: Context) => {
     );
   }
 
-  return new Response('Method Not Allowed', { status: 405 });
+  return ApiErrors.methodNotAllowed();
 };
 
 export const config: Config = {

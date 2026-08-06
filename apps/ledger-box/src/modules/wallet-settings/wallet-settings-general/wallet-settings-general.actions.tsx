@@ -1,8 +1,10 @@
 import { reset, useForm } from '@formisch/react';
 import { useEffect, useState } from 'react';
+import { useIntl } from 'react-intl';
 
 import { toast } from '@vhnam/ui/components/toast';
 
+import { formatErrorMessage } from '#/lib/intl-message';
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
 import { useUpdateWallet } from '#/queries/wallets/wallet.mutations';
 import { updateWalletSchema, type UpdateWalletSchema } from '#/schemas/wallet.schema';
@@ -12,6 +14,7 @@ type UseWalletSettingsGeneralActionsOptions = {
 };
 
 export function useWalletSettingsGeneralActions({ wallet }: UseWalletSettingsGeneralActionsOptions) {
+  const intl = useIntl();
   const form = useForm({
     schema: updateWalletSchema,
     initialInput: { name: wallet.name },
@@ -31,12 +34,19 @@ export function useWalletSettingsGeneralActions({ wallet }: UseWalletSettingsGen
 
     updateWallet(output, {
       onSuccess: () => {
-        toast.add({ title: 'Wallet updated', type: 'success' });
+        toast.add({
+          title: intl.formatMessage({ id: 'toast.wallet.updated', defaultMessage: 'Wallet updated' }),
+          type: 'success',
+        });
       },
       onError: (error) => {
-        const message = error instanceof Error ? error.message : 'Failed to update wallet. Please try again.';
+        const message = error instanceof Error ? error.message : 'wallet.settings.general.updateErrorFallback';
         setUpdateError(message);
-        toast.add({ title: 'Failed to update wallet', description: message, type: 'error' });
+        toast.add({
+          title: intl.formatMessage({ id: 'toast.wallet.updateFailed', defaultMessage: 'Failed to update wallet' }),
+          description: formatErrorMessage(intl, message),
+          type: 'error',
+        });
       },
     });
   }

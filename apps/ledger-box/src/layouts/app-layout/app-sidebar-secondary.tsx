@@ -1,5 +1,6 @@
 import type { ComponentProps } from 'react';
 import { useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { Icon } from '@vhnam/ui/components/icon';
 import {
@@ -14,7 +15,9 @@ import { cn } from '@vhnam/ui/lib/utils';
 import { CreateWalletDialog } from '#/modules/wallets/wallet-create-dialog';
 
 function AppSidebarSecondary({ className, ...props }: ComponentProps<typeof SidebarGroup>) {
+  const intl = useIntl();
   const [createWalletOpen, setCreateWalletOpen] = useState(false);
+  const newWalletLabel = intl.formatMessage({ id: 'nav.newWallet', defaultMessage: 'New wallet' });
 
   return (
     <SidebarGroup className={cn('p-0', className)} {...props}>
@@ -23,7 +26,7 @@ function AppSidebarSecondary({ className, ...props }: ComponentProps<typeof Side
           <SidebarMenuItem>
             <SidebarMenuButton
               size="lg"
-              tooltip="New wallet"
+              tooltip={newWalletLabel}
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               render={
                 <button
@@ -38,7 +41,9 @@ function AppSidebarSecondary({ className, ...props }: ComponentProps<typeof Side
                 <Icon name="PlusIcon" aria-hidden />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">New wallet</span>
+                <span className="truncate font-medium">
+                  <FormattedMessage id="nav.newWallet" defaultMessage="New wallet" />
+                </span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>

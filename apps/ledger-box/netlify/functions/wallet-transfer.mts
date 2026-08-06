@@ -4,6 +4,7 @@ import { auth } from '#/lib/auth.ts';
 import { db } from '#/lib/db/index.ts';
 import { calendarDateToOccurredAtStart } from '#/lib/period-bounds.ts';
 
+import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { getTenantId, requireWalletWriteAccess } from './lib/tenant-access.ts';
 import { transferBetweenWallets } from './lib/wallet-mutations.ts';
 
@@ -23,34 +24,34 @@ export default async (request: Request) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response('Unauthorized', { status: 401 });
+    return ApiErrors.unauthorized();
   }
 
   if (request.method !== 'POST') {
-    return new Response('Method Not Allowed', { status: 405 });
+    return ApiErrors.methodNotAllowed();
   }
 
   const tenantId = getTenantId(session);
   const body = (await request.json()) as TransferMoneyBody;
 
   if (typeof body.fromWalletId !== 'string' || body.fromWalletId.trim().length === 0) {
-    return new Response('Source wallet is required', { status: 400 });
+    return apiError('SOURCE_WALLET_REQUIRED', 400);
   }
 
   if (typeof body.toWalletId !== 'string' || body.toWalletId.trim().length === 0) {
-    return new Response('Destination wallet is required', { status: 400 });
+    return apiError('DESTINATION_WALLET_REQUIRED', 400);
   }
 
   if (typeof body.amount !== 'number' || !Number.isFinite(body.amount) || body.amount <= 0) {
-    return new Response('Amount must be greater than 0', { status: 400 });
+    return apiError('AMOUNT_MUST_BE_POSITIVE', 400);
   }
 
   if (typeof body.note !== 'string' || body.note.trim().length === 0) {
-    return new Response('Note is required', { status: 400 });
+    return apiError('NOTE_REQUIRED', 400);
   }
 
   if (body.occurredAt !== undefined && typeof body.occurredAt !== 'string') {
-    return new Response('Occurred at must be a date string', { status: 400 });
+    return apiError('OCCURRED_AT_INVALID', 400);
   }
 
   const fromWalletId = body.fromWalletId.trim();
@@ -59,7 +60,7 @@ export default async (request: Request) => {
   const note = body.note.trim();
 
   if (fromWalletId === toWalletId) {
-    return new Response('Source and destination wallets must be different', { status: 400 });
+    return apiError('TRANSFER_SAME_WALLET', 400);
   }
 
   const fromAccess = await requireWalletWriteAccess(tenantId, fromWalletId, session.user.email);
@@ -76,6 +77,10 @@ export default async (request: Request) => {
 
   const fromWallet = fromAccess.wallet;
   const toWallet = toAccess.wallet;
+
+  if (fromWallet.currency !== toWallet.currency) {
+    return apiError('TRANSFER_CURRENCY_MISMATCH', 400);
+  }
 
   const description = buildTransferDescription(fromWallet.name, toWallet.name, note);
   const now = new Date();

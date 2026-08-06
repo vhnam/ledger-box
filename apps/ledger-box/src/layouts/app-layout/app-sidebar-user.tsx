@@ -1,5 +1,6 @@
 import { useNavigate } from '@tanstack/react-router';
 import { useMemo, useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@vhnam/ui/components/avatar';
 import {
@@ -19,6 +20,7 @@ import { getAvatarFallbackFromName } from '#/lib/avatar';
 import { SettingsDialog, SettingsDialogTrigger } from '#/modules/settings/settings-dialog';
 
 function AppSidebarUser() {
+  const intl = useIntl();
   const navigate = useNavigate();
   const { data: session } = useSession();
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -30,8 +32,11 @@ function AppSidebarUser() {
     await navigate({ to: '/auth/login' });
 
     toast.add({
-      title: 'Logged out successfully',
-      description: 'You have been logged out of your account',
+      title: intl.formatMessage({ id: 'toast.auth.loggedOut.title', defaultMessage: 'Logged out successfully' }),
+      description: intl.formatMessage({
+        id: 'toast.auth.loggedOut.description',
+        defaultMessage: 'You have been logged out of your account',
+      }),
       type: 'success',
     });
   }
@@ -66,7 +71,7 @@ function AppSidebarUser() {
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={handleSignOut}>
                 <Icon name="SignOutIcon" />
-                Log out
+                <FormattedMessage id="nav.logOut" defaultMessage="Log out" />
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>

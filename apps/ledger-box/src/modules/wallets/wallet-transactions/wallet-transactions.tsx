@@ -1,3 +1,5 @@
+import { FormattedMessage } from 'react-intl';
+
 import { Skeleton } from '@vhnam/ui/components/skeleton';
 
 import { AppPagination } from '#/components/app-pagination';
@@ -38,13 +40,17 @@ function WalletTransactions({ walletId, transactionQuery }: WalletTransactionsPr
         </div>
       )}
 
-      {isError && <p className="text-sm text-destructive">Failed to load transactions.</p>}
+      {isError && (
+        <p className="text-sm text-destructive">
+          <FormattedMessage id="transaction.list.loadFailed" defaultMessage="Failed to load transactions." />
+        </p>
+      )}
 
       {!isPending && !isError && transactions.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-end justify-between">
             <span className="font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-              Transactions
+              <FormattedMessage id="transaction.list.heading" defaultMessage="Transactions" />
             </span>
             <span className="font-mono text-xs text-muted-foreground">{resultLabel}</span>
           </div>

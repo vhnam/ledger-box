@@ -6,6 +6,7 @@ import { db } from '#/lib/db/index.ts';
 import type { WalletMemberRole } from '#/lib/db/schema.ts';
 
 import { recordActivity } from './lib/activity-log.ts';
+import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { getTenantId, requireOwnedWallet } from './lib/tenant-access.ts';
 import { findUserByEmail, findUserById } from './lib/user-lookup.ts';
 import { mapWalletMember } from './lib/wallet-member-response.ts';
@@ -43,21 +44,21 @@ export default async (request: Request, context: Context) => {
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (!session) {
-    return new Response('Unauthorized', { status: 401 });
+    return ApiErrors.unauthorized();
   }
 
   if (request.method !== 'PATCH' && request.method !== 'DELETE') {
-    return new Response('Method Not Allowed', { status: 405 });
+    return ApiErrors.methodNotAllowed();
   }
 
   const { walletId, memberId } = getIds(request, context);
 
   if (!walletId) {
-    return new Response('Wallet id is required', { status: 400 });
+    return apiError('WALLET_ID_REQUIRED', 400);
   }
 
   if (!memberId) {
-    return new Response('Member id is required', { status: 400 });
+    return apiError('MEMBER_ID_REQUIRED', 400);
   }
 
   const tenantId = getTenantId(session);
@@ -76,7 +77,7 @@ export default async (request: Request, context: Context) => {
     .executeTakeFirst();
 
   if (!existingMember) {
-    return new Response('Member not found', { status: 404 });
+    return apiError('MEMBER_NOT_FOUND', 404);
   }
 
   const actor = { userId: session.user.id, email: session.user.email };
@@ -114,7 +115,7 @@ export default async (request: Request, context: Context) => {
   const body = (await request.json()) as UpdateWalletMemberBody;
 
   if (!isWalletMemberRole(body.role)) {
-    return new Response('Role is required', { status: 400 });
+    return apiError('ROLE_REQUIRED', 400);
   }
 
   const nextRole = body.role;

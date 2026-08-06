@@ -6,10 +6,10 @@ export const SORT_BY_OPTIONS = {
 } as const;
 
 export const SORT_BY_OPTIONS_LIST = [
-  { label: 'Occurred at', value: SORT_BY_OPTIONS.OCCURRED_AT },
-  { label: 'Created at', value: SORT_BY_OPTIONS.CREATED_AT },
-  { label: 'Updated at', value: SORT_BY_OPTIONS.UPDATED_AT },
-  { label: 'Amount', value: SORT_BY_OPTIONS.AMOUNT },
+  { labelId: 'sort.by.occurredAt', defaultLabel: 'Occurred at', value: SORT_BY_OPTIONS.OCCURRED_AT },
+  { labelId: 'sort.by.createdAt', defaultLabel: 'Created at', value: SORT_BY_OPTIONS.CREATED_AT },
+  { labelId: 'sort.by.updatedAt', defaultLabel: 'Updated at', value: SORT_BY_OPTIONS.UPDATED_AT },
+  { labelId: 'sort.by.amount', defaultLabel: 'Amount', value: SORT_BY_OPTIONS.AMOUNT },
 ] as const;
 
 export type SortByValue = (typeof SORT_BY_OPTIONS)[keyof typeof SORT_BY_OPTIONS];
@@ -20,8 +20,8 @@ export const SORT_ORDER_OPTIONS = {
 } as const;
 
 export const SORT_ORDER_OPTIONS_LIST = [
-  { label: 'Ascending', value: SORT_ORDER_OPTIONS.ASC },
-  { label: 'Descending', value: SORT_ORDER_OPTIONS.DESC },
+  { labelId: 'sort.order.asc', defaultLabel: 'Ascending', value: SORT_ORDER_OPTIONS.ASC },
+  { labelId: 'sort.order.desc', defaultLabel: 'Descending', value: SORT_ORDER_OPTIONS.DESC },
 ] as const;
 
 export type SortOrderValue = (typeof SORT_ORDER_OPTIONS)[keyof typeof SORT_ORDER_OPTIONS];

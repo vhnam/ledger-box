@@ -1,17 +1,26 @@
 import {
+  CURRENCY_FRACTION_DIGITS,
   DEFAULT_CURRENCY_CODE,
   DEFAULT_CURRENCY_LOCALE,
   DEFAULT_MAXIMUM_FRACTION_DIGITS,
-  DEFAULT_MINIMUM_FRACTION_DIGITS,
 } from './constants.ts';
 import type { CurrencyInput, CurrencySignType, FormatCurrencyOptions } from './types.ts';
 
+export function getCurrencyFractionDigits(code?: string): number {
+  return code !== undefined && code in CURRENCY_FRACTION_DIGITS
+    ? CURRENCY_FRACTION_DIGITS[code]
+    : DEFAULT_MAXIMUM_FRACTION_DIGITS;
+}
+
 function resolveFormatCurrencyOptions(options: FormatCurrencyOptions = {}) {
+  const currency = options.currency ?? DEFAULT_CURRENCY_CODE;
+  const fractionDigits = getCurrencyFractionDigits(currency);
+
   return {
     locale: options.locale ?? DEFAULT_CURRENCY_LOCALE,
-    currency: options.currency ?? DEFAULT_CURRENCY_CODE,
-    minimumFractionDigits: options.minimumFractionDigits ?? DEFAULT_MINIMUM_FRACTION_DIGITS,
-    maximumFractionDigits: options.maximumFractionDigits ?? DEFAULT_MAXIMUM_FRACTION_DIGITS,
+    currency,
+    minimumFractionDigits: options.minimumFractionDigits ?? fractionDigits,
+    maximumFractionDigits: options.maximumFractionDigits ?? fractionDigits,
   };
 }
 

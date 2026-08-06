@@ -1,5 +1,6 @@
 import { getRouteApi } from '@tanstack/react-router';
 import { useEffect, useMemo, useRef } from 'react';
+import { useIntl } from 'react-intl';
 
 import { getPageItems } from '#/lib/pagination';
 import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
@@ -21,6 +22,7 @@ export function useWalletTransactions({
   pageSize = TRANSACTIONS_PAGE_SIZE,
   transactionQuery,
 }: UseWalletTransactionsOptions) {
+  const intl = useIntl();
   const search = walletRouteApi.useSearch();
   const navigate = walletRouteApi.useNavigate();
   const page = search.page;
@@ -35,7 +37,13 @@ export function useWalletTransactions({
   const canGoPrevious = safePage > 1;
   const canGoNext = safePage < totalPages;
   const showPagination = totalPages > 1;
-  const resultLabel = totalResults === 1 ? '1 result' : `${totalResults} results`;
+  const resultLabel =
+    totalResults === 1
+      ? intl.formatMessage({ id: 'transaction.list.resultOne', defaultMessage: '1 result' })
+      : intl.formatMessage(
+          { id: 'transaction.list.resultOther', defaultMessage: '{count} results' },
+          { count: totalResults },
+        );
 
   useEffect(() => {
     if (prevWalletIdRef.current === walletId) {

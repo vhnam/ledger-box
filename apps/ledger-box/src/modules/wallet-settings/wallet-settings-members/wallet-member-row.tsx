@@ -1,3 +1,6 @@
+import { useMemo } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
+
 import { Button } from '@vhnam/ui/components/button';
 import { Icon } from '@vhnam/ui/components/icon';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@vhnam/ui/components/select';
@@ -15,13 +18,24 @@ type WalletMemberRowProps = {
 };
 
 function WalletMemberRow({ member, onRoleChange, onRemove, onResend }: WalletMemberRowProps) {
+  const intl = useIntl();
+
+  const roleItems = useMemo(
+    () =>
+      WALLET_MEMBER_ROLE_OPTIONS.map((option) => ({
+        value: option.value,
+        label: intl.formatMessage({ id: option.labelId, defaultMessage: option.defaultLabel }),
+      })),
+    [intl],
+  );
+
   return (
     <li className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
       <WalletMemberAvatar member={member} />
       <WalletMemberIdentity member={member} />
 
       <Select
-        items={WALLET_MEMBER_ROLE_OPTIONS}
+        items={roleItems}
         value={member.role}
         disabled={member.isOwner}
         onValueChange={(value) => onRoleChange(member.id, value as WalletMemberRole)}
@@ -32,7 +46,7 @@ function WalletMemberRow({ member, onRoleChange, onRemove, onResend }: WalletMem
         <SelectContent>
           {WALLET_MEMBER_ROLE_OPTIONS.map((option) => (
             <SelectItem key={option.value} value={option.value}>
-              {option.label}
+              <FormattedMessage id={option.labelId} defaultMessage={option.defaultLabel} />
             </SelectItem>
           ))}
         </SelectContent>
@@ -43,7 +57,10 @@ function WalletMemberRow({ member, onRoleChange, onRemove, onResend }: WalletMem
           type="button"
           variant="ghost"
           size="icon-sm"
-          aria-label={`Resend invite to ${member.email}`}
+          aria-label={intl.formatMessage(
+            { id: 'wallet.settings.members.resendAria', defaultMessage: 'Resend invite to {email}' },
+            { email: member.email },
+          )}
           onClick={() => onResend(member.id)}
         >
           <Icon name="ArrowClockwiseIcon" />
@@ -55,7 +72,10 @@ function WalletMemberRow({ member, onRoleChange, onRemove, onResend }: WalletMem
           type="button"
           variant="ghost"
           size="icon-sm"
-          aria-label={`Remove ${member.email}`}
+          aria-label={intl.formatMessage(
+            { id: 'wallet.settings.members.removeAria', defaultMessage: 'Remove {email}' },
+            { email: member.email },
+          )}
           onClick={() => onRemove(member.id)}
         >
           <Icon name="XIcon" />

@@ -1,5 +1,6 @@
 import { getRouteApi } from '@tanstack/react-router';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { Button } from '@vhnam/ui/components/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@vhnam/ui/components/collapsible';
@@ -22,6 +23,7 @@ type WalletActionsProps = {
 };
 
 function WalletActions({ hasTransactions, filters }: WalletActionsProps) {
+  const intl = useIntl();
   const {
     filterBy,
     setFilterBy,
@@ -43,6 +45,33 @@ function WalletActions({ hasTransactions, filters }: WalletActionsProps) {
   const [openAddTransactionDialog, setOpenAddTransactionDialog] = useState(false);
   const canTransfer = wallets.length > 1;
 
+  const filterItems = useMemo(
+    () =>
+      FILTER_OPTIONS_LIST.map((option) => ({
+        value: option.value,
+        label: intl.formatMessage({ id: option.labelId, defaultMessage: option.defaultLabel }),
+      })),
+    [intl],
+  );
+
+  const sortByItems = useMemo(
+    () =>
+      sortByOptions.map((option) => ({
+        value: option.value,
+        label: intl.formatMessage({ id: option.labelId, defaultMessage: option.defaultLabel }),
+      })),
+    [intl, sortByOptions],
+  );
+
+  const sortOrderItems = useMemo(
+    () =>
+      sortOrderOptions.map((option) => ({
+        value: option.value,
+        label: intl.formatMessage({ id: option.labelId, defaultMessage: option.defaultLabel }),
+      })),
+    [intl, sortOrderOptions],
+  );
+
   return (
     <Collapsible className="flex flex-col gap-4">
       <div className="flex items-center justify-between gap-2">
@@ -51,7 +80,7 @@ function WalletActions({ hasTransactions, filters }: WalletActionsProps) {
           render={
             <Button variant="outline" disabled={!hasTransactions}>
               <Icon name="FunnelIcon" />
-              Filter
+              <FormattedMessage id="wallet.actions.filter" defaultMessage="Filter" />
             </Button>
           }
         />
@@ -60,7 +89,9 @@ function WalletActions({ hasTransactions, filters }: WalletActionsProps) {
             <>
               <Button variant="secondary" onClick={() => setOpenTransferMoneyDialog(true)}>
                 <Icon name="ArrowsLeftRightIcon" />
-                <span className="hidden lg:block">Transfer</span>
+                <span className="hidden lg:block">
+                  <FormattedMessage id="wallet.actions.transfer" defaultMessage="Transfer" />
+                </span>
               </Button>
               <TransferMoneyDialog
                 open={openTransferMoneyDialog}
@@ -71,7 +102,9 @@ function WalletActions({ hasTransactions, filters }: WalletActionsProps) {
           ) : null}
           <Button variant="default" onClick={() => setOpenAddTransactionDialog(true)}>
             <Icon name="PlusIcon" />
-            <span className="hidden lg:block">Add transaction</span>
+            <span className="hidden lg:block">
+              <FormattedMessage id="wallet.actions.addTransaction" defaultMessage="Add transaction" />
+            </span>
           </Button>
           <AddTransactionDialog
             open={openAddTransactionDialog}
@@ -83,20 +116,24 @@ function WalletActions({ hasTransactions, filters }: WalletActionsProps) {
       <CollapsibleContent>
         <div className="bg-sidebar p-4 rounded-lg flex flex-wrap items-center gap-4">
           <Field className="w-fit" orientation="horizontal">
-            <FieldLabel>Filter by</FieldLabel>
+            <FieldLabel>
+              <FormattedMessage id="wallet.actions.filterBy" defaultMessage="Filter by" />
+            </FieldLabel>
             <Select
-              items={FILTER_OPTIONS_LIST}
+              items={filterItems}
               defaultValue={DEFAULT_FILTER_VALUE}
               value={filterBy}
               onValueChange={(value) => setFilterBy(value as typeof filterBy)}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Filter by" />
+                <SelectValue
+                  placeholder={intl.formatMessage({ id: 'wallet.actions.filterBy', defaultMessage: 'Filter by' })}
+                />
               </SelectTrigger>
               <SelectContent>
                 {FILTER_OPTIONS_LIST.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
-                    {option.label}
+                    <FormattedMessage id={option.labelId} defaultMessage={option.defaultLabel} />
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -108,15 +145,19 @@ function WalletActions({ hasTransactions, filters }: WalletActionsProps) {
           {isDateRangeFilter ? <DatePickerRange value={dateRange} onChange={setDateRange} numberOfMonths={1} /> : null}
 
           <Field className="w-fit" orientation="horizontal">
-            <FieldLabel>Sort by</FieldLabel>
-            <Select items={sortByOptions} value={sortBy} onValueChange={(value) => setSortBy(value as typeof sortBy)}>
+            <FieldLabel>
+              <FormattedMessage id="wallet.actions.sortBy" defaultMessage="Sort by" />
+            </FieldLabel>
+            <Select items={sortByItems} value={sortBy} onValueChange={(value) => setSortBy(value as typeof sortBy)}>
               <SelectTrigger>
-                <SelectValue placeholder="Sort by" />
+                <SelectValue
+                  placeholder={intl.formatMessage({ id: 'wallet.actions.sortBy', defaultMessage: 'Sort by' })}
+                />
               </SelectTrigger>
               <SelectContent>
                 {sortByOptions.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
-                    {option.label}
+                    <FormattedMessage id={option.labelId} defaultMessage={option.defaultLabel} />
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -124,19 +165,23 @@ function WalletActions({ hasTransactions, filters }: WalletActionsProps) {
           </Field>
 
           <Field className="w-fit" orientation="horizontal">
-            <FieldLabel>Order</FieldLabel>
+            <FieldLabel>
+              <FormattedMessage id="wallet.actions.order" defaultMessage="Order" />
+            </FieldLabel>
             <Select
-              items={sortOrderOptions}
+              items={sortOrderItems}
               value={sortOrder}
               onValueChange={(value) => setSortOrder(value as typeof sortOrder)}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Order" />
+                <SelectValue
+                  placeholder={intl.formatMessage({ id: 'wallet.actions.order', defaultMessage: 'Order' })}
+                />
               </SelectTrigger>
               <SelectContent>
                 {sortOrderOptions.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
-                    {option.label}
+                    <FormattedMessage id={option.labelId} defaultMessage={option.defaultLabel} />
                   </SelectItem>
                 ))}
               </SelectContent>
