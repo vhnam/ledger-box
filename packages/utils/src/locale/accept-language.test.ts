@@ -30,7 +30,17 @@ describe('parseAcceptLanguage', () => {
   });
 
   it('falls back to en-US for a fully unsupported locale', () => {
-    expect(parseAcceptLanguage('zh-CN')).toBe('en-US');
+    expect(parseAcceptLanguage('ko-KR')).toBe('en-US');
+  });
+
+  it('matches Simplified and Traditional Chinese exactly', () => {
+    expect(parseAcceptLanguage('zh-CN')).toBe('zh-CN');
+    expect(parseAcceptLanguage('zh-TW')).toBe('zh-TW');
+  });
+
+  it('skips ambiguous bare zh when both zh-CN and zh-TW are supported', () => {
+    expect(parseAcceptLanguage('zh;q=1,ja-JP;q=0.5')).toBe('ja-JP');
+    expect(parseAcceptLanguage('zh')).toBe('en-US');
   });
 
   it('resolves an unambiguous bare language to its single supported region', () => {

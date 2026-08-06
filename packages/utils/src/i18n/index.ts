@@ -1,19 +1,30 @@
-import en from './messages/en.json';
-import fr from './messages/fr.json';
-import ja from './messages/ja.json';
-import vi from './messages/vi.json';
+import { DEFAULT_LOCALE, isSupportedLocale, type SupportedLocale } from '../locale/constants.ts';
+import enGB from './messages/en-GB.json';
+import enUS from './messages/en-US.json';
+import frFR from './messages/fr-FR.json';
+import jaJP from './messages/ja-JP.json';
+import viVN from './messages/vi-VN.json';
+import zhCN from './messages/zh-CN.json';
+import zhTW from './messages/zh-TW.json';
 
-export type MessageLanguage = 'en' | 'vi' | 'ja' | 'fr';
+/** Catalog id — one JSON file per supported locale (English and Chinese are region-split). */
+export type MessageLanguage = SupportedLocale;
 
-export const MESSAGES: Record<MessageLanguage, Record<string, string>> = { en, vi, ja, fr };
+export const MESSAGES: Record<MessageLanguage, Record<string, string>> = {
+  'en-US': enUS,
+  'en-GB': enGB,
+  'vi-VN': viVN,
+  'ja-JP': jaJP,
+  'fr-FR': frFR,
+  'zh-CN': zhCN,
+  'zh-TW': zhTW,
+};
 
-/** `en-US`/`en-GB` share the `en` catalog — language vs. locale split. */
+/** Resolves a BCP-47 locale tag to a message catalog. Unknown tags fall back to `en-US`. */
 export function toMessageLanguage(locale: string): MessageLanguage {
-  const language = locale.split('-')[0] ?? 'en';
-
-  if (language === 'vi' || language === 'ja' || language === 'fr' || language === 'en') {
-    return language;
+  if (isSupportedLocale(locale)) {
+    return locale;
   }
 
-  return 'en';
+  return DEFAULT_LOCALE;
 }

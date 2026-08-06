@@ -78,7 +78,7 @@ describe('formatDateNumeric', () => {
     expect(formatDateNumeric(sampleDate, 'en-US')).toBe('07/13/2026');
   });
 
-  it('formats day-first for en-GB, distinct from en-US despite sharing translated strings', () => {
+  it('formats day-first for en-GB, distinct from en-US', () => {
     expect(formatDateNumeric(sampleDate, 'en-GB')).toBe('13/07/2026');
   });
 

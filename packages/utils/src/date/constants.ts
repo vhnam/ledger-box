@@ -1,4 +1,4 @@
-import { enGB, enUS, fr, ja, vi, type Locale } from 'date-fns/locale';
+import { enGB, enUS, fr, ja, vi, zhCN, zhTW, type Locale } from 'date-fns/locale';
 
 import type { SupportedLocale } from '../locale/constants.ts';
 
@@ -72,6 +72,20 @@ export const LOCALE_DATE_PATTERNS: Record<SupportedLocale, Record<keyof typeof D
     Long: 'd MMMM yyyy',
     Month: 'MM/yyyy',
   },
+  'zh-CN': {
+    Numeric: 'yyyy/MM/dd',
+    Short: 'yyyy/M/d',
+    Text: "yyyy'年'M'月'd'日'",
+    Long: "yyyy'年'M'月'd'日'",
+    Month: 'yyyy/MM',
+  },
+  'zh-TW': {
+    Numeric: 'yyyy/MM/dd',
+    Short: 'yyyy/M/d',
+    Text: "yyyy'年'M'月'd'日'",
+    Long: "yyyy'年'M'月'd'日'",
+    Month: 'yyyy/MM',
+  },
 };
 
 export const LOCALE_DATE_TIME_PATTERNS: Record<SupportedLocale, Record<keyof typeof DateTimeFormat, string>> = {
@@ -100,6 +114,16 @@ export const LOCALE_DATE_TIME_PATTERNS: Record<SupportedLocale, Record<keyof typ
     Short: 'd/M/yyyy HH:mm',
     Text: 'd MMM yyyy HH:mm',
   },
+  'zh-CN': {
+    Numeric: 'yyyy/MM/dd HH:mm',
+    Short: 'yyyy/M/d HH:mm',
+    Text: "yyyy'年'M'月'd'日' HH:mm",
+  },
+  'zh-TW': {
+    Numeric: 'yyyy/MM/dd HH:mm',
+    Short: 'yyyy/M/d HH:mm',
+    Text: "yyyy'年'M'月'd'日' HH:mm",
+  },
 };
 
 export const LOCALE_DATE_FNS_LOCALE: Record<SupportedLocale, Locale> = {
@@ -108,4 +132,6 @@ export const LOCALE_DATE_FNS_LOCALE: Record<SupportedLocale, Locale> = {
   'en-GB': enGB,
   'ja-JP': ja,
   'fr-FR': fr,
+  'zh-CN': zhCN,
+  'zh-TW': zhTW,
 };

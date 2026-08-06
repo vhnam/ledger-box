@@ -10,11 +10,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 #### Added
 
-- `react-intl` message keys (`en`/`vi`/`fr`/`ja`) for app chrome, wallets/transactions,
-  wallet settings, auth, public invite/statement, validation, toasts, `errors.{CODE}`, and
-  `email.invite.*`; bidirectional catalog key-parity tests; `formatErrorMessage` helper;
-  shared API error codes with JSON `{ code, message }` Netlify responses and client
-  `getApiError` mapping; server `createServerIntl` / `getUserLocale` for invite emails.
+- `react-intl` message keys (`en-US`/`en-GB`/`vi`/`fr`/`ja`/`zh-CN`/`zh-TW`) for app chrome,
+  wallets/transactions, wallet settings, auth, public invite/statement, validation, toasts,
+  `errors.{CODE}`, and `email.invite.*`; bidirectional catalog key-parity tests;
+  `formatErrorMessage` helper; shared API error codes with JSON `{ code, message }` Netlify
+  responses and client `getApiError` mapping; server `createServerIntl` / `getUserLocale`
+  for invite emails.
 
 #### Changed
 

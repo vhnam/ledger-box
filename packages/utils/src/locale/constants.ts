@@ -1,4 +1,4 @@
-export const SUPPORTED_LOCALES = ['vi-VN', 'en-US', 'en-GB', 'ja-JP', 'fr-FR'] as const;
+export const SUPPORTED_LOCALES = ['vi-VN', 'en-US', 'en-GB', 'ja-JP', 'fr-FR', 'zh-CN', 'zh-TW'] as const;
 
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 

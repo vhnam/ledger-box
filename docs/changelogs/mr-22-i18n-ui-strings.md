@@ -3,14 +3,15 @@
 ## Summary
 
 Extends the existing locale / `react-intl` infrastructure so Ledger Box renders translated
-copy for `en`, `vi`, `fr`, and `ja` (with `en-US`/`en-GB` sharing the English catalog)
-across the signed-in app and unauthenticated auth/invite/statement surfaces, returns
-stable API error codes the client maps to catalog messages, and localizes wallet invite
-emails using the inviter’s stored locale.
+copy for `en-US`, `en-GB`, `vi`, `fr`, `ja`, `zh-CN`, and `zh-TW` across the signed-in app
+and unauthenticated auth/invite/statement surfaces, returns stable API error codes the
+client maps to catalog messages, and localizes wallet invite emails using the inviter’s
+stored locale.
 
 ## Added
 
-- Message keys in `packages/utils/src/i18n/messages/{en,vi,fr,ja}.json` covering:
+- Message keys in `packages/utils/src/i18n/messages/{en-US,en-GB,vi,fr,ja,zh-CN,zh-TW}.json`
+  covering:
   - common actions, nav, wallet shell, empty states, summary, filters/sort
   - create/delete wallet, transaction CRUD, transfers, attachments
   - wallet settings (general, members, statement shares, activity)
