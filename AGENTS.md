@@ -145,8 +145,8 @@ Variants: `success`, `info`, `warning`, `error`, `loading`.
 `apps/ledger-box/src/schemas/` as `*.schema.ts`.
 
 **UI strings use `react-intl`.** Message catalogs live in
-`packages/utils/src/i18n/messages/{en-US,en-GB,vi,fr,ja,zh-CN,zh-TW}.json` (one file per
-`SupportedLocale`; `vi`/`fr`/`ja` map to `vi-VN`/`fr-FR`/`ja-JP`). Prefer
+`packages/utils/src/i18n/messages/{en-US,en-GB,vi-VN,fr-FR,ja-JP,zh-CN,zh-TW}.json` (one
+file per `SupportedLocale`). Prefer
 `<FormattedMessage id="…" defaultMessage="…" />` in JSX and `useIntl().formatMessage` for
 toasts, placeholders, and other imperative copy. Valibot schemas store **message ids**
 (e.g. `validation.amount.required`) — render them with `formatErrorMessage` from
