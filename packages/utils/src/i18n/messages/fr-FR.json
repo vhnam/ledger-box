@@ -1,8 +1,10 @@
 {
   "settings.dialog.title": "Paramètres",
-  "settings.dialog.tabs.account": "Compte",
-  "settings.dialog.tabs.appearance": "Apparence",
-  "settings.dialog.tabs.locale": "Langue",
+  "settings.page.title": "Paramètres",
+  "settings.back": "Retour",
+  "settings.nav.account": "Compte",
+  "settings.nav.appearance": "Apparence",
+  "settings.nav.locale": "Langue",
   "settings.appearance.title": "Apparence",
   "settings.appearance.description": "Choisissez le thème de couleur que vous préférez.",
   "settings.appearance.theme.light": "Clair",

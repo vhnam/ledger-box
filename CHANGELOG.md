@@ -6,6 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-23 — user settings dialog to standalone `/settings` route](docs/changelogs/mr-23-user-settings-route.md)
+
+#### Added
+
+- Standalone `/settings` route tree (`/settings/account`, `/settings/appearance`,
+  `/settings/locale`) with a desktop sub-sidebar and a mobile stacked section list,
+  replacing the sidebar-user-menu settings dialog.
+
+#### Changed
+
+- Sidebar user menu "Settings" entry navigates to `/settings` instead of opening a
+  dialog; renamed `settings.dialog.tabs.*` i18n keys to `settings.nav.*` across all
+  7 locales.
+
+#### Removed
+
+- `SettingsDialog` / `SettingsDialogTrigger` (`modules/settings/settings-dialog/`).
+
 ### [mr-22 — per-wallet currency + full app i18n](docs/changelogs/mr-22-per-wallet-currency-and-i18n.md)
 
 #### Added

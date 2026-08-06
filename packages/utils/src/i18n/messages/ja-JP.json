@@ -1,8 +1,10 @@
 {
   "settings.dialog.title": "設定",
-  "settings.dialog.tabs.account": "アカウント",
-  "settings.dialog.tabs.appearance": "外観",
-  "settings.dialog.tabs.locale": "言語",
+  "settings.page.title": "設定",
+  "settings.back": "戻る",
+  "settings.nav.account": "アカウント",
+  "settings.nav.appearance": "外観",
+  "settings.nav.locale": "言語",
   "settings.appearance.title": "外観",
   "settings.appearance.description": "使用したいカラーテーマを選択してください。",
   "settings.appearance.theme.light": "ライト",

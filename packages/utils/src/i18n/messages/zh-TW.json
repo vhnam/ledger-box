@@ -1,8 +1,10 @@
 {
   "settings.dialog.title": "設置",
-  "settings.dialog.tabs.account": "帳戶",
-  "settings.dialog.tabs.appearance": "外觀",
-  "settings.dialog.tabs.locale": "語言",
+  "settings.page.title": "設置",
+  "settings.back": "返回",
+  "settings.nav.account": "帳戶",
+  "settings.nav.appearance": "外觀",
+  "settings.nav.locale": "語言",
   "settings.appearance.title": "外觀",
   "settings.appearance.description": "選擇你偏好的顏色主題。",
   "settings.appearance.theme.light": "淺色",

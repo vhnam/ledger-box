@@ -1,5 +1,5 @@
-import { useNavigate } from '@tanstack/react-router';
-import { useMemo, useState } from 'react';
+import { Link, useNavigate } from '@tanstack/react-router';
+import { useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@vhnam/ui/components/avatar';
@@ -17,13 +17,11 @@ import { toast } from '@vhnam/ui/components/toast';
 
 import { authClient, useSession } from '#/lib/auth-client';
 import { getAvatarFallbackFromName } from '#/lib/avatar';
-import { SettingsDialog, SettingsDialogTrigger } from '#/modules/settings/settings-dialog';
 
 function AppSidebarUser() {
   const intl = useIntl();
   const navigate = useNavigate();
   const { data: session } = useSession();
-  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const avatarFallback = useMemo(() => getAvatarFallbackFromName(session?.user.name ?? ''), [session?.user.name]);
 
@@ -65,7 +63,10 @@ function AppSidebarUser() {
           />
           <DropdownMenuContent>
             <DropdownMenuGroup>
-              <SettingsDialogTrigger onOpen={() => setSettingsOpen(true)} />
+              <DropdownMenuItem nativeButton={false} render={<Link to="/settings" />}>
+                <Icon name="GearIcon" />
+                <FormattedMessage id="settings.dialog.title" defaultMessage="Settings" />
+              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
@@ -76,7 +77,6 @@ function AppSidebarUser() {
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
-        <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
       </SidebarMenuItem>
     </SidebarMenu>
   );
