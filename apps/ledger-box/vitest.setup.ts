@@ -3,31 +3,44 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
-const envPath = path.join(dirname, '../../.env');
+const rootDir = path.join(dirname, '../..');
 
-try {
-  const contents = readFileSync(envPath, 'utf-8');
+/** Prefer `.env` (docs / AGENTS.md); fall back to `.env.dev` used by `pnpm dev`. */
+const envCandidates = [path.join(rootDir, '.env'), path.join(rootDir, '.env.dev')];
 
-  for (const line of contents.split('\n')) {
-    const trimmed = line.trim();
+function loadEnvFile(envPath: string): boolean {
+  try {
+    const contents = readFileSync(envPath, 'utf-8');
 
-    if (trimmed.length === 0 || trimmed.startsWith('#')) {
-      continue;
+    for (const line of contents.split('\n')) {
+      const trimmed = line.trim();
+
+      if (trimmed.length === 0 || trimmed.startsWith('#')) {
+        continue;
+      }
+
+      const separatorIndex = trimmed.indexOf('=');
+
+      if (separatorIndex === -1) {
+        continue;
+      }
+
+      const key = trimmed.slice(0, separatorIndex).trim();
+      const value = trimmed.slice(separatorIndex + 1).trim();
+
+      if (!(key in process.env)) {
+        process.env[key] = value;
+      }
     }
 
-    const separatorIndex = trimmed.indexOf('=');
-
-    if (separatorIndex === -1) {
-      continue;
-    }
-
-    const key = trimmed.slice(0, separatorIndex).trim();
-    const value = trimmed.slice(separatorIndex + 1).trim();
-
-    if (!(key in process.env)) {
-      process.env[key] = value;
-    }
+    return true;
+  } catch {
+    return false;
   }
-} catch {
-  // No root .env file present; rely on whatever the environment already provides.
+}
+
+for (const envPath of envCandidates) {
+  if (loadEnvFile(envPath)) {
+    break;
+  }
 }

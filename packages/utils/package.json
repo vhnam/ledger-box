@@ -12,6 +12,7 @@
     "./date/constants": "./src/date/constants.ts",
     "./date/utils": "./src/date/utils.ts",
     "./i18n": "./src/i18n/index.ts",
+    "./i18n/all-messages": "./src/i18n/all-messages.ts",
     "./locale": "./src/locale/index.ts"
   },
   "scripts": {

@@ -1,6 +1,8 @@
-import { DEFAULT_LOCALE, MESSAGES, toMessageLanguage, type SupportedLocale } from '@vhnam/utils';
-import { useMemo, type ReactNode } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { IntlProvider } from 'react-intl';
+
+import { DEFAULT_MESSAGES, getCachedMessages, loadMessages, toMessageLanguage } from '@vhnam/utils/i18n';
+import { DEFAULT_LOCALE, type SupportedLocale } from '@vhnam/utils/locale';
 
 import { useSession } from '#/lib/auth-client';
 import { resolveClientLocale } from '#/lib/client-locale';
@@ -48,12 +50,37 @@ function useResolvedLocale(): SupportedLocale {
 /**
  * Provides translated strings (via `react-intl`) from the signed-in user's stored locale,
  * or from the viewer's browser locale on unauthenticated routes.
+ *
+ * Only `en-US` ships in the initial JS; other catalogs are loaded on demand when the
+ * resolved locale changes.
  */
 function LocaleProvider({ children }: LocaleProviderProps) {
   const locale = useResolvedLocale();
+  const language = toMessageLanguage(locale);
+  const [messages, setMessages] = useState(() => getCachedMessages(language) ?? DEFAULT_MESSAGES);
+
+  useEffect(() => {
+    let cancelled = false;
+    const cached = getCachedMessages(language);
+
+    if (cached) {
+      setMessages(cached);
+      return;
+    }
+
+    void loadMessages(language).then((catalog) => {
+      if (!cancelled) {
+        setMessages(catalog);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [language]);
 
   return (
-    <IntlProvider locale={locale} messages={MESSAGES[toMessageLanguage(locale)]}>
+    <IntlProvider locale={locale} defaultLocale={DEFAULT_LOCALE} messages={messages}>
       {children}
     </IntlProvider>
   );

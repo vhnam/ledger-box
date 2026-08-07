@@ -1,6 +1,7 @@
-import { DEFAULT_LOCALE, type SupportedLocale } from '@vhnam/utils';
 import { renderToStaticMarkup } from 'react-dom/server';
 import type { IntlShape } from 'react-intl';
+
+import { DEFAULT_LOCALE, type SupportedLocale } from '@vhnam/utils/locale';
 
 import { WALLET_MEMBER_ROLE_OPTIONS } from '#/constants/wallet-member-role-options.ts';
 import type { WalletMemberRole } from '#/lib/db/schema.ts';

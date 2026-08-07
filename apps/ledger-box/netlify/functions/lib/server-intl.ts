@@ -1,5 +1,7 @@
-import { DEFAULT_LOCALE, MESSAGES, toMessageLanguage, type SupportedLocale } from '@vhnam/utils';
 import { createIntl, createIntlCache, type IntlShape } from 'react-intl';
+
+import { MESSAGES, toMessageLanguage } from '@vhnam/utils/i18n/all-messages';
+import { DEFAULT_LOCALE, type SupportedLocale } from '@vhnam/utils/locale';
 
 const intlCache = createIntlCache();
 
