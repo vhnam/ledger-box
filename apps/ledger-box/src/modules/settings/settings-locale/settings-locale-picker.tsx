@@ -8,6 +8,8 @@ import { toast } from '@vhnam/ui/components/toast';
 
 import type { SupportedLocale } from '@vhnam/utils/locale';
 
+import { useLocaleTransition } from '#/lib/locale-transition';
+
 import { useUpdateUserLocale } from '#/queries/user-settings/user-settings.mutations';
 import { useUserLocale } from '#/queries/user-settings/user-settings.queries';
 
@@ -28,6 +30,7 @@ function SettingsLocalePicker() {
   const intl = useIntl();
   const { data, isPending } = useUserLocale();
   const updateLocale = useUpdateUserLocale();
+  const { phase, beginTransition, failTransition } = useLocaleTransition();
 
   const selectItems = useMemo(
     () =>
@@ -39,7 +42,7 @@ function SettingsLocalePicker() {
   );
 
   function handleValueChange(value: string | null) {
-    if (!value || updateLocale.isPending) {
+    if (!value || updateLocale.isPending || phase !== 'idle') {
       return;
     }
 
@@ -48,8 +51,10 @@ function SettingsLocalePicker() {
       return;
     }
 
+    beginTransition(locale);
     updateLocale.mutate(locale, {
       onError: (error) => {
+        failTransition();
         toast.add({ title: error.message, type: 'error' });
       },
     });
@@ -77,7 +82,7 @@ function SettingsLocalePicker() {
           <Select
             items={selectItems}
             value={data?.locale}
-            disabled={updateLocale.isPending}
+            disabled={updateLocale.isPending || phase !== 'idle'}
             onValueChange={handleValueChange}
           >
             <SelectTrigger

@@ -23,6 +23,7 @@
   "settings.account.submitting": "Đang cập nhật...",
   "settings.locale.title": "Ngôn ngữ",
   "settings.locale.description": "Chọn ngôn ngữ và định dạng khu vực được sử dụng trong ứng dụng.",
+  "settings.locale.changed": "Đã cập nhật ngôn ngữ",
   "brand.tagline": "Quản lý ví",
   "common.cancel": "Hủy",
   "common.create": "Tạo",

@@ -23,6 +23,7 @@
   "settings.account.submitting": "Updating...",
   "settings.locale.title": "Language",
   "settings.locale.description": "Choose the language and regional formatting used across the app.",
+  "settings.locale.changed": "Language updated",
   "brand.tagline": "Wallet Management",
   "common.cancel": "Cancel",
   "common.create": "Create",

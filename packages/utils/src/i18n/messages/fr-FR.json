@@ -23,6 +23,7 @@
   "settings.account.submitting": "Mise à jour...",
   "settings.locale.title": "Langue",
   "settings.locale.description": "Choisissez la langue et le format régional utilisés dans l'application.",
+  "settings.locale.changed": "Langue mise à jour",
   "brand.tagline": "Gestion de portefeuilles",
   "common.cancel": "Annuler",
   "common.create": "Créer",

@@ -23,6 +23,7 @@
   "settings.account.submitting": "更新中...",
   "settings.locale.title": "言語",
   "settings.locale.description": "アプリ全体で使用する言語と地域の表示形式を選択してください。",
+  "settings.locale.changed": "言語を更新しました",
   "brand.tagline": "ウォレット管理",
   "common.cancel": "キャンセル",
   "common.create": "作成",
