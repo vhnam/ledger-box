@@ -1,6 +1,7 @@
 {
   "settings.dialog.title": "設定",
   "settings.page.title": "設定",
+  "settings.page.navLabel": "設定",
   "settings.back": "戻る",
   "settings.nav.account": "アカウント",
   "settings.nav.appearance": "外観",

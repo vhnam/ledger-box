@@ -1,6 +1,7 @@
 {
   "settings.dialog.title": "设置",
   "settings.page.title": "设置",
+  "settings.page.navLabel": "设置",
   "settings.back": "返回",
   "settings.nav.account": "账户",
   "settings.nav.appearance": "外观",

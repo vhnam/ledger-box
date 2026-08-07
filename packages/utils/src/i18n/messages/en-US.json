@@ -1,6 +1,7 @@
 {
   "settings.dialog.title": "Settings",
   "settings.page.title": "Settings",
+  "settings.page.navLabel": "Settings",
   "settings.back": "Back",
   "settings.nav.account": "Account",
   "settings.nav.appearance": "Appearance",

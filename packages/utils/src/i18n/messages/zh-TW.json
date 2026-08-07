@@ -1,6 +1,7 @@
 {
   "settings.dialog.title": "設置",
   "settings.page.title": "設置",
+  "settings.page.navLabel": "設置",
   "settings.back": "返回",
   "settings.nav.account": "帳戶",
   "settings.nav.appearance": "外觀",

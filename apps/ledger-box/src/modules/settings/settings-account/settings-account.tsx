@@ -149,7 +149,7 @@ function SettingsAccount() {
                 value={ownedWallets.map((wallet) => (
                   <Link
                     key={wallet.id}
-                    to="/wallets/$walletId/settings/general"
+                    to="/wallets/$walletId"
                     params={{ walletId: wallet.id }}
                     className="font-semibold text-foreground underline underline-offset-2 hover:text-foreground/80"
                   >
@@ -165,6 +165,7 @@ function SettingsAccount() {
                 values={{
                   deleteLink: (chunks: ReactNode) => (
                     <a
+                      key="deleteLink"
                       href={GUIDELINE_URL}
                       target="_blank"
                       rel="noreferrer"
@@ -175,6 +176,7 @@ function SettingsAccount() {
                   ),
                   transferLink: (chunks: ReactNode) => (
                     <a
+                      key="transferLink"
                       href={GUIDELINE_URL}
                       target="_blank"
                       rel="noreferrer"
