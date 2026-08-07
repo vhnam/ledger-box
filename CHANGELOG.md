@@ -6,23 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-### [mr-23 — user settings dialog to standalone `/settings` route](docs/changelogs/mr-23-user-settings-route.md)
+### [mr-23 — Settings route + Account / Appearance UX](docs/changelogs/mr-23-user-settings-route.md)
 
 #### Added
 
-- Standalone `/settings` route tree (`/settings/account`, `/settings/appearance`,
-  `/settings/locale`) with a desktop sub-sidebar and a mobile stacked section list,
-  replacing the sidebar-user-menu settings dialog.
+- Standalone `/settings` route (Account + Appearance) replacing the settings dialog;
+  GitHub-style Account sign-in methods (Email/password + Google) and Delete account
+  (owned-wallet gate, no-wallet caution, password confirm).
+- Appearance Language Select with country flags; `/settings/locale` redirects here.
+- Lazy i18n message loading; finer oxfmt `#/` import groups for `apps/ledger-box`.
 
 #### Changed
 
-- Sidebar user menu "Settings" entry navigates to `/settings` instead of opening a
-  dialog; renamed `settings.dialog.tabs.*` i18n keys to `settings.nav.*` across all
-  7 locales.
+- Sidebar **Settings** navigates to `/settings`; nav is Account + Appearance only;
+  Appearance covers theme and language.
 
 #### Removed
 
-- `SettingsDialog` / `SettingsDialogTrigger` (`modules/settings/settings-dialog/`).
+- `SettingsDialog` / `SettingsDialogTrigger`; standalone Language settings page and
+  `settings.nav.locale` catalog key.
 
 ### [mr-22 — per-wallet currency + full app i18n](docs/changelogs/mr-22-per-wallet-currency-and-i18n.md)
 
