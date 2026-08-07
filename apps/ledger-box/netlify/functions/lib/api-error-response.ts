@@ -1,4 +1,4 @@
-import { API_ERROR_MESSAGES, type ApiErrorBody, type ApiErrorCode } from '#/lib/api-error-codes.ts';
+import { API_ERROR_MESSAGES, type ApiErrorBody, type ApiErrorCode } from '#/utils/api-error/api-error-codes.ts';
 
 /**
  * Returns a JSON error Response `{ code, message }` for app Netlify handlers.

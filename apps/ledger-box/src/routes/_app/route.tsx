@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
-import { authClient } from '#/lib/auth-client';
+import { authClient } from '#/lib/auth/auth-client';
 
 import { AppLayout } from '#/layouts/app-layout';
 

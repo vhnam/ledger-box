@@ -1,7 +1,7 @@
 import type { Config, Context } from '@netlify/functions';
 
-import { auth } from '#/lib/auth.ts';
-import { deleteTransactionAttachment } from '#/lib/r2.ts';
+import { auth } from '#/lib/auth/auth.ts';
+import { deleteTransactionAttachment } from '#/lib/storage/r2.ts';
 
 import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { getTenantId, requireTransactionWriteAccess } from './lib/tenant-access.ts';

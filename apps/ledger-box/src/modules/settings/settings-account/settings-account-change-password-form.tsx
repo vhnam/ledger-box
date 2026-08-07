@@ -6,7 +6,7 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '@vhnam/ui/components/
 import { Input } from '@vhnam/ui/components/input';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
-import { formatErrorMessage } from '#/lib/intl-message';
+import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 import { useSettingsAccountActions } from '#/modules/settings/settings-account/settings-account.actions';
 

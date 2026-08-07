@@ -10,7 +10,7 @@ import { Spinner } from '@vhnam/ui/components/spinner';
 
 import { WALLET_MEMBER_ROLE_OPTIONS, type WalletMemberRole } from '#/constants/wallet-member-role-options';
 
-import { formatErrorMessage } from '#/lib/intl-message';
+import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 type WalletMembersInviteFormProps = {
   inviteEmail: string;

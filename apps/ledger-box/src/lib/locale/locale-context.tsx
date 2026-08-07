@@ -4,10 +4,11 @@ import { IntlProvider } from 'react-intl';
 import { DEFAULT_MESSAGES, getCachedMessages, loadMessages, toMessageLanguage } from '@vhnam/utils/i18n';
 import { DEFAULT_LOCALE, type SupportedLocale } from '@vhnam/utils/locale';
 
-import { useSession } from '#/lib/auth-client';
-import { resolveClientLocale } from '#/lib/client-locale';
-import { LocaleChangeAnnouncer, LocaleChangeOverlay } from '#/lib/locale-change-overlay';
-import { LocaleTransitionProvider } from '#/lib/locale-transition';
+import { resolveClientLocale } from '#/utils/locale/client-locale';
+
+import { useSession } from '#/lib/auth/auth-client';
+import { LocaleChangeAnnouncer, LocaleChangeOverlay } from '#/lib/locale/locale-change-overlay';
+import { LocaleTransitionProvider } from '#/lib/locale/locale-transition';
 
 import { useUserLocale } from '#/queries/user-settings/user-settings.queries';
 

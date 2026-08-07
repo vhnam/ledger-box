@@ -1,8 +1,8 @@
 import type { Config } from '@netlify/functions';
 
-import { auth } from '#/lib/auth.ts';
+import { auth } from '#/lib/auth/auth.ts';
 import { db } from '#/lib/db/index.ts';
-import { calendarDateToOccurredAtStart } from '#/lib/period-bounds.ts';
+import { calendarDateToOccurredAtStart } from '#/utils/wallet/period-bounds.ts';
 
 import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { getTenantId, requireWalletWriteAccess } from './lib/tenant-access.ts';

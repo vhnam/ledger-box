@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { registerSchema } from '#/schemas/auth.schema';
 
-import { authClient } from '#/lib/auth-client';
+import { authClient } from '#/lib/auth/auth-client';
 
 export function useRegisterActions() {
   const navigate = useNavigate();

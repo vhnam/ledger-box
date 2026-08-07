@@ -1,4 +1,4 @@
-import { calendarDateToOccurredAtStart } from '#/lib/period-bounds.ts';
+import { calendarDateToOccurredAtStart } from '#/utils/wallet/period-bounds.ts';
 
 type ShareForOverlap = {
   periodFrom: Date | string;

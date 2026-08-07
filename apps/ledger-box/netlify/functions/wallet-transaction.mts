@@ -1,9 +1,9 @@
 import type { Config, Context } from '@netlify/functions';
 
-import { auth } from '#/lib/auth.ts';
+import { auth } from '#/lib/auth/auth.ts';
 import { db } from '#/lib/db/index.ts';
 import type { TransactionType } from '#/lib/db/schema.ts';
-import { calendarDateToOccurredAtStart } from '#/lib/period-bounds.ts';
+import { calendarDateToOccurredAtStart } from '#/utils/wallet/period-bounds.ts';
 
 import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { getTenantId, requireTransactionWriteAccess } from './lib/tenant-access.ts';

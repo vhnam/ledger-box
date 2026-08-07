@@ -1,7 +1,8 @@
 import type { Kysely } from 'kysely';
 
+import type { PeriodBounds } from '#/utils/wallet/period-bounds';
+
 import type { Database } from '#/lib/db/schema';
-import type { PeriodBounds } from '#/lib/period-bounds';
 
 type WalletSummaryTotals = {
   income: number;

@@ -8,8 +8,9 @@ import { WALLET_MEMBER_ROLES, type WalletMemberRole } from '#/constants/wallet-m
 
 import { inviteWalletMemberSchema } from '#/schemas/wallet-member.schema';
 
-import { formatErrorMessage } from '#/lib/intl-message';
-import { getPageItems } from '#/lib/pagination';
+import { getPageItems } from '#/utils/pagination';
+
+import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 import {
   useInviteWalletMember,

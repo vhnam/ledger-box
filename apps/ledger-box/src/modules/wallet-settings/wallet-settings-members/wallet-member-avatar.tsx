@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@vhnam/ui/components/avatar';
 
-import { getAvatarFallbackFromEmail, getAvatarFallbackFromName } from '#/lib/avatar';
+import { getAvatarFallbackFromEmail, getAvatarFallbackFromName } from '#/utils/avatar';
 
 import type { WalletMemberDto } from '#/queries/wallets/wallet-member.dto';
 

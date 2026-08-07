@@ -35,6 +35,10 @@
               "elementNamePattern": ["#/schemas", "#/schemas/**"]
             },
             {
+              "groupName": "#/utils",
+              "elementNamePattern": ["#/utils", "#/utils/**"]
+            },
+            {
               "groupName": "#/lib",
               "elementNamePattern": ["#/lib", "#/lib/**"]
             },
@@ -67,6 +71,7 @@
             "vhnam/utils",
             "#/constants",
             "#/schemas",
+            "#/utils",
             "#/lib",
             "#/queries",
             "#/layouts",

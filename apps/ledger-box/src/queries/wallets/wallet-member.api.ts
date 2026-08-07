@@ -4,7 +4,7 @@ import type { WalletMemberRole } from '#/constants/wallet-member-role-options';
 
 import type { InviteWalletMemberSchema, UpdateWalletMemberRoleSchema } from '#/schemas/wallet-member.schema';
 
-import { getApiErrorMessage } from '#/lib/api-error';
+import { getApiErrorMessage } from '#/lib/api-error/api-error';
 
 import type { WalletMemberDto, WalletMemberListDto } from '#/queries/wallets/wallet-member.dto';
 

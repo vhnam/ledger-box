@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import type { SupportedLocale } from '@vhnam/utils/locale';
 
-import { getApiErrorMessage } from '#/lib/api-error';
+import { getApiErrorMessage } from '#/lib/api-error/api-error';
 
 import type { UserLocaleDto } from '#/queries/user-settings/user-settings.dto';
 

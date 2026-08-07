@@ -8,7 +8,7 @@ import { Input } from '@vhnam/ui/components/input';
 import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
-import { formatErrorMessage } from '#/lib/intl-message';
+import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 import { useDeleteAccountDialogActions } from '#/modules/settings/settings-account/settings-account-delete-dialog.actions';
 

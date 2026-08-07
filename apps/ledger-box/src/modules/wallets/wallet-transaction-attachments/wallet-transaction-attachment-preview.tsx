@@ -6,7 +6,7 @@ import { Dialog, DialogContent } from '@vhnam/ui/components/dialog';
 import { Icon } from '@vhnam/ui/components/icon';
 import { cn } from '@vhnam/ui/lib/utils';
 
-import { isPdfContentType } from '#/lib/file';
+import { isPdfContentType } from '#/utils/attachments/file';
 
 type PreviewableTransactionAttachment = {
   id: string;

@@ -3,8 +3,9 @@ import { useIntl } from 'react-intl';
 
 import { toast } from '@vhnam/ui/components/toast';
 
-import { formatErrorMessage } from '#/lib/intl-message';
-import { getPageItems } from '#/lib/pagination';
+import { getPageItems } from '#/utils/pagination';
+
+import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 import type {
   CreateStatementSharePayload,

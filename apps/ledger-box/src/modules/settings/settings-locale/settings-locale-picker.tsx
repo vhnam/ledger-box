@@ -8,7 +8,7 @@ import { toast } from '@vhnam/ui/components/toast';
 
 import type { SupportedLocale } from '@vhnam/utils/locale';
 
-import { useLocaleTransition } from '#/lib/locale-transition';
+import { useLocaleTransition } from '#/lib/locale/locale-transition';
 
 import { useUpdateUserLocale } from '#/queries/user-settings/user-settings.mutations';
 import { useUserLocale } from '#/queries/user-settings/user-settings.queries';

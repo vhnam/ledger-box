@@ -1,7 +1,7 @@
 import type { Config } from '@netlify/functions';
 import { sql } from 'kysely';
 
-import { auth } from '#/lib/auth.ts';
+import { auth } from '#/lib/auth/auth.ts';
 import { db } from '#/lib/db/index.ts';
 
 import { ApiErrors, apiError } from './lib/api-error-response.ts';

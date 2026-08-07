@@ -2,10 +2,10 @@ import type { Config, Context } from '@netlify/functions';
 
 import { FILTER_OPTIONS } from '#/constants/filter-options.ts';
 import { DEFAULT_SORT_BY, DEFAULT_SORT_ORDER, SORT_BY_OPTIONS, SORT_ORDER_OPTIONS } from '#/constants/sort-options.ts';
-import { auth } from '#/lib/auth.ts';
+import { auth } from '#/lib/auth/auth.ts';
 import { db } from '#/lib/db/index.ts';
 import type { TransactionType } from '#/lib/db/schema.ts';
-import { calendarDateToOccurredAtStart, resolvePeriodBounds } from '#/lib/period-bounds.ts';
+import { calendarDateToOccurredAtStart, resolvePeriodBounds } from '#/utils/wallet/period-bounds.ts';
 
 import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { getTenantId, requireWalletAccess, requireWalletWriteAccess } from './lib/tenant-access.ts';

@@ -1,7 +1,7 @@
 import { formatSignedCurrency } from '@vhnam/utils/currency';
 import { DateTimeFormat, formatDateTime } from '@vhnam/utils/date';
 
-import { useAppLocale } from '#/lib/locale-context';
+import { useAppLocale } from '#/lib/locale/locale-context';
 
 import type { TransactionDto } from '#/queries/transactions/transaction.dto';
 import { useWallets } from '#/queries/wallets/wallet.queries';

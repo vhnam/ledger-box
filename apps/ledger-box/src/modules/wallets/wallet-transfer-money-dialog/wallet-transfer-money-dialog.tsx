@@ -15,7 +15,7 @@ import { Textarea } from '@vhnam/ui/components/textarea';
 
 import type { TransferMoneyOutput } from '#/schemas/transfer-money.schema';
 
-import { formatErrorMessage } from '#/lib/intl-message';
+import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 import { useWallets } from '#/queries/wallets/wallet.queries';
 

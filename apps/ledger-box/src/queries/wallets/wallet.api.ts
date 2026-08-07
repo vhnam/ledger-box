@@ -3,7 +3,7 @@ import axios from 'axios';
 import type { TransferMoneyOutput } from '#/schemas/transfer-money.schema';
 import type { CreateWalletSchema, UpdateWalletSchema } from '#/schemas/wallet.schema';
 
-import { getApiErrorMessage } from '#/lib/api-error';
+import { getApiErrorMessage } from '#/lib/api-error/api-error';
 
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
 

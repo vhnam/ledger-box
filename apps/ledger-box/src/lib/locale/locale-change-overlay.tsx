@@ -10,7 +10,7 @@ import {
   getFadeOutMs,
   prefersReducedMotion,
   useLocaleTransition,
-} from '#/lib/locale-transition';
+} from '#/lib/locale/locale-transition';
 
 /**
  * Opaque full-viewport veil for intentional locale changes.

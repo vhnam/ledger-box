@@ -10,7 +10,7 @@ import {
   type AddTransactionOutput,
 } from '#/schemas/add-transaction.schema';
 
-import { formatErrorMessage } from '#/lib/intl-message';
+import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 import { useAddTransaction } from '#/queries/transactions/transaction.mutations';
 import type { WalletDto } from '#/queries/wallets/wallet.dto';

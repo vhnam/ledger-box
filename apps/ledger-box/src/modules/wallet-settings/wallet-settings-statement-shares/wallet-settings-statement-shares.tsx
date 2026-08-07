@@ -13,7 +13,7 @@ import { toast } from '@vhnam/ui/components/toast';
 
 import { format } from '@vhnam/utils/date';
 
-import { formatErrorMessage } from '#/lib/intl-message';
+import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
 

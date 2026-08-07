@@ -11,7 +11,7 @@ import {
 } from '@vhnam/ui/components/pagination';
 import { cn } from '@vhnam/ui/lib/utils';
 
-import type { PageItem } from '#/lib/pagination';
+import type { PageItem } from '#/utils/pagination';
 
 type AppPaginationProps = {
   page: number;

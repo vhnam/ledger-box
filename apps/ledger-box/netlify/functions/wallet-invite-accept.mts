@@ -1,7 +1,7 @@
 import type { Config, Context } from '@netlify/functions';
 
 import { db } from '#/lib/db/index.ts';
-import { hashShareToken } from '#/lib/share-token.ts';
+import { hashShareToken } from '#/utils/wallet/share-token.ts';
 
 import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { findUserByEmail } from './lib/user-lookup.ts';
