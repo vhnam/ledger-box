@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { authClient } from '#/lib/auth-client';
+import { authClient } from '#/lib/auth/auth-client';
 
 import { linkedAccountsQueryKey } from '#/queries/auth/auth.queries';
 

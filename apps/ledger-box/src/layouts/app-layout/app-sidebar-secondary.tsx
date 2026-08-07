@@ -10,7 +10,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@vhnam/ui/components/sidebar';
-import { cn } from '@vhnam/ui/lib/utils';
 
 import { CreateWalletDialog } from '#/modules/wallets/wallet-create-dialog';
 
@@ -20,7 +19,7 @@ function AppSidebarSecondary({ className, ...props }: ComponentProps<typeof Side
   const newWalletLabel = intl.formatMessage({ id: 'nav.newWallet', defaultMessage: 'New wallet' });
 
   return (
-    <SidebarGroup className={cn('p-0', className)} {...props}>
+    <SidebarGroup className={className} {...props}>
       <SidebarGroupContent>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -37,7 +36,7 @@ function AppSidebarSecondary({ className, ...props }: ComponentProps<typeof Side
                 />
               }
             >
-              <div className="size-8 rounded-lg flex items-center justify-center shrink-0 bg-accent text-accent-foreground">
+              <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-accent text-accent-foreground">
                 <Icon name="PlusIcon" aria-hidden />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">

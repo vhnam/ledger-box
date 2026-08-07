@@ -12,7 +12,7 @@ import { cn } from '@vhnam/ui/lib/utils';
 
 import { GUIDELINE_URL } from '#/constants/urls';
 
-import { useSession } from '#/lib/auth-client';
+import { useSession } from '#/lib/auth/auth-client';
 
 import { useConnectGoogle } from '#/queries/auth/auth.mutations';
 import { useLinkedAccounts } from '#/queries/auth/auth.queries';
@@ -165,6 +165,7 @@ function SettingsAccount() {
                 values={{
                   deleteLink: (chunks: ReactNode) => (
                     <a
+                      key="deleteLink"
                       href={GUIDELINE_URL}
                       target="_blank"
                       rel="noreferrer"
@@ -175,6 +176,7 @@ function SettingsAccount() {
                   ),
                   transferLink: (chunks: ReactNode) => (
                     <a
+                      key="transferLink"
                       href={GUIDELINE_URL}
                       target="_blank"
                       rel="noreferrer"

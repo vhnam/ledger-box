@@ -1,6 +1,7 @@
 {
   "settings.dialog.title": "Cài đặt",
   "settings.page.title": "Cài đặt",
+  "settings.page.navLabel": "Cài đặt",
   "settings.back": "Quay lại",
   "settings.nav.account": "Tài khoản",
   "settings.nav.appearance": "Giao diện",
@@ -23,6 +24,7 @@
   "settings.account.submitting": "Đang cập nhật...",
   "settings.locale.title": "Ngôn ngữ",
   "settings.locale.description": "Chọn ngôn ngữ và định dạng khu vực được sử dụng trong ứng dụng.",
+  "settings.locale.changed": "Đã cập nhật ngôn ngữ",
   "brand.tagline": "Quản lý ví",
   "common.cancel": "Hủy",
   "common.create": "Tạo",

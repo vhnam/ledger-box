@@ -10,7 +10,7 @@ import {
   type TransferMoneyOutput,
 } from '#/schemas/transfer-money.schema';
 
-import { formatErrorMessage } from '#/lib/intl-message';
+import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
 import { useTransferMoney } from '#/queries/wallets/wallet.mutations';

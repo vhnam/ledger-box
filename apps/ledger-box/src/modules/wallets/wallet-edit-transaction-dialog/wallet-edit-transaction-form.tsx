@@ -13,7 +13,7 @@ import { cn } from '@vhnam/ui/lib/utils';
 
 import type { EditTransactionOutput } from '#/schemas/edit-transaction.schema';
 
-import { formatErrorMessage } from '#/lib/intl-message';
+import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 import type { useEditTransactionDialogActions } from '#/modules/wallets/wallet-edit-transaction-dialog/wallet-edit-transaction-dialog.actions';
 

@@ -3,9 +3,10 @@ import { useIntl } from 'react-intl';
 
 import { toast } from '@vhnam/ui/components/toast';
 
-import { isPreviewableContentType, isPreviewableFile } from '#/lib/file';
-import { optimizeImageForUpload } from '#/lib/image';
-import { formatErrorMessage } from '#/lib/intl-message';
+import { isPreviewableContentType, isPreviewableFile } from '#/utils/attachments/file';
+import { optimizeImageForUpload } from '#/utils/attachments/image';
+
+import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 import type { TransactionAttachmentDto } from '#/queries/transactions/transaction-attachment.dto';
 import { useUploadTransactionAttachment } from '#/queries/transactions/transaction.mutations';

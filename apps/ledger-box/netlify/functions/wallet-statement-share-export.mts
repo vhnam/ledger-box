@@ -1,9 +1,9 @@
 import type { Config, Context } from '@netlify/functions';
 
-import { auth } from '#/lib/auth.ts';
+import { auth } from '#/lib/auth/auth.ts';
 import { db } from '#/lib/db/index.ts';
-import { buildStatementCsvFilename, encodeStatementCsv } from '#/lib/statement-export.ts';
-import type { StatementSnapshot } from '#/lib/statement.ts';
+import type { StatementSnapshot } from '#/lib/wallet/statement.ts';
+import { buildStatementCsvFilename, encodeStatementCsv } from '#/utils/wallet/statement-export.ts';
 
 import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { getTenantId, requireOwnedWallet } from './lib/tenant-access.ts';

@@ -1,4 +1,5 @@
 import { DEFAULT_LOCALE, isSupportedLocale, type SupportedLocale } from '../locale/constants.ts';
+// Client/Vite path: bare JSON imports. Server/Node uses `with { type: 'json' }` in all-messages.ts.
 import enUS from './messages/en-US.json';
 
 /** Catalog id — one JSON file per supported locale (English and Chinese are region-split). */

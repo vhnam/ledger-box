@@ -14,7 +14,7 @@ import { cn } from '@vhnam/ui/lib/utils';
 
 import type { AddTransactionOutput } from '#/schemas/add-transaction.schema';
 
-import { formatErrorMessage } from '#/lib/intl-message';
+import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 import { useWallets } from '#/queries/wallets/wallet.queries';
 

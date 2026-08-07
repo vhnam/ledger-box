@@ -1,6 +1,7 @@
 {
   "settings.dialog.title": "設置",
   "settings.page.title": "設置",
+  "settings.page.navLabel": "設置",
   "settings.back": "返回",
   "settings.nav.account": "帳戶",
   "settings.nav.appearance": "外觀",
@@ -23,6 +24,7 @@
   "settings.account.submitting": "更新中...",
   "settings.locale.title": "語言",
   "settings.locale.description": "選擇應用中使用的語言和地區格式。",
+  "settings.locale.changed": "語言已更新",
   "brand.tagline": "錢包管理",
   "common.cancel": "取消",
   "common.create": "創建",

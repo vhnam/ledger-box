@@ -1,7 +1,7 @@
 import type { Config } from '@netlify/functions';
 import * as v from 'valibot';
 
-import { auth } from '#/lib/auth.ts';
+import { auth } from '#/lib/auth/auth.ts';
 import { db } from '#/lib/db/index.ts';
 import { updateUserLocaleSchema } from '#/schemas/user-locale.schema.ts';
 

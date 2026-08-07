@@ -1,4 +1,4 @@
-import { isImageFile } from '#/lib/file';
+import { isImageFile } from '#/utils/attachments/file';
 
 const MAX_IMAGE_DIMENSION = 2048;
 const MIN_SIZE_TO_OPTIMIZE_BYTES = 150 * 1024;

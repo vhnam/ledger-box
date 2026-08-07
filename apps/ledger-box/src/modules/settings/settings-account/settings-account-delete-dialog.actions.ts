@@ -7,8 +7,8 @@ import { toast } from '@vhnam/ui/components/toast';
 
 import { deleteAccountSchema } from '#/schemas/auth.schema';
 
-import { authClient } from '#/lib/auth-client';
-import { formatErrorMessage } from '#/lib/intl-message';
+import { authClient } from '#/lib/auth/auth-client';
+import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 import { useDeleteAccount } from '#/queries/auth/auth.mutations';
 

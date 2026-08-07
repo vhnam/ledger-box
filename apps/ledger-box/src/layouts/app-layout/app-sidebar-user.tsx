@@ -15,8 +15,9 @@ import { Icon } from '@vhnam/ui/components/icon';
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@vhnam/ui/components/sidebar';
 import { toast } from '@vhnam/ui/components/toast';
 
-import { authClient, useSession } from '#/lib/auth-client';
-import { getAvatarFallbackFromName } from '#/lib/avatar';
+import { getAvatarFallbackFromName } from '#/utils/avatar';
+
+import { authClient, useSession } from '#/lib/auth/auth-client';
 
 function AppSidebarUser() {
   const intl = useIntl();

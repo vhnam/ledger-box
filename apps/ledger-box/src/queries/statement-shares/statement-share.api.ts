@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { getApiErrorMessage } from '#/lib/api-error';
+import { getApiErrorMessage } from '#/lib/api-error/api-error';
 
 import type {
   CreateStatementSharePayload,

@@ -4,8 +4,11 @@ import { IntlProvider } from 'react-intl';
 import { DEFAULT_MESSAGES, getCachedMessages, loadMessages, toMessageLanguage } from '@vhnam/utils/i18n';
 import { DEFAULT_LOCALE, type SupportedLocale } from '@vhnam/utils/locale';
 
-import { useSession } from '#/lib/auth-client';
-import { resolveClientLocale } from '#/lib/client-locale';
+import { resolveClientLocale } from '#/utils/locale/client-locale';
+
+import { useSession } from '#/lib/auth/auth-client';
+import { LocaleChangeAnnouncer, LocaleChangeOverlay } from '#/lib/locale/locale-change-overlay';
+import { LocaleTransitionProvider } from '#/lib/locale/locale-transition';
 
 import { useUserLocale } from '#/queries/user-settings/user-settings.queries';
 
@@ -53,12 +56,16 @@ function useResolvedLocale(): SupportedLocale {
  * or from the viewer's browser locale on unauthenticated routes.
  *
  * Only `en-US` ships in the initial JS; other catalogs are loaded on demand when the
- * resolved locale changes.
+ * resolved locale changes. Intentional locale changes are masked by a soft-reload fade
+ * overlay until the matching catalog is applied (see LocaleTransitionProvider).
  */
 function LocaleProvider({ children }: LocaleProviderProps) {
   const locale = useResolvedLocale();
   const language = toMessageLanguage(locale);
   const [messages, setMessages] = useState(() => getCachedMessages(language) ?? DEFAULT_MESSAGES);
+  const [messagesLanguage, setMessagesLanguage] = useState(() =>
+    getCachedMessages(language) ? language : DEFAULT_LOCALE,
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -66,12 +73,14 @@ function LocaleProvider({ children }: LocaleProviderProps) {
 
     if (cached) {
       setMessages(cached);
+      setMessagesLanguage(language);
       return;
     }
 
     void loadMessages(language).then((catalog) => {
       if (!cancelled) {
         setMessages(catalog);
+        setMessagesLanguage(language);
       }
     });
 
@@ -80,9 +89,16 @@ function LocaleProvider({ children }: LocaleProviderProps) {
     };
   }, [language]);
 
+  // Reveal only when IntlProvider's applied catalog matches the resolved locale.
+  const messagesReady = language === messagesLanguage;
+
   return (
     <IntlProvider locale={locale} defaultLocale={DEFAULT_LOCALE} messages={messages}>
-      {children}
+      <LocaleTransitionProvider activeLocale={locale} messagesReady={messagesReady}>
+        {children}
+        <LocaleChangeOverlay />
+        <LocaleChangeAnnouncer />
+      </LocaleTransitionProvider>
     </IntlProvider>
   );
 }

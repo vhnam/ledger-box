@@ -11,7 +11,7 @@ import { toast } from '@vhnam/ui/components/toast';
 
 import { createWalletSchema, WALLET_CURRENCIES, type CreateWalletSchema } from '#/schemas/wallet.schema';
 
-import { formatErrorMessage } from '#/lib/intl-message';
+import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 import { useCreateWalletDialogActions } from '#/modules/wallets/wallet-create-dialog/wallet-create-dialog.actions';
 

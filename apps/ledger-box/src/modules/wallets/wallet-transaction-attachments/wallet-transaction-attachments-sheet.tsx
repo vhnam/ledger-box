@@ -2,7 +2,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
 
-import { formatErrorMessage } from '#/lib/intl-message';
+import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 import type { TransactionDto } from '#/queries/transactions/transaction.dto';
 

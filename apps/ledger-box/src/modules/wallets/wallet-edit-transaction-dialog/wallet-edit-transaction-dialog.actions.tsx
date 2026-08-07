@@ -10,7 +10,7 @@ import {
   type EditTransactionOutput,
 } from '#/schemas/edit-transaction.schema';
 
-import { formatErrorMessage } from '#/lib/intl-message';
+import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 import type { TransactionDto } from '#/queries/transactions/transaction.dto';
 import { useUpdateTransaction } from '#/queries/transactions/transaction.mutations';

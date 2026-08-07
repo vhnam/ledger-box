@@ -1,11 +1,11 @@
 import { DEFAULT_LOCALE, isSupportedLocale, type SupportedLocale } from '../locale/constants.ts';
-import enGB from './messages/en-GB.json';
-import enUS from './messages/en-US.json';
-import frFR from './messages/fr-FR.json';
-import jaJP from './messages/ja-JP.json';
-import viVN from './messages/vi-VN.json';
-import zhCN from './messages/zh-CN.json';
-import zhTW from './messages/zh-TW.json';
+import enGB from './messages/en-GB.json' with { type: 'json' };
+import enUS from './messages/en-US.json' with { type: 'json' };
+import frFR from './messages/fr-FR.json' with { type: 'json' };
+import jaJP from './messages/ja-JP.json' with { type: 'json' };
+import viVN from './messages/vi-VN.json' with { type: 'json' };
+import zhCN from './messages/zh-CN.json' with { type: 'json' };
+import zhTW from './messages/zh-TW.json' with { type: 'json' };
 
 /** Catalog id — one JSON file per supported locale (English and Chinese are region-split). */
 export type MessageLanguage = SupportedLocale;

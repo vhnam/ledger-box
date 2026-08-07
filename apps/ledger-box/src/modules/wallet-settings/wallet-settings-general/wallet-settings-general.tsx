@@ -8,7 +8,7 @@ import { Field, FieldError, FieldGroup } from '@vhnam/ui/components/field';
 import { Input } from '@vhnam/ui/components/input';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
-import { formatErrorMessage } from '#/lib/intl-message';
+import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
 

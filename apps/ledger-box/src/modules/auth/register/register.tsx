@@ -7,7 +7,7 @@ import { CardContent, CardDescription, CardHeader, CardTitle } from '@vhnam/ui/c
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@vhnam/ui/components/field';
 import { Input } from '@vhnam/ui/components/input';
 
-import { formatErrorMessage } from '#/lib/intl-message';
+import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 import { useRegisterActions } from '#/modules/auth/register/register.actions';
 

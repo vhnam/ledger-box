@@ -4,8 +4,8 @@ import { buttonVariants } from '@vhnam/ui/components/button';
 import { Icon } from '@vhnam/ui/components/icon';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
-import { getApiErrorMessage } from '#/lib/api-error';
-import { formatErrorMessage } from '#/lib/intl-message';
+import { getApiErrorMessage } from '#/lib/api-error/api-error';
+import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 import { usePublicStatement } from '#/queries/statement-shares/statement-share.queries';
 

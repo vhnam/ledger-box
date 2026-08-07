@@ -6,7 +6,7 @@ import { toast } from '@vhnam/ui/components/toast';
 
 import { updateWalletSchema, type UpdateWalletSchema } from '#/schemas/wallet.schema';
 
-import { formatErrorMessage } from '#/lib/intl-message';
+import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
 import { useUpdateWallet } from '#/queries/wallets/wallet.mutations';

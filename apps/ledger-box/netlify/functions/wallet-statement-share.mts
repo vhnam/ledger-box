@@ -1,6 +1,6 @@
 import type { Config, Context } from '@netlify/functions';
 
-import { auth } from '#/lib/auth.ts';
+import { auth } from '#/lib/auth/auth.ts';
 import { db } from '#/lib/db/index.ts';
 
 import { recordActivity } from './lib/activity-log.ts';

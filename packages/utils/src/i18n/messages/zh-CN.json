@@ -1,6 +1,7 @@
 {
   "settings.dialog.title": "设置",
   "settings.page.title": "设置",
+  "settings.page.navLabel": "设置",
   "settings.back": "返回",
   "settings.nav.account": "账户",
   "settings.nav.appearance": "外观",
@@ -23,6 +24,7 @@
   "settings.account.submitting": "更新中...",
   "settings.locale.title": "语言",
   "settings.locale.description": "选择应用中使用的语言和地区格式。",
+  "settings.locale.changed": "语言已更新",
   "brand.tagline": "钱包管理",
   "common.cancel": "取消",
   "common.create": "创建",

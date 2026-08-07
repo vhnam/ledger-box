@@ -10,8 +10,9 @@ import { formatCurrency } from '@vhnam/utils/currency';
 import { formatDateTime } from '@vhnam/utils/date';
 import type { SupportedLocale } from '@vhnam/utils/locale';
 
-import { useAppLocale } from '#/lib/locale-context';
-import { getPageItems } from '#/lib/pagination';
+import { getPageItems } from '#/utils/pagination';
+
+import { useAppLocale } from '#/lib/locale/locale-context';
 
 import type { ActivityLogItemDto } from '#/queries/activity/activity.dto';
 import { useWalletActivity } from '#/queries/activity/activity.queries';

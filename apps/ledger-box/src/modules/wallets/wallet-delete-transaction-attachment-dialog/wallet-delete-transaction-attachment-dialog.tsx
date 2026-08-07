@@ -6,7 +6,7 @@ import { Icon } from '@vhnam/ui/components/icon';
 import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
-import { formatErrorMessage } from '#/lib/intl-message';
+import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 import { useDeleteTransactionAttachmentDialogActions } from '#/modules/wallets/wallet-delete-transaction-attachment-dialog/wallet-delete-transaction-attachment-dialog.actions';
 import type { TransactionAttachment } from '#/modules/wallets/wallet-transaction-attachments/wallet-transaction-attachments-sheet.actions';

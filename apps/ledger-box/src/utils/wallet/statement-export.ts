@@ -1,6 +1,6 @@
 import { getCurrencyFractionDigits } from '@vhnam/utils/currency';
 
-import type { StatementSnapshot } from '#/lib/statement';
+import type { StatementSnapshot } from '#/lib/wallet/statement';
 
 const CSV_BOM = '﻿';
 const FORMULA_TRIGGER_CHARS = ['=', '+', '-', '@'];

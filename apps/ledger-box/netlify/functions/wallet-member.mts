@@ -1,7 +1,7 @@
 import type { Config, Context } from '@netlify/functions';
 
 import { WALLET_MEMBER_ROLES } from '#/constants/wallet-member-role-options.ts';
-import { auth } from '#/lib/auth.ts';
+import { auth } from '#/lib/auth/auth.ts';
 import { db } from '#/lib/db/index.ts';
 import type { WalletMemberRole } from '#/lib/db/schema.ts';
 

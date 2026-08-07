@@ -1,10 +1,10 @@
 import type { Config, Context } from '@netlify/functions';
 
 import { FILTER_OPTIONS } from '#/constants/filter-options.ts';
-import { auth } from '#/lib/auth.ts';
+import { auth } from '#/lib/auth/auth.ts';
 import { db } from '#/lib/db/index.ts';
-import { resolvePeriodBounds } from '#/lib/period-bounds.ts';
-import { computeWalletSummary } from '#/lib/wallet-summary.ts';
+import { computeWalletSummary } from '#/lib/wallet/wallet-summary.ts';
+import { resolvePeriodBounds } from '#/utils/wallet/period-bounds.ts';
 
 import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { requireWalletAccess } from './lib/tenant-access.ts';

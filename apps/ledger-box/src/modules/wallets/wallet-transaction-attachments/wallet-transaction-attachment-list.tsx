@@ -18,8 +18,9 @@ import {
   getAttachmentIconNameFromContentType,
   getFileTypeLabelFromName,
   isImageContentType,
-} from '#/lib/file';
-import { formatErrorMessage } from '#/lib/intl-message';
+} from '#/utils/attachments/file';
+
+import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 import type { TransactionAttachment } from '#/modules/wallets/wallet-transaction-attachments/wallet-transaction-attachments-sheet.actions';
 

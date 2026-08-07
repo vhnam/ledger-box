@@ -1,6 +1,11 @@
 import axios from 'axios';
 
-import { apiErrorCatalogId, isApiErrorCode, type ApiErrorBody, type ApiErrorCode } from '#/lib/api-error-codes';
+import {
+  apiErrorCatalogId,
+  isApiErrorCode,
+  type ApiErrorBody,
+  type ApiErrorCode,
+} from '#/utils/api-error/api-error-codes';
 
 type ApiError = {
   code: ApiErrorCode | null;

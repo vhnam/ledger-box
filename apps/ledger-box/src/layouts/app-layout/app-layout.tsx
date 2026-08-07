@@ -6,9 +6,9 @@ import { AppSidebar } from '#/layouts/app-layout/app-sidebar';
 
 export function AppLayout() {
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={false}>
       <AppSidebar />
-      <SidebarInset className="min-h-svh">
+      <SidebarInset className="relative z-0 min-h-svh">
         <Outlet />
       </SidebarInset>
     </SidebarProvider>

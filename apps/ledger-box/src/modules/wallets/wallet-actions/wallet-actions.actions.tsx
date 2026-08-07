@@ -18,7 +18,7 @@ import {
   type WalletTransactionSearch,
 } from '#/schemas/wallet-transaction-search.schema';
 
-import { useAppLocale } from '#/lib/locale-context';
+import { useAppLocale } from '#/lib/locale/locale-context';
 
 import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
 
