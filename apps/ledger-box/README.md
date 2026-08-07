@@ -13,8 +13,11 @@ src/layouts/            Route layouts (auth-layout, app-layout)
 src/modules/             Feature UI, grouped by domain (auth, wallets, settings)
 src/queries/             TanStack Query hooks + API clients, grouped by domain
 src/schemas/             Valibot schemas shared by forms and API validation
-src/lib/                  auth (better-auth), auth-client, db (Kysely)
+src/lib/                  External-library integrations, grouped by scope (auth, locale, storage, api-error, wallet, db)
+src/utils/                Pure/business-logic helpers, grouped by scope (api-error, locale, wallet, attachments)
 ```
+
+Each scoped folder under `src/lib` and `src/utils` exposes an `index.ts` barrel re-exporting its public API. `src/lib/auth` is the exception: `auth.ts` (server-only, uses `pg`) and `auth-client.ts` (browser-safe) are re-exported from the same barrel for convenience, so client code should keep importing `auth-client` directly rather than through the barrel.
 
 Feature modules follow a `*.tsx` (presentational) + `*.actions.tsx` (state/handlers) split — see `src/modules/wallets/create-wallet-dialog` for the pattern. Forms are built with [Formisch](https://formisch.dev) validated against the schemas in `src/schemas`.
 
