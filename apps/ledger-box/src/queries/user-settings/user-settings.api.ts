@@ -3,6 +3,7 @@ import axios from 'axios';
 import type { SupportedLocale } from '@vhnam/utils/locale';
 
 import { getApiErrorMessage } from '#/lib/api-error';
+
 import type { UserLocaleDto } from '#/queries/user-settings/user-settings.dto';
 
 export async function fetchUserLocale(): Promise<UserLocaleDto> {

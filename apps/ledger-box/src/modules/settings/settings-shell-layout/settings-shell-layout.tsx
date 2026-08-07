@@ -8,11 +8,11 @@ import { ScrollArea } from '@vhnam/ui/components/scroll-area';
 import { cn } from '@vhnam/ui/lib/utils';
 
 type SettingsSection = {
-  value: 'account' | 'appearance' | 'locale';
+  value: 'account' | 'appearance';
   labelId: string;
   defaultLabel: string;
   icon: IconName;
-  to: '/settings/account' | '/settings/appearance' | '/settings/locale';
+  to: '/settings/account' | '/settings/appearance';
 };
 
 const SETTINGS_SECTIONS: SettingsSection[] = [
@@ -29,13 +29,6 @@ const SETTINGS_SECTIONS: SettingsSection[] = [
     defaultLabel: 'Appearance',
     icon: 'PaletteIcon',
     to: '/settings/appearance',
-  },
-  {
-    value: 'locale',
-    labelId: 'settings.nav.locale',
-    defaultLabel: 'Language',
-    icon: 'GlobeIcon',
-    to: '/settings/locale',
   },
 ];
 

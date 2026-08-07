@@ -4,9 +4,8 @@
   "settings.back": "Quay lại",
   "settings.nav.account": "Tài khoản",
   "settings.nav.appearance": "Giao diện",
-  "settings.nav.locale": "Ngôn ngữ",
   "settings.appearance.title": "Giao diện",
-  "settings.appearance.description": "Chọn giao diện màu sắc bạn muốn sử dụng.",
+  "settings.appearance.description": "Chọn giao diện màu sắc và ngôn ngữ bạn muốn sử dụng.",
   "settings.appearance.theme.light": "Sáng",
   "settings.appearance.theme.system": "Hệ thống",
   "settings.appearance.theme.dark": "Tối",
@@ -446,6 +445,7 @@
   "toast.settings.accountDeleted": "Đã xóa tài khoản",
   "toast.settings.accountDeleteFailed": "Không thể xóa tài khoản",
   "settings.account.delete.sectionTitle": "Xóa tài khoản",
+  "settings.account.delete.hint": "Một khi bạn xóa tài khoản, sẽ không thể khôi phục. Hãy chắc chắn trước khi tiếp tục.",
   "settings.account.delete.ownedWallets": "Tài khoản của bạn hiện là chủ sở hữu của các ví sau:",
   "settings.account.delete.ownedWalletsHint": "Bạn phải <deleteLink>xóa các ví này</deleteLink> hoặc <transferLink>chuyển quyền sở hữu</transferLink> trước khi có thể xóa tài khoản.",
   "settings.account.delete.trigger": "Xóa tài khoản của bạn"

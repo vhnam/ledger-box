@@ -9,9 +9,11 @@ import { Input } from '@vhnam/ui/components/input';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
 import { formatErrorMessage } from '#/lib/intl-message';
+
+import type { WalletDto } from '#/queries/wallets/wallet.dto';
+
 import { useWalletSettingsGeneralActions } from '#/modules/wallet-settings/wallet-settings-general/wallet-settings-general.actions';
 import { DeleteWalletDialog } from '#/modules/wallets/wallet-delete-dialog';
-import type { WalletDto } from '#/queries/wallets/wallet.dto';
 
 type WalletSettingsGeneralProps = {
   wallet: WalletDto;

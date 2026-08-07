@@ -1,1 +1,1 @@
-export { SettingsLocale } from '#/modules/settings/settings-locale/settings-locale';
+export { SettingsLocalePicker } from '#/modules/settings/settings-locale/settings-locale-picker';

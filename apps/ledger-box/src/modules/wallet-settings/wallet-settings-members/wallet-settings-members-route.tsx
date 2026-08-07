@@ -1,5 +1,6 @@
-import { WalletSettingsMembers } from '#/modules/wallet-settings/wallet-settings-members/wallet-settings-members';
 import { useWallet, useWallets } from '#/queries/wallets/wallet.queries';
+
+import { WalletSettingsMembers } from '#/modules/wallet-settings/wallet-settings-members/wallet-settings-members';
 
 type WalletSettingsMembersRouteProps = {
   walletId: string;

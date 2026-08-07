@@ -4,9 +4,8 @@
   "settings.back": "返回",
   "settings.nav.account": "账户",
   "settings.nav.appearance": "外观",
-  "settings.nav.locale": "语言",
   "settings.appearance.title": "外观",
-  "settings.appearance.description": "选择你偏好的颜色主题。",
+  "settings.appearance.description": "选择你偏好的颜色主题和语言。",
   "settings.appearance.theme.light": "浅色",
   "settings.appearance.theme.system": "跟随系统",
   "settings.appearance.theme.dark": "深色",
@@ -446,6 +445,7 @@
   "toast.settings.accountDeleted": "账户已删除",
   "toast.settings.accountDeleteFailed": "删除账户失败",
   "settings.account.delete.sectionTitle": "删除账户",
+  "settings.account.delete.hint": "删除账户后将无法恢复。请确认后再继续。",
   "settings.account.delete.ownedWallets": "您的账户目前是以下钱包的所有者：",
   "settings.account.delete.ownedWalletsHint": "您必须<deleteLink>删除这些钱包</deleteLink>或<transferLink>转让所有权</transferLink>，才能删除您的账户。",
   "settings.account.delete.trigger": "删除您的账户"

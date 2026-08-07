@@ -7,6 +7,7 @@ import { cn } from '@vhnam/ui/lib/utils';
 import { formatCurrency } from '@vhnam/utils/currency';
 
 import { useAppLocale } from '#/lib/locale-context';
+
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
 
 interface WalletHeaderProps {

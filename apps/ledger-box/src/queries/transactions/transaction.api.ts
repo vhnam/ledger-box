@@ -1,11 +1,13 @@
 import axios from 'axios';
 
+import type { AddTransactionOutput } from '#/schemas/add-transaction.schema';
+import type { EditTransactionOutput } from '#/schemas/edit-transaction.schema';
+
 import { getApiErrorMessage } from '#/lib/api-error';
+
 import type { UploadTransactionAttachmentsDto } from '#/queries/transactions/transaction-attachment.dto';
 import type { TransactionsPageDto } from '#/queries/transactions/transaction.dto';
 import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
-import type { AddTransactionOutput } from '#/schemas/add-transaction.schema';
-import type { EditTransactionOutput } from '#/schemas/edit-transaction.schema';
 
 export async function fetchTransactions(
   walletId: string,

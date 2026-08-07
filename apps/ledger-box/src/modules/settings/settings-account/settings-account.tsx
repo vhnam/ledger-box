@@ -11,14 +11,17 @@ import { Spinner } from '@vhnam/ui/components/spinner';
 import { cn } from '@vhnam/ui/lib/utils';
 
 import { GUIDELINE_URL } from '#/constants/urls';
+
 import { useSession } from '#/lib/auth-client';
+
+import { useConnectGoogle } from '#/queries/auth/auth.mutations';
+import { useLinkedAccounts } from '#/queries/auth/auth.queries';
+import { useWallets } from '#/queries/wallets/wallet.queries';
+
 import { ChangePasswordForm } from '#/modules/settings/settings-account/settings-account-change-password-form';
 import { DeleteAccountDialog } from '#/modules/settings/settings-account/settings-account-delete-dialog';
 import { DisconnectGoogleDialog } from '#/modules/settings/settings-account/settings-account-disconnect-google-dialog';
 import { SignInMethodRow } from '#/modules/settings/settings-account/settings-account-sign-in-row';
-import { useConnectGoogle } from '#/queries/auth/auth.mutations';
-import { useLinkedAccounts } from '#/queries/auth/auth.queries';
-import { useWallets } from '#/queries/wallets/wallet.queries';
 
 function SettingsAccount() {
   const { data: session } = useSession();
@@ -69,7 +72,7 @@ function SettingsAccount() {
                   ) : (
                     <span className="flex items-center gap-1.5">
                       {session?.user.email}
-                      <Badge variant="destructive">
+                      <Badge variant="outline">
                         <FormattedMessage id="settings.account.email.unverified" defaultMessage="Unverified" />
                       </Badge>
                     </span>
@@ -184,7 +187,14 @@ function SettingsAccount() {
               />
             </p>
           </div>
-        ) : null}
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            <FormattedMessage
+              id="settings.account.delete.hint"
+              defaultMessage="Once you delete your account, there is no going back. Please be certain."
+            />
+          </p>
+        )}
 
         <div>
           <Button

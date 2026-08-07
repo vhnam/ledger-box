@@ -2,8 +2,9 @@ import { createFileRoute, Navigate } from '@tanstack/react-router';
 
 import { Spinner } from '@vhnam/ui/components/spinner';
 
-import { WalletEmpty } from '#/modules/wallets/wallet-empty';
 import { useWallets } from '#/queries/wallets/wallet.queries';
+
+import { WalletEmpty } from '#/modules/wallets/wallet-empty';
 
 export const Route = createFileRoute('/_app/wallets/')({
   component: RouteComponent,

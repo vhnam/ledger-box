@@ -2,10 +2,12 @@ import { getRouteApi } from '@tanstack/react-router';
 import { useEffect, useMemo, useRef } from 'react';
 import { useIntl } from 'react-intl';
 
+import { resolveWalletTransactionSearch } from '#/schemas/wallet-transaction-search.schema';
+
 import { getPageItems } from '#/lib/pagination';
+
 import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
 import { useTransactions } from '#/queries/transactions/transaction.queries';
-import { resolveWalletTransactionSearch } from '#/schemas/wallet-transaction-search.schema';
 
 const TRANSACTIONS_PAGE_SIZE = 10;
 

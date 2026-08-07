@@ -4,8 +4,10 @@ import { useIntl } from 'react-intl';
 import { toast } from '@vhnam/ui/components/toast';
 
 import { formatErrorMessage } from '#/lib/intl-message';
-import type { TransactionAttachment } from '#/modules/wallets/wallet-transaction-attachments/wallet-transaction-attachments-sheet.actions';
+
 import { useDeleteTransactionAttachment } from '#/queries/transactions/transaction.mutations';
+
+import type { TransactionAttachment } from '#/modules/wallets/wallet-transaction-attachments/wallet-transaction-attachments-sheet.actions';
 
 type UseDeleteTransactionAttachmentDialogActionsOptions = {
   walletId: string;

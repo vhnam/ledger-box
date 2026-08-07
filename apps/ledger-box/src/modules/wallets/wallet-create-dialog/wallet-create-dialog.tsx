@@ -9,9 +9,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Spinner } from '@vhnam/ui/components/spinner';
 import { toast } from '@vhnam/ui/components/toast';
 
-import { formatErrorMessage } from '#/lib/intl-message';
-import { useCreateWalletDialogActions } from '#/modules/wallets/wallet-create-dialog/wallet-create-dialog.actions';
 import { createWalletSchema, WALLET_CURRENCIES, type CreateWalletSchema } from '#/schemas/wallet.schema';
+
+import { formatErrorMessage } from '#/lib/intl-message';
+
+import { useCreateWalletDialogActions } from '#/modules/wallets/wallet-create-dialog/wallet-create-dialog.actions';
 
 const CURRENCY_OPTIONS = WALLET_CURRENCIES.map((currency) => ({ value: currency, label: currency }));
 

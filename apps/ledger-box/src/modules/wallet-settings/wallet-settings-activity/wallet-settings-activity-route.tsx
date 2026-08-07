@@ -1,7 +1,8 @@
 import { Navigate } from '@tanstack/react-router';
 
-import { WalletSettingsActivity } from '#/modules/wallet-settings/wallet-settings-activity/wallet-settings-activity';
 import { useWallet, useWallets } from '#/queries/wallets/wallet.queries';
+
+import { WalletSettingsActivity } from '#/modules/wallet-settings/wallet-settings-activity/wallet-settings-activity';
 
 type WalletSettingsActivityRouteProps = {
   walletId: string;

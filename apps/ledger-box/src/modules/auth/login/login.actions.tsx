@@ -2,8 +2,9 @@ import { useForm } from '@formisch/react';
 import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 
-import { authClient } from '#/lib/auth-client';
 import { loginSchema } from '#/schemas/auth.schema';
+
+import { authClient } from '#/lib/auth-client';
 
 export function useLoginActions() {
   const navigate = useNavigate();

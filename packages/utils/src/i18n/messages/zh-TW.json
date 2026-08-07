@@ -4,9 +4,8 @@
   "settings.back": "返回",
   "settings.nav.account": "帳戶",
   "settings.nav.appearance": "外觀",
-  "settings.nav.locale": "語言",
   "settings.appearance.title": "外觀",
-  "settings.appearance.description": "選擇你偏好的顏色主題。",
+  "settings.appearance.description": "選擇你偏好的顏色主題和語言。",
   "settings.appearance.theme.light": "淺色",
   "settings.appearance.theme.system": "跟隨系統",
   "settings.appearance.theme.dark": "深色",
@@ -446,6 +445,7 @@
   "toast.settings.accountDeleted": "帳戶已刪除",
   "toast.settings.accountDeleteFailed": "刪除帳戶失敗",
   "settings.account.delete.sectionTitle": "刪除帳戶",
+  "settings.account.delete.hint": "刪除帳戶後將無法復原。請確認後再繼續。",
   "settings.account.delete.ownedWallets": "您的帳戶目前是以下錢包的擁有者：",
   "settings.account.delete.ownedWalletsHint": "您必須<deleteLink>刪除這些錢包</deleteLink>或<transferLink>轉讓擁有權</transferLink>，才能刪除您的帳戶。",
   "settings.account.delete.trigger": "刪除您的帳戶"

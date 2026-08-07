@@ -6,6 +6,7 @@ import { DEFAULT_LOCALE, type SupportedLocale } from '@vhnam/utils/locale';
 
 import { useSession } from '#/lib/auth-client';
 import { resolveClientLocale } from '#/lib/client-locale';
+
 import { useUserLocale } from '#/queries/user-settings/user-settings.queries';
 
 type LocaleProviderProps = {

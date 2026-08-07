@@ -13,10 +13,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Spinner } from '@vhnam/ui/components/spinner';
 import { Textarea } from '@vhnam/ui/components/textarea';
 
-import { formatErrorMessage } from '#/lib/intl-message';
-import { useTransferMoneyDialogActions } from '#/modules/wallets/wallet-transfer-money-dialog/wallet-transfer-money-dialog.actions';
-import { useWallets } from '#/queries/wallets/wallet.queries';
 import type { TransferMoneyOutput } from '#/schemas/transfer-money.schema';
+
+import { formatErrorMessage } from '#/lib/intl-message';
+
+import { useWallets } from '#/queries/wallets/wallet.queries';
+
+import { useTransferMoneyDialogActions } from '#/modules/wallets/wallet-transfer-money-dialog/wallet-transfer-money-dialog.actions';
 
 interface TransferMoneyDialogProps {
   open: boolean;

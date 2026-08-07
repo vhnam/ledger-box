@@ -1,9 +1,11 @@
 import axios from 'axios';
 
-import { getApiErrorMessage } from '#/lib/api-error';
-import type { WalletDto } from '#/queries/wallets/wallet.dto';
 import type { TransferMoneyOutput } from '#/schemas/transfer-money.schema';
 import type { CreateWalletSchema, UpdateWalletSchema } from '#/schemas/wallet.schema';
+
+import { getApiErrorMessage } from '#/lib/api-error';
+
+import type { WalletDto } from '#/queries/wallets/wallet.dto';
 
 interface WalletResponseDto {
   id: string;

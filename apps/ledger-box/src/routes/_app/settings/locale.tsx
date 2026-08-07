@@ -1,11 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router';
-
-import { SettingsLocale } from '#/modules/settings/settings-locale';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/_app/settings/locale')({
-  component: RouteComponent,
+  beforeLoad: () => {
+    throw redirect({ to: '/settings/appearance' });
+  },
 });
-
-function RouteComponent() {
-  return <SettingsLocale />;
-}

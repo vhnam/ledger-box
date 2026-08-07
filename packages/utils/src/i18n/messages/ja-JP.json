@@ -4,9 +4,8 @@
   "settings.back": "戻る",
   "settings.nav.account": "アカウント",
   "settings.nav.appearance": "外観",
-  "settings.nav.locale": "言語",
   "settings.appearance.title": "外観",
-  "settings.appearance.description": "使用したいカラーテーマを選択してください。",
+  "settings.appearance.description": "使用したいカラーテーマと言語を選択してください。",
   "settings.appearance.theme.light": "ライト",
   "settings.appearance.theme.system": "システム",
   "settings.appearance.theme.dark": "ダーク",
@@ -446,6 +445,7 @@
   "toast.settings.accountDeleted": "アカウントを削除しました",
   "toast.settings.accountDeleteFailed": "アカウントの削除に失敗しました",
   "settings.account.delete.sectionTitle": "アカウントを削除",
+  "settings.account.delete.hint": "アカウントを削除すると元に戻せません。十分に確認してから実行してください。",
   "settings.account.delete.ownedWallets": "現在、以下のウォレットのオーナーになっています：",
   "settings.account.delete.ownedWalletsHint": "アカウントを削除する前に、<deleteLink>これらのウォレットを削除する</deleteLink>か<transferLink>所有権を譲渡する</transferLink>必要があります。",
   "settings.account.delete.trigger": "アカウントを削除する"

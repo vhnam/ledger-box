@@ -4,8 +4,9 @@ import { useIntl } from 'react-intl';
 
 import { toast } from '@vhnam/ui/components/toast';
 
-import { authClient } from '#/lib/auth-client';
 import { changePasswordSchema } from '#/schemas/auth.schema';
+
+import { authClient } from '#/lib/auth-client';
 
 export function useSettingsAccountActions() {
   const intl = useIntl();

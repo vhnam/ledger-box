@@ -5,6 +5,8 @@ import { Icon, type IconName } from '@vhnam/ui/components/icon';
 import { useTheme } from '@vhnam/ui/hooks/use-theme';
 import { cn } from '@vhnam/ui/lib/utils';
 
+import { SettingsLocalePicker } from '#/modules/settings/settings-locale';
+
 type Theme = 'dark' | 'light' | 'system';
 
 const themeOptions: {
@@ -96,7 +98,10 @@ function SettingsAppearance() {
           <FormattedMessage id="settings.appearance.title" defaultMessage="Appearance" />
         </h1>
         <p className="text-sm text-muted-foreground">
-          <FormattedMessage id="settings.appearance.description" defaultMessage="Choose your preferred color theme." />
+          <FormattedMessage
+            id="settings.appearance.description"
+            defaultMessage="Choose your preferred color theme and language."
+          />
         </p>
       </div>
       <Card>
@@ -118,6 +123,7 @@ function SettingsAppearance() {
           </div>
         </CardContent>
       </Card>
+      <SettingsLocalePicker />
     </div>
   );
 }

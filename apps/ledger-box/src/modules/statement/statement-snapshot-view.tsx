@@ -3,6 +3,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { formatCurrency, formatSignedCurrency } from '@vhnam/utils/currency';
 
 import { useAppLocale } from '#/lib/locale-context';
+
 import type { StatementSnapshotDto } from '#/queries/statement-shares/statement-share.dto';
 
 type StatementSnapshotViewProps = {

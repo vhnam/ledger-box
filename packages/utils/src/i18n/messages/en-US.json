@@ -4,9 +4,8 @@
   "settings.back": "Back",
   "settings.nav.account": "Account",
   "settings.nav.appearance": "Appearance",
-  "settings.nav.locale": "Language",
   "settings.appearance.title": "Appearance",
-  "settings.appearance.description": "Choose your preferred color theme.",
+  "settings.appearance.description": "Choose your preferred color theme and language.",
   "settings.appearance.theme.light": "Light",
   "settings.appearance.theme.system": "System",
   "settings.appearance.theme.dark": "Dark",
@@ -446,6 +445,7 @@
   "toast.settings.accountDeleted": "Account deleted",
   "toast.settings.accountDeleteFailed": "Failed to delete account",
   "settings.account.delete.sectionTitle": "Delete account",
+  "settings.account.delete.hint": "Once you delete your account, there is no going back. Please be certain.",
   "settings.account.delete.ownedWallets": "Your account is currently an owner in these wallets:",
   "settings.account.delete.ownedWalletsHint": "You must <deleteLink>delete these wallets</deleteLink> or <transferLink>transfer ownership</transferLink> before you can delete your account.",
   "settings.account.delete.trigger": "Delete your account"

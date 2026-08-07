@@ -8,6 +8,7 @@ import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@vh
 import { Input } from '@vhnam/ui/components/input';
 
 import { formatErrorMessage } from '#/lib/intl-message';
+
 import { useRegisterActions } from '#/modules/auth/register/register.actions';
 
 export function RegisterPage() {

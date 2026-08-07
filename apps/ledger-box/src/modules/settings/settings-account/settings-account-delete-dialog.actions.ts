@@ -5,10 +5,12 @@ import { useIntl } from 'react-intl';
 
 import { toast } from '@vhnam/ui/components/toast';
 
+import { deleteAccountSchema } from '#/schemas/auth.schema';
+
 import { authClient } from '#/lib/auth-client';
 import { formatErrorMessage } from '#/lib/intl-message';
+
 import { useDeleteAccount } from '#/queries/auth/auth.mutations';
-import { deleteAccountSchema } from '#/schemas/auth.schema';
 
 export function useDeleteAccountDialogActions() {
   const intl = useIntl();

@@ -3,6 +3,9 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
 
 import { formatErrorMessage } from '#/lib/intl-message';
+
+import type { TransactionDto } from '#/queries/transactions/transaction.dto';
+
 import { DeleteTransactionAttachmentDialog } from '#/modules/wallets/wallet-delete-transaction-attachment-dialog';
 import { TransactionAttachmentEmptyState } from '#/modules/wallets/wallet-transaction-attachments/wallet-transaction-attachment-empty-state';
 import { TransactionAttachmentList } from '#/modules/wallets/wallet-transaction-attachments/wallet-transaction-attachment-list';
@@ -11,7 +14,6 @@ import { TransactionAttachmentPreview } from '#/modules/wallets/wallet-transacti
 import { TransactionAttachmentUpload } from '#/modules/wallets/wallet-transaction-attachments/wallet-transaction-attachment-upload';
 import { useTransactionAttachments } from '#/modules/wallets/wallet-transaction-attachments/wallet-transaction-attachments-sheet.actions';
 import { TransactionDialogHeader } from '#/modules/wallets/wallet-transactions/wallet-transaction-dialog-header';
-import type { TransactionDto } from '#/queries/transactions/transaction.dto';
 
 type TransactionAttachmentsSheetProps = {
   open: boolean;

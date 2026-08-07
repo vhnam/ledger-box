@@ -2,12 +2,13 @@ import { FormattedMessage } from 'react-intl';
 
 import { Spinner } from '@vhnam/ui/components/spinner';
 
+import { useTransactions } from '#/queries/transactions/transaction.queries';
+import { useWallet, useWallets } from '#/queries/wallets/wallet.queries';
+
 import { WalletActions, useWalletActions } from '#/modules/wallets/wallet-actions';
 import { WalletEmpty } from '#/modules/wallets/wallet-empty';
 import { WalletSummary } from '#/modules/wallets/wallet-summary';
 import { WalletTransactions } from '#/modules/wallets/wallet-transactions';
-import { useTransactions } from '#/queries/transactions/transaction.queries';
-import { useWallet, useWallets } from '#/queries/wallets/wallet.queries';
 
 interface WalletPageProps {
   walletId: string;
