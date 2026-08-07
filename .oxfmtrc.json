@@ -12,6 +12,72 @@
       "options": {
         "singleQuote": true
       }
+    },
+    {
+      "files": ["apps/ledger-box/src/**/*.{ts,tsx,js,jsx,mts}"],
+      "options": {
+        "sortImports": {
+          "customGroups": [
+            {
+              "groupName": "vhnam/ui",
+              "elementNamePattern": ["@vhnam/ui/**"]
+            },
+            {
+              "groupName": "vhnam/utils",
+              "elementNamePattern": ["@vhnam/utils/**"]
+            },
+            {
+              "groupName": "#/constants",
+              "elementNamePattern": ["#/constants", "#/constants/**"]
+            },
+            {
+              "groupName": "#/schemas",
+              "elementNamePattern": ["#/schemas", "#/schemas/**"]
+            },
+            {
+              "groupName": "#/lib",
+              "elementNamePattern": ["#/lib", "#/lib/**"]
+            },
+            {
+              "groupName": "#/queries",
+              "elementNamePattern": ["#/queries", "#/queries/**"]
+            },
+            {
+              "groupName": "#/layouts",
+              "elementNamePattern": ["#/layouts", "#/layouts/**"]
+            },
+            {
+              "groupName": "#/components",
+              "elementNamePattern": ["#/components", "#/components/**"]
+            },
+            {
+              "groupName": "#/modules",
+              "elementNamePattern": ["#/modules", "#/modules/**"]
+            },
+            {
+              "groupName": "app",
+              "elementNamePattern": ["#/**"]
+            }
+          ],
+          "newlinesBetween": true,
+          "groups": [
+            "builtin",
+            "external",
+            "vhnam/ui",
+            "vhnam/utils",
+            "#/constants",
+            "#/schemas",
+            "#/lib",
+            "#/queries",
+            "#/layouts",
+            "#/components",
+            "#/modules",
+            "app",
+            ["parent", "sibling", "index", "style", "side_effect_style"],
+            "unknown"
+          ]
+        }
+      }
     }
   ],
   "ignorePatterns": ["apps/ledger-box/src/routeTree.gen.ts"],

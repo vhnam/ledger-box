@@ -7,8 +7,10 @@ import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
 import { formatErrorMessage } from '#/lib/intl-message';
-import { useDeleteTransactionDialogActions } from '#/modules/wallets/wallet-delete-transaction-dialog/wallet-delete-transaction-dialog.actions';
+
 import type { TransactionDto } from '#/queries/transactions/transaction.dto';
+
+import { useDeleteTransactionDialogActions } from '#/modules/wallets/wallet-delete-transaction-dialog/wallet-delete-transaction-dialog.actions';
 
 type DeleteTransactionDialogProps = {
   open: boolean;

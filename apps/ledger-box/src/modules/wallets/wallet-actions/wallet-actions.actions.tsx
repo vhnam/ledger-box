@@ -12,12 +12,15 @@ import {
   type SortByValue,
   type SortOrderValue,
 } from '#/constants/sort-options';
-import { useAppLocale } from '#/lib/locale-context';
-import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
+
 import {
   resolveWalletTransactionSearch,
   type WalletTransactionSearch,
 } from '#/schemas/wallet-transaction-search.schema';
+
+import { useAppLocale } from '#/lib/locale-context';
+
+import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
 
 const walletRouteApi = getRouteApi('/_app/wallets/$walletId/');
 

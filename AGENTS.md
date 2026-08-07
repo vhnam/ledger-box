@@ -16,6 +16,7 @@ Docs are local at `node_modules/vite-plus/docs` or online at https://viteplus.de
 - [ ] Run `vp check` and `vp test` to format, lint, type check and test changes.
 - [ ] Check if there are `vite.config.ts` tasks or `package.json` scripts necessary for validation, run via `vp run <script>`.
 - [ ] If setup, runtime, or package-manager behavior looks wrong, run `vp env doctor` and include its output when asking for help.
+- [ ] When building or reshaping UI, run the `frontend-design` skill; when reviewing or shipping UI changes, run the `web-design-guidelines` skill (see Agent skills below).
 
 <!--VITE PLUS END-->
 
@@ -52,6 +53,19 @@ Two consequences that shape most decisions in this repo:
 - Anything that knows about wallets, transactions, or tenancy → `apps/ledger-box`
   (`src/modules/` for feature UI, `src/queries/` for TanStack Query, `*.actions.tsx`
   for handlers — see `create-wallet-dialog` for the pattern).
+
+---
+
+## Agent skills
+
+Project skills live under `.agents/skills/` (Claude mirrors under `.claude/skills/`).
+**Read and follow the matching `SKILL.md` before acting** when the task matches.
+
+| Skill                   | Path                                    | Use when                                                                                                                                                                                                                                                                                                                          |
+| ----------------------- | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `frontend-design`       | `.agents/skills/frontend-design/`       | Building new UI or reshaping an existing one — aesthetic direction, typography, layout, and avoiding templated defaults. Prefer this before designing screens in `packages/ui` and `apps/ledger-box/src/modules/`. Within an established design system, preserve existing patterns and visual language.                           |
+| `web-design-guidelines` | `.agents/skills/web-design-guidelines/` | Reviewing UI for Web Interface Guidelines compliance — accessibility, UX, or "check my site against best practices". Fetch the latest rules from the skill's guidelines source URL before each review; report findings in the skill's `file:line` format. Prefer this for UI in `packages/ui` and `apps/ledger-box/src/modules/`. |
+| `documentation-writer`  | `.agents/skills/documentation-writer/`  | Writing or restructuring docs with Diátaxis (tutorial, how-to, reference, explanation).                                                                                                                                                                                                                                           |
 
 ---
 

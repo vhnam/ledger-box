@@ -12,11 +12,16 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AppSettingsRouteRouteImport } from './routes/_app/settings/route'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as InviteTokenRouteImport } from './routes/invite/$token'
 import { Route as StatementTokenRouteImport } from './routes/statement/$token'
+import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
+import { Route as AppSettingsAccountRouteImport } from './routes/_app/settings/account'
+import { Route as AppSettingsAppearanceRouteImport } from './routes/_app/settings/appearance'
+import { Route as AppSettingsLocaleRouteImport } from './routes/_app/settings/locale'
 import { Route as AppWalletsIndexRouteImport } from './routes/_app/wallets/index'
 import { Route as AppWalletsWalletIdRouteRouteImport } from './routes/_app/wallets/$walletId/route'
 import { Route as AppWalletsWalletIdIndexRouteImport } from './routes/_app/wallets/$walletId/index'
@@ -38,6 +43,11 @@ const AuthRouteRoute = AuthRouteRouteImport.update({
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppSettingsRouteRoute = AppSettingsRouteRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => AppRouteRoute,
 } as any)
 const AuthIndexRoute = AuthIndexRouteImport.update({
@@ -64,6 +74,26 @@ const StatementTokenRoute = StatementTokenRouteImport.update({
   id: '/statement/$token',
   path: '/statement/$token',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppSettingsIndexRoute = AppSettingsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppSettingsRouteRoute,
+} as any)
+const AppSettingsAccountRoute = AppSettingsAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => AppSettingsRouteRoute,
+} as any)
+const AppSettingsAppearanceRoute = AppSettingsAppearanceRouteImport.update({
+  id: '/appearance',
+  path: '/appearance',
+  getParentRoute: () => AppSettingsRouteRoute,
+} as any)
+const AppSettingsLocaleRoute = AppSettingsLocaleRouteImport.update({
+  id: '/locale',
+  path: '/locale',
+  getParentRoute: () => AppSettingsRouteRoute,
 } as any)
 const AppWalletsIndexRoute = AppWalletsIndexRouteImport.update({
   id: '/wallets/',
@@ -114,12 +144,17 @@ const AppWalletsWalletIdSettingsStatementSharesRoute =
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
+  '/settings': typeof AppSettingsRouteRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/invite/$token': typeof InviteTokenRoute
   '/statement/$token': typeof StatementTokenRoute
   '/auth/': typeof AuthIndexRoute
   '/wallets/$walletId': typeof AppWalletsWalletIdRouteRouteWithChildren
+  '/settings/account': typeof AppSettingsAccountRoute
+  '/settings/appearance': typeof AppSettingsAppearanceRoute
+  '/settings/locale': typeof AppSettingsLocaleRoute
+  '/settings/': typeof AppSettingsIndexRoute
   '/wallets/': typeof AppWalletsIndexRoute
   '/wallets/$walletId/': typeof AppWalletsWalletIdIndexRoute
   '/wallets/$walletId/settings/activity': typeof AppWalletsWalletIdSettingsActivityRoute
@@ -135,6 +170,10 @@ export interface FileRoutesByTo {
   '/statement/$token': typeof StatementTokenRoute
   '/': typeof AppIndexRoute
   '/auth': typeof AuthIndexRoute
+  '/settings/account': typeof AppSettingsAccountRoute
+  '/settings/appearance': typeof AppSettingsAppearanceRoute
+  '/settings/locale': typeof AppSettingsLocaleRoute
+  '/settings': typeof AppSettingsIndexRoute
   '/wallets': typeof AppWalletsIndexRoute
   '/wallets/$walletId': typeof AppWalletsWalletIdIndexRoute
   '/wallets/$walletId/settings/activity': typeof AppWalletsWalletIdSettingsActivityRoute
@@ -147,6 +186,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
+  '/_app/settings': typeof AppSettingsRouteRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/invite/$token': typeof InviteTokenRoute
@@ -154,6 +194,10 @@ export interface FileRoutesById {
   '/_app/': typeof AppIndexRoute
   '/auth/': typeof AuthIndexRoute
   '/_app/wallets/$walletId': typeof AppWalletsWalletIdRouteRouteWithChildren
+  '/_app/settings/account': typeof AppSettingsAccountRoute
+  '/_app/settings/appearance': typeof AppSettingsAppearanceRoute
+  '/_app/settings/locale': typeof AppSettingsLocaleRoute
+  '/_app/settings/': typeof AppSettingsIndexRoute
   '/_app/wallets/': typeof AppWalletsIndexRoute
   '/_app/wallets/$walletId/': typeof AppWalletsWalletIdIndexRoute
   '/_app/wallets/$walletId/settings/activity': typeof AppWalletsWalletIdSettingsActivityRoute
@@ -167,12 +211,17 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/settings'
     | '/auth/login'
     | '/auth/register'
     | '/invite/$token'
     | '/statement/$token'
     | '/auth/'
     | '/wallets/$walletId'
+    | '/settings/account'
+    | '/settings/appearance'
+    | '/settings/locale'
+    | '/settings/'
     | '/wallets/'
     | '/wallets/$walletId/'
     | '/wallets/$walletId/settings/activity'
@@ -188,6 +237,10 @@ export interface FileRouteTypes {
     | '/statement/$token'
     | '/'
     | '/auth'
+    | '/settings/account'
+    | '/settings/appearance'
+    | '/settings/locale'
+    | '/settings'
     | '/wallets'
     | '/wallets/$walletId'
     | '/wallets/$walletId/settings/activity'
@@ -199,6 +252,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_app'
     | '/auth'
+    | '/_app/settings'
     | '/auth/login'
     | '/auth/register'
     | '/invite/$token'
@@ -206,6 +260,10 @@ export interface FileRouteTypes {
     | '/_app/'
     | '/auth/'
     | '/_app/wallets/$walletId'
+    | '/_app/settings/account'
+    | '/_app/settings/appearance'
+    | '/_app/settings/locale'
+    | '/_app/settings/'
     | '/_app/wallets/'
     | '/_app/wallets/$walletId/'
     | '/_app/wallets/$walletId/settings/activity'
@@ -245,6 +303,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/auth/': {
       id: '/auth/'
       path: '/'
@@ -279,6 +344,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/statement/$token'
       preLoaderRoute: typeof StatementTokenRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_app/settings/': {
+      id: '/_app/settings/'
+      path: '/'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof AppSettingsIndexRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
+    '/_app/settings/account': {
+      id: '/_app/settings/account'
+      path: '/account'
+      fullPath: '/settings/account'
+      preLoaderRoute: typeof AppSettingsAccountRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
+    '/_app/settings/appearance': {
+      id: '/_app/settings/appearance'
+      path: '/appearance'
+      fullPath: '/settings/appearance'
+      preLoaderRoute: typeof AppSettingsAppearanceRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
+    }
+    '/_app/settings/locale': {
+      id: '/_app/settings/locale'
+      path: '/locale'
+      fullPath: '/settings/locale'
+      preLoaderRoute: typeof AppSettingsLocaleRouteImport
+      parentRoute: typeof AppSettingsRouteRoute
     }
     '/_app/wallets/': {
       id: '/_app/wallets/'
@@ -339,6 +432,23 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AppSettingsRouteRouteChildren {
+  AppSettingsAccountRoute: typeof AppSettingsAccountRoute
+  AppSettingsAppearanceRoute: typeof AppSettingsAppearanceRoute
+  AppSettingsLocaleRoute: typeof AppSettingsLocaleRoute
+  AppSettingsIndexRoute: typeof AppSettingsIndexRoute
+}
+
+const AppSettingsRouteRouteChildren: AppSettingsRouteRouteChildren = {
+  AppSettingsAccountRoute: AppSettingsAccountRoute,
+  AppSettingsAppearanceRoute: AppSettingsAppearanceRoute,
+  AppSettingsLocaleRoute: AppSettingsLocaleRoute,
+  AppSettingsIndexRoute: AppSettingsIndexRoute,
+}
+
+const AppSettingsRouteRouteWithChildren =
+  AppSettingsRouteRoute._addFileChildren(AppSettingsRouteRouteChildren)
+
 interface AppWalletsWalletIdRouteRouteChildren {
   AppWalletsWalletIdIndexRoute: typeof AppWalletsWalletIdIndexRoute
   AppWalletsWalletIdSettingsActivityRoute: typeof AppWalletsWalletIdSettingsActivityRoute
@@ -368,12 +478,14 @@ const AppWalletsWalletIdRouteRouteWithChildren =
   )
 
 interface AppRouteRouteChildren {
+  AppSettingsRouteRoute: typeof AppSettingsRouteRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
   AppWalletsWalletIdRouteRoute: typeof AppWalletsWalletIdRouteRouteWithChildren
   AppWalletsIndexRoute: typeof AppWalletsIndexRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppSettingsRouteRoute: AppSettingsRouteRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
   AppWalletsWalletIdRouteRoute: AppWalletsWalletIdRouteRouteWithChildren,
   AppWalletsIndexRoute: AppWalletsIndexRoute,

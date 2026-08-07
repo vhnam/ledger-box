@@ -1,8 +1,11 @@
 import { FormattedMessage } from 'react-intl';
 
+import { Card, CardContent, CardHeader, CardTitle } from '@vhnam/ui/components/card';
 import { Icon, type IconName } from '@vhnam/ui/components/icon';
 import { useTheme } from '@vhnam/ui/hooks/use-theme';
 import { cn } from '@vhnam/ui/lib/utils';
+
+import { SettingsLocalePicker } from '#/modules/settings/settings-locale';
 
 type Theme = 'dark' | 'light' | 'system';
 
@@ -89,25 +92,38 @@ function SettingsAppearance() {
   const { theme = 'system', setTheme } = useTheme();
 
   return (
-    <div className="flex flex-col gap-4 px-4">
-      <div className="flex flex-col gap-1">
-        <h2 className="font-heading text-lg font-medium">
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-1 border-b pb-4">
+        <h1 className="font-heading text-2xl font-semibold">
           <FormattedMessage id="settings.appearance.title" defaultMessage="Appearance" />
-        </h2>
+        </h1>
         <p className="text-sm text-muted-foreground">
-          <FormattedMessage id="settings.appearance.description" defaultMessage="Choose your preferred color theme." />
+          <FormattedMessage
+            id="settings.appearance.description"
+            defaultMessage="Choose your preferred color theme and language."
+          />
         </p>
       </div>
-      <div className="grid grid-cols-3 gap-3">
-        {themeOptions.map((option) => (
-          <ThemeOption
-            key={option.value}
-            {...option}
-            selected={theme === option.value}
-            onSelect={(value) => setTheme(value)}
-          />
-        ))}
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            <FormattedMessage id="settings.appearance.theme.title" defaultMessage="Theme" />
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-3 gap-3">
+            {themeOptions.map((option) => (
+              <ThemeOption
+                key={option.value}
+                {...option}
+                selected={theme === option.value}
+                onSelect={(value) => setTheme(value)}
+              />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+      <SettingsLocalePicker />
     </div>
   );
 }

@@ -6,8 +6,10 @@ import { Spinner } from '@vhnam/ui/components/spinner';
 
 import { getApiErrorMessage } from '#/lib/api-error';
 import { formatErrorMessage } from '#/lib/intl-message';
-import { StatementSnapshotView } from '#/modules/statement/statement-snapshot-view';
+
 import { usePublicStatement } from '#/queries/statement-shares/statement-share.queries';
+
+import { StatementSnapshotView } from '#/modules/statement/statement-snapshot-view';
 
 type StatementPublicPageProps = {
   token: string;

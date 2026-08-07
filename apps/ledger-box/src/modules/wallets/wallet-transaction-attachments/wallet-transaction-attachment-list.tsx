@@ -20,6 +20,7 @@ import {
   isImageContentType,
 } from '#/lib/file';
 import { formatErrorMessage } from '#/lib/intl-message';
+
 import type { TransactionAttachment } from '#/modules/wallets/wallet-transaction-attachments/wallet-transaction-attachments-sheet.actions';
 
 type TransactionAttachmentListProps = {

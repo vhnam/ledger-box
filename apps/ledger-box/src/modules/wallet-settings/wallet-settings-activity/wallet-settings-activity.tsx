@@ -10,11 +10,13 @@ import { formatCurrency } from '@vhnam/utils/currency';
 import { formatDateTime } from '@vhnam/utils/date';
 import type { SupportedLocale } from '@vhnam/utils/locale';
 
-import { AppPagination } from '#/components/app-pagination';
 import { useAppLocale } from '#/lib/locale-context';
 import { getPageItems } from '#/lib/pagination';
+
 import type { ActivityLogItemDto } from '#/queries/activity/activity.dto';
 import { useWalletActivity } from '#/queries/activity/activity.queries';
+
+import { AppPagination } from '#/components/app-pagination';
 
 type WalletSettingsActivityProps = {
   walletId: string;

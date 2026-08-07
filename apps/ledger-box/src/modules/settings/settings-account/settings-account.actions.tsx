@@ -4,8 +4,9 @@ import { useIntl } from 'react-intl';
 
 import { toast } from '@vhnam/ui/components/toast';
 
-import { authClient } from '#/lib/auth-client';
 import { changePasswordSchema } from '#/schemas/auth.schema';
+
+import { authClient } from '#/lib/auth-client';
 
 export function useSettingsAccountActions() {
   const intl = useIntl();
@@ -13,11 +14,10 @@ export function useSettingsAccountActions() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm({ schema: changePasswordSchema });
 
-  async function handleChangePassword(output: {
-    currentPassword: string;
-    newPassword: string;
-    confirmPassword: string;
-  }) {
+  async function handleChangePassword(
+    output: { currentPassword: string; newPassword: string; confirmPassword: string },
+    onSuccess?: () => void,
+  ) {
     setError(null);
     setIsSubmitting(true);
 
@@ -35,6 +35,7 @@ export function useSettingsAccountActions() {
     }
 
     reset(form);
+    onSuccess?.();
     toast.add({
       title: intl.formatMessage({ id: 'toast.settings.passwordUpdated', defaultMessage: 'Password updated' }),
       description: intl.formatMessage({

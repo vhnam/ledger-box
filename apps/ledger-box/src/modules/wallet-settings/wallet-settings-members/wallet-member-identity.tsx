@@ -2,8 +2,9 @@ import { FormattedMessage } from 'react-intl';
 
 import { Badge } from '@vhnam/ui/components/badge';
 
-import { hasRegisteredWalletMember } from '#/modules/wallet-settings/wallet-settings-members/wallet-member.utils';
 import type { WalletMemberDto } from '#/queries/wallets/wallet-member.dto';
+
+import { hasRegisteredWalletMember } from '#/modules/wallet-settings/wallet-settings-members/wallet-member.utils';
 
 type WalletMemberIdentityProps = {
   member: WalletMemberDto;

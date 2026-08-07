@@ -14,6 +14,7 @@ import { cn } from '@vhnam/ui/lib/utils';
 import { formatCurrency } from '@vhnam/utils/currency';
 
 import { useAppLocale } from '#/lib/locale-context';
+
 import { useWallets } from '#/queries/wallets/wallet.queries';
 
 function AppSidebarWallets(props: ComponentProps<typeof SidebarGroup>) {

@@ -3,11 +3,13 @@ import { FormattedMessage } from 'react-intl';
 import { Separator } from '@vhnam/ui/components/separator';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
+import type { WalletDto } from '#/queries/wallets/wallet.dto';
+
 import { AppPagination } from '#/components/app-pagination';
+
 import { WalletMemberRow } from '#/modules/wallet-settings/wallet-settings-members/wallet-member-row';
 import { WalletMembersInviteForm } from '#/modules/wallet-settings/wallet-settings-members/wallet-members-invite-form';
 import { useWalletSettingsMembersActions } from '#/modules/wallet-settings/wallet-settings-members/wallet-settings-members.actions';
-import type { WalletDto } from '#/queries/wallets/wallet.dto';
 
 type WalletSettingsMembersProps = {
   wallet: WalletDto;

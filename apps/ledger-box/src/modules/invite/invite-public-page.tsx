@@ -5,8 +5,10 @@ import { Button } from '@vhnam/ui/components/button';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
 import { WALLET_MEMBER_ROLE_OPTIONS } from '#/constants/wallet-member-role-options';
+
 import { getApiErrorMessage } from '#/lib/api-error';
 import { formatErrorMessage } from '#/lib/intl-message';
+
 import { useWalletInviteVerification } from '#/queries/wallet-invites/wallet-invite.queries';
 
 type InvitePublicPageProps = {

@@ -2,11 +2,13 @@ import { FormattedMessage } from 'react-intl';
 
 import { Skeleton } from '@vhnam/ui/components/skeleton';
 
+import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
+
 import { AppPagination } from '#/components/app-pagination';
+
 import { WalletEmpty } from '#/modules/wallets/wallet-empty';
 import { WalletTransaction } from '#/modules/wallets/wallet-transactions/wallet-transaction';
 import { useWalletTransactions } from '#/modules/wallets/wallet-transactions/wallet-transactions.actions';
-import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
 
 type WalletTransactionsProps = {
   walletId: string;

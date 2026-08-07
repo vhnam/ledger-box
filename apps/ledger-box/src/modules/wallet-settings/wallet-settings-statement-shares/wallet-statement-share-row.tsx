@@ -7,6 +7,7 @@ import { Icon } from '@vhnam/ui/components/icon';
 import { formatDate, formatRelative } from '@vhnam/utils/date';
 
 import { useAppLocale } from '#/lib/locale-context';
+
 import type { StatementShareDto } from '#/queries/statement-shares/statement-share.dto';
 
 type WalletStatementShareRowProps = {

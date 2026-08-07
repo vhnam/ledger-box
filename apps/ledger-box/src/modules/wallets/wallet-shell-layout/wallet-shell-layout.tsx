@@ -14,8 +14,10 @@ import { Spinner } from '@vhnam/ui/components/spinner';
 import { cn } from '@vhnam/ui/lib/utils';
 
 import { WALLET_MEMBER_ROLES } from '#/constants/wallet-member-role-options';
-import { WalletHeader } from '#/modules/wallets/wallet-header';
+
 import { useWallet, useWallets } from '#/queries/wallets/wallet.queries';
+
+import { WalletHeader } from '#/modules/wallets/wallet-header';
 
 type WalletShellLayoutProps = {
   walletId: string;

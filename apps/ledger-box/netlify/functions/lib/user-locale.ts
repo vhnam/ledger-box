@@ -1,4 +1,4 @@
-import { DEFAULT_LOCALE, isSupportedLocale, type SupportedLocale } from '@vhnam/utils';
+import { DEFAULT_LOCALE, isSupportedLocale, type SupportedLocale } from '@vhnam/utils/locale';
 
 import { db } from '#/lib/db/index.ts';
 

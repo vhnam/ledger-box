@@ -5,8 +5,12 @@ import * as v from 'valibot';
 import { toast } from '@vhnam/ui/components/toast';
 
 import { WALLET_MEMBER_ROLES, type WalletMemberRole } from '#/constants/wallet-member-role-options';
+
+import { inviteWalletMemberSchema } from '#/schemas/wallet-member.schema';
+
 import { formatErrorMessage } from '#/lib/intl-message';
 import { getPageItems } from '#/lib/pagination';
+
 import {
   useInviteWalletMember,
   useRemoveWalletMember,
@@ -15,7 +19,6 @@ import {
 } from '#/queries/wallets/wallet-member.mutations';
 import { useWalletMembers } from '#/queries/wallets/wallet-member.queries';
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
-import { inviteWalletMemberSchema } from '#/schemas/wallet-member.schema';
 
 type UseWalletSettingsMembersActionsOptions = {
   wallet: WalletDto;
