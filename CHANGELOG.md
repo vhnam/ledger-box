@@ -6,6 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-24 — Settings section shell + locale-change fade](docs/changelogs/mr-24-settings-layout-and-locale-transition.md)
+
+#### Added
+
+- Shared `SectionShellLayout` used by settings and wallet shells; settings header,
+  mobile list landing, desktop auto-land to Account.
+- Full-screen locale-change fade (`LocaleTransitionProvider` + overlay) when picking
+  a language in Appearance; reduced-motion–aware timing and fail/timeout clear.
+- Domain folders under `lib/` and `utils/` with barrels and added unit coverage for
+  moved modules.
+
+#### Changed
+
+- Settings and wallet shells compose the shared section chrome; owned-wallet links on
+  Account point at each wallet’s general settings.
+
+#### Fixed
+
+- `#/lib/auth` barrel is browser-safe only — server `auth` imports via `#/lib/auth/auth`
+  so Vite never pulls `pg` / secrets through the barrel.
+
 ### [mr-23 — Settings route + Account / Appearance UX](docs/changelogs/mr-23-user-settings-route.md)
 
 #### Added
