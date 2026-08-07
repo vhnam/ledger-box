@@ -149,7 +149,7 @@ function SettingsAccount() {
                 value={ownedWallets.map((wallet) => (
                   <Link
                     key={wallet.id}
-                    to="/wallets/$walletId"
+                    to="/wallets/$walletId/settings/general"
                     params={{ walletId: wallet.id }}
                     className="font-semibold text-foreground underline underline-offset-2 hover:text-foreground/80"
                   >
