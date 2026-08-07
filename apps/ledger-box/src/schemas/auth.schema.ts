@@ -19,6 +19,10 @@ export const registerSchema = v.object({
   ),
 });
 
+export const deleteAccountSchema = v.object({
+  password: v.pipe(v.string(), v.nonEmpty('validation.password.current.required')),
+});
+
 export const changePasswordSchema = v.pipe(
   v.object({
     currentPassword: v.pipe(v.string(), v.nonEmpty('validation.password.current.required')),
