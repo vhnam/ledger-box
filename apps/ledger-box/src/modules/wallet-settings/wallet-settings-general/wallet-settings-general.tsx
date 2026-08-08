@@ -2,8 +2,8 @@ import { Field as FormField, Form } from '@formisch/react';
 import { useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Alert, AlertAction, AlertDescription, AlertTitle } from '@vhnam/ui/components/alert';
 import { Button } from '@vhnam/ui/components/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@vhnam/ui/components/card';
 import { Field, FieldError, FieldGroup } from '@vhnam/ui/components/field';
 import { Input } from '@vhnam/ui/components/input';
 import { Spinner } from '@vhnam/ui/components/spinner';
@@ -34,78 +34,105 @@ function WalletSettingsGeneral({ wallet }: WalletSettingsGeneralProps) {
           <p className="text-sm text-muted-foreground">
             <FormattedMessage
               id="wallet.settings.general.description"
-              defaultMessage="Rename this wallet or permanently delete it."
+              defaultMessage="Manage this wallet's name, currency, and deletion."
             />
           </p>
         </div>
 
-        <div className="flex flex-col gap-3 border-b pb-8">
-          <h2 className="text-base font-semibold">
-            <FormattedMessage id="wallet.settings.general.name.heading" defaultMessage="Wallet name" />
-          </h2>
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <FormattedMessage id="wallet.settings.general.name.heading" defaultMessage="Wallet name" />
+            </CardTitle>
+            <CardDescription>
+              <FormattedMessage
+                id="wallet.settings.general.name.description"
+                defaultMessage="This is the display name for this wallet."
+              />
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form of={form} onSubmit={(output) => handleUpdateWallet(output)}>
+              <FieldGroup>
+                <div className="flex items-start gap-2">
+                  <FormField
+                    of={form}
+                    path={['name']}
+                    children={(field) => (
+                      <Field className="flex-1" data-invalid={!!field.errors}>
+                        <Input
+                          id={field.props.name}
+                          placeholder={intl.formatMessage({
+                            id: 'wallet.settings.general.name.placeholder',
+                            defaultMessage: 'Enter wallet name',
+                          })}
+                          aria-invalid={!!field.errors}
+                          {...field.props}
+                          value={field.input ?? ''}
+                        />
+                        {field.errors && <FieldError>{formatErrorMessage(intl, field.errors[0])}</FieldError>}
+                      </Field>
+                    )}
+                  />
 
-          <Form of={form} onSubmit={(output) => handleUpdateWallet(output)}>
-            <FieldGroup>
-              <div className="flex items-start gap-2">
-                <FormField
-                  of={form}
-                  path={['name']}
-                  children={(field) => (
-                    <Field className="flex-1" data-invalid={!!field.errors}>
-                      <Input
-                        id={field.props.name}
-                        placeholder={intl.formatMessage({
-                          id: 'wallet.settings.general.name.placeholder',
-                          defaultMessage: 'Enter wallet name',
-                        })}
-                        aria-invalid={!!field.errors}
-                        {...field.props}
-                        value={field.input ?? ''}
-                      />
-                      {field.errors && <FieldError>{formatErrorMessage(intl, field.errors[0])}</FieldError>}
-                    </Field>
-                  )}
-                />
+                  <Button type="submit" variant="outline" disabled={isUpdating}>
+                    {isUpdating && <Spinner className="size-4" />}
+                    {isUpdating ? (
+                      <FormattedMessage id="wallet.settings.general.saving" defaultMessage="Saving..." />
+                    ) : (
+                      <FormattedMessage id="wallet.settings.general.save" defaultMessage="Save" />
+                    )}
+                  </Button>
+                </div>
 
-                <Button type="submit" variant="outline" disabled={isUpdating}>
-                  {isUpdating && <Spinner className="size-4" />}
-                  {isUpdating ? (
-                    <FormattedMessage id="wallet.settings.general.saving" defaultMessage="Saving..." />
-                  ) : (
-                    <FormattedMessage id="wallet.settings.general.save" defaultMessage="Save" />
-                  )}
-                </Button>
-              </div>
+                {updateError && <FieldError>{formatErrorMessage(intl, updateError)}</FieldError>}
+              </FieldGroup>
+            </Form>
+          </CardContent>
+        </Card>
 
-              {updateError && <FieldError>{formatErrorMessage(intl, updateError)}</FieldError>}
-            </FieldGroup>
-          </Form>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <FormattedMessage id="wallet.settings.general.currency.heading" defaultMessage="Currency" />
+            </CardTitle>
+            <CardDescription>
+              <FormattedMessage
+                id="wallet.settings.general.currency.description"
+                defaultMessage="This is the currency of this wallet."
+              />
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Input value={wallet.currency} disabled readOnly />
+          </CardContent>
+        </Card>
 
-        <div className="flex flex-col">
-          <div className="mb-4">
-            <h2 className="text-lg font-semibold">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-destructive">
               <FormattedMessage id="wallet.settings.general.dangerZone" defaultMessage="Danger Zone" />
-            </h2>
-          </div>
-
-          <Alert variant="destructive">
-            <AlertTitle>
-              <FormattedMessage id="wallet.settings.general.delete.title" defaultMessage="Delete this wallet" />
-            </AlertTitle>
-            <AlertDescription>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            <p className="text-sm text-muted-foreground">
               <FormattedMessage
                 id="wallet.settings.general.delete.body"
                 defaultMessage="Once you delete a wallet, there is no going back. All of its transactions will be permanently deleted."
               />
-            </AlertDescription>
-            <AlertAction>
-              <Button size="xs" type="button" variant="destructive" onClick={() => setOpenDeleteDialog(true)}>
+            </p>
+            <div>
+              <Button
+                type="button"
+                variant="outline"
+                className="text-destructive hover:text-destructive"
+                onClick={() => setOpenDeleteDialog(true)}
+              >
                 <FormattedMessage id="wallet.settings.general.delete.cta" defaultMessage="Delete wallet" />
               </Button>
-            </AlertAction>
-          </Alert>
-        </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       <DeleteWalletDialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog} wallet={wallet} />

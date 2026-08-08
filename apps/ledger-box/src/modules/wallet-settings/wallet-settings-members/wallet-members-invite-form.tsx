@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { Button } from '@vhnam/ui/components/button';
-import { Field, FieldDescription, FieldError, FieldLabel } from '@vhnam/ui/components/field';
+import { Field, FieldDescription, FieldError } from '@vhnam/ui/components/field';
 import { Icon } from '@vhnam/ui/components/icon';
 import { Input } from '@vhnam/ui/components/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@vhnam/ui/components/select';
@@ -44,9 +44,6 @@ function WalletMembersInviteForm({
 
   return (
     <Field>
-      <FieldLabel>
-        <FormattedMessage id="wallet.settings.members.invite.label" defaultMessage="Invite by email" />
-      </FieldLabel>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start">
         <Input
           type="email"

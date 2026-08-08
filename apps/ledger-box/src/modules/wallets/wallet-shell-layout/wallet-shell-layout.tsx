@@ -41,7 +41,7 @@ const SETTINGS_SECTIONS: SettingsSection[] = [
   {
     value: 'general',
     labelId: 'wallet.shell.settings.general',
-    defaultLabel: 'General',
+    defaultLabel: 'Settings',
     icon: 'GearSixIcon',
     to: '/wallets/$walletId/settings/general',
     ownerOnly: false,
@@ -125,7 +125,7 @@ function WalletShellLayout({ walletId }: WalletShellLayoutProps) {
   return (
     <SectionShellLayout
       header={<WalletHeader wallet={walletPreview} />}
-      bodyClassName="h-[calc(100vh-var(--header-height))]"
+      bodyClassName="h-[calc(100vh-var(--header-height)-var(--sub-header-height))] md:h-[calc(100vh-var(--header-height))]"
       sidebarClassName="w-64 gap-4 p-2"
       contentClassName="mx-auto max-w-4xl p-4 lg:p-6"
       scrollRestorationId={scrollRestorationId}

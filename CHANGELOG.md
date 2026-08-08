@@ -6,6 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-25 — Settings/wallet-settings card polish, mobile nav dropdown, theme fade](docs/changelogs/mr-25-settings-ui-polish.md)
+
+#### Added
+
+- Theme switching crossfade via View Transitions (`#/lib/theme`), reduced-motion
+  aware, with a mobile settings-section dropdown replacing the old back-link/list
+  nav; mobile-only sidebar trigger added to wallet and settings headers.
+
+#### Changed
+
+- Wallet Settings (General/Members/Activity/Statement Shares) and Account's
+  delete-account section now use consistent `Card`-based layout; Appearance
+  reorders locale picker above theme grid.
+
+#### Removed
+
+- `@vhnam/ui` `Alert` and `Tabs` components (unused); `SettingsBackLink` /
+  `SettingsMobileList` mobile-nav state; `SettingsAccount`'s email verification
+  badge (flagged for confirmation — see linked doc).
+
 ### [mr-24 — Settings section shell + locale-change fade](docs/changelogs/mr-24-settings-layout-and-locale-transition.md)
 
 #### Added
