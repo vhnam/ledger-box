@@ -1,6 +1,6 @@
 import { FormattedMessage } from 'react-intl';
 
-import { Separator } from '@vhnam/ui/components/separator';
+import { Card, CardContent, CardHeader, CardTitle } from '@vhnam/ui/components/card';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
@@ -40,9 +40,9 @@ function WalletSettingsMembers({ wallet }: WalletSettingsMembersProps) {
   } = useWalletSettingsMembersActions({ wallet });
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-1">
-        <h1 className="font-heading text-xl font-semibold">
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-1 border-b pb-4">
+        <h1 className="font-heading text-2xl font-semibold">
           <FormattedMessage id="wallet.settings.members.title" defaultMessage="Members" />
         </h1>
         <p className="text-sm text-muted-foreground">
@@ -53,50 +53,65 @@ function WalletSettingsMembers({ wallet }: WalletSettingsMembersProps) {
         </p>
       </div>
 
-      <WalletMembersInviteForm
-        inviteEmail={inviteEmail}
-        inviteRole={inviteRole}
-        inviteError={inviteError}
-        isInviting={isInviting}
-        onInviteEmailChange={setInviteEmail}
-        onInviteRoleChange={setInviteRole}
-        onInvite={handleInvite}
-      />
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            <FormattedMessage id="wallet.settings.members.invite.label" defaultMessage="Invite by email" />
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <WalletMembersInviteForm
+            inviteEmail={inviteEmail}
+            inviteRole={inviteRole}
+            inviteError={inviteError}
+            isInviting={isInviting}
+            onInviteEmailChange={setInviteEmail}
+            onInviteRoleChange={setInviteRole}
+            onInvite={handleInvite}
+          />
+        </CardContent>
+      </Card>
 
-      {isLoadingMembers ? (
-        <div className="flex justify-center py-6">
-          <Spinner className="size-6 text-muted-foreground" />
-        </div>
-      ) : (
-        members.length > 0 && (
-          <>
-            <Separator />
-            <ul className="divide-y divide-border">
-              {members.map((member) => (
-                <WalletMemberRow
-                  key={member.id}
-                  member={member}
-                  onRoleChange={handleRoleChange}
-                  onRemove={handleRemoveMember}
-                  onResend={handleResendInvite}
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            <FormattedMessage id="wallet.settings.members.title" defaultMessage="Members" />
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoadingMembers ? (
+            <div className="flex justify-center py-6">
+              <Spinner className="size-6 text-muted-foreground" />
+            </div>
+          ) : members.length > 0 ? (
+            <div className="flex flex-col gap-4">
+              <ul className="divide-y divide-border">
+                {members.map((member) => (
+                  <WalletMemberRow
+                    key={member.id}
+                    member={member}
+                    onRoleChange={handleRoleChange}
+                    onRemove={handleRemoveMember}
+                    onResend={handleResendInvite}
+                  />
+                ))}
+              </ul>
+              {totalPages > 1 ? (
+                <AppPagination
+                  page={page}
+                  totalPages={totalPages}
+                  canGoPrevious={canGoPrevious}
+                  canGoNext={canGoNext}
+                  pageItems={pageItems}
+                  goToPage={goToPage}
+                  goToPreviousPage={goToPreviousPage}
+                  goToNextPage={goToNextPage}
                 />
-              ))}
-            </ul>
-            {totalPages > 1 ? (
-              <AppPagination
-                page={page}
-                totalPages={totalPages}
-                canGoPrevious={canGoPrevious}
-                canGoNext={canGoNext}
-                pageItems={pageItems}
-                goToPage={goToPage}
-                goToPreviousPage={goToPreviousPage}
-                goToNextPage={goToNextPage}
-              />
-            ) : null}
-          </>
-        )
-      )}
+              ) : null}
+            </div>
+          ) : null}
+        </CardContent>
+      </Card>
     </div>
   );
 }

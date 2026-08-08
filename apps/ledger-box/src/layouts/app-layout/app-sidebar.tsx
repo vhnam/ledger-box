@@ -41,7 +41,7 @@ function AppSidebar(props: ComponentProps<typeof Sidebar>) {
               />
             </SidebarMenuItem>
           </SidebarMenu>
-          <SidebarTrigger className="group-data-[collapsible=icon]:hidden" />
+          <SidebarTrigger className="group-data-[collapsible=icon]:hidden hidden md:block" />
         </div>
       </SidebarHeader>
       <SidebarContent className="scroll-fade overflow-y-auto">

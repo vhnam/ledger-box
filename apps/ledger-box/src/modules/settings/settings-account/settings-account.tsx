@@ -2,7 +2,6 @@ import { Link } from '@tanstack/react-router';
 import { useState, type ReactNode } from 'react';
 import { FormattedList, FormattedMessage } from 'react-intl';
 
-import { Badge } from '@vhnam/ui/components/badge';
 import { Button } from '@vhnam/ui/components/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@vhnam/ui/components/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@vhnam/ui/components/collapsible';
@@ -62,21 +61,9 @@ function SettingsAccount() {
                 icon={<Icon name="EnvelopeSimpleIcon" className="size-4" />}
                 title={<FormattedMessage id="settings.account.email.title" defaultMessage="Email & password" />}
                 description={
-                  session?.user.emailVerified ? (
-                    <span className="flex items-center gap-1.5">
-                      {session.user.email}
-                      <Badge variant="secondary">
-                        <FormattedMessage id="settings.account.email.verified" defaultMessage="Verified" />
-                      </Badge>
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-1.5">
-                      {session?.user.email}
-                      <Badge variant="outline">
-                        <FormattedMessage id="settings.account.email.unverified" defaultMessage="Unverified" />
-                      </Badge>
-                    </span>
-                  )
+                  session?.user.email ? (
+                    <span className="flex items-center gap-1.5 text-xs">{session.user.email}</span>
+                  ) : null
                 }
                 action={
                   <CollapsibleTrigger render={<Button variant="outline" size="sm" />}>
@@ -132,84 +119,87 @@ function SettingsAccount() {
         </CardContent>
       </Card>
 
-      <div className="flex flex-col gap-4">
-        <h2 className="border-b pb-4 text-lg font-semibold text-destructive">
-          <FormattedMessage id="settings.account.delete.sectionTitle" defaultMessage="Delete account" />
-        </h2>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-destructive">
+            <FormattedMessage id="settings.account.delete.sectionTitle" defaultMessage="Delete account" />
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          {hasOwnedWallets ? (
+            <div className="flex flex-col gap-2 text-sm text-muted-foreground">
+              <p>
+                <FormattedMessage
+                  id="settings.account.delete.ownedWallets"
+                  defaultMessage="Your account is currently an owner in these wallets:"
+                />{' '}
+                <FormattedList
+                  type="conjunction"
+                  value={ownedWallets.map((wallet) => (
+                    <Link
+                      key={wallet.id}
+                      to="/wallets/$walletId/settings/general"
+                      params={{ walletId: wallet.id }}
+                      className="font-semibold text-foreground underline underline-offset-2 hover:text-foreground/80"
+                    >
+                      {wallet.name}
+                    </Link>
+                  ))}
+                />
+              </p>
+              <p>
+                <FormattedMessage
+                  id="settings.account.delete.ownedWalletsHint"
+                  defaultMessage="You must <deleteLink>delete these wallets</deleteLink> or <transferLink>transfer ownership</transferLink> before you can delete your account."
+                  values={{
+                    deleteLink: (chunks: ReactNode) => (
+                      <a
+                        key="deleteLink"
+                        href={GUIDELINE_URL}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-medium text-foreground underline underline-offset-2 hover:text-foreground/80"
+                      >
+                        {chunks}
+                      </a>
+                    ),
+                    transferLink: (chunks: ReactNode) => (
+                      <a
+                        key="transferLink"
+                        href={GUIDELINE_URL}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-medium text-foreground underline underline-offset-2 hover:text-foreground/80"
+                      >
+                        {chunks}
+                      </a>
+                    ),
+                  }}
+                />
+              </p>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              <FormattedMessage
+                id="settings.account.delete.hint"
+                defaultMessage="Once you delete your account, there is no going back. Please be certain."
+              />
+            </p>
+          )}
 
-        {hasOwnedWallets ? (
-          <div className="flex flex-col gap-2 text-sm text-muted-foreground">
-            <p>
-              <FormattedMessage
-                id="settings.account.delete.ownedWallets"
-                defaultMessage="Your account is currently an owner in these wallets:"
-              />{' '}
-              <FormattedList
-                type="conjunction"
-                value={ownedWallets.map((wallet) => (
-                  <Link
-                    key={wallet.id}
-                    to="/wallets/$walletId/settings/general"
-                    params={{ walletId: wallet.id }}
-                    className="font-semibold text-foreground underline underline-offset-2 hover:text-foreground/80"
-                  >
-                    {wallet.name}
-                  </Link>
-                ))}
-              />
-            </p>
-            <p>
-              <FormattedMessage
-                id="settings.account.delete.ownedWalletsHint"
-                defaultMessage="You must <deleteLink>delete these wallets</deleteLink> or <transferLink>transfer ownership</transferLink> before you can delete your account."
-                values={{
-                  deleteLink: (chunks: ReactNode) => (
-                    <a
-                      key="deleteLink"
-                      href={GUIDELINE_URL}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="font-medium text-foreground underline underline-offset-2 hover:text-foreground/80"
-                    >
-                      {chunks}
-                    </a>
-                  ),
-                  transferLink: (chunks: ReactNode) => (
-                    <a
-                      key="transferLink"
-                      href={GUIDELINE_URL}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="font-medium text-foreground underline underline-offset-2 hover:text-foreground/80"
-                    >
-                      {chunks}
-                    </a>
-                  ),
-                }}
-              />
-            </p>
+          <div>
+            <Button
+              type="button"
+              variant="outline"
+              className={cn(!hasOwnedWallets && 'text-destructive hover:text-destructive')}
+              disabled={hasOwnedWallets}
+              onClick={() => setDeleteAccountDialogOpen(true)}
+            >
+              <FormattedMessage id="settings.account.delete.trigger" defaultMessage="Delete your account" />
+            </Button>
           </div>
-        ) : (
-          <p className="text-sm text-muted-foreground">
-            <FormattedMessage
-              id="settings.account.delete.hint"
-              defaultMessage="Once you delete your account, there is no going back. Please be certain."
-            />
-          </p>
-        )}
-
-        <div>
-          <Button
-            type="button"
-            variant="outline"
-            className={cn(!hasOwnedWallets && 'text-destructive hover:text-destructive')}
-            disabled={hasOwnedWallets}
-            onClick={() => setDeleteAccountDialogOpen(true)}
-          >
-            <FormattedMessage id="settings.account.delete.trigger" defaultMessage="Delete your account" />
-          </Button>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       <DisconnectGoogleDialog
         open={disconnectGoogleDialogOpen}

@@ -16,3 +16,19 @@
 :root {
   --sub-header-height: calc(var(--spacing) * 8 + 1px);
 }
+
+/* Soft crossfade when switching light/dark via View Transitions API. */
+@supports (view-transition-name: none) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 350ms;
+    animation-timing-function: ease-in-out;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none;
+    }
+  }
+}

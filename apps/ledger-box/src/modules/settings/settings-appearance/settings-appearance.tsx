@@ -5,9 +5,11 @@ import { Icon, type IconName } from '@vhnam/ui/components/icon';
 import { useTheme } from '@vhnam/ui/hooks/use-theme';
 import { cn } from '@vhnam/ui/lib/utils';
 
+import { switchThemeWithTransition, type AppTheme } from '#/lib/theme';
+
 import { SettingsLocalePicker } from '#/modules/settings/settings-locale';
 
-type Theme = 'dark' | 'light' | 'system';
+type Theme = AppTheme;
 
 const themeOptions: {
   value: Theme;
@@ -91,6 +93,14 @@ function ThemeOption({
 function SettingsAppearance() {
   const { theme = 'system', setTheme } = useTheme();
 
+  function handleThemeSelect(value: Theme) {
+    if (value === theme) {
+      return;
+    }
+
+    switchThemeWithTransition(setTheme, value);
+  }
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-1 border-b pb-4">
@@ -104,6 +114,9 @@ function SettingsAppearance() {
           />
         </p>
       </div>
+
+      <SettingsLocalePicker />
+
       <Card>
         <CardHeader>
           <CardTitle>
@@ -111,19 +124,18 @@ function SettingsAppearance() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid md:grid-cols-3 gap-3">
             {themeOptions.map((option) => (
               <ThemeOption
                 key={option.value}
                 {...option}
                 selected={theme === option.value}
-                onSelect={(value) => setTheme(value)}
+                onSelect={handleThemeSelect}
               />
             ))}
           </div>
         </CardContent>
       </Card>
-      <SettingsLocalePicker />
     </div>
   );
 }

@@ -1,10 +1,15 @@
-import { Link, Outlet, useLocation, useNavigate, useRouter } from '@tanstack/react-router';
+import { Link, Outlet, useLocation, useNavigate } from '@tanstack/react-router';
 import { useEffect } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { Button } from '@vhnam/ui/components/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@vhnam/ui/components/dropdown-menu';
 import { Icon, type IconName } from '@vhnam/ui/components/icon';
-import { useIsMobile } from '@vhnam/ui/hooks/use-mobile';
 import { cn } from '@vhnam/ui/lib/utils';
 
 import { SectionShellLayout } from '#/layouts/section-shell-layout';
@@ -36,86 +41,33 @@ const SETTINGS_SECTIONS: SettingsSection[] = [
   },
 ];
 
-function SettingsBackLink({ onClick }: { onClick?: () => void }) {
-  const router = useRouter();
-
-  function handleBack() {
-    if (onClick) {
-      onClick();
-      return;
-    }
-
-    if (router.history.canGoBack()) {
-      router.history.back();
-      return;
-    }
-
-    void router.navigate({ to: '/wallets' });
-  }
-
-  return (
-    <Button variant="ghost" size="sm" className="gap-1.5 px-2" onClick={handleBack}>
-      <Icon name="ArrowLeftIcon" className="size-4" />
-      <FormattedMessage id="settings.back" defaultMessage="Back" />
-    </Button>
-  );
-}
-
-function SettingsMobileList() {
-  return (
-    <div className="flex flex-col gap-1 p-2">
-      {SETTINGS_SECTIONS.map((section) => (
-        <Link
-          key={section.value}
-          to={section.to}
-          className="flex items-center gap-3 rounded-md px-3 py-3 text-sm hover:bg-accent hover:text-accent-foreground"
-        >
-          <Icon name={section.icon} />
-          <span className="flex-1 text-left">
-            <FormattedMessage id={section.labelId} defaultMessage={section.defaultLabel} />
-          </span>
-          <Icon name="CaretRightIcon" className="size-4 text-muted-foreground" />
-        </Link>
-      ))}
-    </div>
-  );
-}
-
 function SettingsShellLayout() {
+  const intl = useIntl();
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
 
   const lastSegment = pathname.split('/').filter(Boolean).pop();
   const matchedSection = SETTINGS_SECTIONS.find((section) => section.value === lastSegment)?.value;
-  const isMobileListVisible = matchedSection === undefined;
+  const activeSection = SETTINGS_SECTIONS.find((section) => section.value === matchedSection) ?? SETTINGS_SECTIONS[0];
 
   useEffect(() => {
     // Only auto-land from the bare /settings index — matchedSection is undefined
     // for any non-settings pathname too (e.g. mid-navigation to /wallets/$walletId),
     // and redirecting then would clobber that navigation.
-    if (pathname !== '/settings' || isMobile) {
-      return;
-    }
-
-    // useIsMobile is false until measured — confirm desktop before auto-landing.
-    if (window.matchMedia('(max-width: 767px)').matches) {
+    if (pathname !== '/settings') {
       return;
     }
 
     void navigate({ to: '/settings/account', replace: true });
-  }, [isMobile, pathname, navigate]);
-
-  function handleMobileSectionBack() {
-    void navigate({ to: '/settings' });
-  }
+  }, [pathname, navigate]);
 
   return (
     <SectionShellLayout
       header={<SettingsHeader />}
-      bodyClassName="h-[calc(100vh-var(--header-height))]"
+      bodyClassName="h-[calc(100vh-var(--header-height)-var(--sub-header-height))] md:h-[calc(100vh-var(--header-height))]"
       sidebarClassName="w-64 gap-4 p-2"
-      scrollRestorationId={`settings-${matchedSection ?? 'list'}`}
+      contentClassName="mx-auto max-w-4xl p-4 lg:p-6"
+      scrollRestorationId={`settings-${matchedSection ?? 'account'}`}
       sidebar={
         <div className="flex flex-col gap-1">
           <p className="px-3 pt-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
@@ -144,22 +96,34 @@ function SettingsShellLayout() {
         </div>
       }
       mobileBar={
-        <div className="flex items-center gap-1">
-          {isMobileListVisible ? <SettingsBackLink /> : <SettingsBackLink onClick={handleMobileSectionBack} />}
-          <p className="text-sm font-medium">
-            <FormattedMessage id="settings.page.title" defaultMessage="Settings" />
-          </p>
+        <div className="flex w-full items-center justify-end gap-1">
+          <DropdownMenu>
+            <DropdownMenuTrigger className="inline-flex shrink-0 items-center gap-1.5 rounded-md px-1.5 text-sm font-medium text-foreground transition-colors">
+              <Icon name={activeSection.icon} className="size-4" />
+              {intl.formatMessage({
+                id: activeSection.labelId,
+                defaultMessage: activeSection.defaultLabel,
+              })}
+              <Icon name="CaretDownIcon" className="size-3.5" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-fit">
+              {SETTINGS_SECTIONS.map((section) => (
+                <DropdownMenuItem key={section.value} nativeButton={false} render={<Link to={section.to} />}>
+                  <Icon name={section.icon} />
+                  <span className="flex-1">
+                    <FormattedMessage id={section.labelId} defaultMessage={section.defaultLabel} />
+                  </span>
+                  {section.value === matchedSection ? (
+                    <span className="size-1.5 shrink-0 rounded-full bg-primary" />
+                  ) : null}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       }
     >
-      {isMobileListVisible ? (
-        <div className="md:hidden">
-          <SettingsMobileList />
-        </div>
-      ) : null}
-      <div className={cn('mx-auto max-w-4xl p-4 lg:p-6', isMobileListVisible && 'hidden md:block')}>
-        <Outlet />
-      </div>
+      <Outlet />
     </SectionShellLayout>
   );
 }

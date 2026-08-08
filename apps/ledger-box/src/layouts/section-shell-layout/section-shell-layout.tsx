@@ -54,10 +54,12 @@ function SectionShellLayout({
 
           <div className="flex min-h-0 min-w-0 flex-1 flex-col">
             {mobileBar ? (
-              <div className="flex h-(--sub-header-height) items-center border-b px-2 md:hidden">{mobileBar}</div>
+              <div className="flex h-(--sub-header-height) shrink-0 items-center border-b px-4 md:hidden">
+                {mobileBar}
+              </div>
             ) : null}
 
-            <ScrollArea scrollRestorationId={scrollRestorationId} className="h-full w-full">
+            <ScrollArea scrollRestorationId={scrollRestorationId} className="size-full">
               <div className={contentClassName}>{children}</div>
             </ScrollArea>
           </div>

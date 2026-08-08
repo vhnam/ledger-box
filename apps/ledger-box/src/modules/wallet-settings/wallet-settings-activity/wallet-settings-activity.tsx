@@ -3,6 +3,7 @@ import { FormattedMessage, useIntl, type IntlShape } from 'react-intl';
 
 import { Badge } from '@vhnam/ui/components/badge';
 import { Button } from '@vhnam/ui/components/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@vhnam/ui/components/card';
 import { Icon } from '@vhnam/ui/components/icon';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
@@ -168,9 +169,9 @@ function WalletSettingsActivity({ walletId, currency }: WalletSettingsActivityPr
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-1">
-        <h1 className="font-heading text-xl font-semibold">
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-1 border-b pb-4">
+        <h1 className="font-heading text-2xl font-semibold">
           <FormattedMessage id="wallet.settings.activity.title" defaultMessage="Activity" />
         </h1>
         <p className="text-sm text-muted-foreground">
@@ -181,39 +182,48 @@ function WalletSettingsActivity({ walletId, currency }: WalletSettingsActivityPr
         </p>
       </div>
 
-      {isPending ? (
-        <div className="flex justify-center py-6">
-          <Spinner className="size-6 text-muted-foreground" />
-        </div>
-      ) : isError ? (
-        <p className="text-sm text-destructive">
-          <FormattedMessage id="wallet.settings.activity.loadFailed" defaultMessage="Failed to load activity." />
-        </p>
-      ) : data.items.length === 0 ? (
-        <p className="text-sm text-muted-foreground">
-          <FormattedMessage id="wallet.settings.activity.empty" defaultMessage="No activity recorded yet." />
-        </p>
-      ) : (
-        <>
-          <ul className="divide-y">
-            {data.items.map((item) => (
-              <ActivityRow key={item.id} item={item} currency={currency} locale={locale} />
-            ))}
-          </ul>
-          {totalPages > 1 ? (
-            <AppPagination
-              page={page}
-              totalPages={totalPages}
-              canGoPrevious={canGoPrevious}
-              canGoNext={canGoNext}
-              pageItems={pageItems}
-              goToPage={goToPage}
-              goToPreviousPage={() => goToPage(page - 1)}
-              goToNextPage={() => goToPage(page + 1)}
-            />
-          ) : null}
-        </>
-      )}
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            <FormattedMessage id="wallet.settings.activity.title" defaultMessage="Activity" />
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isPending ? (
+            <div className="flex justify-center py-6">
+              <Spinner className="size-6 text-muted-foreground" />
+            </div>
+          ) : isError ? (
+            <p className="text-sm text-destructive">
+              <FormattedMessage id="wallet.settings.activity.loadFailed" defaultMessage="Failed to load activity." />
+            </p>
+          ) : data.items.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              <FormattedMessage id="wallet.settings.activity.empty" defaultMessage="No activity recorded yet." />
+            </p>
+          ) : (
+            <div className="flex flex-col gap-4">
+              <ul className="divide-y">
+                {data.items.map((item) => (
+                  <ActivityRow key={item.id} item={item} currency={currency} locale={locale} />
+                ))}
+              </ul>
+              {totalPages > 1 ? (
+                <AppPagination
+                  page={page}
+                  totalPages={totalPages}
+                  canGoPrevious={canGoPrevious}
+                  canGoNext={canGoNext}
+                  pageItems={pageItems}
+                  goToPage={goToPage}
+                  goToPreviousPage={() => goToPage(page - 1)}
+                  goToNextPage={() => goToPage(page + 1)}
+                />
+              ) : null}
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
