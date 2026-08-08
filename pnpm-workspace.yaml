@@ -48,6 +48,7 @@ catalog:
   vite-plus: 0.2.8
   vite: npm:@voidzero-dev/vite-plus-core@0.2.8
   vitest: ^4.1.10
+  "@faker-js/faker": ^10.5.0
 
 catalogMode: prefer
 

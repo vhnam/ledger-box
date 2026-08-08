@@ -7,7 +7,7 @@ import { Icon } from '@vhnam/ui/components/icon';
 
 import { CreateWalletDialog } from '#/modules/wallets/wallet-create-dialog';
 
-type WalletEmptyVariant = 'wallets' | 'transactions';
+type WalletEmptyVariant = 'wallets' | 'transactions' | 'activity';
 
 type WalletEmptyProps = {
   variant?: WalletEmptyVariant;
@@ -30,6 +30,27 @@ function WalletEmpty({ variant = 'wallets' }: WalletEmptyProps) {
             <FormattedMessage
               id="wallet.empty.transactions.description"
               defaultMessage="Add your first income or expense to start tracking activity in this wallet."
+            />
+          </EmptyDescription>
+        </EmptyHeader>
+      </Empty>
+    );
+  }
+
+  if (variant === 'activity') {
+    return (
+      <Empty className="flex-none py-8">
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <Icon name="ClockCounterClockwiseIcon" />
+          </EmptyMedia>
+          <EmptyTitle className="font-heading text-lg">
+            <FormattedMessage id="wallet.empty.activity.title" defaultMessage="No activity recorded yet" />
+          </EmptyTitle>
+          <EmptyDescription>
+            <FormattedMessage
+              id="wallet.empty.activity.description"
+              defaultMessage="Changes to this wallet will show up here as an audit trail."
             />
           </EmptyDescription>
         </EmptyHeader>
