@@ -47,6 +47,13 @@ describe('formatDate', () => {
   it('formats with a custom pattern', () => {
     expect(formatDate(sampleDate, DateFormat.Month)).toBe('07/2026');
   });
+
+  it('formats medium dates with locale month names', () => {
+    expect(formatDate(sampleDate, DateFormat.Medium, 'en-US')).toBe('Jul 13, 2026');
+    expect(formatDate(sampleDate, DateFormat.Medium, 'en-GB')).toBe('13 Jul 2026');
+    expect(formatDate(sampleDate, DateFormat.MonthMedium, 'en-US')).toBe('Jul 2026');
+    expect(formatDate(sampleDate, DateFormat.MonthMedium, 'ja-JP')).toBe('2026年7月');
+  });
 });
 
 describe('formatDateShort', () => {
@@ -93,7 +100,7 @@ describe('formatDateTime', () => {
   });
 
   it('formats with a custom pattern', () => {
-    expect(formatDateTime(sampleDate, DateTimeFormat.Text)).toBe('13 thg 7 2026 19:30');
+    expect(formatDateTime(sampleDate, DateTimeFormat.Medium)).toBe('13 thg 7 2026 19:30');
   });
 });
 
