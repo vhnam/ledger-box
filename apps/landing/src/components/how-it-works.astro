@@ -1,0 +1,60 @@
+---
+import { Card, CardDescription, CardHeader, CardTitle } from '@vhnam/ui/components/card';
+
+const flow = [
+  {
+    step: '01',
+    who: 'You',
+    description: 'Record income, expenses, and transfers, and attach receipts to any of them.',
+    illustration: '/illustrations/flow-you.svg',
+  },
+  {
+    step: '02',
+    who: 'The recipient',
+    description: "Gets a viewer account and checks the wallet themselves, so they don't have to ask you every time.",
+    illustration: '/illustrations/flow-recipient.svg',
+  },
+  {
+    step: '03',
+    who: 'The funder',
+    description:
+      'Gets a statement link — a read-only web page, no account needed, showing opening balance, every transaction with a running balance, and closing balance. The numbers are frozen at the moment you generate it, so what they see today is what they’ll see next month.',
+    illustration: '/illustrations/flow-funder.svg',
+  },
+];
+---
+
+<section id="how-it-works" class="bg-secondary/40 border-border border-t">
+  <div class="mx-auto max-w-6xl px-6 py-20 sm:py-24">
+    <h2 class="font-heading text-foreground text-3xl font-semibold sm:text-4xl">
+      Three ways to answer "can I account for it?"
+    </h2>
+
+    <ol class="mt-12 grid gap-8 md:grid-cols-3">
+      {
+        flow.map((item) => (
+          <li>
+            <Card className="h-full">
+            <div class="py-2">
+              <img
+                src={item.illustration}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                width="200"
+                height="140"
+                class="mx-auto h-28 w-auto object-contain"
+              />
+              </div>
+              <CardHeader>
+                <span class="text-primary font-heading text-sm font-semibold">{item.step}</span>
+                <CardTitle className="text-xl font-semibold">{item.who}</CardTitle>
+                <CardDescription className="leading-relaxed">{item.description}</CardDescription>
+              </CardHeader>
+            </Card>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

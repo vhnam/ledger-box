@@ -1,0 +1,12 @@
+# build output
+dist/
+
+# generated content
+.astro/
+
+# environment variables
+.env
+.env.production
+
+# macOS-specific files
+.DS_Store

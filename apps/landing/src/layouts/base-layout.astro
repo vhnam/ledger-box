@@ -1,0 +1,27 @@
+---
+import '#/styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Ledger Box — a ledger for money held on behalf of other people',
+  description = "Ledger Box answers 'how much is in this wallet, and can I account for it?' Track income, expenses, and transfers for money you hold for someone else, and hand them a statement they can trust.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body class="bg-background text-foreground font-sans antialiased">
+    <slot />
+  </body>
+</html>
