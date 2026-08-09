@@ -3,8 +3,10 @@ import { FormattedMessage, useIntl, type IntlShape } from 'react-intl';
 
 import { Badge } from '@vhnam/ui/components/badge';
 import { Button } from '@vhnam/ui/components/button';
+import { DatePickerRange } from '@vhnam/ui/components/date-picker-range';
 import { Icon } from '@vhnam/ui/components/icon';
 import { Skeleton } from '@vhnam/ui/components/skeleton';
+import { ToggleGroup, ToggleGroupItem } from '@vhnam/ui/components/toggle-group';
 import { cn } from '@vhnam/ui/lib/utils';
 
 import { formatSignedCurrency } from '@vhnam/utils/currency';
@@ -20,6 +22,7 @@ import { useWalletActivity } from '#/queries/activity/activity.queries';
 
 import { AppPagination } from '#/components/app-pagination';
 
+import { useWalletSettingsActivityFilters } from '#/modules/wallet-settings/wallet-settings-activity/wallet-settings-activity.actions';
 import { WalletEmpty } from '#/modules/wallets/wallet-empty';
 
 type WalletSettingsActivityProps = {
@@ -171,9 +174,20 @@ function ActivityRow({
 
 function WalletSettingsActivity({ walletId, currency }: WalletSettingsActivityProps) {
   const intl = useIntl();
-  const [page, setPage] = useState(1);
   const locale = useAppLocale();
-  const { data, isPending, isError } = useWalletActivity(walletId, page, true);
+  const {
+    filterBy,
+    setFilterBy,
+    dateRange,
+    setDateRange,
+    filterPreview,
+    isDateRangeFilter,
+    filterOptions,
+    page,
+    setPage,
+    activityQuery,
+  } = useWalletSettingsActivityFilters();
+  const { data, isPending, isError } = useWalletActivity(walletId, activityQuery, true);
   const totalResults = data?.total ?? 0;
   const totalPages = data ? Math.max(1, Math.ceil(data.total / data.pageSize)) : 1;
   const pageItems = useMemo(() => getPageItems(page, totalPages), [page, totalPages]);
@@ -211,6 +225,53 @@ function WalletSettingsActivity({ walletId, currency }: WalletSettingsActivityPr
       </div>
 
       <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2.5 rounded-xl border border-border bg-card p-3 md:p-4">
+          <p className="text-xs text-muted-foreground">
+            <FormattedMessage id="wallet.actions.period" defaultMessage="Period" />
+          </p>
+          <ToggleGroup
+            value={[filterBy]}
+            onValueChange={(values) => {
+              const nextValue = values.at(-1);
+              if (!nextValue) {
+                return;
+              }
+              setFilterBy(nextValue as typeof filterBy);
+            }}
+            variant="outline"
+            size="sm"
+            spacing={1}
+            className="flex w-full flex-wrap rounded-xl bg-muted/50 p-1"
+          >
+            {filterOptions.map((option) => (
+              <ToggleGroupItem
+                key={option.value}
+                value={option.value}
+                className={cn(
+                  'grow border-0 px-2.5 sm:grow-0',
+                  'aria-pressed:bg-background aria-pressed:text-foreground aria-pressed:shadow-sm',
+                )}
+              >
+                <FormattedMessage id={option.labelId} defaultMessage={option.defaultLabel} />
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+
+          {isDateRangeFilter ? (
+            <DatePickerRange
+              value={dateRange}
+              onChange={setDateRange}
+              locale={locale}
+              placeholder={intl.formatMessage({
+                id: 'wallet.actions.dateRangePlaceholder',
+                defaultMessage: 'Choose dates',
+              })}
+            />
+          ) : null}
+
+          {filterPreview ? <p className="text-sm text-muted-foreground">{filterPreview}</p> : null}
+        </div>
+
         {isPending && (
           <div className="space-y-2">
             {Array.from({ length: 10 }).map((_, index) => (
