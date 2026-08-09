@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@import "@vhnam/ui/tailwind.css";
+@import "@vhnam/ui/globals.css";
+
+@source "..";
+@source "../../../../packages/ui/src";
+
+@theme inline {
+  --breakpoint-3xl: 1920px;
+}
