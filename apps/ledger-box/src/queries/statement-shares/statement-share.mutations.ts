@@ -2,9 +2,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import {
   createStatementShare,
-  downloadStatementPreviewCsv,
+  downloadStatementPreviewExport,
   previewStatementShare,
   revokeStatementShare,
+  type StatementExportFormat,
 } from '#/queries/statement-shares/statement-share.api';
 import type { CreateStatementSharePayload } from '#/queries/statement-shares/statement-share.dto';
 
@@ -14,9 +15,17 @@ export function usePreviewStatementShare(walletId: string) {
   });
 }
 
+export function useDownloadStatementPreviewExport(walletId: string) {
+  return useMutation({
+    mutationFn: ({ payload, format }: { payload: CreateStatementSharePayload; format: StatementExportFormat }) =>
+      downloadStatementPreviewExport(walletId, payload, format),
+  });
+}
+
+/** CSV-only convenience wrapper around `useDownloadStatementPreviewExport`. */
 export function useDownloadStatementPreviewCsv(walletId: string) {
   return useMutation({
-    mutationFn: (payload: CreateStatementSharePayload) => downloadStatementPreviewCsv(walletId, payload),
+    mutationFn: (payload: CreateStatementSharePayload) => downloadStatementPreviewExport(walletId, payload, 'csv'),
   });
 }
 

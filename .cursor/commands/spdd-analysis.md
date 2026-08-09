@@ -84,7 +84,7 @@ Input can be provided in two ways:
    - If no matching domain code exists (greenfield area), note this explicitly and rely on framework conventions inferred from dependencies
 
    e. **Relevant SPDD context (scoped by concepts)**:
-   - List files in `spdd/prompt/` and `spdd/analysis/` (if the directories exist)
+   - List files in `docs/spdd/prompt/` and `docs/spdd/analysis/` (if the directories exist)
    - Read ONLY those files whose filenames suggest relevance to the extracted concepts
    - If none are relevant or the directories are absent, skip this step
 
@@ -244,13 +244,13 @@ Input can be provided in two ways:
    - `GGQPA-169-202603131530-[Analysis]-monthly-report-export.md`
 
    b. **Create directory and write file**:
-   - Ensure directory `spdd/analysis/` exists under the project root (create if not)
-   - Write the complete enriched context document to `spdd/analysis/<file-name>.md`
+   - Ensure directory `docs/spdd/analysis/` exists (create if not)
+   - Write the complete enriched context document to `docs/spdd/analysis/<file-name>.md`
 
    c. **Show summary to user**:
 
    ```
-   ✅ Analysis complete. Enriched context saved to `spdd/analysis/<file-name>.md`
+   ✅ Analysis complete. Enriched context saved to `docs/spdd/analysis/<file-name>.md`
 
    📋 Analysis summary:
    - Project type: [backend/frontend/fullstack]
@@ -261,7 +261,7 @@ Input can be provided in two ways:
    - Open questions/risks: [count]
 
    🔗 Next step: Use this as input for REASONS Canvas generation:
-      /spdd-reasons-canvas @spdd/analysis/<file-name>.md
+      /spdd-reasons-canvas @docs/spdd/analysis/<file-name>.md
    ```
 
 8. **Offer to proceed with REASONS Canvas generation**
@@ -272,7 +272,7 @@ Input can be provided in two ways:
 
 **Output**
 
-An enriched context document saved to `spdd/analysis/<file-name>.md` that transforms raw business requirements into a **strategic-level** analysis containing:
+An enriched context document saved to `docs/spdd/analysis/<file-name>.md` that transforms raw business requirements into a **strategic-level** analysis containing:
 
 - Original business requirements (preserved verbatim)
 - Domain concept identification (existing and new concepts, conceptual relationships, business rules — grounded in codebase exploration)
@@ -292,7 +292,7 @@ An enriched context document saved to `spdd/analysis/<file-name>.md` that transf
 - Do NOT leave placeholders or TODO items — generate complete, specific content
 - Do NOT modify any existing files in the codebase
 - Always read ALL `@` referenced files completely
-- Always create `spdd/analysis/` directory if it does not exist
+- Always create `docs/spdd/analysis/` directory if it does not exist
 - File name MUST follow the naming convention defined above
 - Use `GGQPA-XXX` if JIRA ticket number cannot be extracted from context
 - Acceptance Criteria coverage MUST assess every AC from the requirement
@@ -325,7 +325,7 @@ This command is the **pre-processing phase** of the SPDD workflow, bridging raw 
 │  │   + Risk & Gap Analysis (ambiguities, edge cases, risks)        │    │
 │  │   = Enriched Context (Business + Strategic + Risks)             │    │
 │  │                                                                 │    │
-│  │ Output: spdd/analysis/GGQPA-XXX-*-[Analysis]-*.md              │    │
+│  │ Output: docs/spdd/analysis/GGQPA-XXX-*-[Analysis]-*.md       │    │
 │  └────────────────────────────────────────────────────────────────┘    │
 │                              │                                          │
 │                              ▼                                          │
@@ -333,7 +333,7 @@ This command is the **pre-processing phase** of the SPDD workflow, bridging raw 
 │  ┌────────────────────────────────────────────────────────────────┐    │
 │  │ Enriched Context → REASONS Canvas Structured Prompt             │    │
 │  │                                                                 │    │
-│  │ Output: spdd/prompt/GGQPA-XXX-*.md (REASONS Canvas)           │    │
+│  │ Output: docs/spdd/prompt/GGQPA-XXX-*.md (REASONS Canvas)    │    │
 │  └────────────────────────────────────────────────────────────────┘    │
 │                              │                                          │
 │                              ▼                                          │

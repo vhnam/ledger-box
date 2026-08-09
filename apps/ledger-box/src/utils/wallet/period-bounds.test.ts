@@ -45,6 +45,51 @@ describe('resolvePeriodBounds', () => {
     });
   });
 
+  it('resolves Monday-start "this-week" for a mid-week reference (Saturday)', () => {
+    // 2026-08-08 is a Saturday; ISO week starts Monday 2026-08-03.
+    const bounds = resolvePeriodBounds('UTC', FILTER_OPTIONS.THIS_WEEK, undefined, undefined, referenceNow);
+
+    expect(bounds).toEqual({
+      start: new Date('2026-08-03T00:00:00.000Z'),
+      endExclusive: new Date('2026-08-10T00:00:00.000Z'),
+    });
+  });
+
+  it('keeps Sunday in the week that started the previous Monday', () => {
+    const sunday = new Date('2026-08-09T12:00:00.000Z');
+    const bounds = resolvePeriodBounds('UTC', FILTER_OPTIONS.THIS_WEEK, undefined, undefined, sunday);
+
+    expect(bounds).toEqual({
+      start: new Date('2026-08-03T00:00:00.000Z'),
+      endExclusive: new Date('2026-08-10T00:00:00.000Z'),
+    });
+  });
+
+  it('resolves "last-week" as the immediately preceding Monday–Monday window', () => {
+    const bounds = resolvePeriodBounds('UTC', FILTER_OPTIONS.LAST_WEEK, undefined, undefined, referenceNow);
+
+    expect(bounds).toEqual({
+      start: new Date('2026-07-27T00:00:00.000Z'),
+      endExclusive: new Date('2026-08-03T00:00:00.000Z'),
+    });
+  });
+
+  it('resolves week bounds at local midnight in a non-UTC timezone', () => {
+    const bounds = resolvePeriodBounds(
+      'Asia/Ho_Chi_Minh',
+      FILTER_OPTIONS.THIS_WEEK,
+      undefined,
+      undefined,
+      referenceNow,
+    );
+
+    // Asia/Ho_Chi_Minh is UTC+7; local Monday 2026-08-03 00:00 is 2026-08-02T17:00:00.000Z.
+    expect(bounds).toEqual({
+      start: new Date('2026-08-02T17:00:00.000Z'),
+      endExclusive: new Date('2026-08-09T17:00:00.000Z'),
+    });
+  });
+
   it('resolves "last-month", rolling back across a year boundary in January', () => {
     const january = new Date('2026-01-15T12:00:00.000Z');
 

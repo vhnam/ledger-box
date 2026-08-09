@@ -7,7 +7,7 @@ description: Sync code changes back to the structured SPDD prompt file following
 
 Synchronize implementation details from refactored or updated code back to the structured SPDD (Structured Prompt-Driven Development) prompt file, ensuring the prompt remains the accurate source of truth for the system design.
 
-**Input**: The argument after `/spdd-sync` is the path to the structured prompt file (e.g., `@spdd/prompt/GGQPA-XXX-202602271430-[Feat]-api-create-agent-endpoint.md`).
+**Input**: The argument after `/spdd-sync` is the path to the structured prompt file (e.g., `@docs/spdd/prompt/GGQPA-XXX-202602271430-[Feat]-api-create-agent-endpoint.md`).
 
 **Steps**
 
@@ -15,7 +15,7 @@ Synchronize implementation details from refactored or updated code back to the s
 
    Use the **AskUserQuestion tool** to ask:
 
-   > "Please provide the path to the structured prompt file you want to sync (e.g., `@spdd/prompt/xxx.md`)."
+   > "Please provide the path to the structured prompt file you want to sync (e.g., `@docs/spdd/prompt/xxx.md`)."
 
    **IMPORTANT**: Do NOT proceed without a valid prompt file path.
 

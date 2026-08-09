@@ -1,9 +1,16 @@
 import { useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Button } from '@vhnam/ui/components/button';
+import { Button, buttonVariants } from '@vhnam/ui/components/button';
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@vhnam/ui/components/card';
 import { DatePickerRange } from '@vhnam/ui/components/date-picker-range';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@vhnam/ui/components/dropdown-menu';
 import { Field, FieldError, FieldLabel } from '@vhnam/ui/components/field';
 import { Icon } from '@vhnam/ui/components/icon';
 import { Input } from '@vhnam/ui/components/input';
@@ -14,6 +21,7 @@ import { toast } from '@vhnam/ui/components/toast';
 import { format } from '@vhnam/utils/date';
 
 import { formatErrorMessage } from '#/lib/locale/intl-message';
+import { useAppLocale } from '#/lib/locale/locale-context';
 
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
 
@@ -29,6 +37,7 @@ type WalletSettingsStatementSharesProps = {
 
 function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementSharesProps) {
   const intl = useIntl();
+  const locale = useAppLocale();
   const [dialogOpen, setDialogOpen] = useState(false);
   const {
     shares,
@@ -56,6 +65,7 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
     handlePreview,
     handleCreate,
     handleDownloadCsv,
+    handleDownloadPdf,
     handleRevoke,
     resetCreateFlow,
   } = useWalletSettingsStatementSharesActions({ wallet });
@@ -197,7 +207,11 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
                   setPeriodFrom(range?.from ? format(range.from, 'yyyy-MM-dd') : undefined);
                   setPeriodTo(range?.to ? format(range.to, 'yyyy-MM-dd') : undefined);
                 }}
-                numberOfMonths={1}
+                locale={locale}
+                placeholder={intl.formatMessage({
+                  id: 'wallet.settings.shares.dialog.period.placeholder',
+                  defaultMessage: 'Select a period',
+                })}
               />
             </Field>
 
@@ -227,11 +241,27 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
                 {isPreviewing && <Spinner className="size-4" />}
                 <FormattedMessage id="wallet.settings.shares.dialog.preview" defaultMessage="Preview" />
               </Button>
-              <Button variant="outline" className="flex-1" onClick={handleDownloadCsv} disabled={isDownloading}>
-                {isDownloading && <Spinner className="size-4" />}
-                <Icon name="DownloadIcon" />
-                <FormattedMessage id="wallet.settings.shares.dialog.downloadCsv" defaultMessage="Download CSV" />
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  disabled={isDownloading}
+                  className={buttonVariants({ variant: 'outline', className: 'flex-1' })}
+                >
+                  {isDownloading && <Spinner className="size-4" />}
+                  <Icon name="DownloadIcon" />
+                  <FormattedMessage id="wallet.settings.shares.dialog.download" defaultMessage="Download" />
+                  <Icon name="CaretDownIcon" className="size-3.5 opacity-70" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem onClick={handleDownloadCsv} disabled={isDownloading}>
+                      <FormattedMessage id="wallet.settings.shares.dialog.downloadCsv" defaultMessage="Download CSV" />
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleDownloadPdf} disabled={isDownloading}>
+                      <FormattedMessage id="wallet.settings.shares.dialog.downloadPdf" defaultMessage="Download PDF" />
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <Button className="flex-1" onClick={handleCreate} disabled={isCreating}>
                 {isCreating && <Spinner className="size-4" />}
                 <FormattedMessage id="wallet.settings.shares.dialog.createLink" defaultMessage="Create link" />

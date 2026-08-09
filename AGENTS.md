@@ -16,7 +16,6 @@ Docs are local at `node_modules/vite-plus/docs` or online at https://viteplus.de
 - [ ] Run `vp check` and `vp test` to format, lint, type check and test changes.
 - [ ] Check if there are `vite.config.ts` tasks or `package.json` scripts necessary for validation, run via `vp run <script>`.
 - [ ] If setup, runtime, or package-manager behavior looks wrong, run `vp env doctor` and include its output when asking for help.
-- [ ] When building or reshaping UI, run the `frontend-design` skill; when reviewing or shipping UI changes, run the `web-design-guidelines` skill (see Agent skills below).
 
 <!--VITE PLUS END-->
 
@@ -284,6 +283,9 @@ vp check && vp test                           # format, lint, typecheck, test �
 
 Run `vp check` and `vp test` before proposing a change as done.
 
+When an agent creates a git commit or PR, do **not** add `Co-authored-by`,
+`Made-with: Cursor`, or similar attribution trailers — message body only.
+
 ---
 
 ## Changelog
@@ -315,3 +317,13 @@ and an `invite_email_failed` activity entry is recorded.
 
 Never commit real values. When adding a variable, add it to `.env.example` in the same
 change.
+
+---
+
+## Commit and PR messages
+
+Do NOT include a `Co-authored-by: Claude` trailer, or any AI-attribution line
+(e.g. "Generated with Claude Code", "🤖 Generated with...") in commit messages
+or pull request descriptions. Write commit messages and PR descriptions as the
+author would write them themselves — no mention of AI assistance anywhere in
+the message body or trailers.

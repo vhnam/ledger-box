@@ -1,0 +1,3 @@
+Noto Sans fonts in this directory are from Google Fonts / notofonts
+and are licensed under the SIL Open Font License, Version 1.1.
+See https://scripts.sil.org/OFL

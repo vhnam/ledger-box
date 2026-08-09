@@ -118,12 +118,24 @@ function formatFilenameTimestamp(isoValue: string, timezone: string): string {
   return `${lookup.year}${lookup.month}${lookup.day}${lookup.hour}${lookup.minute}`;
 }
 
-export function buildStatementCsvFilename(snapshot: StatementSnapshot, walletName: string): string {
+export type StatementExportFormat = 'csv' | 'pdf';
+
+export function buildStatementExportFilename(
+  snapshot: StatementSnapshot,
+  walletName: string,
+  format: StatementExportFormat,
+): string {
   const period =
     snapshot.periodFrom && snapshot.periodTo
       ? `${formatCsvDate(snapshot.periodFrom, snapshot.timezone)}_${formatCsvDate(snapshot.periodTo, snapshot.timezone)}`
       : 'all-time';
   const generatedAt = formatFilenameTimestamp(snapshot.snapshotAt, snapshot.timezone);
 
-  return `statement-${sanitizeFilenameSegment(walletName)}-${period}-${generatedAt}.csv`;
+  return `statement-${sanitizeFilenameSegment(walletName)}-${period}-${generatedAt}.${format}`;
 }
+
+export function buildStatementCsvFilename(snapshot: StatementSnapshot, walletName: string): string {
+  return buildStatementExportFilename(snapshot, walletName, 'csv');
+}
+
+export { encodeStatementPdf } from './statement-export-pdf';

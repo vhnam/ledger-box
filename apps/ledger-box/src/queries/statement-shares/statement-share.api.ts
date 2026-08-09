@@ -73,25 +73,38 @@ export type StatementCsvDownload = {
   filename: string;
 };
 
-function extractFilename(contentDisposition: string | undefined): string {
+export type StatementExportFormat = 'csv' | 'pdf';
+
+function extractFilename(contentDisposition: string | undefined, fallback: string): string {
   const match = contentDisposition?.match(/filename="([^"]+)"/);
 
-  return match?.[1] ?? 'statement.csv';
+  return match?.[1] ?? fallback;
+}
+
+export async function downloadStatementPreviewExport(
+  walletId: string,
+  payload: CreateStatementSharePayload,
+  format: StatementExportFormat,
+): Promise<StatementCsvDownload> {
+  try {
+    const response = await axios.post<Blob>(
+      `/api/wallets/${walletId}/statement-shares?preview=true&format=${format}`,
+      payload,
+      { responseType: 'blob' },
+    );
+
+    return {
+      blob: response.data,
+      filename: extractFilename(response.headers['content-disposition'], `statement.${format}`),
+    };
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, 'wallet.settings.shares.downloadErrorFallback'));
+  }
 }
 
 export async function downloadStatementPreviewCsv(
   walletId: string,
   payload: CreateStatementSharePayload,
 ): Promise<StatementCsvDownload> {
-  try {
-    const response = await axios.post<Blob>(
-      `/api/wallets/${walletId}/statement-shares?preview=true&format=csv`,
-      payload,
-      { responseType: 'blob' },
-    );
-
-    return { blob: response.data, filename: extractFilename(response.headers['content-disposition']) };
-  } catch (error) {
-    throw new Error(getApiErrorMessage(error, 'wallet.settings.shares.downloadErrorFallback'));
-  }
+  return downloadStatementPreviewExport(walletId, payload, 'csv');
 }

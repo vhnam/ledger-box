@@ -13,15 +13,15 @@ Update an existing SPDD (Structured Prompt-Driven Development) prompt file with 
 
 ```
 # Update with architectural principles
-/spdd-prompt-update @spdd/prompt/GGQPA-XXX-202603131758-[Feat]-api-token-usage-billing.md
+/spdd-prompt-update @docs/spdd/prompt/GGQPA-XXX-202603131758-[Feat]-api-token-usage-billing.md
 Add three-layer architecture with dependency inversion principle
 
 # Update with new requirements
-/spdd-prompt-update @spdd/prompt/GGQPA-XXX-202603131758-[Feat]-api-token-usage-billing.md
+/spdd-prompt-update @docs/spdd/prompt/GGQPA-XXX-202603131758-[Feat]-api-token-usage-billing.md
 Add support for batch usage submission
 
 # Update specific section
-/spdd-prompt-update @spdd/prompt/GGQPA-XXX-202603131758-[Feat]-api-token-usage-billing.md
+/spdd-prompt-update @docs/spdd/prompt/GGQPA-XXX-202603131758-[Feat]-api-token-usage-billing.md
 Update Safeguards section to add rate limiting constraints
 ```
 
@@ -31,7 +31,7 @@ Update Safeguards section to add rate limiting constraints
 
    a. **If no prompt file provided**, use the **AskUserQuestion tool** to ask:
 
-   > "Please provide the path to the SPDD prompt file to update (e.g., `@spdd/prompt/xxx.md`)"
+   > "Please provide the path to the SPDD prompt file to update (e.g., `@docs/spdd/prompt/xxx.md`)"
 
    b. **If no update instructions provided**, use the **AskUserQuestion tool** to ask:
 
@@ -107,7 +107,7 @@ Update Safeguards section to add rate limiting constraints
 8. **Show update summary**
 
    ```
-   ✅ SPDD prompt updated: `spdd/prompt/<file-name>.md`
+   ✅ SPDD prompt updated: `docs/spdd/prompt/<file-name>.md`
 
    📋 Changes made:
    - [Section]: [Summary of changes]
@@ -175,7 +175,7 @@ This command supports the iterative refinement cycle in SPDD:
 │                                                                          │
 │  Create: /spdd-reasons-canvas                                           │
 │  ┌────────────────────────────────────────────────────────────────┐    │
-│  │ Business Context → REASONS Canvas → spdd/prompt/*.md            │    │
+│  │ Business Context → REASONS Canvas → docs/spdd/prompt/*.md     │    │
 │  └────────────────────────────────────────────────────────────────┘    │
 │                              │                                          │
 │                              ▼                                          │

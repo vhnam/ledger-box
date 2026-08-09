@@ -1,7 +1,9 @@
 import type { Config, Context } from '@netlify/functions';
 
+import { FILTER_OPTIONS } from '#/constants/filter-options.ts';
 import { auth } from '#/lib/auth/auth.ts';
 import { db } from '#/lib/db/index.ts';
+import { resolvePeriodBounds } from '#/utils/wallet/period-bounds.ts';
 
 import { activityAffectsActiveShare } from './lib/activity-statement-overlap.ts';
 import { ApiErrors, apiError } from './lib/api-error-response.ts';
@@ -47,32 +49,40 @@ export default async (request: Request, context: Context) => {
   const page = Math.max(1, Number.parseInt(url.searchParams.get('page') ?? '1', 10) || 1);
   const pageSize = Math.min(100, Math.max(1, Number.parseInt(url.searchParams.get('pageSize') ?? '20', 10) || 20));
   const offset = (page - 1) * pageSize;
+  const filter = url.searchParams.get('filter') ?? FILTER_OPTIONS.ALL_TIME;
+  const from = url.searchParams.get('from');
+  const to = url.searchParams.get('to');
+  const bounds = resolvePeriodBounds(ownership.wallet.timezone, filter, from ?? undefined, to ?? undefined);
+
+  let itemsQuery = db
+    .selectFrom('walletActivityLog')
+    .select([
+      'id',
+      'actorUserId',
+      'actorEmail',
+      'entityType',
+      'entityId',
+      'action',
+      'beforeJson',
+      'afterJson',
+      'walletAmountDelta',
+      'createdAt',
+    ])
+    .where('walletId', '=', walletId);
+
+  let countQuery = db
+    .selectFrom('walletActivityLog')
+    .select((eb) => eb.fn.count('id').as('count'))
+    .where('walletId', '=', walletId);
+
+  if (bounds) {
+    itemsQuery = itemsQuery.where('createdAt', '>=', bounds.start).where('createdAt', '<', bounds.endExclusive);
+    countQuery = countQuery.where('createdAt', '>=', bounds.start).where('createdAt', '<', bounds.endExclusive);
+  }
 
   const [rows, countResult, shares] = await Promise.all([
-    db
-      .selectFrom('walletActivityLog')
-      .select([
-        'id',
-        'actorUserId',
-        'actorEmail',
-        'entityType',
-        'entityId',
-        'action',
-        'beforeJson',
-        'afterJson',
-        'walletAmountDelta',
-        'createdAt',
-      ])
-      .where('walletId', '=', walletId)
-      .orderBy('createdAt', 'desc')
-      .limit(pageSize)
-      .offset(offset)
-      .execute(),
-    db
-      .selectFrom('walletActivityLog')
-      .select((eb) => eb.fn.count('id').as('count'))
-      .where('walletId', '=', walletId)
-      .executeTakeFirst(),
+    itemsQuery.orderBy('createdAt', 'desc').limit(pageSize).offset(offset).execute(),
+    countQuery.executeTakeFirst(),
     db
       .selectFrom('walletStatementShare')
       .select(['periodFrom', 'periodTo', 'snapshotAt', 'revokedAt', 'expiresAt'])

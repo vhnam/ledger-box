@@ -7,6 +7,7 @@ import { getPageItems } from '#/utils/pagination';
 
 import { formatErrorMessage } from '#/lib/locale/intl-message';
 
+import type { StatementExportFormat } from '#/queries/statement-shares/statement-share.api';
 import type {
   CreateStatementSharePayload,
   CreateStatementShareResponse,
@@ -14,7 +15,7 @@ import type {
 } from '#/queries/statement-shares/statement-share.dto';
 import {
   useCreateStatementShare,
-  useDownloadStatementPreviewCsv,
+  useDownloadStatementPreviewExport,
   usePreviewStatementShare,
   useRevokeStatementShare,
 } from '#/queries/statement-shares/statement-share.mutations';
@@ -54,7 +55,7 @@ export function useWalletSettingsStatementSharesActions({ wallet }: UseWalletSet
   const { mutate: preview, isPending: isPreviewing } = usePreviewStatementShare(wallet.id);
   const { mutate: createShare, isPending: isCreating } = useCreateStatementShare(wallet.id);
   const { mutate: revokeShare } = useRevokeStatementShare(wallet.id);
-  const { mutate: downloadCsv, isPending: isDownloading } = useDownloadStatementPreviewCsv(wallet.id);
+  const { mutate: downloadExport, isPending: isDownloading } = useDownloadStatementPreviewExport(wallet.id);
 
   const [periodFrom, setPeriodFrom] = useState<string | undefined>(undefined);
   const [periodTo, setPeriodTo] = useState<string | undefined>(undefined);
@@ -94,7 +95,7 @@ export function useWalletSettingsStatementSharesActions({ wallet }: UseWalletSet
     });
   }
 
-  function handleDownloadCsv() {
+  function handleDownloadExport(format: StatementExportFormat) {
     setError(null);
     const payload = buildPayload();
 
@@ -102,21 +103,32 @@ export function useWalletSettingsStatementSharesActions({ wallet }: UseWalletSet
       return;
     }
 
-    downloadCsv(payload, {
-      onSuccess: ({ blob, filename }) => {
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = filename;
-        link.click();
-        URL.revokeObjectURL(url);
+    downloadExport(
+      { payload, format },
+      {
+        onSuccess: ({ blob, filename }) => {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = filename;
+          link.click();
+          URL.revokeObjectURL(url);
+        },
+        onError: (downloadError) => {
+          const message =
+            downloadError instanceof Error ? downloadError.message : 'wallet.settings.shares.downloadErrorFallback';
+          setError(message);
+        },
       },
-      onError: (downloadError) => {
-        const message =
-          downloadError instanceof Error ? downloadError.message : 'wallet.settings.shares.downloadErrorFallback';
-        setError(message);
-      },
-    });
+    );
+  }
+
+  function handleDownloadCsv() {
+    handleDownloadExport('csv');
+  }
+
+  function handleDownloadPdf() {
+    handleDownloadExport('pdf');
   }
 
   function handleCreate() {
@@ -208,6 +220,7 @@ export function useWalletSettingsStatementSharesActions({ wallet }: UseWalletSet
     handlePreview,
     handleCreate,
     handleDownloadCsv,
+    handleDownloadPdf,
     handleRevoke,
     resetCreateFlow,
   };

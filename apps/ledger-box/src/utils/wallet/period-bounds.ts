@@ -106,6 +106,25 @@ function dayBounds(parts: ZonedDateParts, timezone: string): PeriodBounds {
   };
 }
 
+/** ISO weekday for a calendar Y-M-D: 1 = Monday … 7 = Sunday. */
+function getIsoWeekday(parts: ZonedDateParts): number {
+  const day = new Date(Date.UTC(parts.year, parts.month - 1, parts.day)).getUTCDay();
+
+  return day === 0 ? 7 : day;
+}
+
+/** Monday (ISO week start) of the week containing `parts`. */
+function mondayOfWeek(parts: ZonedDateParts): ZonedDateParts {
+  return addDaysToParts(parts, 1 - getIsoWeekday(parts));
+}
+
+function weekBoundsFromMonday(monday: ZonedDateParts, timezone: string): PeriodBounds {
+  return {
+    start: startOfDayUtc(monday, timezone),
+    endExclusive: startOfDayUtc(addDaysToParts(monday, 7), timezone),
+  };
+}
+
 function monthBounds(parts: ZonedDateParts, timezone: string): PeriodBounds {
   const start = zonedWallTimeToUtc(parts.year, parts.month - 1, 1, 0, 0, 0, timezone);
   const nextMonth =
@@ -130,6 +149,17 @@ export function resolvePeriodBounds(
   switch (filter) {
     case FILTER_OPTIONS.TODAY:
       return dayBounds(getZonedDateParts(referenceNow, timezone), timezone);
+    case FILTER_OPTIONS.THIS_WEEK: {
+      const monday = mondayOfWeek(getZonedDateParts(referenceNow, timezone));
+
+      return weekBoundsFromMonday(monday, timezone);
+    }
+    case FILTER_OPTIONS.LAST_WEEK: {
+      const thisMonday = mondayOfWeek(getZonedDateParts(referenceNow, timezone));
+      const lastMonday = addDaysToParts(thisMonday, -7);
+
+      return weekBoundsFromMonday(lastMonday, timezone);
+    }
     case FILTER_OPTIONS.THIS_MONTH:
       return monthBounds(getZonedDateParts(referenceNow, timezone), timezone);
     case FILTER_OPTIONS.LAST_MONTH: {

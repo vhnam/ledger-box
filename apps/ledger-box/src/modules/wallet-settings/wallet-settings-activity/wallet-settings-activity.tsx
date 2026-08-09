@@ -3,11 +3,13 @@ import { FormattedMessage, useIntl, type IntlShape } from 'react-intl';
 
 import { Badge } from '@vhnam/ui/components/badge';
 import { Button } from '@vhnam/ui/components/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@vhnam/ui/components/card';
+import { DatePickerRange } from '@vhnam/ui/components/date-picker-range';
 import { Icon } from '@vhnam/ui/components/icon';
-import { Spinner } from '@vhnam/ui/components/spinner';
+import { Skeleton } from '@vhnam/ui/components/skeleton';
+import { ToggleGroup, ToggleGroupItem } from '@vhnam/ui/components/toggle-group';
+import { cn } from '@vhnam/ui/lib/utils';
 
-import { formatCurrency } from '@vhnam/utils/currency';
+import { formatSignedCurrency } from '@vhnam/utils/currency';
 import { formatDateTime } from '@vhnam/utils/date';
 import type { SupportedLocale } from '@vhnam/utils/locale';
 
@@ -19,6 +21,9 @@ import type { ActivityLogItemDto } from '#/queries/activity/activity.dto';
 import { useWalletActivity } from '#/queries/activity/activity.queries';
 
 import { AppPagination } from '#/components/app-pagination';
+
+import { useWalletSettingsActivityFilters } from '#/modules/wallet-settings/wallet-settings-activity/wallet-settings-activity.actions';
+import { WalletEmpty } from '#/modules/wallets/wallet-empty';
 
 type WalletSettingsActivityProps = {
   walletId: string;
@@ -109,11 +114,11 @@ function ActivityRow({
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <li className="space-y-2 py-3 first:pt-0 last:pb-0">
-      <div className="flex items-start justify-between gap-3">
+    <div className="gap-4 rounded-lg border bg-card px-4 py-3 transition-all duration-100">
+      <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 space-y-1">
           <div className="flex flex-wrap items-center gap-2">
-            <p className="text-sm font-medium">{actionLabel(intl, item)}</p>
+            <p className="truncate text-sm font-medium">{actionLabel(intl, item)}</p>
             {item.affectsActiveStatementShare ? (
               <Badge variant="secondary">
                 <FormattedMessage
@@ -124,41 +129,78 @@ function ActivityRow({
             ) : null}
           </div>
           <p className="truncate text-sm text-muted-foreground">{entitySummary(item)}</p>
-          <p className="text-xs text-muted-foreground">
-            {item.actorEmail} · {formatDateTime(item.createdAt, undefined, locale)}
-            {item.walletAmountDelta != null && item.walletAmountDelta !== 0
-              ? ` · ${formatCurrency(item.walletAmountDelta, { currency, locale })}`
-              : null}
+          <p className="font-mono text-xs text-muted-foreground">
+            {formatDateTime(item.createdAt, undefined, locale)} · {item.actorEmail}
           </p>
         </div>
-        <Button variant="ghost" size="sm" onClick={() => setExpanded((value) => !value)}>
-          <Icon name={expanded ? 'CaretUpIcon' : 'CaretDownIcon'} />
-          {expanded ? (
-            <FormattedMessage id="wallet.settings.activity.hide" defaultMessage="Hide" />
-          ) : (
-            <FormattedMessage id="wallet.settings.activity.details" defaultMessage="Details" />
-          )}
-        </Button>
+        <div className="flex shrink-0 flex-col items-end gap-2">
+          {item.walletAmountDelta != null && item.walletAmountDelta !== 0 ? (
+            <p
+              className={cn(
+                'font-mono text-sm font-medium',
+                item.walletAmountDelta > 0 ? 'text-emerald-500' : 'text-rose-500',
+              )}
+            >
+              {formatSignedCurrency(
+                Math.abs(item.walletAmountDelta),
+                item.walletAmountDelta > 0 ? 'income' : 'expense',
+                {
+                  currency,
+                  locale,
+                },
+              )}
+            </p>
+          ) : null}
+          <Button variant="ghost" size="sm" onClick={() => setExpanded((value) => !value)}>
+            <Icon name={expanded ? 'CaretUpIcon' : 'CaretDownIcon'} />
+            {expanded ? (
+              <FormattedMessage id="wallet.settings.activity.hide" defaultMessage="Hide" />
+            ) : (
+              <FormattedMessage id="wallet.settings.activity.details" defaultMessage="Details" />
+            )}
+          </Button>
+        </div>
       </div>
       {expanded ? (
-        <div className="rounded-md bg-muted/40 p-3 text-xs">
+        <div className="mt-3 rounded-md bg-muted/40 p-3 text-xs">
           <pre className="overflow-x-auto whitespace-pre-wrap break-all">
             {JSON.stringify({ before: item.before, after: item.after }, null, 2)}
           </pre>
         </div>
       ) : null}
-    </li>
+    </div>
   );
 }
 
 function WalletSettingsActivity({ walletId, currency }: WalletSettingsActivityProps) {
-  const [page, setPage] = useState(1);
+  const intl = useIntl();
   const locale = useAppLocale();
-  const { data, isPending, isError } = useWalletActivity(walletId, page, true);
+  const {
+    filterBy,
+    setFilterBy,
+    dateRange,
+    setDateRange,
+    filterPreview,
+    isDateRangeFilter,
+    filterOptions,
+    page,
+    setPage,
+    activityQuery,
+  } = useWalletSettingsActivityFilters();
+  const { data, isPending, isError } = useWalletActivity(walletId, activityQuery, true);
+  const totalResults = data?.total ?? 0;
   const totalPages = data ? Math.max(1, Math.ceil(data.total / data.pageSize)) : 1;
   const pageItems = useMemo(() => getPageItems(page, totalPages), [page, totalPages]);
   const canGoPrevious = page > 1;
   const canGoNext = page < totalPages;
+  const showPagination = totalPages > 1;
+  const resultLabel =
+    totalResults === 1
+      ? intl.formatMessage({ id: 'wallet.settings.activity.resultOne', defaultMessage: '1 result' })
+      : intl.formatMessage(
+          { id: 'wallet.settings.activity.resultOther', defaultMessage: '{count} results' },
+          { count: totalResults },
+        );
 
   function goToPage(nextPage: number) {
     if (nextPage < 1 || nextPage > totalPages) {
@@ -182,48 +224,99 @@ function WalletSettingsActivity({ walletId, currency }: WalletSettingsActivityPr
         </p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            <FormattedMessage id="wallet.settings.activity.title" defaultMessage="Activity" />
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {isPending ? (
-            <div className="flex justify-center py-6">
-              <Spinner className="size-6 text-muted-foreground" />
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2.5 rounded-xl border border-border bg-card p-3 md:p-4">
+          <p className="text-xs text-muted-foreground">
+            <FormattedMessage id="wallet.actions.period" defaultMessage="Period" />
+          </p>
+          <ToggleGroup
+            value={[filterBy]}
+            onValueChange={(values) => {
+              const nextValue = values.at(-1);
+              if (!nextValue) {
+                return;
+              }
+              setFilterBy(nextValue as typeof filterBy);
+            }}
+            variant="outline"
+            size="sm"
+            spacing={1}
+            className="flex w-full flex-wrap rounded-xl bg-muted/50 p-1"
+          >
+            {filterOptions.map((option) => (
+              <ToggleGroupItem
+                key={option.value}
+                value={option.value}
+                className={cn(
+                  'grow border-0 px-2.5 sm:grow-0',
+                  'aria-pressed:bg-background aria-pressed:text-foreground aria-pressed:shadow-sm',
+                )}
+              >
+                <FormattedMessage id={option.labelId} defaultMessage={option.defaultLabel} />
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+
+          {isDateRangeFilter ? (
+            <DatePickerRange
+              value={dateRange}
+              onChange={setDateRange}
+              locale={locale}
+              placeholder={intl.formatMessage({
+                id: 'wallet.actions.dateRangePlaceholder',
+                defaultMessage: 'Choose dates',
+              })}
+            />
+          ) : null}
+
+          {filterPreview ? <p className="text-sm text-muted-foreground">{filterPreview}</p> : null}
+        </div>
+
+        {isPending && (
+          <div className="space-y-2">
+            {Array.from({ length: 10 }).map((_, index) => (
+              <Skeleton key={index} className="h-12 w-full" />
+            ))}
+          </div>
+        )}
+
+        {isError && (
+          <p className="text-sm text-destructive">
+            <FormattedMessage id="wallet.settings.activity.loadFailed" defaultMessage="Failed to load activity." />
+          </p>
+        )}
+
+        {!isPending && !isError && data.items.length > 0 && (
+          <div className="space-y-4">
+            <div className="flex items-end justify-between">
+              <span className="font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                <FormattedMessage id="wallet.settings.activity.title" defaultMessage="Activity" />
+              </span>
+              <span className="font-mono text-xs text-muted-foreground">{resultLabel}</span>
             </div>
-          ) : isError ? (
-            <p className="text-sm text-destructive">
-              <FormattedMessage id="wallet.settings.activity.loadFailed" defaultMessage="Failed to load activity." />
-            </p>
-          ) : data.items.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              <FormattedMessage id="wallet.settings.activity.empty" defaultMessage="No activity recorded yet." />
-            </p>
-          ) : (
-            <div className="flex flex-col gap-4">
-              <ul className="divide-y">
-                {data.items.map((item) => (
-                  <ActivityRow key={item.id} item={item} currency={currency} locale={locale} />
-                ))}
-              </ul>
-              {totalPages > 1 ? (
-                <AppPagination
-                  page={page}
-                  totalPages={totalPages}
-                  canGoPrevious={canGoPrevious}
-                  canGoNext={canGoNext}
-                  pageItems={pageItems}
-                  goToPage={goToPage}
-                  goToPreviousPage={() => goToPage(page - 1)}
-                  goToNextPage={() => goToPage(page + 1)}
-                />
-              ) : null}
+            <div className="space-y-4">
+              {data.items.map((item) => (
+                <ActivityRow key={item.id} item={item} currency={currency} locale={locale} />
+              ))}
             </div>
-          )}
-        </CardContent>
-      </Card>
+          </div>
+        )}
+
+        {!isPending && !isError && data.items.length === 0 && <WalletEmpty variant="activity" />}
+
+        {showPagination && (
+          <AppPagination
+            page={page}
+            totalPages={totalPages}
+            canGoPrevious={canGoPrevious}
+            canGoNext={canGoNext}
+            pageItems={pageItems}
+            goToPage={goToPage}
+            goToPreviousPage={() => goToPage(page - 1)}
+            goToNextPage={() => goToPage(page + 1)}
+          />
+        )}
+      </div>
     </div>
   );
 }

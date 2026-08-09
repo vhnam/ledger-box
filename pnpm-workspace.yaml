@@ -33,8 +33,10 @@ catalog:
   date-fns: ^4.4.0
   kysely: ^0.29.4
   next-themes: ^0.4.6
+  pdfkit: ^0.17.2
   playwright: ^1.62.1
   react-day-picker: ^10.0.1
+  "@types/pdfkit": ^0.17.3
   react-dom: ^19.2.8
   react-intl: ^7.1.11
   react: ^19.2.8
@@ -48,6 +50,7 @@ catalog:
   vite-plus: 0.2.8
   vite: npm:@voidzero-dev/vite-plus-core@0.2.8
   vitest: ^4.1.10
+  "@faker-js/faker": ^10.5.0
 
 catalogMode: prefer
 

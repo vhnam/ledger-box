@@ -73,11 +73,11 @@ export function useWalletActions() {
   const filterPreview = useMemo(() => {
     switch (search.filter) {
       case FILTER_OPTIONS.TODAY:
-        return formatDate(new Date(), undefined, locale);
+        return formatDate(new Date(), DateFormat.Medium, locale);
       case FILTER_OPTIONS.THIS_MONTH:
-        return formatDate(new Date(), DateFormat.Month, locale);
+        return formatDate(new Date(), DateFormat.MonthMedium, locale);
       case FILTER_OPTIONS.LAST_MONTH:
-        return formatDate(subMonths(new Date(), 1), DateFormat.Month, locale);
+        return formatDate(subMonths(new Date(), 1), DateFormat.MonthMedium, locale);
       default:
         return null;
     }

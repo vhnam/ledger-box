@@ -1,6 +1,13 @@
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { buttonVariants } from '@vhnam/ui/components/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@vhnam/ui/components/dropdown-menu';
 import { Icon } from '@vhnam/ui/components/icon';
 import { Spinner } from '@vhnam/ui/components/spinner';
 
@@ -28,14 +35,29 @@ function StatementPublicPage({ token }: StatementPublicPageProps) {
       <div className="flex items-center justify-between gap-3">
         <h1 className="font-heading text-lg font-medium">{data?.displayTitle ?? fallbackTitle}</h1>
         {data ? (
-          <a
-            href={`/api/public/statements/${token}?format=csv`}
-            download
-            className={buttonVariants({ variant: 'outline', size: 'sm' })}
-          >
-            <Icon name="DownloadIcon" />
-            <FormattedMessage id="statement.public.downloadCsv" defaultMessage="Download CSV" />
-          </a>
+          <DropdownMenu>
+            <DropdownMenuTrigger className={buttonVariants({ variant: 'outline', size: 'sm' })}>
+              <Icon name="DownloadIcon" />
+              <FormattedMessage id="statement.public.download" defaultMessage="Download" />
+              <Icon name="CaretDownIcon" className="size-3.5 opacity-70" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  nativeButton={false}
+                  render={<a href={`/api/public/statements/${token}?format=csv`} download />}
+                >
+                  <FormattedMessage id="statement.public.downloadCsv" defaultMessage="Download CSV" />
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  nativeButton={false}
+                  render={<a href={`/api/public/statements/${token}?format=pdf`} download />}
+                >
+                  <FormattedMessage id="statement.public.downloadPdf" defaultMessage="Download PDF" />
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         ) : null}
       </div>
 

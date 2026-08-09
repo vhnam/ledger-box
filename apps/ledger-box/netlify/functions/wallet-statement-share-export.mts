@@ -1,9 +1,16 @@
 import type { Config, Context } from '@netlify/functions';
 
+import { DEFAULT_LOCALE, isSupportedLocale, parseAcceptLanguage, type SupportedLocale } from '@vhnam/utils/locale';
+
 import { auth } from '#/lib/auth/auth.ts';
 import { db } from '#/lib/db/index.ts';
 import type { StatementSnapshot } from '#/lib/wallet/statement.ts';
-import { buildStatementCsvFilename, encodeStatementCsv } from '#/utils/wallet/statement-export.ts';
+import {
+  buildStatementCsvFilename,
+  buildStatementExportFilename,
+  encodeStatementCsv,
+  encodeStatementPdf,
+} from '#/utils/wallet/statement-export.ts';
 
 import { ApiErrors, apiError } from './lib/api-error-response.ts';
 import { getTenantId, requireOwnedWallet } from './lib/tenant-access.ts';
@@ -64,6 +71,23 @@ export default async (request: Request, context: Context) => {
   }
 
   const snapshot = share.snapshotJson as StatementSnapshot;
+  const formatParam = new URL(request.url).searchParams.get('format');
+  const format = formatParam === 'pdf' ? 'pdf' : 'csv';
+  const parsedLocale = parseAcceptLanguage(request.headers.get('accept-language'));
+  const locale: SupportedLocale = isSupportedLocale(parsedLocale) ? parsedLocale : DEFAULT_LOCALE;
+
+  if (format === 'pdf') {
+    const body = await encodeStatementPdf(snapshot, share.displayTitle, { locale });
+    const filename = buildStatementExportFilename(snapshot, wallet.name, 'pdf');
+
+    return new Response(Buffer.from(body), {
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `attachment; filename="${filename}"`,
+      },
+    });
+  }
+
   const filename = buildStatementCsvFilename(snapshot, wallet.name);
 
   return new Response(encodeStatementCsv(snapshot, share.displayTitle), {

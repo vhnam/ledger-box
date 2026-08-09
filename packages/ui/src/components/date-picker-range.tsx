@@ -3,7 +3,8 @@
 import { useId, useState } from 'react';
 import { type DateRange } from 'react-day-picker';
 
-import { DateFormat, formatDate, type DateFormat as DateFormatType } from '@vhnam/utils/date';
+import { DateFormat, formatDate, LOCALE_DATE_FNS_LOCALE, type DateFormat as DateFormatType } from '@vhnam/utils/date';
+import type { SupportedLocale } from '@vhnam/utils/locale';
 
 import { Button } from '#/components/button';
 import { Calendar } from '#/components/calendar';
@@ -24,10 +25,15 @@ type DatePickerRangeProps = {
   buttonClassName?: string;
   numberOfMonths?: number;
   dateFormat?: DateFormatType;
+  locale?: SupportedLocale;
   align?: 'start' | 'center' | 'end';
 };
 
-function formatRangeLabel(dateRange: DateRange | undefined, dateFormat: DateFormatType): React.ReactNode {
+function formatRangeLabel(
+  dateRange: DateRange | undefined,
+  dateFormat: DateFormatType,
+  locale?: SupportedLocale,
+): React.ReactNode {
   if (!dateRange?.from) {
     return null;
   }
@@ -35,12 +41,12 @@ function formatRangeLabel(dateRange: DateRange | undefined, dateFormat: DateForm
   if (dateRange.to) {
     return (
       <>
-        {formatDate(dateRange.from, dateFormat)} - {formatDate(dateRange.to, dateFormat)}
+        {formatDate(dateRange.from, dateFormat, locale)} - {formatDate(dateRange.to, dateFormat, locale)}
       </>
     );
   }
 
-  return formatDate(dateRange.from, dateFormat);
+  return formatDate(dateRange.from, dateFormat, locale);
 }
 
 function DatePickerRange({
@@ -55,12 +61,14 @@ function DatePickerRange({
   buttonClassName,
   numberOfMonths = 2,
   dateFormat = DateFormat.Numeric,
+  locale,
   align = 'start',
 }: DatePickerRangeProps) {
   const generatedId = useId();
   const id = idProp ?? generatedId;
   const [internalValue, setInternalValue] = useState<DateRange | undefined>(defaultValue);
   const dateRange = value ?? internalValue;
+  const dayPickerLocale = locale ? LOCALE_DATE_FNS_LOCALE[locale] : undefined;
 
   const handleSelect = (nextRange: DateRange | undefined) => {
     if (value === undefined) {
@@ -84,7 +92,9 @@ function DatePickerRange({
               className={cn('justify-start px-2.5 font-normal', buttonClassName)}
             >
               <Icon name="CalendarBlankIcon" data-icon="inline-start" />
-              {formatRangeLabel(dateRange, dateFormat) ?? <span className="text-muted-foreground">{placeholder}</span>}
+              {formatRangeLabel(dateRange, dateFormat, locale) ?? (
+                <span className="text-muted-foreground">{placeholder}</span>
+              )}
             </Button>
           }
         />
@@ -96,6 +106,7 @@ function DatePickerRange({
             onSelect={handleSelect}
             numberOfMonths={numberOfMonths}
             disabled={disabled}
+            locale={dayPickerLocale}
           />
         </PopoverContent>
       </Popover>
