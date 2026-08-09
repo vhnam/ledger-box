@@ -6,6 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-26 — Wallet actions polish, activity date filter, statement PDF export](docs/changelogs/mr-26-wallet-actions-activity-filter-pdf-export.md)
+
+#### Added
+
+- Activity log period filter (`filter` / `from` / `to` on
+  `GET /api/wallets/:walletId/activity`) with this-week / last-week presets and
+  URL-backed UI in Wallet Settings → Activity.
+- Statement PDF export (`?format=pdf`) on public, preview, and share-export
+  routes via `pdfkit` + vendored Noto Sans; Download CSV/PDF chooser on all
+  previous CSV surfaces.
+- Rewritten `db:seed` (faker, multi-currency, activity-aware writes); SPDD docs
+  under `docs/spdd/`; hook/docs banning AI commit co-author attribution.
+
+#### Changed
+
+- Wallet-page period filter UX and locale-aware date-range / period preview;
+  i18n strings for weeks, period controls, and PDF chrome/download labels.
+
 ### [mr-25 — Settings/wallet-settings card polish, mobile nav dropdown, theme fade](docs/changelogs/mr-25-settings-ui-polish.md)
 
 #### Added
