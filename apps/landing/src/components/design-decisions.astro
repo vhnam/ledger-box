@@ -1,0 +1,58 @@
+---
+const designDecisions = [
+  {
+    title: 'No spending categories or tags',
+    description:
+      'The transaction description is free text and carries that information. Categories add friction at entry time and a taxonomy to maintain, and this project cares about balances and accountability rather than spending analysis.',
+  },
+  {
+    title: 'Statements are snapshots, not live views',
+    description:
+      'A statement is a document you hand to someone, so its numbers are frozen when it’s generated and labelled with that timestamp. Correcting something means issuing a new statement, not silently changing an old one.',
+  },
+  {
+    title: 'Soft deletes everywhere',
+    description:
+      'Wallets, transactions, and members are never hard-deleted, so a balance can always be reconciled against its history. Attachments are the one exception — deleting one removes the file from object storage permanently.',
+  },
+  {
+    title: 'Timezone lives on the wallet',
+    description:
+      'Period boundaries are computed server-side from the wallet’s timezone rather than the viewer’s clock, so "this month" means the same thing to everyone looking at the same wallet.',
+  },
+];
+---
+
+<section id="design-decisions" class="border-border border-t">
+  <div class="mx-auto max-w-6xl px-6 py-20 sm:py-24">
+    <div class="grid gap-10 lg:grid-cols-2 lg:items-center">
+      <div>
+        <h2 class="font-heading text-foreground text-3xl font-semibold sm:text-4xl">Design decisions</h2>
+        <p class="text-foreground/70 mt-4 max-w-2xl text-lg">
+          Some things are deliberately absent. If you're evaluating this against other finance apps, these are the
+          trade-offs.
+        </p>
+      </div>
+      <img
+        src="/illustrations/design-choices.svg"
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        width="400"
+        height="280"
+        class="mx-auto w-full max-w-sm object-contain lg:max-w-md"
+      />
+    </div>
+
+    <dl class="mt-12 grid gap-x-12 gap-y-10 sm:grid-cols-2">
+      {
+        designDecisions.map((decision) => (
+          <div>
+            <dt class="font-heading text-foreground text-lg font-semibold">{decision.title}</dt>
+            <dd class="text-foreground/70 mt-2 text-sm leading-relaxed">{decision.description}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
