@@ -1,11 +1,16 @@
 import type { Config, Context } from '@netlify/functions';
 
-import { parseAcceptLanguage } from '@vhnam/utils/locale';
+import { isSupportedLocale, parseAcceptLanguage, DEFAULT_LOCALE, type SupportedLocale } from '@vhnam/utils/locale';
 
 import { db } from '#/lib/db/index.ts';
 import type { StatementSnapshot } from '#/lib/wallet/statement.ts';
 import { hashShareToken } from '#/utils/wallet/share-token.ts';
-import { buildStatementCsvFilename, encodeStatementCsv } from '#/utils/wallet/statement-export.ts';
+import {
+  buildStatementCsvFilename,
+  buildStatementExportFilename,
+  encodeStatementCsv,
+  encodeStatementPdf,
+} from '#/utils/wallet/statement-export.ts';
 
 import { ApiErrors, apiError } from './lib/api-error-response.ts';
 
@@ -97,15 +102,28 @@ export default async (request: Request, context: Context) => {
     .execute();
 
   const format = new URL(request.url).searchParams.get('format');
+  const snapshot = share.snapshotJson as StatementSnapshot;
+  const parsedLocale = parseAcceptLanguage(request.headers.get('accept-language'));
+  const locale: SupportedLocale = isSupportedLocale(parsedLocale) ? parsedLocale : DEFAULT_LOCALE;
 
   if (format === 'csv') {
-    const snapshot = share.snapshotJson as StatementSnapshot;
     const filename = buildStatementCsvFilename(snapshot, share.displayTitle ?? 'statement');
-    const locale = parseAcceptLanguage(request.headers.get('accept-language'));
 
     return new Response(encodeStatementCsv(snapshot, share.displayTitle, { locale }), {
       headers: {
         'Content-Type': 'text/csv; charset=utf-8',
+        'Content-Disposition': `attachment; filename="${filename}"`,
+      },
+    });
+  }
+
+  if (format === 'pdf') {
+    const body = await encodeStatementPdf(snapshot, share.displayTitle, { locale });
+    const filename = buildStatementExportFilename(snapshot, share.displayTitle ?? 'statement', 'pdf');
+
+    return new Response(Buffer.from(body), {
+      headers: {
+        'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="${filename}"`,
       },
     });

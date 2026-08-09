@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vite-plus/test';
 
 import type { StatementSnapshot } from '#/lib/wallet/statement';
 
-import { buildStatementCsvFilename, encodeStatementCsv } from './statement-export';
+import { buildStatementCsvFilename, buildStatementExportFilename, encodeStatementCsv } from './statement-export';
+import { encodeStatementPdf } from './statement-export-pdf';
 
 function makeSnapshot(overrides: Partial<StatementSnapshot> = {}): StatementSnapshot {
   return {
@@ -71,5 +72,30 @@ describe('buildStatementCsvFilename', () => {
     const filename = buildStatementCsvFilename(makeSnapshot({ periodFrom: null, periodTo: null }), '$$$');
 
     expect(filename).toBe('statement-statement-all-time-202608081234.csv');
+  });
+});
+
+describe('buildStatementExportFilename', () => {
+  it('uses the pdf extension when requested', () => {
+    const filename = buildStatementExportFilename(makeSnapshot(), 'My Wallet', 'pdf');
+
+    expect(filename).toBe('statement-My-Wallet-2026-08-01_2026-08-08-202608081234.pdf');
+  });
+});
+
+describe('encodeStatementPdf', () => {
+  it('returns a PDF byte stream starting with %PDF', async () => {
+    const pdf = await encodeStatementPdf(makeSnapshot(), 'My Wallet', { locale: 'en-US' });
+    const header = new TextDecoder().decode(pdf.slice(0, 4));
+
+    expect(header).toBe('%PDF');
+  });
+
+  it('handles Vietnamese titles and empty periods without throwing', async () => {
+    const pdf = await encodeStatementPdf(makeSnapshot({ periodFrom: null, periodTo: null, rows: [] }), 'Ví tiền mặt', {
+      locale: 'vi-VN',
+    });
+
+    expect(new TextDecoder().decode(pdf.slice(0, 4))).toBe('%PDF');
   });
 });

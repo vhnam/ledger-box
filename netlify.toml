@@ -3,6 +3,10 @@ command = "pnpm install --frozen-lockfile && pnpm --filter @vhnam/ledger-box bui
 publish = "apps/ledger-box/dist"
 functions = "apps/ledger-box/netlify/functions"
 
+[functions]
+node_bundler = "esbuild"
+included_files = ["apps/ledger-box/assets/fonts/**"]
+
 [build.environment]
 NODE_VERSION = "24"
 

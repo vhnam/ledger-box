@@ -2,6 +2,13 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import { Badge } from '@vhnam/ui/components/badge';
 import { Button, buttonVariants } from '@vhnam/ui/components/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@vhnam/ui/components/dropdown-menu';
 import { Icon } from '@vhnam/ui/components/icon';
 
 import { formatDate, formatRelative } from '@vhnam/utils/date';
@@ -54,6 +61,8 @@ function WalletStatementShareRow({ walletId, share, onRevoke }: WalletStatementS
       )
     : intl.formatMessage({ id: 'wallet.settings.shares.row.notYetViewed', defaultMessage: 'Not yet viewed' });
 
+  const exportBase = `/api/wallets/${walletId}/statement-shares/${share.id}/export`;
+
   return (
     <li className="flex items-center justify-between gap-3 py-3">
       <div className="min-w-0">
@@ -75,14 +84,23 @@ function WalletStatementShareRow({ walletId, share, onRevoke }: WalletStatementS
         </p>
       </div>
       <div className="flex items-center gap-1">
-        <a
-          href={`/api/wallets/${walletId}/statement-shares/${share.id}/export`}
-          download
-          className={buttonVariants({ variant: 'ghost', size: 'sm' })}
-        >
-          <Icon name="DownloadIcon" />
-          <FormattedMessage id="wallet.settings.shares.row.download" defaultMessage="Download" />
-        </a>
+        <DropdownMenu>
+          <DropdownMenuTrigger className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
+            <Icon name="DownloadIcon" />
+            <FormattedMessage id="wallet.settings.shares.row.download" defaultMessage="Download" />
+            <Icon name="CaretDownIcon" className="size-3.5 opacity-70" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuGroup>
+              <DropdownMenuItem nativeButton={false} render={<a href={`${exportBase}?format=csv`} download />}>
+                <FormattedMessage id="wallet.settings.shares.row.downloadCsv" defaultMessage="Download CSV" />
+              </DropdownMenuItem>
+              <DropdownMenuItem nativeButton={false} render={<a href={`${exportBase}?format=pdf`} download />}>
+                <FormattedMessage id="wallet.settings.shares.row.downloadPdf" defaultMessage="Download PDF" />
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
         {share.isActive ? (
           <Button variant="ghost" size="sm" onClick={() => onRevoke(share.id)}>
             <Icon name="ProhibitIcon" />
