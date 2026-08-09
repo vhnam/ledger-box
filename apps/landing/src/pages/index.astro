@@ -1,0 +1,24 @@
+---
+import DesignDecisions from '#/components/design-decisions.astro';
+import Features from '#/components/features.astro';
+import Hero from '#/components/hero.astro';
+import HowItWorks from '#/components/how-it-works.astro';
+import Nav from '#/components/nav.astro';
+import SiteFooter from '#/components/site-footer.astro';
+import Situation from '#/components/situation.astro';
+import BaseLayout from '#/layouts/base-layout.astro';
+---
+
+<BaseLayout>
+  <Nav />
+
+  <main id="top">
+    <Hero />
+    <Situation />
+    <HowItWorks />
+    <Features />
+    <DesignDecisions />
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
