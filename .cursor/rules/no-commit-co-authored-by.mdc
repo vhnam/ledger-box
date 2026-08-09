@@ -1,0 +1,14 @@
+---
+description: Do not add AI co-author attribution to commits or PRs
+alwaysApply: true
+---
+
+# No commit / PR co-author attribution
+
+When creating git commits or pull requests:
+
+- Do **not** add `Co-authored-by:` trailers of any kind (including Cursor, Cursor Agent, or similar).
+- Do **not** add `Made-with: Cursor`, `Made with Cursor`, or other AI attribution footers.
+- Keep the commit/PR body limited to the human-authored message only.
+
+If a tool or template suggests adding attribution, omit it.
