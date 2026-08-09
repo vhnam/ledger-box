@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-27 — Landing page](docs/changelogs/mr-27-landing-page.md)
+
+#### Added
+
+- `apps/landing` (`@vhnam/landing`): Astro 7 site for the Ledger Box marketing page,
+  using `@vhnam/ui` design tokens and `@astrojs/react` for a mobile-nav island only.
+  Wired into `vp run -r build`.
+
 ### [mr-26 — Wallet actions polish, activity date filter, statement PDF export](docs/changelogs/mr-26-wallet-actions-activity-filter-pdf-export.md)
 
 #### Added
