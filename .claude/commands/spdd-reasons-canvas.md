@@ -417,13 +417,13 @@ Input can be provided in two ways:
    - `GGQPA-169-202603061530-[Fix]-service-payment-validation.md`
 
    b. **Create directory and write file**:
-   - Ensure directory `spdd/prompt/` exists under the project root (create if not)
-   - Write the complete, fully-populated structured prompt to `spdd/prompt/<file-name>.md`
+   - Ensure directory `docs/spdd/prompt/` exists (create if not)
+   - Write the complete, fully-populated structured prompt to `docs/spdd/prompt/<file-name>.md`
 
    c. **Show summary to user**:
 
    ```
-   ✅ REASONS-Canvas prompt generated and saved to `spdd/prompt/<file-name>.md`
+   ✅ REASONS-Canvas prompt generated and saved to `docs/spdd/prompt/<file-name>.md`
 
    📋 Generated sections:
    - Requirements: [1-line summary]
@@ -441,7 +441,7 @@ Input can be provided in two ways:
 
 **Output**
 
-A fully-populated, implementation-ready REASONS-Canvas structured prompt saved to `spdd/prompt/<file-name>.md`, then implementation upon user confirmation.
+A fully-populated, implementation-ready REASONS-Canvas structured prompt saved to `docs/spdd/prompt/<file-name>.md`, then implementation upon user confirmation.
 
 **Guardrails**
 
@@ -452,7 +452,7 @@ A fully-populated, implementation-ready REASONS-Canvas structured prompt saved t
 - Do NOT implement code before user confirms the structured prompt
 - File name MUST follow SPDD naming convention defined above
 - Use `GGQPA-XXX` if JIRA ticket number cannot be extracted from context
-- Always create `spdd/prompt/` directory if it does not exist
+- Always create `docs/spdd/prompt/` directory if it does not exist
 - Read codebase context when needed to generate accurate entity models and implementation tasks
 - Ensure all sections are logically coherent and support the business requirement
 - Operations section MUST contain specific, executable implementation tasks with detailed method signatures and logic

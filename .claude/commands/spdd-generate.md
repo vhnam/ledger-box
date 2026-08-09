@@ -7,7 +7,7 @@ description: Generate code from a structured SPDD prompt file following the REAS
 
 Generate implementation code from a structured SPDD (Structured Prompt-Driven Development) prompt file, strictly following the Operations sequence and coding norms defined in the prompt.
 
-**Input**: The argument after `/spdd-generate` is the path to the structured prompt file (e.g., `@spdd/prompt/GGQPA-XXX-202602271430-[Feat]-api-create-agent-endpoint.md`).
+**Input**: The argument after `/spdd-generate` is the path to the structured prompt file (e.g., `@docs/spdd/prompt/GGQPA-XXX-202602271430-[Feat]-api-create-agent-endpoint.md`).
 
 **Steps**
 
@@ -15,7 +15,7 @@ Generate implementation code from a structured SPDD (Structured Prompt-Driven De
 
    Use the **AskUserQuestion tool** to ask:
 
-   > "Please provide the path to the structured prompt file (e.g., `@spdd/prompt/xxx.md`)."
+   > "Please provide the path to the structured prompt file (e.g., `@docs/spdd/prompt/xxx.md`)."
 
    **IMPORTANT**: Do NOT proceed without a valid prompt file path.
 
@@ -212,7 +212,7 @@ This command is the third phase of the SPDD workflow:
 │  ┌────────────────────────────────────────────────────────────────┐    │
 │  │ Enriched Context → REASONS Canvas → Structured Prompt          │    │
 │  │                                                                 │    │
-│  │ Output: spdd/prompt/GGQPA-XXX-*.md (REASONS Canvas)           │    │
+│  │ Output: docs/spdd/prompt/GGQPA-XXX-*.md (REASONS Canvas)    │    │
 │  └────────────────────────────────────────────────────────────────┘    │
 │                              │                                          │
 │                              ▼                                          │
