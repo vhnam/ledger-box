@@ -61,9 +61,8 @@ import {
   XIcon,
   type IconWeight,
 } from '@phosphor-icons/react';
+import { cn } from 'cn';
 import type { ComponentPropsWithoutRef, ComponentType } from 'react';
-
-import { cn } from '#/lib/utils';
 
 /**
  * Curated registry — do not `import *` from `@phosphor-icons/react`.
