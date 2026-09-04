@@ -1,9 +1,9 @@
 import { Toast as ToastPrimitive } from '@base-ui/react/toast';
-import { cn } from 'cn';
 import * as React from 'react';
 
 import { Icon } from '#/components/icon';
 import { Button } from '#/components/ui/button';
+import { cn } from '#/lib/cn';
 
 const toast = ToastPrimitive.createToastManager();
 
@@ -69,14 +69,20 @@ function ToastContent({ className, ...props }: ToastPrimitive.Content.Props) {
 }
 
 function ToastTitle({ className, ...props }: ToastPrimitive.Title.Props) {
-  return <ToastPrimitive.Title data-slot="toast-title" className={cn('text-sm font-medium', className)} {...props} />;
+  return (
+    <ToastPrimitive.Title
+      data-slot="toast-title"
+      className={cn('truncate text-sm font-medium', className)}
+      {...props}
+    />
+  );
 }
 
 function ToastDescription({ className, ...props }: ToastPrimitive.Description.Props) {
   return (
     <ToastPrimitive.Description
       data-slot="toast-description"
-      className={cn('text-sm text-muted-foreground', className)}
+      className={cn('line-clamp-2 text-sm break-words text-muted-foreground', className)}
       {...props}
     />
   );

@@ -1,8 +1,8 @@
 import { Select as SelectPrimitive } from '@base-ui/react/select';
-import { cn } from 'cn';
 import * as React from 'react';
 
 import { Icon } from '#/components/icon';
+import { cn } from '#/lib/cn';
 
 const Select = SelectPrimitive.Root;
 
