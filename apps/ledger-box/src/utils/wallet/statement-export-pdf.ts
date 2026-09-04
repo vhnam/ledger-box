@@ -94,7 +94,7 @@ export async function encodeStatementPdf(
   const allTimeLabel = labels.formatMessage({ id: 'statement.snapshot.allTime', defaultMessage: 'All time' });
   const periodFromLabel = formatPdfDate(snapshot.periodFrom, snapshot.timezone, locale);
   const periodToLabel = formatPdfDate(snapshot.periodTo, snapshot.timezone, locale);
-  const periodLabel = periodFromLabel && periodToLabel ? `${periodFromLabel} – ${periodToLabel}` : allTimeLabel;
+  const periodLabel = periodFromLabel && periodToLabel ? `${periodFromLabel} - ${periodToLabel}` : allTimeLabel;
 
   const generatedLabel = labels.formatMessage(
     { id: 'statement.snapshot.generated', defaultMessage: 'Generated {date}' },

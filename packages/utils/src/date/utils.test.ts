@@ -204,7 +204,7 @@ describe('getTodayRange', () => {
 });
 
 describe('getThisWeekRange', () => {
-  it('returns the ISO week (Monday–Sunday) containing the reference date', () => {
+  it('returns the ISO week (Monday-Sunday) containing the reference date', () => {
     const wednesday = new Date(2026, 6, 15, 19, 30);
     const { start, end } = getThisWeekRange(wednesday);
 

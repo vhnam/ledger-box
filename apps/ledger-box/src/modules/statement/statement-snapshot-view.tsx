@@ -25,7 +25,7 @@ function StatementSnapshotView({ snapshot }: StatementSnapshotViewProps) {
 
   const periodFromLabel = formatSnapshotDate(snapshot.periodFrom, snapshot.timezone, locale);
   const periodToLabel = formatSnapshotDate(snapshot.periodTo, snapshot.timezone, locale);
-  const periodLabel = periodFromLabel && periodToLabel ? `${periodFromLabel} – ${periodToLabel}` : allTimeLabel;
+  const periodLabel = periodFromLabel && periodToLabel ? `${periodFromLabel} - ${periodToLabel}` : allTimeLabel;
 
   const generatedDate = new Intl.DateTimeFormat(locale, {
     dateStyle: 'medium',
