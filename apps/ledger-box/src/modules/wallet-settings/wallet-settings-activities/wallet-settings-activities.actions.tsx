@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 
 import type { DatePickerRangeValue } from '@vhnam/ui/components/date-picker-range';
 
-import { DateFormat, format, formatDate, parseISO, subMonths } from '@vhnam/utils/date';
+import { DateFormat, format, formatDate, getThisWeekRange, parseISO, subMonths } from '@vhnam/utils/date';
 
 import { ACTIVITY_FILTER_OPTIONS_LIST, FILTER_OPTIONS, type FilterOptionValue } from '#/constants/filter-options';
 
@@ -13,7 +13,7 @@ import { useAppLocale } from '#/lib/locale/locale-context';
 
 import type { ActivityQueryParams } from '#/queries/activity/activity.params';
 
-const activityRouteApi = getRouteApi('/_app/wallets/$walletId/settings/activity');
+const activitiesRouteApi = getRouteApi('/_app/wallets/$walletId/settings/activities');
 
 function toIsoDate(date: Date): string {
   return format(date, 'yyyy-MM-dd');
@@ -54,9 +54,9 @@ function mondayOfLocalWeek(reference: Date): Date {
   return monday;
 }
 
-export function useWalletSettingsActivityFilters() {
-  const search = activityRouteApi.useSearch();
-  const navigate = activityRouteApi.useNavigate();
+export function useWalletSettingsActivitiesFilters() {
+  const search = activitiesRouteApi.useSearch();
+  const navigate = activitiesRouteApi.useNavigate();
   const locale = useAppLocale();
 
   const updateSearch = (next: Partial<WalletActivitySearch>) => {
@@ -94,10 +94,24 @@ export function useWalletSettingsActivityFilters() {
   const activityQuery = useMemo(() => toActivityQuery(search), [search]);
 
   const setFilterBy = (filterBy: FilterOptionValue) => {
+    if (filterBy === FILTER_OPTIONS.DATE_RANGE) {
+      const week = getThisWeekRange();
+
+      updateSearch({
+        filter: filterBy,
+        page: undefined,
+        from: toIsoDate(week.start),
+        to: toIsoDate(week.end),
+      });
+
+      return;
+    }
+
     updateSearch({
       filter: filterBy,
       page: undefined,
-      ...(filterBy === FILTER_OPTIONS.DATE_RANGE ? {} : { from: undefined, to: undefined }),
+      from: undefined,
+      to: undefined,
     });
   };
 

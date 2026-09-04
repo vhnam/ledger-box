@@ -2,13 +2,13 @@ import { Navigate } from '@tanstack/react-router';
 
 import { useWallet, useWallets } from '#/queries/wallets/wallet.queries';
 
-import { WalletSettingsActivity } from './wallet-settings-activity';
+import { WalletSettingsActivities } from './wallet-settings-activities';
 
-type WalletSettingsActivityRouteProps = {
+type WalletSettingsActivitiesRouteProps = {
   walletId: string;
 };
 
-function WalletSettingsActivityRoute({ walletId }: WalletSettingsActivityRouteProps) {
+function WalletSettingsActivitiesRoute({ walletId }: WalletSettingsActivitiesRouteProps) {
   const { data: wallets } = useWallets();
   const { data: wallet } = useWallet(walletId);
   const walletPreview = wallet ?? wallets?.find((item) => item.id === walletId);
@@ -21,7 +21,7 @@ function WalletSettingsActivityRoute({ walletId }: WalletSettingsActivityRoutePr
     return <Navigate to="/wallets/$walletId/settings/general" params={{ walletId }} replace />;
   }
 
-  return <WalletSettingsActivity walletId={walletPreview.id} currency={walletPreview.currency} />;
+  return <WalletSettingsActivities walletId={walletPreview.id} currency={walletPreview.currency} />;
 }
 
-export { WalletSettingsActivityRoute };
+export { WalletSettingsActivitiesRoute };

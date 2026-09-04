@@ -31,7 +31,7 @@ type SettingsSection = {
   icon: IconName;
   to:
     | '/wallets/$walletId/settings/general'
-    | '/wallets/$walletId/settings/activity'
+    | '/wallets/$walletId/settings/activities'
     | '/wallets/$walletId/settings/members'
     | '/wallets/$walletId/settings/statement-shares';
   ownerOnly: boolean;
@@ -47,11 +47,11 @@ const SETTINGS_SECTIONS: SettingsSection[] = [
     ownerOnly: false,
   },
   {
-    value: 'activity',
-    labelId: 'wallet.shell.settings.activity',
-    defaultLabel: 'Activity',
+    value: 'activities',
+    labelId: 'wallet.shell.settings.activities',
+    defaultLabel: 'Activities',
     icon: 'ClockCounterClockwiseIcon',
-    to: '/wallets/$walletId/settings/activity',
+    to: '/wallets/$walletId/settings/activities',
     ownerOnly: true,
   },
   {
