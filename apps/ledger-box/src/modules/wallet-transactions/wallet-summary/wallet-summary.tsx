@@ -47,13 +47,13 @@ const toneStyles: Record<WalletSummaryTone, { value: string; icon: string; iconB
 };
 
 const negativeTextStyles = {
-  value: 'text-rose-500',
-  icon: 'text-rose-500',
-  iconBackground: 'bg-rose-500/10',
-  label: 'text-rose-500',
+  value: 'text-orange-400',
+  icon: 'text-orange-400',
+  iconBackground: 'bg-orange-400/10',
+  label: 'text-orange-400',
 };
 
-const negativeCardClassName = 'bg-rose-500/10 border-rose-500/30';
+const negativeCardClassName = 'bg-orange-400/10 border-orange-400/30';
 
 type WalletSummaryProps = {
   walletId: string;
