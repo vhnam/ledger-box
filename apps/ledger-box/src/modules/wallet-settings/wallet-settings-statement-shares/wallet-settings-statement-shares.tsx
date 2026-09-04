@@ -5,7 +5,7 @@ import { DatePickerRange } from '@vhnam/ui/components/date-picker-range';
 import { Icon } from '@vhnam/ui/components/icon';
 import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
 import { Button, buttonVariants } from '@vhnam/ui/components/ui/button';
-import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@vhnam/ui/components/ui/card';
+import { Card, CardContent } from '@vhnam/ui/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +15,7 @@ import {
 } from '@vhnam/ui/components/ui/dropdown-menu';
 import { Field, FieldError, FieldLabel } from '@vhnam/ui/components/ui/field';
 import { Input } from '@vhnam/ui/components/ui/input';
+import { Skeleton } from '@vhnam/ui/components/ui/skeleton';
 import { Spinner } from '@vhnam/ui/components/ui/spinner';
 import { toast } from '@vhnam/ui/components/ui/toast';
 
@@ -42,6 +43,7 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
   const [dialogOpen, setDialogOpen] = useState(false);
   const {
     shares,
+    totalResults,
     isLoadingShares,
     page,
     totalPages,
@@ -92,6 +94,14 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
     });
   }
 
+  const showPagination = totalPages > 1;
+  const resultLabel =
+    totalResults === 1
+      ? intl.formatMessage({ id: 'wallet.settings.shares.resultOne', defaultMessage: '1 result' })
+      : intl.formatMessage(
+          { id: 'wallet.settings.shares.resultOther', defaultMessage: '{count} results' },
+          { count: totalResults },
+        );
   const hasUnsavedInput = !createdLink && Boolean(periodFrom || periodTo || displayTitle);
 
   function handleDismissAttempt() {
@@ -117,56 +127,70 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
           <p className="text-sm text-muted-foreground">
             <FormattedMessage
               id="wallet.settings.shares.description"
-              defaultMessage="Share a read-only, revocable statement for a date range, without sign-in."
+              defaultMessage="Share a statement. No sign-in required."
             />
           </p>
         </div>
 
         <Card>
-          <CardHeader>
-            <CardTitle>
-              <FormattedMessage id="wallet.settings.shares.title" defaultMessage="Statement links" />
-            </CardTitle>
-            <CardAction>
-              <Button variant="secondary" size="sm" onClick={() => setDialogOpen(true)}>
-                <Icon name="ShareIcon" />
-                <FormattedMessage id="wallet.settings.shares.cta" defaultMessage="Share statement" />
-              </Button>
-            </CardAction>
-          </CardHeader>
-          <CardContent>
-            {isLoadingShares ? (
-              <div className="flex justify-center py-6">
-                <Spinner className="size-6 text-muted-foreground" />
-              </div>
-            ) : shares.length > 0 ? (
-              <div className="flex flex-col gap-4">
-                <ul className="divide-y divide-border">
-                  {shares.map((share) => (
-                    <WalletStatementShareRow
-                      key={share.id}
-                      walletId={wallet.id}
-                      share={share}
-                      onRevoke={handleRevoke}
-                    />
-                  ))}
-                </ul>
-                {totalPages > 1 ? (
-                  <AppPagination
-                    page={page}
-                    totalPages={totalPages}
-                    canGoPrevious={canGoPrevious}
-                    canGoNext={canGoNext}
-                    pageItems={pageItems}
-                    goToPage={goToPage}
-                    goToPreviousPage={goToPreviousPage}
-                    goToNextPage={goToNextPage}
-                  />
-                ) : null}
-              </div>
-            ) : null}
+          <CardContent className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="min-w-0 text-sm text-muted-foreground sm:truncate">
+              <FormattedMessage
+                id="wallet.settings.shares.description"
+                defaultMessage="Share a statement. No sign-in required."
+              />
+            </p>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="w-full shrink-0 sm:w-auto"
+              onClick={() => setDialogOpen(true)}
+            >
+              <Icon name="ShareIcon" />
+              <FormattedMessage id="wallet.settings.shares.cta" defaultMessage="Share statement" />
+            </Button>
           </CardContent>
         </Card>
+
+        <div className="flex flex-col gap-4">
+          <div className="flex items-end justify-between gap-3">
+            <span className="font-display text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              <FormattedMessage id="wallet.settings.shares.title" defaultMessage="Statement links" />
+            </span>
+            <div className="flex items-center gap-3">
+              {!isLoadingShares ? <span className="font-mono text-xs text-muted-foreground">{resultLabel}</span> : null}
+            </div>
+          </div>
+
+          {isLoadingShares ? (
+            <div className="space-y-2">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <Skeleton key={index} className="h-12 w-full" />
+              ))}
+            </div>
+          ) : null}
+
+          {!isLoadingShares && shares.length > 0 ? (
+            <ul className="space-y-4">
+              {shares.map((share) => (
+                <WalletStatementShareRow key={share.id} walletId={wallet.id} share={share} onRevoke={handleRevoke} />
+              ))}
+            </ul>
+          ) : null}
+
+          {showPagination ? (
+            <AppPagination
+              page={page}
+              totalPages={totalPages}
+              canGoPrevious={canGoPrevious}
+              canGoNext={canGoNext}
+              pageItems={pageItems}
+              goToPage={goToPage}
+              goToPreviousPage={goToPreviousPage}
+              goToNextPage={goToNextPage}
+            />
+          ) : null}
+        </div>
       </div>
 
       <ResponsiveDialog
@@ -182,7 +206,7 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
             <p className="text-sm text-muted-foreground">
               <FormattedMessage
                 id="wallet.settings.shares.dialog.createdHint"
-                defaultMessage="Copy this link now — it will not be shown again. Anyone with this link can view the statement until it expires or is revoked."
+                defaultMessage="Copy this link now - it will not be shown again. Anyone with this link can view the statement until it expires or is revoked."
               />
             </p>
             <div className="flex items-center gap-2">

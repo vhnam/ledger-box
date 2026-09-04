@@ -2,7 +2,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import { Icon } from '@vhnam/ui/components/icon';
 import { Badge } from '@vhnam/ui/components/ui/badge';
-import { Button, buttonVariants } from '@vhnam/ui/components/ui/button';
+import { Button } from '@vhnam/ui/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -64,9 +64,9 @@ function WalletStatementShareRow({ walletId, share, onRevoke }: WalletStatementS
   const exportBase = `/api/wallets/${walletId}/statement-shares/${share.id}/export`;
 
   return (
-    <li className="flex items-center justify-between gap-3 py-3">
+    <li className="flex items-start justify-between gap-4 rounded-lg border bg-card px-4 py-3">
       <div className="min-w-0">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 mb-1">
           <p className="truncate text-sm font-medium">
             {share.displayTitle ??
               intl.formatMessage({
@@ -77,19 +77,23 @@ function WalletStatementShareRow({ walletId, share, onRevoke }: WalletStatementS
           <Badge variant={statusVariant}>{statusLabel}</Badge>
         </div>
         <p className="text-xs text-muted-foreground">
-          {formatDate(share.periodFrom, undefined, locale)} – {formatDate(share.periodTo, undefined, locale)}
+          {formatDate(share.periodFrom, undefined, locale)} - {formatDate(share.periodTo, undefined, locale)}
         </p>
         <p className="text-xs text-muted-foreground">
           {lastViewedLabel} · {viewsLabel}
         </p>
       </div>
-      <div className="flex items-center gap-1">
+      <div className="flex shrink-0 items-center gap-2">
         <DropdownMenu>
-          <DropdownMenuTrigger className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
-            <Icon name="DownloadIcon" />
-            <FormattedMessage id="wallet.settings.shares.row.download" defaultMessage="Download" />
-            <Icon name="CaretDownIcon" className="size-3.5 opacity-70" />
-          </DropdownMenuTrigger>
+          <DropdownMenuTrigger
+            render={
+              <Button variant="outline" size="sm">
+                <Icon name="DownloadIcon" />
+                <FormattedMessage id="wallet.settings.shares.row.download" defaultMessage="Download" />
+                <Icon name="CaretDownIcon" className="size-3.5 opacity-70" />
+              </Button>
+            }
+          />
           <DropdownMenuContent align="end">
             <DropdownMenuGroup>
               <DropdownMenuItem nativeButton={false} render={<a href={`${exportBase}?format=csv`} download />}>
@@ -102,7 +106,7 @@ function WalletStatementShareRow({ walletId, share, onRevoke }: WalletStatementS
           </DropdownMenuContent>
         </DropdownMenu>
         {share.isActive ? (
-          <Button variant="ghost" size="sm" onClick={() => onRevoke(share.id)}>
+          <Button variant="destructive" size="sm" onClick={() => onRevoke(share.id)}>
             <Icon name="ProhibitIcon" />
             <FormattedMessage id="wallet.settings.shares.row.revoke" defaultMessage="Revoke" />
           </Button>

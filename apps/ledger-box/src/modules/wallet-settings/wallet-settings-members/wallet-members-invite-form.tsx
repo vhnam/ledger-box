@@ -94,7 +94,7 @@ function WalletMembersInviteForm({
             <span className="font-medium text-foreground">
               <FormattedMessage id={option.labelId} defaultMessage={option.defaultLabel} />
             </span>
-            {' — '}
+            {' - '}
             <FormattedMessage id={option.descriptionId} defaultMessage={option.defaultDescription} />
           </span>
         ))}
