@@ -1,10 +1,10 @@
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Button } from '@vhnam/ui/components/button';
-import { FieldError } from '@vhnam/ui/components/field';
 import { Icon } from '@vhnam/ui/components/icon';
 import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
-import { Spinner } from '@vhnam/ui/components/spinner';
+import { Button } from '@vhnam/ui/components/ui/button';
+import { FieldError } from '@vhnam/ui/components/ui/field';
+import { Spinner } from '@vhnam/ui/components/ui/spinner';
 
 import { formatErrorMessage } from '#/lib/locale/intl-message';
 

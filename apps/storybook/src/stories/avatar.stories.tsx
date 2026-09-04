@@ -7,7 +7,7 @@ import {
   AvatarGroup,
   AvatarGroupCount,
   AvatarImage,
-} from '@vhnam/ui/components/avatar';
+} from '@vhnam/ui/components/ui/avatar';
 
 import { sampleAvatarDataUri } from '../fixtures/sample-avatar';
 

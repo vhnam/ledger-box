@@ -1,12 +1,12 @@
 import { Field as FormField, Form, reset } from '@formisch/react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Button } from '@vhnam/ui/components/button';
-import { Field, FieldError, FieldGroup, FieldLabel } from '@vhnam/ui/components/field';
 import { Icon } from '@vhnam/ui/components/icon';
-import { Input } from '@vhnam/ui/components/input';
 import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
-import { Spinner } from '@vhnam/ui/components/spinner';
+import { Button } from '@vhnam/ui/components/ui/button';
+import { Field, FieldError, FieldGroup, FieldLabel } from '@vhnam/ui/components/ui/field';
+import { Input } from '@vhnam/ui/components/ui/input';
+import { Spinner } from '@vhnam/ui/components/ui/spinner';
 
 import { formatErrorMessage } from '#/lib/locale/intl-message';
 

@@ -1,9 +1,16 @@
 import { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import { Button } from '@vhnam/ui/components/button';
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@vhnam/ui/components/empty';
 import { Icon } from '@vhnam/ui/components/icon';
+import { Button } from '@vhnam/ui/components/ui/button';
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@vhnam/ui/components/ui/empty';
 
 import { CreateWalletDialog } from '#/modules/wallets/wallet-create-dialog';
 
@@ -23,7 +30,7 @@ function WalletEmpty({ variant = 'wallets' }: WalletEmptyProps) {
           <EmptyMedia variant="icon">
             <Icon name="ArrowsLeftRightIcon" />
           </EmptyMedia>
-          <EmptyTitle className="font-heading text-lg">
+          <EmptyTitle className="font-display text-lg">
             <FormattedMessage id="wallet.empty.transactions.title" defaultMessage="No transactions yet" />
           </EmptyTitle>
           <EmptyDescription>
@@ -44,7 +51,7 @@ function WalletEmpty({ variant = 'wallets' }: WalletEmptyProps) {
           <EmptyMedia variant="icon">
             <Icon name="ClockCounterClockwiseIcon" />
           </EmptyMedia>
-          <EmptyTitle className="font-heading text-lg">
+          <EmptyTitle className="font-display text-lg">
             <FormattedMessage id="wallet.empty.activity.title" defaultMessage="No activity recorded yet" />
           </EmptyTitle>
           <EmptyDescription>
@@ -65,7 +72,7 @@ function WalletEmpty({ variant = 'wallets' }: WalletEmptyProps) {
           <EmptyMedia variant="icon">
             <Icon name="WalletIcon" />
           </EmptyMedia>
-          <EmptyTitle className="font-heading text-lg">
+          <EmptyTitle className="font-display text-lg">
             <FormattedMessage id="wallet.empty.wallets.title" defaultMessage="No wallets yet" />
           </EmptyTitle>
           <EmptyDescription>

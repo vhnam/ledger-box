@@ -11,7 +11,7 @@ import {
   SelectSeparator,
   SelectTrigger,
   SelectValue,
-} from '@vhnam/ui/components/select';
+} from '@vhnam/ui/components/ui/select';
 
 const meta = {
   title: 'Components/Select',

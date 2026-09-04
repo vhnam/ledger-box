@@ -1,6 +1,6 @@
 import { FormattedMessage } from 'react-intl';
 
-import { Spinner } from '@vhnam/ui/components/spinner';
+import { Spinner } from '@vhnam/ui/components/ui/spinner';
 
 import { useTransactions } from '#/queries/transactions/transaction.queries';
 import { useWallet, useWallets } from '#/queries/wallets/wallet.queries';

@@ -9,7 +9,7 @@
     @apply bg-background text-foreground;
   }
   html {
-    @apply font-sans;
+    @apply font-body;
   }
 
   button:not(:disabled),

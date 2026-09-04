@@ -27,7 +27,7 @@ import {
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
-} from '@vhnam/ui/components/sidebar';
+} from '@vhnam/ui/components/ui/sidebar';
 
 const items: { title: string; icon: IconName }[] = [
   { title: 'Home', icon: 'HouseIcon' },

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
 
-import { Button } from '@vhnam/ui/components/button';
+import { Button } from '@vhnam/ui/components/ui/button';
 
 const meta = {
   title: 'Components/Button',

@@ -12,7 +12,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
   SidebarTrigger,
-} from '@vhnam/ui/components/sidebar';
+} from '@vhnam/ui/components/ui/sidebar';
 
 import { AppSidebarSecondary } from '#/layouts/app-layout/app-sidebar-secondary';
 import { AppSidebarUser } from '#/layouts/app-layout/app-sidebar-user';
@@ -31,7 +31,7 @@ function AppSidebar(props: ComponentProps<typeof Sidebar>) {
                   <Link to="/">
                     <img src="/logo.svg" alt="Ledger Box" className="size-8" />
                     <div className="flex flex-col gap-0.5 leading-none group-data-[collapsible=icon]:hidden">
-                      <span className="font-heading font-medium">Ledger Box</span>
+                      <span className="font-display font-medium">Ledger Box</span>
                       <span className="text-xs text-muted-foreground">
                         <FormattedMessage id="brand.tagline" defaultMessage="Wallet Management" />
                       </span>

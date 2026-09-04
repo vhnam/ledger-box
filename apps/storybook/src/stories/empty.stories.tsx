@@ -1,8 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { Button } from '@vhnam/ui/components/button';
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@vhnam/ui/components/empty';
 import { Icon } from '@vhnam/ui/components/icon';
+import { Button } from '@vhnam/ui/components/ui/button';
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@vhnam/ui/components/ui/empty';
 
 const meta = {
   title: 'Components/Empty',

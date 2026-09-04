@@ -1,22 +1,22 @@
 import { useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Button, buttonVariants } from '@vhnam/ui/components/button';
-import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@vhnam/ui/components/card';
 import { DatePickerRange } from '@vhnam/ui/components/date-picker-range';
+import { Icon } from '@vhnam/ui/components/icon';
+import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
+import { Button, buttonVariants } from '@vhnam/ui/components/ui/button';
+import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@vhnam/ui/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@vhnam/ui/components/dropdown-menu';
-import { Field, FieldError, FieldLabel } from '@vhnam/ui/components/field';
-import { Icon } from '@vhnam/ui/components/icon';
-import { Input } from '@vhnam/ui/components/input';
-import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
-import { Spinner } from '@vhnam/ui/components/spinner';
-import { toast } from '@vhnam/ui/components/toast';
+} from '@vhnam/ui/components/ui/dropdown-menu';
+import { Field, FieldError, FieldLabel } from '@vhnam/ui/components/ui/field';
+import { Input } from '@vhnam/ui/components/ui/input';
+import { Spinner } from '@vhnam/ui/components/ui/spinner';
+import { toast } from '@vhnam/ui/components/ui/toast';
 
 import { format } from '@vhnam/utils/date';
 
@@ -110,7 +110,7 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
     <>
       <div className="flex flex-col gap-8">
         <div className="flex flex-col gap-1 border-b pb-4">
-          <h1 className="font-heading text-2xl font-semibold">
+          <h1 className="font-display text-2xl font-semibold">
             <FormattedMessage id="wallet.settings.shares.title" defaultMessage="Statement links" />
           </h1>
           <p className="text-sm text-muted-foreground">

@@ -2,10 +2,10 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { expect, waitFor, within } from 'storybook/test';
 
-import { Button } from '@vhnam/ui/components/button';
-import { Field, FieldLabel } from '@vhnam/ui/components/field';
-import { Input } from '@vhnam/ui/components/input';
 import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
+import { Button } from '@vhnam/ui/components/ui/button';
+import { Field, FieldLabel } from '@vhnam/ui/components/ui/field';
+import { Input } from '@vhnam/ui/components/ui/input';
 
 const meta = {
   title: 'Components/ResponsiveDialog',

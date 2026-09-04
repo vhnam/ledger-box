@@ -1,5 +1,7 @@
+import { cn } from 'cn';
 import { useIntl } from 'react-intl';
 
+import { Icon } from '@vhnam/ui/components/icon';
 import {
   Attachment,
   AttachmentAction,
@@ -9,9 +11,7 @@ import {
   AttachmentMedia,
   AttachmentTitle,
   AttachmentTrigger,
-} from '@vhnam/ui/components/attachment';
-import { Icon } from '@vhnam/ui/components/icon';
-import { cn } from '@vhnam/ui/lib/utils';
+} from '@vhnam/ui/components/ui/attachment';
 
 import {
   formatFileSize,

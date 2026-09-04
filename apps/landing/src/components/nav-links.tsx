@@ -1,4 +1,4 @@
-import { Button } from '@vhnam/ui/components/button';
+import { Button } from '@vhnam/ui/components/ui/button';
 
 type NavLink = {
   href: string;

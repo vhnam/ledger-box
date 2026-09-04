@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { Button } from '@vhnam/ui/components/button';
+import { Button } from '@vhnam/ui/components/ui/button';
 import {
   Card,
   CardAction,
@@ -9,7 +9,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@vhnam/ui/components/card';
+} from '@vhnam/ui/components/ui/card';
 
 const meta = {
   title: 'Components/Card',

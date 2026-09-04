@@ -1,7 +1,7 @@
+import { cn } from 'cn';
 import { FormattedMessage } from 'react-intl';
 
-import { SidebarTrigger } from '@vhnam/ui/components/sidebar';
-import { cn } from '@vhnam/ui/lib/utils';
+import { SidebarTrigger } from '@vhnam/ui/components/ui/sidebar';
 
 import { formatCurrency } from '@vhnam/utils/currency';
 
@@ -22,7 +22,7 @@ function WalletHeader({ wallet }: WalletHeaderProps) {
       <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
         <SidebarTrigger className="mr-2 md:hidden" />
         <div className="flex flex-col">
-          <h1 className="font-heading text-base font-medium">{wallet.name}</h1>
+          <h1 className="font-display text-base font-medium">{wallet.name}</h1>
           <p
             className={cn(
               'text-xs text-muted-foreground',

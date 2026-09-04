@@ -104,6 +104,8 @@
   "transaction.list.resultOne": "1 kết quả",
   "transaction.list.resultOther": "{count} kết quả",
   "transaction.list.pageOf": "Trang {page} / {totalPages}",
+  "pagination.next.text": "Tiếp theo",
+  "pagination.previous.text": "Trước",
   "transaction.add.title": "Giao dịch mới",
   "transaction.add.amount.label": "Số tiền",
   "transaction.add.amount.placeholder": "Nhập số tiền",

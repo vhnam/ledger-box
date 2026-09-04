@@ -2,7 +2,8 @@ import { Link, useNavigate } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@vhnam/ui/components/avatar';
+import { Icon } from '@vhnam/ui/components/icon';
+import { Avatar, AvatarFallback, AvatarImage } from '@vhnam/ui/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,12 +11,10 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@vhnam/ui/components/dropdown-menu';
-import { Icon } from '@vhnam/ui/components/icon';
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@vhnam/ui/components/sidebar';
-import { toast } from '@vhnam/ui/components/toast';
-
-import { getAvatarFallbackFromName } from '#/utils/avatar';
+} from '@vhnam/ui/components/ui/dropdown-menu';
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@vhnam/ui/components/ui/sidebar';
+import { toast } from '@vhnam/ui/components/ui/toast';
+import { getAvatarFallbackFromName } from '@vhnam/ui/lib/avatar';
 
 import { authClient, useSession } from '#/lib/auth/auth-client';
 

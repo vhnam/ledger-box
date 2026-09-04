@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { Input } from '@vhnam/ui/components/input';
-import { Label } from '@vhnam/ui/components/label';
+import { Input } from '@vhnam/ui/components/ui/input';
+import { Label } from '@vhnam/ui/components/ui/label';
 
 const meta = {
   title: 'Components/Label',

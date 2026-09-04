@@ -102,7 +102,7 @@ entry from `WalletShellLayout`'s `SETTINGS_SECTIONS`. `DeleteWalletDialog` (owne
    - Now imports `DeleteWalletDialog` (from `#/modules/wallets/delete-wallet-dialog`) and
      owns `const [openDeleteDialog, setOpenDeleteDialog] = useState(false)`, both moved
      from the deleted `WalletSettingsDangerZone`.
-   - Top-level layout: `<h1 className="font-heading border-b pb-4 text-2xl font-semibold">General</h1>`,
+   - Top-level layout: `<h1 className="font-display border-b pb-4 text-2xl font-semibold">General</h1>`,
      then a `border-b pb-8` wrapper containing an `h2` ("Wallet name") and the existing
      `Form`/`FieldGroup`/`FormField` name-update flow (unchanged `useWalletSettingsGeneralActions`
      logic; only the JSX around it changed — the Save `Button` moved from a right-aligned

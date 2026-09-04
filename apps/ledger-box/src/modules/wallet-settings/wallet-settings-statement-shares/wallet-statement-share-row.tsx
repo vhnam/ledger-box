@@ -1,15 +1,15 @@
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Badge } from '@vhnam/ui/components/badge';
-import { Button, buttonVariants } from '@vhnam/ui/components/button';
+import { Icon } from '@vhnam/ui/components/icon';
+import { Badge } from '@vhnam/ui/components/ui/badge';
+import { Button, buttonVariants } from '@vhnam/ui/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@vhnam/ui/components/dropdown-menu';
-import { Icon } from '@vhnam/ui/components/icon';
+} from '@vhnam/ui/components/ui/dropdown-menu';
 
 import { formatDate, formatRelative } from '@vhnam/utils/date';
 

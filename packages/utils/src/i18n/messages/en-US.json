@@ -104,6 +104,8 @@
   "transaction.list.resultOne": "1 result",
   "transaction.list.resultOther": "{count} results",
   "transaction.list.pageOf": "Page {page} of {totalPages}",
+  "pagination.next.text": "Next",
+  "pagination.previous.text": "Previous",
   "transaction.add.title": "New Transaction",
   "transaction.add.amount.label": "Amount",
   "transaction.add.amount.placeholder": "Enter the amount",

@@ -11,8 +11,8 @@ import {
   FieldSeparator,
   FieldSet,
   FieldTitle,
-} from '@vhnam/ui/components/field';
-import { Input } from '@vhnam/ui/components/input';
+} from '@vhnam/ui/components/ui/field';
+import { Input } from '@vhnam/ui/components/ui/input';
 
 const meta = {
   title: 'Components/Field',

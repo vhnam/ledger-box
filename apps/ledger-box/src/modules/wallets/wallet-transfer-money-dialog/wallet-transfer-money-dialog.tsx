@@ -2,16 +2,16 @@ import { Field as FormField, Form, isDirty } from '@formisch/react';
 import { useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Button } from '@vhnam/ui/components/button';
 import { CurrencyInput } from '@vhnam/ui/components/currency-input';
-import { DatePicker } from '@vhnam/ui/components/date-picker';
-import { Field, FieldError, FieldGroup, FieldLabel } from '@vhnam/ui/components/field';
 import { Icon } from '@vhnam/ui/components/icon';
-import { Input } from '@vhnam/ui/components/input';
 import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@vhnam/ui/components/select';
-import { Spinner } from '@vhnam/ui/components/spinner';
-import { Textarea } from '@vhnam/ui/components/textarea';
+import { Button } from '@vhnam/ui/components/ui/button';
+import { DatePicker } from '@vhnam/ui/components/ui/date-picker';
+import { Field, FieldError, FieldGroup, FieldLabel } from '@vhnam/ui/components/ui/field';
+import { Input } from '@vhnam/ui/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@vhnam/ui/components/ui/select';
+import { Spinner } from '@vhnam/ui/components/ui/spinner';
+import { Textarea } from '@vhnam/ui/components/ui/textarea';
 
 import type { TransferMoneyOutput } from '#/schemas/transfer-money.schema';
 

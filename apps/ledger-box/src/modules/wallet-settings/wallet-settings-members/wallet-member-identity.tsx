@@ -1,6 +1,6 @@
 import { FormattedMessage } from 'react-intl';
 
-import { Badge } from '@vhnam/ui/components/badge';
+import { Badge } from '@vhnam/ui/components/ui/badge';
 
 import type { WalletMemberDto } from '#/queries/wallets/wallet-member.dto';
 

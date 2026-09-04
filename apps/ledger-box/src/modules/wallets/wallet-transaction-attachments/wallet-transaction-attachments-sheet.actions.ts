@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 
-import { toast } from '@vhnam/ui/components/toast';
+import { toast } from '@vhnam/ui/components/ui/toast';
 
 import { isPreviewableContentType, isPreviewableFile } from '#/utils/attachments/file';
 import { optimizeImageForUpload } from '#/utils/attachments/image';

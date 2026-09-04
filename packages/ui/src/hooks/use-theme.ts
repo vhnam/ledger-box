@@ -1,1 +1,1 @@
-export { ThemeProvider, useTheme } from 'next-themes';
+export { useTheme } from 'next-themes';

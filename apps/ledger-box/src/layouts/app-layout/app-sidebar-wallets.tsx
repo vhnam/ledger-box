@@ -7,9 +7,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@vhnam/ui/components/sidebar';
-import { Skeleton } from '@vhnam/ui/components/skeleton';
-import { cn } from '@vhnam/ui/lib/utils';
+} from '@vhnam/ui/components/ui/sidebar';
+import { Skeleton } from '@vhnam/ui/components/ui/skeleton';
+import { cn } from '@vhnam/ui/lib/cn';
 
 import { formatCurrency } from '@vhnam/utils/currency';
 

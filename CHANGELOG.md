@@ -6,6 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-28 — shadcn `components/ui` layout, typefaces, Vite+ 0.3](docs/changelogs/mr-28-ui-shadcn-layout.md)
+
+#### Added
+
+- `@vhnam/ui` `PasswordInput` and `ButtonGroup`; `lib/cn`, `lib/theme`, and
+  `lib/avatar` package exports. Pagination next/previous catalog keys; Better
+  Auth agent skills.
+
+#### Changed
+
+- Primitives live under `components/ui` (`@vhnam/ui/components/ui/<name>`);
+  `ThemeProvider` is `@vhnam/ui/lib/theme`; class merging uses `cn`. Type tokens
+  `font-heading` / `font-sans` become `font-display` / `font-body` (Space Grotesk,
+  Geist Mono, JetBrains Mono). Catalog bump including Vite+ 0.3.0 and
+  `better-auth` ^1.7.2.
+
+#### Removed
+
+- App-local avatar helpers (`apps/ledger-box/src/utils/avatar`); `clsx` /
+  `tailwind-merge` and `@vhnam/ui/lib/utils`.
+
 ### [mr-27 — Landing page](docs/changelogs/mr-27-landing-page.md)
 
 #### Added

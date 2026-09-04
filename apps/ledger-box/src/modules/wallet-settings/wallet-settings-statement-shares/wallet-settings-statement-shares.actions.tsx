@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 
-import { toast } from '@vhnam/ui/components/toast';
+import { toast } from '@vhnam/ui/components/ui/toast';
 
 import { getPageItems } from '#/utils/pagination';
 

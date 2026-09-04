@@ -1,16 +1,16 @@
 import { Link, Outlet, useLocation, useNavigate } from '@tanstack/react-router';
+import { cn } from 'cn';
 import { useEffect } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Button } from '@vhnam/ui/components/button';
+import { Icon, type IconName } from '@vhnam/ui/components/icon';
+import { Button } from '@vhnam/ui/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@vhnam/ui/components/dropdown-menu';
-import { Icon, type IconName } from '@vhnam/ui/components/icon';
-import { cn } from '@vhnam/ui/lib/utils';
+} from '@vhnam/ui/components/ui/dropdown-menu';
 
 import { SectionShellLayout } from '#/layouts/section-shell-layout';
 

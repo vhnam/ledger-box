@@ -2,7 +2,7 @@ import { reset, useForm } from '@formisch/react';
 import { useState } from 'react';
 import { useIntl } from 'react-intl';
 
-import { toast } from '@vhnam/ui/components/toast';
+import { toast } from '@vhnam/ui/components/ui/toast';
 
 import { changePasswordSchema } from '#/schemas/auth.schema';
 

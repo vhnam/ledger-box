@@ -1,9 +1,9 @@
+import { cn } from 'cn';
 import { FormattedMessage } from 'react-intl';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@vhnam/ui/components/card';
 import { Icon, type IconName } from '@vhnam/ui/components/icon';
+import { Card, CardContent, CardHeader, CardTitle } from '@vhnam/ui/components/ui/card';
 import { useTheme } from '@vhnam/ui/hooks/use-theme';
-import { cn } from '@vhnam/ui/lib/utils';
 
 import { switchThemeWithTransition, type AppTheme } from '#/lib/theme';
 
@@ -104,7 +104,7 @@ function SettingsAppearance() {
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-1 border-b pb-4">
-        <h1 className="font-heading text-2xl font-semibold">
+        <h1 className="font-display text-2xl font-semibold">
           <FormattedMessage id="settings.appearance.title" defaultMessage="Appearance" />
         </h1>
         <p className="text-sm text-muted-foreground">

@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor, within } from 'storybook/test';
 
-import { Button } from '@vhnam/ui/components/button';
-import { toast, Toaster } from '@vhnam/ui/components/toast';
+import { Button } from '@vhnam/ui/components/ui/button';
+import { toast, Toaster } from '@vhnam/ui/components/ui/toast';
 
 const meta = {
   title: 'Components/Toast',

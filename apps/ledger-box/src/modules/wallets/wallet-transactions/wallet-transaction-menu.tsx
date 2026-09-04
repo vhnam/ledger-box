@@ -1,6 +1,7 @@
 import { FormattedMessage } from 'react-intl';
 
-import { Button } from '@vhnam/ui/components/button';
+import { Icon } from '@vhnam/ui/components/icon';
+import { Button } from '@vhnam/ui/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,8 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@vhnam/ui/components/dropdown-menu';
-import { Icon } from '@vhnam/ui/components/icon';
+} from '@vhnam/ui/components/ui/dropdown-menu';
 
 type WalletTransactionMenuProps = {
   onEdit: () => void;

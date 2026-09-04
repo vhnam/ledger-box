@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { expect, waitFor, within } from 'storybook/test';
 
-import { Button } from '@vhnam/ui/components/button';
+import { Button } from '@vhnam/ui/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -18,7 +18,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from '@vhnam/ui/components/dropdown-menu';
+} from '@vhnam/ui/components/ui/dropdown-menu';
 
 const meta = {
   title: 'Components/DropdownMenu',

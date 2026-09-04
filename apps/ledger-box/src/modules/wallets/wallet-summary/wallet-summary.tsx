@@ -1,8 +1,8 @@
+import { cn } from 'cn';
 import { FormattedMessage } from 'react-intl';
 
 import { Icon, type IconName } from '@vhnam/ui/components/icon';
-import { Skeleton } from '@vhnam/ui/components/skeleton';
-import { cn } from '@vhnam/ui/lib/utils';
+import { Skeleton } from '@vhnam/ui/components/ui/skeleton';
 
 import { formatCurrency } from '@vhnam/utils/currency';
 

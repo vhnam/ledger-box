@@ -1,9 +1,9 @@
 import { isDirty } from '@formisch/react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Button } from '@vhnam/ui/components/button';
 import { Icon } from '@vhnam/ui/components/icon';
 import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
+import { Button } from '@vhnam/ui/components/ui/button';
 
 import type { EditTransactionOutput } from '#/schemas/edit-transaction.schema';
 

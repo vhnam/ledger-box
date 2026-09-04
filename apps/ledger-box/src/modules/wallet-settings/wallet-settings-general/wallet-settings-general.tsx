@@ -2,11 +2,11 @@ import { Field as FormField, Form } from '@formisch/react';
 import { useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Button } from '@vhnam/ui/components/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@vhnam/ui/components/card';
-import { Field, FieldError, FieldGroup } from '@vhnam/ui/components/field';
-import { Input } from '@vhnam/ui/components/input';
-import { Spinner } from '@vhnam/ui/components/spinner';
+import { Button } from '@vhnam/ui/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@vhnam/ui/components/ui/card';
+import { Field, FieldError, FieldGroup } from '@vhnam/ui/components/ui/field';
+import { Input } from '@vhnam/ui/components/ui/input';
+import { Spinner } from '@vhnam/ui/components/ui/spinner';
 
 import { formatErrorMessage } from '#/lib/locale/intl-message';
 
@@ -28,7 +28,7 @@ function WalletSettingsGeneral({ wallet }: WalletSettingsGeneralProps) {
     <>
       <div className="flex flex-col gap-8">
         <div className="flex flex-col gap-1 border-b pb-4">
-          <h1 className="font-heading text-2xl font-semibold">
+          <h1 className="font-display text-2xl font-semibold">
             <FormattedMessage id="wallet.settings.general.title" defaultMessage="General" />
           </h1>
           <p className="text-sm text-muted-foreground">
