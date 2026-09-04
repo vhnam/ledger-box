@@ -6,6 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-29 — Transaction detail route, wallet module split, locale time zones](docs/changelogs/mr-29-transaction-detail-route.md)
+
+#### Added
+
+- Dedicated transaction page at `/wallets/:walletId/transactions/:transactionId`;
+  `useTransaction` for deep links. Locale IANA time zones via `@date-fns/tz`;
+  GitNexus agent skills.
+
+#### Changed
+
+- `modules/wallets` split into `layouts/` plus `wallet-transactions` /
+  `wallet-transaction-detail`. Dates format in the locale's zone, not the system
+  clock. UI/app `cn` imports go through `#/lib/cn` / `@vhnam/ui/lib/cn`.
+
+#### Removed
+
+- Transaction detail and attachments sheets; `@vhnam/ledger-box`'s direct `cn`
+  dependency.
+
 ### [mr-28 — shadcn `components/ui` layout, typefaces, Vite+ 0.3](docs/changelogs/mr-28-ui-shadcn-layout.md)
 
 #### Added
