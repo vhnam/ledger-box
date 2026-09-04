@@ -6,6 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-30 — Wallet settings lists, activities route, CodeBlock](docs/changelogs/mr-30-wallet-settings-ui.md)
+
+#### Added
+
+- `@vhnam/ui` `CodeBlock` (Shiki, dual theme) and Storybook story. Activities
+  route at `/wallets/:walletId/settings/activities`. Result-count catalog keys
+  for members and statement shares.
+
+#### Changed
+
+- Members, statement shares, and activities share card/skeleton list chrome.
+  Activity JSON uses `CodeBlock`. Date-range months stay in a row. Nested
+  scroll restoration; orange negative summary; nested transaction-detail
+  module; ASCII hyphens in copy.
+
+#### Removed
+
+- `/wallets/:walletId/settings/activity`.
+
 ### [mr-29 — Transaction detail route, wallet module split, locale time zones](docs/changelogs/mr-29-transaction-detail-route.md)
 
 #### Added
