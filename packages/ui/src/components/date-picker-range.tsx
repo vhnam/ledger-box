@@ -98,15 +98,21 @@ function DatePickerRange({
             </Button>
           }
         />
-        <PopoverContent className="w-auto p-0" align={align} aria-label={label ?? 'Choose date range'}>
+        <PopoverContent className="w-auto overflow-x-auto p-0" align={align} aria-label={label ?? 'Choose date range'}>
           <Calendar
             mode="range"
             defaultMonth={dateRange?.from}
             selected={dateRange}
             onSelect={handleSelect}
             numberOfMonths={numberOfMonths}
+            pagedNavigation={numberOfMonths > 1}
+            showOutsideDays={numberOfMonths === 1}
             disabled={disabled}
             locale={dayPickerLocale}
+            className={cn(
+              numberOfMonths > 1 &&
+                '[&_.rdp-months]:flex-row [&_.rdp-months]:flex-nowrap [&_.rdp-months]:gap-6 [&_.rdp-month]:w-auto',
+            )}
           />
         </PopoverContent>
       </Popover>
