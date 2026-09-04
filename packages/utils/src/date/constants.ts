@@ -144,3 +144,19 @@ export const LOCALE_DATE_FNS_LOCALE: Record<SupportedLocale, Locale> = {
   'zh-CN': zhCN,
   'zh-TW': zhTW,
 };
+
+/**
+ * IANA time zone each locale renders dates/times in, independent of the viewer's system
+ * clock — a `vi-VN` viewer should always see `Asia/Ho_Chi_Minh` wall-clock time, even from a
+ * browser set to a different zone. `en-US` has no single canonical zone; `America/New_York`
+ * (Eastern) is used as the representative default.
+ */
+export const LOCALE_TIMEZONE: Record<SupportedLocale, string> = {
+  'vi-VN': 'Asia/Ho_Chi_Minh',
+  'en-US': 'America/New_York',
+  'en-GB': 'Europe/London',
+  'ja-JP': 'Asia/Tokyo',
+  'fr-FR': 'Europe/Paris',
+  'zh-CN': 'Asia/Shanghai',
+  'zh-TW': 'Asia/Taipei',
+};

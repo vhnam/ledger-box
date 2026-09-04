@@ -1,6 +1,8 @@
+import { TZDate } from '@date-fns/tz';
 import {
   endOfDay,
   endOfMonth,
+  endOfWeek,
   format,
   formatDistanceToNow,
   formatISO,
@@ -10,6 +12,7 @@ import {
   parseISO,
   startOfDay,
   startOfMonth,
+  startOfWeek,
   subMonths,
 } from 'date-fns';
 
@@ -23,6 +26,7 @@ import {
   LOCALE_DATE_FNS_LOCALE,
   LOCALE_DATE_PATTERNS,
   LOCALE_DATE_TIME_PATTERNS,
+  LOCALE_TIMEZONE,
 } from './constants.ts';
 import type { DateInput, DateRange } from './types.ts';
 
@@ -66,7 +70,9 @@ export function formatDate(
   pattern: DateFormat = DEFAULT_DATE_FORMAT,
   locale: SupportedLocale = DEFAULT_DATE_LOCALE,
 ): string {
-  return format(toDate(date), resolvePattern(pattern, locale), { locale: LOCALE_DATE_FNS_LOCALE[locale] });
+  return format(new TZDate(toDate(date), LOCALE_TIMEZONE[locale]), resolvePattern(pattern, locale), {
+    locale: LOCALE_DATE_FNS_LOCALE[locale],
+  });
 }
 
 export function formatDateShort(date: DateInput, locale: SupportedLocale = DEFAULT_DATE_LOCALE): string {
@@ -86,7 +92,9 @@ export function formatDateTime(
   pattern: DateTimeFormat = DEFAULT_DATE_TIME_FORMAT,
   locale: SupportedLocale = DEFAULT_DATE_LOCALE,
 ): string {
-  return format(toDate(date), resolveDateTimePattern(pattern, locale), { locale: LOCALE_DATE_FNS_LOCALE[locale] });
+  return format(new TZDate(toDate(date), LOCALE_TIMEZONE[locale]), resolveDateTimePattern(pattern, locale), {
+    locale: LOCALE_DATE_FNS_LOCALE[locale],
+  });
 }
 
 export function formatDateTimeShort(date: DateInput, locale: SupportedLocale = DEFAULT_DATE_LOCALE): string {
@@ -119,6 +127,15 @@ export function getTodayRange(referenceDate: DateInput = new Date()): DateRange 
   return {
     start: startOfDay(date),
     end: endOfDay(date),
+  };
+}
+
+export function getThisWeekRange(referenceDate: DateInput = new Date()): DateRange {
+  const date = toDate(referenceDate);
+
+  return {
+    start: startOfWeek(date, { weekStartsOn: 1 }),
+    end: endOfWeek(date, { weekStartsOn: 1 }),
   };
 }
 
