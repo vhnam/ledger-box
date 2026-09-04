@@ -41,19 +41,27 @@ type DetailStatTileProps = {
   value: ReactNode;
 };
 
-function formatTransactionDetailDateTime(date: string) {
-  return format(toDate(date), 'MMM d, yyyy • h:mm a');
+function TransactionDetailDateTime({ date }: { date: string }) {
+  const occurredAt = toDate(date);
+
+  return (
+    <time dateTime={date}>
+      <span className="block lg:inline">{format(occurredAt, 'MMM d, yyyy')}</span>
+      <span className="hidden lg:inline"> • </span>
+      <span className="block lg:inline">{format(occurredAt, 'h:mm a')}</span>
+    </time>
+  );
 }
 
 function DetailStatTile({ icon, label, value }: DetailStatTileProps) {
   return (
     <div className="flex flex-col gap-2 rounded-xl border border-border bg-card p-3 md:p-4">
-      <div className="flex size-10 items-center justify-center rounded-lg bg-muted">
+      <div className="size-10 items-center justify-center rounded-lg bg-muted hidden md:flex">
         <Icon name={icon} className="size-5 text-muted-foreground" />
       </div>
       <div className="min-w-0">
         <p className="mb-0.5 text-xs text-muted-foreground">{label}</p>
-        <p className="truncate text-sm font-semibold leading-tight">{value}</p>
+        <p className={cn('text-sm font-semibold leading-tight', typeof value === 'string' && 'truncate')}>{value}</p>
       </div>
     </div>
   );
@@ -103,7 +111,7 @@ function WalletTransactionDetail({ transaction }: WalletTransactionDetailProps) 
 
         <Card className="gap-0 overflow-hidden p-0">
           <div className="flex items-start justify-between gap-3 px-4 pt-4 sm:px-6 sm:pt-6">
-            <div className="flex min-w-0 items-start gap-3">
+            <div className="flex min-w-0 items-center gap-3">
               <div
                 className={cn(
                   'flex size-11 shrink-0 items-center justify-center rounded-full',
@@ -113,26 +121,19 @@ function WalletTransactionDetail({ transaction }: WalletTransactionDetailProps) 
                 <Icon name={isExpense ? 'ArrowDownIcon' : 'ArrowUpIcon'} className="size-5 text-white" />
               </div>
               <div className="min-w-0">
-                <p
-                  className={cn(
-                    'text-xs font-semibold tracking-wider uppercase',
-                    isExpense ? 'text-rose-500' : 'text-emerald-500',
-                  )}
-                >
-                  {isExpense ? (
-                    <FormattedMessage id="transaction.type.expense" defaultMessage="Expense" />
-                  ) : (
-                    <FormattedMessage id="transaction.type.income" defaultMessage="Income" />
-                  )}
+                <p className={cn(getTransactionAmountClassName(transaction.type, 'xl'))}>
+                  {formatSignedCurrency(transaction.amount, transaction.type, {
+                    notation: 'standard',
+                    currency: wallet?.currency ?? 'VND',
+                  })}
                 </p>
-                <p className="truncate text-base leading-snug font-medium">{transaction.description}</p>
               </div>
             </div>
 
-            <div className="hidden shrink-0 items-center gap-1 sm:flex">
+            <div className="hidden shrink-0 items-center gap-2 sm:flex">
               <Button
                 type="button"
-                variant="ghost"
+                variant="outline"
                 size="icon-sm"
                 onClick={() => setEditOpen(true)}
                 aria-label={intl.formatMessage({ id: 'common.edit', defaultMessage: 'Edit' })}
@@ -141,9 +142,8 @@ function WalletTransactionDetail({ transaction }: WalletTransactionDetailProps) 
               </Button>
               <Button
                 type="button"
-                variant="ghost"
+                variant="destructive"
                 size="icon-sm"
-                className="text-destructive hover:bg-destructive/10 hover:text-destructive"
                 onClick={() => setDeleteOpen(true)}
                 aria-label={intl.formatMessage({ id: 'common.delete', defaultMessage: 'Delete' })}
               >
@@ -152,11 +152,8 @@ function WalletTransactionDetail({ transaction }: WalletTransactionDetailProps) 
             </div>
           </div>
 
-          <p className={cn('mt-4 px-4 pb-6 sm:px-6', getTransactionAmountClassName(transaction.type, 'xl'))}>
-            {formatSignedCurrency(transaction.amount, transaction.type, {
-              notation: 'standard',
-              currency: wallet?.currency ?? 'VND',
-            })}
+          <p className="mt-4 px-4 pb-6 sm:px-6 text-base leading-snug font-medium tracking-wide">
+            {transaction.description}
           </p>
         </Card>
 
@@ -164,12 +161,12 @@ function WalletTransactionDetail({ transaction }: WalletTransactionDetailProps) 
           <DetailStatTile
             icon="CalendarBlankIcon"
             label={<FormattedMessage id="transaction.detail.dateTime" defaultMessage="Date & Time" />}
-            value={formatTransactionDetailDateTime(transaction.occurredAt)}
+            value={<TransactionDetailDateTime date={transaction.occurredAt} />}
           />
           <DetailStatTile
             icon="WalletIcon"
             label={<FormattedMessage id="transaction.detail.wallet" defaultMessage="Wallet" />}
-            value={wallet?.name ?? '—'}
+            value={wallet?.name ?? '-'}
           />
         </div>
 

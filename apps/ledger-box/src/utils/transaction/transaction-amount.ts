@@ -1,4 +1,4 @@
-import { cn } from '#/lib/cn';
+import { cn } from '@vhnam/ui/lib/cn';
 
 import type { TransactionDto } from '#/queries/transactions/transaction.dto';
 
