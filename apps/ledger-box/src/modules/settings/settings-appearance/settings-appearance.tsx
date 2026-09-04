@@ -1,9 +1,9 @@
-import { cn } from 'cn';
 import { FormattedMessage } from 'react-intl';
 
 import { Icon, type IconName } from '@vhnam/ui/components/icon';
 import { Card, CardContent, CardHeader, CardTitle } from '@vhnam/ui/components/ui/card';
 import { useTheme } from '@vhnam/ui/hooks/use-theme';
+import { cn } from '@vhnam/ui/lib/cn';
 
 import { switchThemeWithTransition, type AppTheme } from '#/lib/theme';
 

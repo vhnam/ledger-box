@@ -1,5 +1,4 @@
 import { Link } from '@tanstack/react-router';
-import { cn } from 'cn';
 import { useState, type ReactNode } from 'react';
 import { FormattedList, FormattedMessage } from 'react-intl';
 
@@ -8,6 +7,7 @@ import { Button } from '@vhnam/ui/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@vhnam/ui/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@vhnam/ui/components/ui/collapsible';
 import { Spinner } from '@vhnam/ui/components/ui/spinner';
+import { cn } from '@vhnam/ui/lib/cn';
 
 import { GUIDELINE_URL } from '#/constants/urls';
 

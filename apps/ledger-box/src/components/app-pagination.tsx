@@ -1,4 +1,3 @@
-import { cn } from 'cn';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import {
@@ -10,6 +9,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@vhnam/ui/components/ui/pagination';
+import { cn } from '@vhnam/ui/lib/cn';
 
 import type { PageItem } from '#/utils/pagination';
 

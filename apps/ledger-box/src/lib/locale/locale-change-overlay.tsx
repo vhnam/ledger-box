@@ -1,8 +1,8 @@
-import { cn } from 'cn';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import { Spinner } from '@vhnam/ui/components/ui/spinner';
+import { cn } from '@vhnam/ui/lib/cn';
 
 import {
   FADE_IN_MS,
