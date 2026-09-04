@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-import { WalletShellLayout } from '#/modules/wallets/wallet-shell-layout';
+import { WalletShellLayout } from '#/layouts/wallet-shell-layout';
 
 export const Route = createFileRoute('/_app/wallets/$walletId')({
   component: RouteComponent,

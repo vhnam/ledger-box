@@ -4,7 +4,7 @@ import { Spinner } from '@vhnam/ui/components/ui/spinner';
 
 import { useWallets } from '#/queries/wallets/wallet.queries';
 
-import { WalletEmpty } from '#/modules/wallets/wallet-empty';
+import { WalletEmpty } from '#/components/wallet-empty';
 
 export const Route = createFileRoute('/_app/wallets/')({
   component: RouteComponent,

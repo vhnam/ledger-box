@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-import { SettingsShellLayout } from '#/modules/settings/settings-shell-layout';
+import { SettingsShellLayout } from '#/layouts/settings-shell-layout';
 
 export const Route = createFileRoute('/_app/settings')({
   component: RouteComponent,

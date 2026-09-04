@@ -45,6 +45,7 @@ export function useUpdateTransaction() {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['wallets'] }),
         queryClient.invalidateQueries({ queryKey: ['transactions', variables.walletId] }),
+        queryClient.invalidateQueries({ queryKey: ['transaction', variables.walletId, variables.transactionId] }),
         queryClient.invalidateQueries({ queryKey: ['activity', variables.walletId] }),
       ]);
     },
@@ -65,6 +66,7 @@ export function useDeleteTransaction() {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['wallets'] }),
         queryClient.invalidateQueries({ queryKey: ['transactions', variables.walletId] }),
+        queryClient.invalidateQueries({ queryKey: ['transaction', variables.walletId, variables.transactionId] }),
         queryClient.invalidateQueries({ queryKey: ['activity', variables.walletId] }),
       ]);
     },

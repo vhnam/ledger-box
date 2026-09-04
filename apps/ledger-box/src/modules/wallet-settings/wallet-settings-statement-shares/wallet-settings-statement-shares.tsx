@@ -28,8 +28,9 @@ import type { WalletDto } from '#/queries/wallets/wallet.dto';
 import { AppPagination } from '#/components/app-pagination';
 
 import { StatementSnapshotView } from '#/modules/statement/statement-snapshot-view';
-import { useWalletSettingsStatementSharesActions } from '#/modules/wallet-settings/wallet-settings-statement-shares/wallet-settings-statement-shares.actions';
-import { WalletStatementShareRow } from '#/modules/wallet-settings/wallet-settings-statement-shares/wallet-statement-share-row';
+
+import { useWalletSettingsStatementSharesActions } from './wallet-settings-statement-shares.actions';
+import { WalletStatementShareRow } from './wallet-statement-share-row';
 
 type WalletSettingsStatementSharesProps = {
   wallet: WalletDto;

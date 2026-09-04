@@ -9,8 +9,8 @@ import { WALLET_MEMBER_ROLE_OPTIONS, type WalletMemberRole } from '#/constants/w
 
 import type { WalletMemberDto } from '#/queries/wallets/wallet-member.dto';
 
-import { WalletMemberAvatar } from '#/modules/wallet-settings/wallet-settings-members/wallet-member-avatar';
-import { WalletMemberIdentity } from '#/modules/wallet-settings/wallet-settings-members/wallet-member-identity';
+import { WalletMemberAvatar } from './wallet-member-avatar';
+import { WalletMemberIdentity } from './wallet-member-identity';
 
 type WalletMemberRowProps = {
   member: WalletMemberDto;

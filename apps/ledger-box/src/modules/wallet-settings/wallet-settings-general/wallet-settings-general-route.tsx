@@ -1,6 +1,6 @@
 import { useWallet, useWallets } from '#/queries/wallets/wallet.queries';
 
-import { WalletSettingsGeneral } from '#/modules/wallet-settings/wallet-settings-general/wallet-settings-general';
+import { WalletSettingsGeneral } from './wallet-settings-general';
 
 type WalletSettingsGeneralRouteProps = {
   walletId: string;
