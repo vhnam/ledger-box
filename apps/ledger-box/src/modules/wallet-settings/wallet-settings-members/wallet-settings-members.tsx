@@ -1,7 +1,7 @@
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@vhnam/ui/components/ui/card';
-import { Spinner } from '@vhnam/ui/components/ui/spinner';
+import { Skeleton } from '@vhnam/ui/components/ui/skeleton';
 
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
 
@@ -16,8 +16,10 @@ type WalletSettingsMembersProps = {
 };
 
 function WalletSettingsMembers({ wallet }: WalletSettingsMembersProps) {
+  const intl = useIntl();
   const {
     members,
+    totalResults,
     isLoadingMembers,
     page,
     totalPages,
@@ -38,6 +40,14 @@ function WalletSettingsMembers({ wallet }: WalletSettingsMembersProps) {
     handleRemoveMember,
     handleResendInvite,
   } = useWalletSettingsMembersActions({ wallet });
+  const showPagination = totalPages > 1;
+  const resultLabel =
+    totalResults === 1
+      ? intl.formatMessage({ id: 'wallet.settings.members.resultOne', defaultMessage: '1 result' })
+      : intl.formatMessage(
+          { id: 'wallet.settings.members.resultOther', defaultMessage: '{count} results' },
+          { count: totalResults },
+        );
 
   return (
     <div className="flex flex-col gap-8">
@@ -72,46 +82,50 @@ function WalletSettingsMembers({ wallet }: WalletSettingsMembersProps) {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            <FormattedMessage id="wallet.settings.members.title" defaultMessage="Members" />
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {isLoadingMembers ? (
-            <div className="flex justify-center py-6">
-              <Spinner className="size-6 text-muted-foreground" />
+      <div className="flex flex-col gap-4">
+        {isLoadingMembers ? (
+          <div className="space-y-2">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <Skeleton key={index} className="h-12 w-full" />
+            ))}
+          </div>
+        ) : null}
+
+        {!isLoadingMembers && members.length > 0 ? (
+          <div className="space-y-4">
+            <div className="flex items-end justify-between">
+              <span className="font-display text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                <FormattedMessage id="wallet.settings.members.title" defaultMessage="Members" />
+              </span>
+              <span className="font-mono text-xs text-muted-foreground">{resultLabel}</span>
             </div>
-          ) : members.length > 0 ? (
-            <div className="flex flex-col gap-4">
-              <ul className="divide-y divide-border">
-                {members.map((member) => (
-                  <WalletMemberRow
-                    key={member.id}
-                    member={member}
-                    onRoleChange={handleRoleChange}
-                    onRemove={handleRemoveMember}
-                    onResend={handleResendInvite}
-                  />
-                ))}
-              </ul>
-              {totalPages > 1 ? (
-                <AppPagination
-                  page={page}
-                  totalPages={totalPages}
-                  canGoPrevious={canGoPrevious}
-                  canGoNext={canGoNext}
-                  pageItems={pageItems}
-                  goToPage={goToPage}
-                  goToPreviousPage={goToPreviousPage}
-                  goToNextPage={goToNextPage}
+            <ul className="space-y-4">
+              {members.map((member) => (
+                <WalletMemberRow
+                  key={member.id}
+                  member={member}
+                  onRoleChange={handleRoleChange}
+                  onRemove={handleRemoveMember}
+                  onResend={handleResendInvite}
                 />
-              ) : null}
-            </div>
-          ) : null}
-        </CardContent>
-      </Card>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
+        {showPagination ? (
+          <AppPagination
+            page={page}
+            totalPages={totalPages}
+            canGoPrevious={canGoPrevious}
+            canGoNext={canGoNext}
+            pageItems={pageItems}
+            goToPage={goToPage}
+            goToPreviousPage={goToPreviousPage}
+            goToNextPage={goToNextPage}
+          />
+        ) : null}
+      </div>
     </div>
   );
 }

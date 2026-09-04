@@ -30,6 +30,7 @@ export function useWalletSettingsMembersActions({ wallet }: UseWalletSettingsMem
   const [page, setPage] = useState(1);
   const { data, isPending: isLoadingMembers, isFetching: isFetchingMembers } = useWalletMembers(wallet.id, page);
   const members = data?.items ?? [];
+  const totalResults = data?.total ?? 0;
   const totalPages = data ? Math.max(1, Math.ceil(data.total / data.pageSize)) : 1;
   const pageItems = useMemo(() => getPageItems(page, totalPages), [page, totalPages]);
   const canGoPrevious = page > 1;
@@ -192,6 +193,7 @@ export function useWalletSettingsMembersActions({ wallet }: UseWalletSettingsMem
 
   return {
     members,
+    totalResults,
     isLoadingMembers,
     isFetchingMembers,
     page,

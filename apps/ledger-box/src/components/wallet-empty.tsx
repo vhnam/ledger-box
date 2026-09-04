@@ -52,11 +52,11 @@ function WalletEmpty({ variant = 'wallets' }: WalletEmptyProps) {
             <Icon name="ClockCounterClockwiseIcon" />
           </EmptyMedia>
           <EmptyTitle className="font-display text-lg">
-            <FormattedMessage id="wallet.empty.activity.title" defaultMessage="No activity recorded yet" />
+            <FormattedMessage id="wallet.empty.activities.title" defaultMessage="No activity recorded yet" />
           </EmptyTitle>
           <EmptyDescription>
             <FormattedMessage
-              id="wallet.empty.activity.description"
+              id="wallet.empty.activities.description"
               defaultMessage="Changes to this wallet will show up here as an audit trail."
             />
           </EmptyDescription>

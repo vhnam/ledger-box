@@ -31,6 +31,7 @@ export function useWalletSettingsStatementSharesActions({ wallet }: UseWalletSet
   const [page, setPage] = useState(1);
   const { data, isPending: isLoadingShares, isFetching: isFetchingShares } = useStatementShares(wallet.id, page);
   const shares = data?.items ?? [];
+  const totalResults = data?.total ?? 0;
   const totalPages = data ? Math.max(1, Math.ceil(data.total / data.pageSize)) : 1;
   const pageItems = useMemo(() => getPageItems(page, totalPages), [page, totalPages]);
   const canGoPrevious = page > 1;
@@ -195,6 +196,7 @@ export function useWalletSettingsStatementSharesActions({ wallet }: UseWalletSet
 
   return {
     shares,
+    totalResults,
     isLoadingShares,
     isFetchingShares,
     page,

@@ -32,7 +32,7 @@ function WalletMemberRow({ member, onRoleChange, onRemove, onResend }: WalletMem
   );
 
   return (
-    <li className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+    <li className="flex items-center gap-3 rounded-lg border bg-card px-4 py-3">
       <WalletMemberAvatar member={member} />
       <WalletMemberIdentity member={member} />
 

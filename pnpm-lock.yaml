@@ -208,6 +208,15 @@ catalogs:
     '@aws-sdk/client-s3':
       specifier: ^3.1125.0
       version: 3.1125.0
+    '@aws-sdk/s3-request-presigner':
+      specifier: ^3.1125.0
+      version: 3.1125.0
+    '@date-fns/tz':
+      specifier: ^1.5.0
+      version: 1.5.0
+    '@dotenvx/dotenvx':
+      specifier: ^2.23.0
+      version: 2.23.0
     '@faker-js/faker':
       specifier: ^10.6.0
       version: 10.6.0
@@ -220,6 +229,18 @@ catalogs:
     '@phosphor-icons/react':
       specifier: ^2.1.10
       version: 2.1.10
+    '@storybook/addon-a11y':
+      specifier: ^10.6.0
+      version: 10.6.0
+    '@storybook/addon-docs':
+      specifier: ^10.6.0
+      version: 10.6.0
+    '@storybook/addon-vitest':
+      specifier: ^10.6.0
+      version: 10.6.0
+    '@storybook/react-vite':
+      specifier: ^10.6.0
+      version: 10.6.0
     '@tailwindcss/vite':
       specifier: ^4.3.3
       version: 4.3.3
@@ -244,6 +265,12 @@ catalogs:
     '@vitejs/plugin-react':
       specifier: ^6.1.1
       version: 6.1.1
+    '@vitest/browser-playwright':
+      specifier: ^4.1.11
+      version: 4.1.11
+    '@vitest/coverage-v8':
+      specifier: ^4.1.11
+      version: 4.1.11
     auth:
       specifier: ^1.7.2
       version: 1.7.2
@@ -253,9 +280,18 @@ catalogs:
     better-auth:
       specifier: ^1.7.2
       version: 1.7.2
+    cn:
+      specifier: ^0.2.4
+      version: 0.2.4
+    date-fns:
+      specifier: ^4.4.0
+      version: 4.4.0
     kysely:
       specifier: ^0.29.5
       version: 0.29.5
+    next-themes:
+      specifier: ^0.4.6
+      version: 0.4.6
     pdfkit:
       specifier: ^0.17.2
       version: 0.17.2
@@ -274,6 +310,15 @@ catalogs:
     resend:
       specifier: ^4.8.0
       version: 4.8.0
+    shadcn:
+      specifier: ^4.20.1
+      version: 4.20.1
+    shiki:
+      specifier: ^4.4.3
+      version: 4.4.3
+    storybook:
+      specifier: ^10.6.0
+      version: 10.6.0
     tailwindcss:
       specifier: ^4.3.3
       version: 4.3.3
@@ -289,6 +334,9 @@ catalogs:
     vite-plus:
       specifier: 0.3.0
       version: 0.3.0
+    vitest:
+      specifier: ^4.1.11
+      version: 4.1.11
 
 overrides:
   baseline-browser-mapping: 2.10.42
@@ -470,7 +518,7 @@ importers:
         version: '@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13)(typescript@6.0.3)(yaml@2.9.0)'
       vite-plus:
         specifier: 'catalog:'
-        version: 0.3.0(@types/node@26.4.1)(@vitest/browser-playwright@4.1.11(@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13)(typescript@6.0.3)(yaml@2.9.0))(playwright@1.62.1)(vitest@4.1.11))(@vitest/coverage-v8@4.1.11(@vitest/browser@4.1.11(@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13)(typescript@6.0.3)(yaml@2.9.0))(vitest@4.1.11))(vitest@4.1.11))(@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13)(typescript@6.0.3)(yaml@2.9.0)
+        version: 0.3.0(@types/node@26.4.1)(@vitest/browser-playwright@4.1.11)(@vitest/coverage-v8@4.1.11)(@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13)(typescript@6.0.3)(yaml@2.9.0)
 
   apps/storybook:
     dependencies:
@@ -586,6 +634,9 @@ importers:
       shadcn:
         specifier: 'catalog:'
         version: 4.20.1(supports-color@7.2.0)(typescript@6.0.3)
+      shiki:
+        specifier: 'catalog:'
+        version: 4.4.3
       tw-animate-css:
         specifier: ^1.4.0
         version: 1.4.0
@@ -604,7 +655,7 @@ importers:
         version: 6.0.3
       vite-plus:
         specifier: 'catalog:'
-        version: 0.3.0(@types/node@26.4.1)(@vitest/browser-playwright@4.1.11)(@vitest/coverage-v8@4.1.11)(@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13)(typescript@6.0.3)(yaml@2.9.0)
+        version: 0.3.0(@types/node@26.4.1)(@vitest/browser-playwright@4.1.11(@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13)(typescript@6.0.3)(yaml@2.9.0))(playwright@1.62.1)(vitest@4.1.11))(@vitest/coverage-v8@4.1.11(@vitest/browser@4.1.11(@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13)(typescript@6.0.3)(yaml@2.9.0))(vitest@4.1.11))(vitest@4.1.11))(@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13)(typescript@6.0.3)(yaml@2.9.0))(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13)(typescript@6.0.3)(yaml@2.9.0)
 
   packages/utils:
     dependencies:
@@ -8748,7 +8799,7 @@ snapshots:
       pg: 8.23.0
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
-      vitest: 4.1.11(@types/node@26.4.1)(@vitest/browser-playwright@4.1.11(@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13)(typescript@6.0.3)(yaml@2.9.0))(playwright@1.62.1)(vitest@4.1.11))(@vitest/browser-preview@4.1.11)(@vitest/coverage-v8@4.1.11(@vitest/browser@4.1.11(@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13)(typescript@6.0.3)(yaml@2.9.0))(vitest@4.1.11))(vitest@4.1.11))(@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13)(typescript@6.0.3)(yaml@2.9.0))
+      vitest: 4.1.11(@types/node@26.4.1)(@vitest/browser-playwright@4.1.11)(@vitest/browser-preview@4.1.11)(@vitest/coverage-v8@4.1.11)(@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.13)(typescript@6.0.3)(yaml@2.9.0))
     transitivePeerDependencies:
       - '@cloudflare/workers-types'
       - '@opentelemetry/api'

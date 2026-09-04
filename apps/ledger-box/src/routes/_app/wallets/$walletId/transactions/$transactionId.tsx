@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-import { WalletTransactionDetailRoute } from '#/modules/wallet-transaction-detail';
+import { WalletTransactionDetailRoute } from '#/modules/wallet-transaction-detail/wallet-transaction-detail';
 
 export const Route = createFileRoute('/_app/wallets/$walletId/transactions/$transactionId')({
   component: RouteComponent,

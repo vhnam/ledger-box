@@ -19,6 +19,15 @@ export const Default: Story = {
   args: {
     placeholder: 'Pick a date range',
   },
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole('button'));
+    const grids = await waitFor(() => within(document.body).getAllByRole('grid'));
+    await expect(grids).toHaveLength(2);
+    await expect(grids[0]).toBeVisible();
+    await expect(grids[1]).toBeVisible();
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(within(document.body).queryByRole('dialog')).toBeNull());
+  },
 };
 
 export const WithLabel: Story = {
@@ -63,6 +72,7 @@ export const SelectRangeInteractively: Story = {
   play: async ({ canvas, userEvent }) => {
     await userEvent.click(canvas.getByRole('button'));
     const grids = await waitFor(() => within(document.body).getAllByRole('grid'));
+    await expect(grids).toHaveLength(2);
     await expect(grids[0]).toBeVisible();
     const startDay = within(document.body).getAllByRole('gridcell', { name: '10' })[0];
     await userEvent.click(startDay.querySelector('button') ?? startDay);
@@ -84,5 +94,13 @@ export const Disabled: Story = {
 export const SingleMonth: Story = {
   args: {
     numberOfMonths: 1,
+  },
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole('button'));
+    const grids = await waitFor(() => within(document.body).getAllByRole('grid'));
+    await expect(grids).toHaveLength(1);
+    await expect(grids[0]).toBeVisible();
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(within(document.body).queryByRole('dialog')).toBeNull());
   },
 };

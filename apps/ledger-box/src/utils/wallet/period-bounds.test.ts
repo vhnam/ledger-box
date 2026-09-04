@@ -65,7 +65,7 @@ describe('resolvePeriodBounds', () => {
     });
   });
 
-  it('resolves "last-week" as the immediately preceding Monday–Monday window', () => {
+  it('resolves "last-week" as the immediately preceding Monday-Monday window', () => {
     const bounds = resolvePeriodBounds('UTC', FILTER_OPTIONS.LAST_WEEK, undefined, undefined, referenceNow);
 
     expect(bounds).toEqual({

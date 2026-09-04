@@ -16,6 +16,7 @@ import './style.css';
 const router = createRouter({
   routeTree,
   scrollRestoration: true,
+  scrollToTopSelectors: ['[data-scroll-restoration-id]'],
 });
 const queryClient = new QueryClient();
 

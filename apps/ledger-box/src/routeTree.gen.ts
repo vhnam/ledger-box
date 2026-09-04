@@ -26,7 +26,7 @@ import { Route as AppWalletsIndexRouteImport } from './routes/_app/wallets/index
 import { Route as AppWalletsWalletIdRouteRouteImport } from './routes/_app/wallets/$walletId/route'
 import { Route as AppWalletsWalletIdIndexRouteImport } from './routes/_app/wallets/$walletId/index'
 import { Route as AppWalletsWalletIdSettingsIndexRouteImport } from './routes/_app/wallets/$walletId/settings/index'
-import { Route as AppWalletsWalletIdSettingsActivityRouteImport } from './routes/_app/wallets/$walletId/settings/activity'
+import { Route as AppWalletsWalletIdSettingsActivitiesRouteImport } from './routes/_app/wallets/$walletId/settings/activities'
 import { Route as AppWalletsWalletIdSettingsGeneralRouteImport } from './routes/_app/wallets/$walletId/settings/general'
 import { Route as AppWalletsWalletIdSettingsMembersRouteImport } from './routes/_app/wallets/$walletId/settings/members'
 import { Route as AppWalletsWalletIdSettingsStatementSharesRouteImport } from './routes/_app/wallets/$walletId/settings/statement-shares'
@@ -117,10 +117,10 @@ const AppWalletsWalletIdSettingsIndexRoute =
     path: '/settings/',
     getParentRoute: () => AppWalletsWalletIdRouteRoute,
   } as any)
-const AppWalletsWalletIdSettingsActivityRoute =
-  AppWalletsWalletIdSettingsActivityRouteImport.update({
-    id: '/settings/activity',
-    path: '/settings/activity',
+const AppWalletsWalletIdSettingsActivitiesRoute =
+  AppWalletsWalletIdSettingsActivitiesRouteImport.update({
+    id: '/settings/activities',
+    path: '/settings/activities',
     getParentRoute: () => AppWalletsWalletIdRouteRoute,
   } as any)
 const AppWalletsWalletIdSettingsGeneralRoute =
@@ -164,7 +164,7 @@ export interface FileRoutesByFullPath {
   '/settings/': typeof AppSettingsIndexRoute
   '/wallets/': typeof AppWalletsIndexRoute
   '/wallets/$walletId/': typeof AppWalletsWalletIdIndexRoute
-  '/wallets/$walletId/settings/activity': typeof AppWalletsWalletIdSettingsActivityRoute
+  '/wallets/$walletId/settings/activities': typeof AppWalletsWalletIdSettingsActivitiesRoute
   '/wallets/$walletId/settings/general': typeof AppWalletsWalletIdSettingsGeneralRoute
   '/wallets/$walletId/settings/members': typeof AppWalletsWalletIdSettingsMembersRoute
   '/wallets/$walletId/settings/statement-shares': typeof AppWalletsWalletIdSettingsStatementSharesRoute
@@ -184,7 +184,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AppSettingsIndexRoute
   '/wallets': typeof AppWalletsIndexRoute
   '/wallets/$walletId': typeof AppWalletsWalletIdIndexRoute
-  '/wallets/$walletId/settings/activity': typeof AppWalletsWalletIdSettingsActivityRoute
+  '/wallets/$walletId/settings/activities': typeof AppWalletsWalletIdSettingsActivitiesRoute
   '/wallets/$walletId/settings/general': typeof AppWalletsWalletIdSettingsGeneralRoute
   '/wallets/$walletId/settings/members': typeof AppWalletsWalletIdSettingsMembersRoute
   '/wallets/$walletId/settings/statement-shares': typeof AppWalletsWalletIdSettingsStatementSharesRoute
@@ -209,7 +209,7 @@ export interface FileRoutesById {
   '/_app/settings/': typeof AppSettingsIndexRoute
   '/_app/wallets/': typeof AppWalletsIndexRoute
   '/_app/wallets/$walletId/': typeof AppWalletsWalletIdIndexRoute
-  '/_app/wallets/$walletId/settings/activity': typeof AppWalletsWalletIdSettingsActivityRoute
+  '/_app/wallets/$walletId/settings/activities': typeof AppWalletsWalletIdSettingsActivitiesRoute
   '/_app/wallets/$walletId/settings/general': typeof AppWalletsWalletIdSettingsGeneralRoute
   '/_app/wallets/$walletId/settings/members': typeof AppWalletsWalletIdSettingsMembersRoute
   '/_app/wallets/$walletId/settings/statement-shares': typeof AppWalletsWalletIdSettingsStatementSharesRoute
@@ -234,7 +234,7 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/wallets/'
     | '/wallets/$walletId/'
-    | '/wallets/$walletId/settings/activity'
+    | '/wallets/$walletId/settings/activities'
     | '/wallets/$walletId/settings/general'
     | '/wallets/$walletId/settings/members'
     | '/wallets/$walletId/settings/statement-shares'
@@ -254,7 +254,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/wallets'
     | '/wallets/$walletId'
-    | '/wallets/$walletId/settings/activity'
+    | '/wallets/$walletId/settings/activities'
     | '/wallets/$walletId/settings/general'
     | '/wallets/$walletId/settings/members'
     | '/wallets/$walletId/settings/statement-shares'
@@ -278,7 +278,7 @@ export interface FileRouteTypes {
     | '/_app/settings/'
     | '/_app/wallets/'
     | '/_app/wallets/$walletId/'
-    | '/_app/wallets/$walletId/settings/activity'
+    | '/_app/wallets/$walletId/settings/activities'
     | '/_app/wallets/$walletId/settings/general'
     | '/_app/wallets/$walletId/settings/members'
     | '/_app/wallets/$walletId/settings/statement-shares'
@@ -414,11 +414,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWalletsWalletIdSettingsIndexRouteImport
       parentRoute: typeof AppWalletsWalletIdRouteRoute
     }
-    '/_app/wallets/$walletId/settings/activity': {
-      id: '/_app/wallets/$walletId/settings/activity'
-      path: '/settings/activity'
-      fullPath: '/wallets/$walletId/settings/activity'
-      preLoaderRoute: typeof AppWalletsWalletIdSettingsActivityRouteImport
+    '/_app/wallets/$walletId/settings/activities': {
+      id: '/_app/wallets/$walletId/settings/activities'
+      path: '/settings/activities'
+      fullPath: '/wallets/$walletId/settings/activities'
+      preLoaderRoute: typeof AppWalletsWalletIdSettingsActivitiesRouteImport
       parentRoute: typeof AppWalletsWalletIdRouteRoute
     }
     '/_app/wallets/$walletId/settings/general': {
@@ -471,7 +471,7 @@ const AppSettingsRouteRouteWithChildren =
 
 interface AppWalletsWalletIdRouteRouteChildren {
   AppWalletsWalletIdIndexRoute: typeof AppWalletsWalletIdIndexRoute
-  AppWalletsWalletIdSettingsActivityRoute: typeof AppWalletsWalletIdSettingsActivityRoute
+  AppWalletsWalletIdSettingsActivitiesRoute: typeof AppWalletsWalletIdSettingsActivitiesRoute
   AppWalletsWalletIdSettingsGeneralRoute: typeof AppWalletsWalletIdSettingsGeneralRoute
   AppWalletsWalletIdSettingsMembersRoute: typeof AppWalletsWalletIdSettingsMembersRoute
   AppWalletsWalletIdSettingsStatementSharesRoute: typeof AppWalletsWalletIdSettingsStatementSharesRoute
@@ -482,8 +482,8 @@ interface AppWalletsWalletIdRouteRouteChildren {
 const AppWalletsWalletIdRouteRouteChildren: AppWalletsWalletIdRouteRouteChildren =
   {
     AppWalletsWalletIdIndexRoute: AppWalletsWalletIdIndexRoute,
-    AppWalletsWalletIdSettingsActivityRoute:
-      AppWalletsWalletIdSettingsActivityRoute,
+    AppWalletsWalletIdSettingsActivitiesRoute:
+      AppWalletsWalletIdSettingsActivitiesRoute,
     AppWalletsWalletIdSettingsGeneralRoute:
       AppWalletsWalletIdSettingsGeneralRoute,
     AppWalletsWalletIdSettingsMembersRoute:

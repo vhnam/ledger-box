@@ -8,9 +8,9 @@ import {
   type WalletActivitySearchInput,
 } from '#/schemas/wallet-activity-search.schema';
 
-import { WalletSettingsActivityRoute } from '#/modules/wallet-settings/wallet-settings-activity';
+import { WalletSettingsActivitiesRoute } from '#/modules/wallet-settings/wallet-settings-activities';
 
-export const Route = createFileRoute('/_app/wallets/$walletId/settings/activity')({
+export const Route = createFileRoute('/_app/wallets/$walletId/settings/activities')({
   validateSearch: (search: WalletActivitySearchInput & SearchSchemaInput) =>
     resolveWalletActivitySearch(v.parse(walletActivitySearchSchema, search)),
   search: {
@@ -22,5 +22,5 @@ export const Route = createFileRoute('/_app/wallets/$walletId/settings/activity'
 function RouteComponent() {
   const { walletId } = Route.useParams();
 
-  return <WalletSettingsActivityRoute walletId={walletId} />;
+  return <WalletSettingsActivitiesRoute walletId={walletId} />;
 }
