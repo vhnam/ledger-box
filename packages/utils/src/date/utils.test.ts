@@ -12,6 +12,7 @@ import {
   formatRelative,
   getLastMonthRange,
   getThisMonthRange,
+  getThisWeekRange,
   getTodayRange,
   isDateInRange,
   isDateToday,
@@ -19,7 +20,10 @@ import {
   toDate,
 } from './utils.ts';
 
-const sampleDate = new Date(2026, 6, 13, 19, 30);
+// Fixed UTC instant (not a local wall-clock construction) so formatting assertions are
+// stable regardless of the machine's system time zone. 12:30 UTC lands at 19:30 in the
+// default locale's zone (Asia/Ho_Chi_Minh, UTC+7), matching the pre-timezone-aware fixture.
+const sampleDate = new Date(Date.UTC(2026, 6, 13, 12, 30));
 
 describe('toDate', () => {
   it('returns a Date instance as-is', () => {
@@ -110,6 +114,25 @@ describe('formatDateTimeShort', () => {
   });
 });
 
+describe('locale time zone conversion', () => {
+  it('renders the same instant in each locale’s own time zone, not the system clock', () => {
+    // 2026-07-13T12:30:00Z
+    expect(formatDateTime(sampleDate, DateTimeFormat.Numeric, 'vi-VN')).toBe('13/07/2026 19:30');
+    expect(formatDateTime(sampleDate, DateTimeFormat.Numeric, 'ja-JP')).toBe('2026/07/13 21:30');
+    expect(formatDateTime(sampleDate, DateTimeFormat.Numeric, 'en-US')).toBe('07/13/2026 08:30');
+    expect(formatDateTime(sampleDate, DateTimeFormat.Numeric, 'en-GB')).toBe('13/07/2026 13:30');
+  });
+
+  it('can shift the calendar date across midnight depending on the zone', () => {
+    // 2026-07-13T23:00:00Z is already 2026-07-14 in Asia/Tokyo (UTC+9) but still 2026-07-13
+    // in America/New_York (UTC-4 during EDT).
+    const lateUtc = new Date(Date.UTC(2026, 6, 13, 23, 0));
+
+    expect(formatDateNumeric(lateUtc, 'ja-JP')).toBe('2026/07/14');
+    expect(formatDateNumeric(lateUtc, 'en-US')).toBe('07/13/2026');
+  });
+});
+
 describe('formatRelative', () => {
   it('formats a past date relative to now with a suffix (default vi-VN)', () => {
     const past = new Date(Date.now() - 1000 * 60 * 60 * 24 * 2);
@@ -177,6 +200,28 @@ describe('getTodayRange', () => {
 
     expect(start.getDate()).toBe(new Date().getDate());
     expect(end.getDate()).toBe(new Date().getDate());
+  });
+});
+
+describe('getThisWeekRange', () => {
+  it('returns the ISO week (Monday–Sunday) containing the reference date', () => {
+    const wednesday = new Date(2026, 6, 15, 19, 30);
+    const { start, end } = getThisWeekRange(wednesday);
+
+    expect(start.getFullYear()).toBe(2026);
+    expect(start.getMonth()).toBe(6);
+    expect(start.getDate()).toBe(13);
+    expect(start.getDay()).toBe(1);
+    expect(end.getDate()).toBe(19);
+    expect(end.getDay()).toBe(0);
+  });
+
+  it('keeps a Sunday in the week that started the previous Monday', () => {
+    const sunday = new Date(2026, 6, 12, 8, 0);
+    const { start, end } = getThisWeekRange(sunday);
+
+    expect(start.getDate()).toBe(6);
+    expect(end.getDate()).toBe(12);
   });
 });
 

@@ -7,9 +7,9 @@ import type { WalletDto } from '#/queries/wallets/wallet.dto';
 
 import { AppPagination } from '#/components/app-pagination';
 
-import { WalletMemberRow } from '#/modules/wallet-settings/wallet-settings-members/wallet-member-row';
-import { WalletMembersInviteForm } from '#/modules/wallet-settings/wallet-settings-members/wallet-members-invite-form';
-import { useWalletSettingsMembersActions } from '#/modules/wallet-settings/wallet-settings-members/wallet-settings-members.actions';
+import { WalletMemberRow } from './wallet-member-row';
+import { WalletMembersInviteForm } from './wallet-members-invite-form';
+import { useWalletSettingsMembersActions } from './wallet-settings-members.actions';
 
 type WalletSettingsMembersProps = {
   wallet: WalletDto;

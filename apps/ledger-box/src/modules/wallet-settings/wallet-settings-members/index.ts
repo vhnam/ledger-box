@@ -1,2 +1,2 @@
-export { WalletSettingsMembers } from '#/modules/wallet-settings/wallet-settings-members/wallet-settings-members';
-export { WalletSettingsMembersRoute } from '#/modules/wallet-settings/wallet-settings-members/wallet-settings-members-route';
+export { WalletSettingsMembers } from './wallet-settings-members';
+export { WalletSettingsMembersRoute } from './wallet-settings-members-route';

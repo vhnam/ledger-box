@@ -4,7 +4,7 @@ import { Badge } from '@vhnam/ui/components/ui/badge';
 
 import type { WalletMemberDto } from '#/queries/wallets/wallet-member.dto';
 
-import { hasRegisteredWalletMember } from '#/modules/wallet-settings/wallet-settings-members/wallet-member.utils';
+import { hasRegisteredWalletMember } from './wallet-member.utils';
 
 type WalletMemberIdentityProps = {
   member: WalletMemberDto;

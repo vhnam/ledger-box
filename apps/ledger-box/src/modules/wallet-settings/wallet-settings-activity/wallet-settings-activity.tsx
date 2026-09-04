@@ -1,4 +1,3 @@
-import { cn } from 'cn';
 import { useMemo, useState } from 'react';
 import { FormattedMessage, useIntl, type IntlShape } from 'react-intl';
 
@@ -8,6 +7,7 @@ import { Badge } from '@vhnam/ui/components/ui/badge';
 import { Button } from '@vhnam/ui/components/ui/button';
 import { Skeleton } from '@vhnam/ui/components/ui/skeleton';
 import { ToggleGroup, ToggleGroupItem } from '@vhnam/ui/components/ui/toggle-group';
+import { cn } from '@vhnam/ui/lib/cn';
 
 import { formatSignedCurrency } from '@vhnam/utils/currency';
 import { formatDateTime } from '@vhnam/utils/date';
@@ -21,9 +21,9 @@ import type { ActivityLogItemDto } from '#/queries/activity/activity.dto';
 import { useWalletActivity } from '#/queries/activity/activity.queries';
 
 import { AppPagination } from '#/components/app-pagination';
+import { WalletEmpty } from '#/components/wallet-empty';
 
-import { useWalletSettingsActivityFilters } from '#/modules/wallet-settings/wallet-settings-activity/wallet-settings-activity.actions';
-import { WalletEmpty } from '#/modules/wallets/wallet-empty';
+import { useWalletSettingsActivityFilters } from './wallet-settings-activity.actions';
 
 type WalletSettingsActivityProps = {
   walletId: string;

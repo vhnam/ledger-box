@@ -3,7 +3,7 @@ import { getAvatarFallbackFromEmail, getAvatarFallbackFromName } from '@vhnam/ui
 
 import type { WalletMemberDto } from '#/queries/wallets/wallet-member.dto';
 
-import { hasRegisteredWalletMember } from '#/modules/wallet-settings/wallet-settings-members/wallet-member.utils';
+import { hasRegisteredWalletMember } from './wallet-member.utils';
 
 type WalletMemberAvatarProps = {
   member: WalletMemberDto;

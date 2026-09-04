@@ -8,7 +8,7 @@ import {
   type WalletTransactionSearchInput,
 } from '#/schemas/wallet-transaction-search.schema';
 
-import { WalletPage } from '#/modules/wallets/wallet-page';
+import { WalletPage } from '#/modules/wallet-transactions/wallet-page';
 
 export const Route = createFileRoute('/_app/wallets/$walletId/')({
   validateSearch: (search: WalletTransactionSearchInput & SearchSchemaInput) =>

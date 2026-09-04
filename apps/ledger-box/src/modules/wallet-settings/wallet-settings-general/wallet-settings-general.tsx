@@ -12,8 +12,8 @@ import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
 
-import { useWalletSettingsGeneralActions } from '#/modules/wallet-settings/wallet-settings-general/wallet-settings-general.actions';
-import { DeleteWalletDialog } from '#/modules/wallets/wallet-delete-dialog';
+import { DeleteWalletDialog } from './wallet-settings-general-delete-dialog';
+import { useWalletSettingsGeneralActions } from './wallet-settings-general.actions';
 
 type WalletSettingsGeneralProps = {
   wallet: WalletDto;

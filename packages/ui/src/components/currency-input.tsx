@@ -1,4 +1,3 @@
-import { cn } from 'cn';
 import * as React from 'react';
 
 import {
@@ -10,6 +9,7 @@ import {
 } from '@vhnam/utils/currency';
 
 import { Input } from '#/components/ui/input';
+import { cn } from '#/lib/cn';
 
 type CurrencyInputProps = Omit<React.ComponentProps<'input'>, 'defaultValue' | 'onChange' | 'type' | 'value'> & {
   value?: string;

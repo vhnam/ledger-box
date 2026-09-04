@@ -1,5 +1,6 @@
-import { cn } from 'cn';
 import * as React from 'react';
+
+import { cn } from '#/lib/cn';
 
 function Card({ className, size = 'default', ...props }: React.ComponentProps<'div'> & { size?: 'default' | 'sm' }) {
   return (
@@ -32,7 +33,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-title"
-      className={cn('font-display text-base leading-snug font-medium group-data-[size=sm]/card:text-sm', className)}
+      className={cn('text-base leading-snug font-medium group-data-[size=sm]/card:text-sm', className)}
       {...props}
     />
   );

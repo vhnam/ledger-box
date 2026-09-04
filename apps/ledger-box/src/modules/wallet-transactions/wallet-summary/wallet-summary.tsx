@@ -1,0 +1,160 @@
+import { FormattedMessage } from 'react-intl';
+
+import { Icon, type IconName } from '@vhnam/ui/components/icon';
+import { Skeleton } from '@vhnam/ui/components/ui/skeleton';
+import { cn } from '@vhnam/ui/lib/cn';
+
+import { formatCurrency } from '@vhnam/utils/currency';
+
+import { useAppLocale } from '#/lib/locale/locale-context';
+
+import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
+import { useWallets } from '#/queries/wallets/wallet.queries';
+
+import { useWalletSummary } from './wallet-summary.actions';
+
+type WalletSummaryTone = 'income' | 'expense' | 'neutral';
+
+interface WalletSummaryStat {
+  labelId: string;
+  defaultLabel: string;
+  value: number;
+  icon: IconName;
+  tone: WalletSummaryTone;
+  highlightWhenNegative?: boolean;
+  featured?: boolean;
+}
+
+const toneStyles: Record<WalletSummaryTone, { value: string; icon: string; iconBackground: string; label: string }> = {
+  income: {
+    value: 'text-emerald-400',
+    icon: 'text-emerald-400',
+    iconBackground: 'bg-emerald-400/10',
+    label: 'text-muted-foreground',
+  },
+  expense: {
+    value: 'text-rose-400',
+    icon: 'text-rose-400',
+    iconBackground: 'bg-rose-400/10',
+    label: 'text-muted-foreground',
+  },
+  neutral: {
+    value: 'text-foreground',
+    icon: 'text-muted-foreground',
+    iconBackground: 'bg-muted',
+    label: 'text-muted-foreground',
+  },
+};
+
+const negativeTextStyles = {
+  value: 'text-rose-500',
+  icon: 'text-rose-500',
+  iconBackground: 'bg-rose-500/10',
+  label: 'text-rose-500',
+};
+
+const negativeCardClassName = 'bg-rose-500/10 border-rose-500/30';
+
+type WalletSummaryProps = {
+  walletId: string;
+  transactionQuery: Omit<TransactionQueryParams, 'page' | 'pageSize'>;
+};
+
+function WalletSummaryStatCard({
+  stat,
+  currency,
+  locale,
+}: {
+  stat: WalletSummaryStat;
+  currency: string;
+  locale: string;
+}) {
+  const isNegative = stat.highlightWhenNegative === true && stat.value < 0;
+  const styles = isNegative ? { ...toneStyles[stat.tone], ...negativeTextStyles } : toneStyles[stat.tone];
+
+  return (
+    <div
+      className={cn(
+        'bg-card rounded-xl border border-border p-3 md:p-4 flex flex-col gap-2',
+        stat.featured && 'col-span-2 sm:col-span-1 flex-row md:flex-col items-center sm:items-start gap-3 sm:gap-2',
+        isNegative && negativeCardClassName,
+      )}
+    >
+      <div className={cn('flex size-10 items-center justify-center rounded-lg', styles.iconBackground)}>
+        <Icon name={stat.icon} className={cn('size-6', styles.icon)} />
+      </div>
+      <div>
+        <p className={cn('mb-0.5 text-xs', styles.label)}>
+          <FormattedMessage id={stat.labelId} defaultMessage={stat.defaultLabel} />
+        </p>
+        <p className={cn('font-mono truncate text-sm font-semibold leading-tight md:text-base', styles.value)}>
+          {formatCurrency(stat.value, { currency, locale })}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function WalletSummary({ walletId, transactionQuery }: WalletSummaryProps) {
+  const { data: wallets = [] } = useWallets();
+  const currency = wallets.find((wallet) => wallet.id === walletId)?.currency ?? 'VND';
+  const locale = useAppLocale();
+  const { stats, isPending, isError } = useWalletSummary({ walletId, transactionQuery });
+
+  if (isPending) {
+    return (
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 md:gap-3 mb-4 md:mb-6">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <div key={index} className="bg-card rounded-xl border border-border p-3 md:p-4 flex flex-col gap-2">
+            <Skeleton className="size-10 rounded-lg" />
+            <Skeleton className="h-4 w-full" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <p className="mb-6 text-sm text-destructive">
+        <FormattedMessage id="wallet.summary.loadFailed" defaultMessage="Failed to load wallet summary." />
+      </p>
+    );
+  }
+
+  const walletSummaryStats: WalletSummaryStat[] = [
+    {
+      labelId: 'wallet.summary.income',
+      defaultLabel: 'Income',
+      value: stats.income,
+      icon: 'TrendUpIcon',
+      tone: 'income',
+    },
+    {
+      labelId: 'wallet.summary.expenses',
+      defaultLabel: 'Expenses',
+      value: stats.expenses,
+      icon: 'TrendDownIcon',
+      tone: 'expense',
+    },
+    {
+      labelId: 'wallet.summary.netBalance',
+      defaultLabel: 'Net balance',
+      value: stats.netBalance,
+      icon: 'ScalesIcon',
+      tone: 'neutral',
+      highlightWhenNegative: true,
+      featured: true,
+    },
+  ];
+
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 md:gap-3 mb-4 md:mb-6">
+      {walletSummaryStats.map((stat) => (
+        <WalletSummaryStatCard key={stat.labelId} stat={stat} currency={currency} locale={locale} />
+      ))}
+    </div>
+  );
+}
+
+export { WalletSummary };

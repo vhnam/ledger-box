@@ -26,7 +26,6 @@
     "@vhnam/utils": "workspace:*",
     "axios": "catalog:",
     "better-auth": "catalog:",
-    "cn": "catalog:",
     "kysely": "catalog:",
     "pdfkit": "catalog:",
     "pg": "^8.23.0",

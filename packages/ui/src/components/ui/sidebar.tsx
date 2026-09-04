@@ -4,7 +4,6 @@ import { mergeProps } from '@base-ui/react/merge-props';
 import { useRender } from '@base-ui/react/use-render';
 import { SidebarIcon } from '@phosphor-icons/react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from 'cn';
 import * as React from 'react';
 
 import { Button } from '#/components/ui/button.tsx';
@@ -14,6 +13,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '
 import { Skeleton } from '#/components/ui/skeleton.tsx';
 import { Tooltip, TooltipContent, TooltipTrigger } from '#/components/ui/tooltip.tsx';
 import { useIsMobile } from '#/hooks/use-mobile.ts';
+import { cn } from '#/lib/cn';
 
 const SIDEBAR_COOKIE_NAME = 'sidebar_state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;

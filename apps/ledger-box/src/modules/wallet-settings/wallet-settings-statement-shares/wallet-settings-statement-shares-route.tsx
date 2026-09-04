@@ -1,6 +1,6 @@
 import { useWallet, useWallets } from '#/queries/wallets/wallet.queries';
 
-import { WalletSettingsStatementShares } from '#/modules/wallet-settings/wallet-settings-statement-shares/wallet-settings-statement-shares';
+import { WalletSettingsStatementShares } from './wallet-settings-statement-shares';
 
 type WalletSettingsStatementSharesRouteProps = {
   walletId: string;

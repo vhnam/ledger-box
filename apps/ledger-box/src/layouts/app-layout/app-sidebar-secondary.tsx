@@ -11,7 +11,7 @@ import {
   SidebarMenuItem,
 } from '@vhnam/ui/components/ui/sidebar';
 
-import { CreateWalletDialog } from '#/modules/wallets/wallet-create-dialog';
+import { CreateWalletDialog } from '#/modules/wallet-transactions';
 
 function AppSidebarSecondary({ className, ...props }: ComponentProps<typeof SidebarGroup>) {
   const intl = useIntl();

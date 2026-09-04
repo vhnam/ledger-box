@@ -1,0 +1,140 @@
+import { FormattedMessage, useIntl } from 'react-intl';
+
+import { Icon } from '@vhnam/ui/components/icon';
+import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
+import { Button } from '@vhnam/ui/components/ui/button';
+import { FieldError } from '@vhnam/ui/components/ui/field';
+import { Spinner } from '@vhnam/ui/components/ui/spinner';
+
+import { formatErrorMessage } from '#/lib/locale/intl-message';
+
+import { useDeleteTransactionAttachmentDialogActions } from '#/modules/wallet-transaction-detail/wallet-delete-transaction-attachment-dialog/wallet-delete-transaction-attachment-dialog.actions';
+import type { TransactionAttachment } from '#/modules/wallet-transaction-detail/wallet-transaction-attachments/wallet-transaction-attachments.actions';
+
+type DeleteTransactionAttachmentDialogProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  attachment: TransactionAttachment | null;
+  walletId: string;
+  transactionId: string;
+  onRemovePending: (attachmentId: string) => void;
+};
+
+type DeleteTransactionAttachmentContentProps = {
+  attachment: TransactionAttachment;
+  isPending: boolean;
+  error: string | null;
+  onCancel: () => void;
+  onConfirm: () => void;
+};
+
+function DeleteTransactionAttachmentContent({
+  attachment,
+  isPending,
+  error,
+  onCancel,
+  onConfirm,
+}: DeleteTransactionAttachmentContentProps) {
+  const intl = useIntl();
+
+  return (
+    <div className="flex flex-col items-center gap-4 text-center">
+      <div className="flex size-12 items-center justify-center rounded-xl bg-destructive/10">
+        <Icon name="TrashIcon" className="size-6 text-destructive" />
+      </div>
+
+      <div className="space-y-2">
+        <h2 className="text-base font-medium">
+          <FormattedMessage id="attachment.delete.title" defaultMessage="Remove attachment?" />
+        </h2>
+        <p className="text-sm text-muted-foreground">
+          <FormattedMessage
+            id="attachment.delete.body"
+            defaultMessage='"{fileName}" will be permanently removed.'
+            values={{ fileName: attachment.fileName }}
+          />
+          <br />
+          <FormattedMessage id="common.cannotBeUndone" defaultMessage="This can't be undone." />
+        </p>
+      </div>
+
+      {error ? <FieldError>{formatErrorMessage(intl, error)}</FieldError> : null}
+
+      <div className="flex w-full gap-2">
+        <Button type="button" variant="outline" className="flex-1" onClick={onCancel} disabled={isPending}>
+          <FormattedMessage id="common.cancel" defaultMessage="Cancel" />
+        </Button>
+        <Button type="button" variant="destructive" className="flex-1" onClick={onConfirm} disabled={isPending}>
+          {isPending ? <Spinner className="size-4" /> : null}
+          {isPending ? (
+            <FormattedMessage id="common.removing" defaultMessage="Removing..." />
+          ) : (
+            <FormattedMessage id="common.remove" defaultMessage="Remove" />
+          )}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function DeleteTransactionAttachmentDialog({
+  open,
+  onOpenChange,
+  attachment,
+  walletId,
+  transactionId,
+  onRemovePending,
+}: DeleteTransactionAttachmentDialogProps) {
+  const intl = useIntl();
+  const { handleDeleteAttachment, isPending, error } = useDeleteTransactionAttachmentDialogActions({
+    walletId,
+    transactionId,
+    attachment,
+    onRemovePending,
+  });
+
+  if (!attachment) {
+    return null;
+  }
+
+  function handleCancel() {
+    onOpenChange(false);
+  }
+
+  function handleConfirm() {
+    handleDeleteAttachment(() => {
+      onOpenChange(false);
+    });
+  }
+
+  const content = (
+    <DeleteTransactionAttachmentContent
+      attachment={attachment}
+      isPending={isPending}
+      error={error}
+      onCancel={handleCancel}
+      onConfirm={handleConfirm}
+    />
+  );
+
+  return (
+    <ResponsiveDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title={intl.formatMessage({ id: 'attachment.delete.title', defaultMessage: 'Remove attachment?' })}
+      description={intl.formatMessage(
+        { id: 'attachment.delete.description', defaultMessage: 'Confirm removal of {fileName}' },
+        { fileName: attachment.fileName },
+      )}
+      hideTitle
+      hideDescription
+      showCloseButton={false}
+      headerClassName="sr-only"
+      className="sm:max-w-md"
+    >
+      {content}
+    </ResponsiveDialog>
+  );
+}
+
+export { DeleteTransactionAttachmentDialog };

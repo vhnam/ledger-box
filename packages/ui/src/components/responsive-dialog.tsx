@@ -1,5 +1,4 @@
 import type { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
-import { cn } from 'cn';
 import * as React from 'react';
 
 import {
@@ -21,6 +20,7 @@ import {
   SheetTrigger,
 } from '#/components/ui/sheet';
 import { useIsMobile } from '#/hooks/use-mobile';
+import { cn } from '#/lib/cn';
 
 type DismissReason = DialogPrimitive.Root.ChangeEventReason;
 
