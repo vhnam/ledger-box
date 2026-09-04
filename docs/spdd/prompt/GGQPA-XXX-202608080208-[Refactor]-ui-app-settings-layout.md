@@ -182,7 +182,7 @@ SettingsLocalePicker ..> LocaleChangeOverlay : begins transition
 
 1. Responsibility: Desktop/page title chrome for settings, aligned with `WalletHeader`.
 2. Package: `apps/ledger-box/src/modules/settings/settings-header/`.
-3. Render: `h-(--header-height) border-b bg-sidebar` with `settings.page.title` as `h1` (`font-heading text-base font-medium`). No Back, no `SidebarTrigger`.
+3. Render: `h-(--header-height) border-b bg-sidebar` with `settings.page.title` as `h1` (`font-display text-base font-medium`). No Back, no `SidebarTrigger`.
 4. Constraints: presentational only.
 
 ### Update Component - `SettingsShellLayout`

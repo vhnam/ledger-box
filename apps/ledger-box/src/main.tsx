@@ -3,9 +3,9 @@ import { createRouter, RouterProvider } from '@tanstack/react-router';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { ThemeProvider } from '@vhnam/ui/components/theme-provider';
-import { Toaster } from '@vhnam/ui/components/toast';
-import { TooltipProvider } from '@vhnam/ui/components/tooltip';
+import { Toaster } from '@vhnam/ui/components/ui/toast';
+import { TooltipProvider } from '@vhnam/ui/components/ui/tooltip';
+import { ThemeProvider } from '@vhnam/ui/lib/theme';
 
 import { LocaleProvider } from '#/lib/locale/locale-context';
 

@@ -1,6 +1,6 @@
 import { FormattedMessage } from 'react-intl';
 
-import { Skeleton } from '@vhnam/ui/components/skeleton';
+import { Skeleton } from '@vhnam/ui/components/ui/skeleton';
 
 import type { TransactionQueryParams } from '#/queries/transactions/transaction.params';
 
@@ -51,7 +51,7 @@ function WalletTransactions({ walletId, transactionQuery }: WalletTransactionsPr
       {!isPending && !isError && transactions.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-end justify-between">
-            <span className="font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            <span className="font-display text-xs font-semibold uppercase tracking-widest text-muted-foreground">
               <FormattedMessage id="transaction.list.heading" defaultMessage="Transactions" />
             </span>
             <span className="font-mono text-xs text-muted-foreground">{resultLabel}</span>

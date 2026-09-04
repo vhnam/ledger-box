@@ -1,6 +1,6 @@
 import { Outlet } from '@tanstack/react-router';
 
-import { Card } from '@vhnam/ui/components/card';
+import { Card } from '@vhnam/ui/components/ui/card';
 
 export function AuthLayout() {
   return (

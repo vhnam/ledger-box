@@ -3,7 +3,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useIntl } from 'react-intl';
 
-import { toast } from '@vhnam/ui/components/toast';
+import { toast } from '@vhnam/ui/components/ui/toast';
 
 import { deleteAccountSchema } from '#/schemas/auth.schema';
 

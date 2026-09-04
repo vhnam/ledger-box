@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 
-import { ScrollArea } from '@vhnam/ui/components/scroll-area';
-import { cn } from '@vhnam/ui/lib/utils';
+import { ScrollArea } from '@vhnam/ui/components/ui/scroll-area';
+import { cn } from '@vhnam/ui/lib/cn';
 
 type SectionShellLayoutProps = {
   /** Optional chrome above the two-column body (e.g. wallet page header). */

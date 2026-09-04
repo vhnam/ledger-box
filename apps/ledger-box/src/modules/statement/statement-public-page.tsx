@@ -1,15 +1,15 @@
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { buttonVariants } from '@vhnam/ui/components/button';
+import { Icon } from '@vhnam/ui/components/icon';
+import { buttonVariants } from '@vhnam/ui/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@vhnam/ui/components/dropdown-menu';
-import { Icon } from '@vhnam/ui/components/icon';
-import { Spinner } from '@vhnam/ui/components/spinner';
+} from '@vhnam/ui/components/ui/dropdown-menu';
+import { Spinner } from '@vhnam/ui/components/ui/spinner';
 
 import { getApiErrorMessage } from '#/lib/api-error/api-error';
 import { formatErrorMessage } from '#/lib/locale/intl-message';
@@ -33,7 +33,7 @@ function StatementPublicPage({ token }: StatementPublicPageProps) {
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-2xl flex-col gap-6 p-4 lg:p-8">
       <div className="flex items-center justify-between gap-3">
-        <h1 className="font-heading text-lg font-medium">{data?.displayTitle ?? fallbackTitle}</h1>
+        <h1 className="font-display text-lg font-medium">{data?.displayTitle ?? fallbackTitle}</h1>
         {data ? (
           <DropdownMenu>
             <DropdownMenuTrigger className={buttonVariants({ variant: 'outline', size: 'sm' })}>

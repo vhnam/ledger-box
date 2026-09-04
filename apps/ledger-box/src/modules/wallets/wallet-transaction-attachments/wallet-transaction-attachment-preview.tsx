@@ -1,10 +1,10 @@
+import { cn } from 'cn';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
-import { Button } from '@vhnam/ui/components/button';
-import { Dialog, DialogContent } from '@vhnam/ui/components/dialog';
 import { Icon } from '@vhnam/ui/components/icon';
-import { cn } from '@vhnam/ui/lib/utils';
+import { Button } from '@vhnam/ui/components/ui/button';
+import { Dialog, DialogContent } from '@vhnam/ui/components/ui/dialog';
 
 import { isPdfContentType } from '#/utils/attachments/file';
 

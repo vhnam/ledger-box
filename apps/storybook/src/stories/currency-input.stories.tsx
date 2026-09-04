@@ -3,7 +3,7 @@ import { useRef, useState, type ComponentProps } from 'react';
 import { expect } from 'storybook/test';
 
 import { CurrencyInput } from '@vhnam/ui/components/currency-input';
-import { Field, FieldDescription, FieldLabel } from '@vhnam/ui/components/field';
+import { Field, FieldDescription, FieldLabel } from '@vhnam/ui/components/ui/field';
 
 const meta = {
   title: 'Components/CurrencyInput',

@@ -1,7 +1,7 @@
 import { ListIcon, XIcon } from '@phosphor-icons/react';
 import { useState } from 'react';
 
-import { Button } from '@vhnam/ui/components/button';
+import { Button } from '@vhnam/ui/components/ui/button';
 
 const LINKS = [
   { href: '#situation', label: 'The situation' },

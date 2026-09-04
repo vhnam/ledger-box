@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor, within } from 'storybook/test';
 
-import { Button } from '@vhnam/ui/components/button';
-import { Field, FieldLabel } from '@vhnam/ui/components/field';
-import { Input } from '@vhnam/ui/components/input';
+import { Button } from '@vhnam/ui/components/ui/button';
+import { Field, FieldLabel } from '@vhnam/ui/components/ui/field';
+import { Input } from '@vhnam/ui/components/ui/input';
 import {
   Sheet,
   SheetClose,
@@ -13,7 +13,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@vhnam/ui/components/sheet';
+} from '@vhnam/ui/components/ui/sheet';
 
 const meta = {
   title: 'Components/Sheet',

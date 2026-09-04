@@ -1,8 +1,8 @@
 import { Link } from '@tanstack/react-router';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Button } from '@vhnam/ui/components/button';
-import { Spinner } from '@vhnam/ui/components/spinner';
+import { Button } from '@vhnam/ui/components/ui/button';
+import { Spinner } from '@vhnam/ui/components/ui/spinner';
 
 import { WALLET_MEMBER_ROLE_OPTIONS } from '#/constants/wallet-member-role-options';
 
@@ -45,7 +45,7 @@ function InvitePublicPage({ token }: InvitePublicPageProps) {
         </>
       ) : data ? (
         <>
-          <h1 className="font-heading text-lg font-medium">
+          <h1 className="font-display text-lg font-medium">
             <FormattedMessage
               id="invite.heading"
               defaultMessage="You've been invited to {walletName} as {role}"

@@ -1,6 +1,7 @@
 import type { ChangeEvent, RefObject } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
+import { Icon } from '@vhnam/ui/components/icon';
 import {
   Attachment,
   AttachmentContent,
@@ -8,8 +9,7 @@ import {
   AttachmentMedia,
   AttachmentTitle,
   AttachmentTrigger,
-} from '@vhnam/ui/components/attachment';
-import { Icon } from '@vhnam/ui/components/icon';
+} from '@vhnam/ui/components/ui/attachment';
 
 const ACCEPTED_ATTACHMENT_TYPES = '.pdf,.png,.jpg,.jpeg,.webp';
 

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { Icon } from '@vhnam/ui/components/icon';
-import { Toggle } from '@vhnam/ui/components/toggle';
+import { Toggle } from '@vhnam/ui/components/ui/toggle';
 
 const meta = {
   title: 'Components/Toggle',

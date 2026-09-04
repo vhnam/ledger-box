@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { expect, waitFor, within } from 'storybook/test';
 
-import { DatePicker } from '@vhnam/ui/components/date-picker';
+import { DatePicker } from '@vhnam/ui/components/ui/date-picker';
 
 const meta = {
   title: 'Components/DatePicker',

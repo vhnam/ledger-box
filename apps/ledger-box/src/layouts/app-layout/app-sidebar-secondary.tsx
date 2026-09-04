@@ -9,7 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@vhnam/ui/components/sidebar';
+} from '@vhnam/ui/components/ui/sidebar';
 
 import { CreateWalletDialog } from '#/modules/wallets/wallet-create-dialog';
 

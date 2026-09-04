@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor, within } from 'storybook/test';
 
-import { Button } from '@vhnam/ui/components/button';
+import { Button } from '@vhnam/ui/components/ui/button';
 import {
   Dialog,
   DialogClose,
@@ -11,9 +11,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@vhnam/ui/components/dialog';
-import { Field, FieldLabel } from '@vhnam/ui/components/field';
-import { Input } from '@vhnam/ui/components/input';
+} from '@vhnam/ui/components/ui/dialog';
+import { Field, FieldLabel } from '@vhnam/ui/components/ui/field';
+import { Input } from '@vhnam/ui/components/ui/input';
 
 const meta = {
   title: 'Components/Dialog',

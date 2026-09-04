@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
 
+import { Icon } from '@vhnam/ui/components/icon';
 import {
   Attachment,
   AttachmentAction,
@@ -11,9 +12,8 @@ import {
   AttachmentMedia,
   AttachmentTitle,
   AttachmentTrigger,
-} from '@vhnam/ui/components/attachment';
-import { Icon } from '@vhnam/ui/components/icon';
-import { Spinner } from '@vhnam/ui/components/spinner';
+} from '@vhnam/ui/components/ui/attachment';
+import { Spinner } from '@vhnam/ui/components/ui/spinner';
 
 import { sampleAvatarDataUri } from '../fixtures/sample-avatar';
 

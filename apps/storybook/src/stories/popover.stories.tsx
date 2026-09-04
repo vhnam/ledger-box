@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor, within } from 'storybook/test';
 
-import { Button } from '@vhnam/ui/components/button';
-import { Input } from '@vhnam/ui/components/input';
-import { Label } from '@vhnam/ui/components/label';
+import { Button } from '@vhnam/ui/components/ui/button';
+import { Input } from '@vhnam/ui/components/ui/input';
+import { Label } from '@vhnam/ui/components/ui/label';
 import {
   Popover,
   PopoverContent,
@@ -11,7 +11,7 @@ import {
   PopoverHeader,
   PopoverTitle,
   PopoverTrigger,
-} from '@vhnam/ui/components/popover';
+} from '@vhnam/ui/components/ui/popover';
 
 const meta = {
   title: 'Components/Popover',

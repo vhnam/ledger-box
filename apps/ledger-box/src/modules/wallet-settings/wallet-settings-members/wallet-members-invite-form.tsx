@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Button } from '@vhnam/ui/components/button';
-import { Field, FieldDescription, FieldError } from '@vhnam/ui/components/field';
 import { Icon } from '@vhnam/ui/components/icon';
-import { Input } from '@vhnam/ui/components/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@vhnam/ui/components/select';
-import { Spinner } from '@vhnam/ui/components/spinner';
+import { Button } from '@vhnam/ui/components/ui/button';
+import { Field, FieldDescription, FieldError } from '@vhnam/ui/components/ui/field';
+import { Input } from '@vhnam/ui/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@vhnam/ui/components/ui/select';
+import { Spinner } from '@vhnam/ui/components/ui/spinner';
 
 import { WALLET_MEMBER_ROLE_OPTIONS, type WalletMemberRole } from '#/constants/wallet-member-role-options';
 

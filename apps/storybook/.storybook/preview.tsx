@@ -2,7 +2,7 @@
 
 import type { Preview } from '@storybook/react-vite';
 
-import { ThemeProvider } from '@vhnam/ui/components/theme-provider';
+import { ThemeProvider } from '@vhnam/ui/lib/theme';
 
 import '../src/style.css';
 

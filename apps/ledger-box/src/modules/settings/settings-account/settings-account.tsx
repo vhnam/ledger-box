@@ -1,13 +1,13 @@
 import { Link } from '@tanstack/react-router';
+import { cn } from 'cn';
 import { useState, type ReactNode } from 'react';
 import { FormattedList, FormattedMessage } from 'react-intl';
 
-import { Button } from '@vhnam/ui/components/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@vhnam/ui/components/card';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@vhnam/ui/components/collapsible';
 import { GoogleLogoIcon, Icon } from '@vhnam/ui/components/icon';
-import { Spinner } from '@vhnam/ui/components/spinner';
-import { cn } from '@vhnam/ui/lib/utils';
+import { Button } from '@vhnam/ui/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@vhnam/ui/components/ui/card';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@vhnam/ui/components/ui/collapsible';
+import { Spinner } from '@vhnam/ui/components/ui/spinner';
 
 import { GUIDELINE_URL } from '#/constants/urls';
 
@@ -39,7 +39,7 @@ function SettingsAccount() {
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-1 border-b pb-4">
-        <h1 className="font-heading text-2xl font-semibold">
+        <h1 className="font-display text-2xl font-semibold">
           <FormattedMessage id="settings.account.title" defaultMessage="Account" />
         </h1>
         <p className="text-sm text-muted-foreground">
@@ -55,7 +55,7 @@ function SettingsAccount() {
         </CardHeader>
 
         <CardContent>
-          <div className="flex flex-col divide-y [&>*:first-child]:pt-0 [&>*:last-child]:pb-0 [&>*]:py-4">
+          <div className="flex flex-col divide-y [&>*:first-child]:pt-0 [&>*:last-child]:pb-0 *:py-4">
             <Collapsible open={changePasswordOpen} onOpenChange={setChangePasswordOpen}>
               <SignInMethodRow
                 icon={<Icon name="EnvelopeSimpleIcon" className="size-4" />}

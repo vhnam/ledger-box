@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { expect } from 'storybook/test';
 
-import { Calendar } from '@vhnam/ui/components/calendar';
 import type { DatePickerRangeValue } from '@vhnam/ui/components/date-picker-range';
+import { Calendar } from '@vhnam/ui/components/ui/calendar';
 
 const meta = {
   title: 'Components/Calendar',

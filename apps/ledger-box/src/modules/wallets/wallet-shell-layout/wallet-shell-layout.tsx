@@ -1,16 +1,16 @@
 import { Link, Navigate, Outlet, useLocation } from '@tanstack/react-router';
+import { cn } from 'cn';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Button } from '@vhnam/ui/components/button';
+import { Icon, type IconName } from '@vhnam/ui/components/icon';
+import { Button } from '@vhnam/ui/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@vhnam/ui/components/dropdown-menu';
-import { Icon, type IconName } from '@vhnam/ui/components/icon';
-import { Spinner } from '@vhnam/ui/components/spinner';
-import { cn } from '@vhnam/ui/lib/utils';
+} from '@vhnam/ui/components/ui/dropdown-menu';
+import { Spinner } from '@vhnam/ui/components/ui/spinner';
 
 import { WALLET_MEMBER_ROLES } from '#/constants/wallet-member-role-options';
 

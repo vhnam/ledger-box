@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@vhnam/ui/components/collapsible';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@vhnam/ui/components/ui/collapsible';
 
 const meta = {
   title: 'Components/Collapsible',

@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@vhnam/ui/components/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@vhnam/ui/components/select';
-import { Spinner } from '@vhnam/ui/components/spinner';
-import { toast } from '@vhnam/ui/components/toast';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@vhnam/ui/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@vhnam/ui/components/ui/select';
+import { Spinner } from '@vhnam/ui/components/ui/spinner';
+import { toast } from '@vhnam/ui/components/ui/toast';
 
 import type { SupportedLocale } from '@vhnam/utils/locale';
 

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { ToggleGroup, ToggleGroupItem } from '@vhnam/ui/components/toggle-group';
+import { ToggleGroup, ToggleGroupItem } from '@vhnam/ui/components/ui/toggle-group';
 
 const meta = {
   title: 'Components/ToggleGroup',

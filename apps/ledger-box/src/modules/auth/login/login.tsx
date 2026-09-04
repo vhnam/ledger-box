@@ -1,10 +1,10 @@
 import { Field as FormField, Form } from '@formisch/react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Button } from '@vhnam/ui/components/button';
-import { CardContent, CardDescription, CardHeader, CardTitle } from '@vhnam/ui/components/card';
-import { Field, FieldError, FieldGroup, FieldLabel } from '@vhnam/ui/components/field';
-import { Input } from '@vhnam/ui/components/input';
+import { Button } from '@vhnam/ui/components/ui/button';
+import { CardContent, CardDescription, CardHeader, CardTitle } from '@vhnam/ui/components/ui/card';
+import { Field, FieldError, FieldGroup, FieldLabel } from '@vhnam/ui/components/ui/field';
+import { Input } from '@vhnam/ui/components/ui/input';
 
 import { formatErrorMessage } from '#/lib/locale/intl-message';
 

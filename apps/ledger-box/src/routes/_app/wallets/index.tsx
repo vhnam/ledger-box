@@ -1,6 +1,6 @@
 import { createFileRoute, Navigate } from '@tanstack/react-router';
 
-import { Spinner } from '@vhnam/ui/components/spinner';
+import { Spinner } from '@vhnam/ui/components/ui/spinner';
 
 import { useWallets } from '#/queries/wallets/wallet.queries';
 

@@ -104,6 +104,8 @@
   "transaction.list.resultOne": "1 件",
   "transaction.list.resultOther": "{count} 件",
   "transaction.list.pageOf": "{page} / {totalPages} ページ",
+  "pagination.next.text": "次へ",
+  "pagination.previous.text": "前へ",
   "transaction.add.title": "新しい取引",
   "transaction.add.amount.label": "金額",
   "transaction.add.amount.placeholder": "金額を入力",

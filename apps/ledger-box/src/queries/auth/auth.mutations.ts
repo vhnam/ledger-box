@@ -21,7 +21,7 @@ export function useDisconnectGoogle() {
 
   return useMutation({
     mutationFn: async (accountId: string) => {
-      const { error } = await authClient.unlinkAccount({ providerId: 'google', accountId });
+      const { error } = await authClient.unlinkAccount({ accountId });
 
       if (error) {
         throw new Error(error.message ?? 'settings.account.google.disconnectErrorFallback');

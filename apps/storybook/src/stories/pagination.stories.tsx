@@ -8,7 +8,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@vhnam/ui/components/pagination';
+} from '@vhnam/ui/components/ui/pagination';
 
 const meta = {
   title: 'Components/Pagination',

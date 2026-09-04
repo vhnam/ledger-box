@@ -1,13 +1,13 @@
 import { Field as FormField, Form, isDirty, reset, useForm } from '@formisch/react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Button } from '@vhnam/ui/components/button';
-import { Field, FieldError, FieldLabel } from '@vhnam/ui/components/field';
-import { Input } from '@vhnam/ui/components/input';
 import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@vhnam/ui/components/select';
-import { Spinner } from '@vhnam/ui/components/spinner';
-import { toast } from '@vhnam/ui/components/toast';
+import { Button } from '@vhnam/ui/components/ui/button';
+import { Field, FieldError, FieldLabel } from '@vhnam/ui/components/ui/field';
+import { Input } from '@vhnam/ui/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@vhnam/ui/components/ui/select';
+import { Spinner } from '@vhnam/ui/components/ui/spinner';
+import { toast } from '@vhnam/ui/components/ui/toast';
 
 import { createWalletSchema, WALLET_CURRENCIES, type CreateWalletSchema } from '#/schemas/wallet.schema';
 

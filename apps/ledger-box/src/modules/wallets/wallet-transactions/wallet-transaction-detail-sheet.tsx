@@ -1,10 +1,10 @@
+import { cn } from 'cn';
 import type { ReactNode } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { Button } from '@vhnam/ui/components/button';
 import { Icon, type IconName } from '@vhnam/ui/components/icon';
 import { ResponsiveDialog } from '@vhnam/ui/components/responsive-dialog';
-import { cn } from '@vhnam/ui/lib/utils';
+import { Button } from '@vhnam/ui/components/ui/button';
 
 import { format, toDate } from '@vhnam/utils/date';
 

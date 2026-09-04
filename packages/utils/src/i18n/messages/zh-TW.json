@@ -104,6 +104,8 @@
   "transaction.list.resultOne": "1 條結果",
   "transaction.list.resultOther": "{count} 條結果",
   "transaction.list.pageOf": "第 {page} 頁，共 {totalPages} 頁",
+  "pagination.next.text": "下一頁",
+  "pagination.previous.text": "上一頁",
   "transaction.add.title": "新建交易",
   "transaction.add.amount.label": "金額",
   "transaction.add.amount.placeholder": "輸入金額",

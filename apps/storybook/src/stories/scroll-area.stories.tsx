@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { ScrollArea } from '@vhnam/ui/components/scroll-area';
-import { Separator } from '@vhnam/ui/components/separator';
+import { ScrollArea } from '@vhnam/ui/components/ui/scroll-area';
+import { Separator } from '@vhnam/ui/components/ui/separator';
 
 const meta = {
   title: 'Components/ScrollArea',
@@ -21,7 +21,7 @@ export const Default: Story = {
   render: () => (
     <ScrollArea className="h-72 w-48 rounded-lg border">
       <div className="p-4">
-        <h4 className="font-heading mb-4 text-sm leading-none font-medium">Tags</h4>
+        <h4 className="font-display mb-4 text-sm leading-none font-medium">Tags</h4>
         {tags.map((tag) => (
           <div key={tag}>
             <div className="text-sm">{tag}</div>

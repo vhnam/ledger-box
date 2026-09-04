@@ -1,13 +1,13 @@
+import { cn } from 'cn';
 import { useMemo, useState } from 'react';
 import { FormattedMessage, useIntl, type IntlShape } from 'react-intl';
 
-import { Badge } from '@vhnam/ui/components/badge';
-import { Button } from '@vhnam/ui/components/button';
 import { DatePickerRange } from '@vhnam/ui/components/date-picker-range';
 import { Icon } from '@vhnam/ui/components/icon';
-import { Skeleton } from '@vhnam/ui/components/skeleton';
-import { ToggleGroup, ToggleGroupItem } from '@vhnam/ui/components/toggle-group';
-import { cn } from '@vhnam/ui/lib/utils';
+import { Badge } from '@vhnam/ui/components/ui/badge';
+import { Button } from '@vhnam/ui/components/ui/button';
+import { Skeleton } from '@vhnam/ui/components/ui/skeleton';
+import { ToggleGroup, ToggleGroupItem } from '@vhnam/ui/components/ui/toggle-group';
 
 import { formatSignedCurrency } from '@vhnam/utils/currency';
 import { formatDateTime } from '@vhnam/utils/date';
@@ -213,7 +213,7 @@ function WalletSettingsActivity({ walletId, currency }: WalletSettingsActivityPr
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-1 border-b pb-4">
-        <h1 className="font-heading text-2xl font-semibold">
+        <h1 className="font-display text-2xl font-semibold">
           <FormattedMessage id="wallet.settings.activity.title" defaultMessage="Activity" />
         </h1>
         <p className="text-sm text-muted-foreground">
@@ -289,7 +289,7 @@ function WalletSettingsActivity({ walletId, currency }: WalletSettingsActivityPr
         {!isPending && !isError && data.items.length > 0 && (
           <div className="space-y-4">
             <div className="flex items-end justify-between">
-              <span className="font-heading text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              <span className="font-display text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                 <FormattedMessage id="wallet.settings.activity.title" defaultMessage="Activity" />
               </span>
               <span className="font-mono text-xs text-muted-foreground">{resultLabel}</span>

@@ -1,7 +1,7 @@
 import { FormattedMessage } from 'react-intl';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@vhnam/ui/components/card';
-import { Spinner } from '@vhnam/ui/components/spinner';
+import { Card, CardContent, CardHeader, CardTitle } from '@vhnam/ui/components/ui/card';
+import { Spinner } from '@vhnam/ui/components/ui/spinner';
 
 import type { WalletDto } from '#/queries/wallets/wallet.dto';
 
@@ -42,7 +42,7 @@ function WalletSettingsMembers({ wallet }: WalletSettingsMembersProps) {
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-1 border-b pb-4">
-        <h1 className="font-heading text-2xl font-semibold">
+        <h1 className="font-display text-2xl font-semibold">
           <FormattedMessage id="wallet.settings.members.title" defaultMessage="Members" />
         </h1>
         <p className="text-sm text-muted-foreground">

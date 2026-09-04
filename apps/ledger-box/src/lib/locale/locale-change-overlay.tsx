@@ -1,8 +1,8 @@
+import { cn } from 'cn';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
-import { Spinner } from '@vhnam/ui/components/spinner';
-import { cn } from '@vhnam/ui/lib/utils';
+import { Spinner } from '@vhnam/ui/components/ui/spinner';
 
 import {
   FADE_IN_MS,
@@ -76,7 +76,7 @@ function LocaleChangeOverlay() {
       aria-hidden="true"
       data-slot="locale-change-overlay"
       className={cn(
-        'pointer-events-auto fixed inset-0 z-[200] flex items-center justify-center bg-background',
+        'pointer-events-auto fixed inset-0 z-200 flex items-center justify-center bg-background',
         !reduced && 'transition-opacity',
         opaque ? 'opacity-100' : 'opacity-0',
       )}
