@@ -22,6 +22,7 @@
   "[css]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
+  "css.lint.unknownAtRules": "ignore",
   "[jsonc]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   }
