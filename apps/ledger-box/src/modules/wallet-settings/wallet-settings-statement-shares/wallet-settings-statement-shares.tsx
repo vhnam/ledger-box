@@ -65,13 +65,19 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
     isPreviewing,
     isCreating,
     isDownloading,
+    isRegenerating,
     handlePreview,
     handleCreate,
     handleDownloadCsv,
     handleDownloadPdf,
     handleRevoke,
+    handleRegenerate,
     resetCreateFlow,
   } = useWalletSettingsStatementSharesActions({ wallet });
+
+  function handleRowRegenerate(shareId: string) {
+    handleRegenerate(shareId, () => setDialogOpen(true));
+  }
 
   function handleDialogOpenChange(open: boolean) {
     setDialogOpen(open);
@@ -173,7 +179,14 @@ function WalletSettingsStatementShares({ wallet }: WalletSettingsStatementShares
           {!isLoadingShares && shares.length > 0 ? (
             <ul className="space-y-4">
               {shares.map((share) => (
-                <WalletStatementShareRow key={share.id} walletId={wallet.id} share={share} onRevoke={handleRevoke} />
+                <WalletStatementShareRow
+                  key={share.id}
+                  walletId={wallet.id}
+                  share={share}
+                  onRevoke={handleRevoke}
+                  onRegenerate={handleRowRegenerate}
+                  isRegenerating={isRegenerating}
+                />
               ))}
             </ul>
           ) : null}

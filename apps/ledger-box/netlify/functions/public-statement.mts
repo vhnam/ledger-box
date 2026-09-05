@@ -3,7 +3,12 @@ import type { Config, Context } from '@netlify/functions';
 import { isSupportedLocale, parseAcceptLanguage, DEFAULT_LOCALE, type SupportedLocale } from '@vhnam/utils/locale';
 
 import { db } from '#/lib/db/index.ts';
-import type { StatementSnapshot } from '#/lib/wallet/statement.ts';
+import {
+  ATTACHMENT_EXPORT_URL_TTL_SECONDS,
+  ATTACHMENT_VIEW_URL_TTL_SECONDS,
+  resolveAttachmentViewUrls,
+  type StatementSnapshot,
+} from '#/lib/wallet/statement.ts';
 import { hashShareToken } from '#/utils/wallet/share-token.ts';
 import {
   buildStatementCsvFilename,
@@ -108,8 +113,9 @@ export default async (request: Request, context: Context) => {
 
   if (format === 'csv') {
     const filename = buildStatementCsvFilename(snapshot, share.displayTitle ?? 'statement');
+    const resolved = await resolveAttachmentViewUrls(snapshot, ATTACHMENT_EXPORT_URL_TTL_SECONDS);
 
-    return new Response(encodeStatementCsv(snapshot, share.displayTitle, { locale }), {
+    return new Response(encodeStatementCsv(resolved, share.displayTitle, { locale }), {
       headers: {
         'Content-Type': 'text/csv; charset=utf-8',
         'Content-Disposition': `attachment; filename="${filename}"`,
@@ -118,7 +124,8 @@ export default async (request: Request, context: Context) => {
   }
 
   if (format === 'pdf') {
-    const body = await encodeStatementPdf(snapshot, share.displayTitle, { locale });
+    const resolved = await resolveAttachmentViewUrls(snapshot, ATTACHMENT_EXPORT_URL_TTL_SECONDS);
+    const body = await encodeStatementPdf(resolved, share.displayTitle, { locale });
     const filename = buildStatementExportFilename(snapshot, share.displayTitle ?? 'statement', 'pdf');
 
     return new Response(Buffer.from(body), {
@@ -129,9 +136,11 @@ export default async (request: Request, context: Context) => {
     });
   }
 
+  const resolved = await resolveAttachmentViewUrls(snapshot, ATTACHMENT_VIEW_URL_TTL_SECONDS);
+
   return Response.json({
     displayTitle: share.displayTitle,
-    snapshot: share.snapshotJson,
+    snapshot: resolved,
   });
 };
 

@@ -1,4 +1,11 @@
-import { DeleteObjectCommand, ListObjectsV2Command, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  ListObjectsV2Command,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 const R2_ENDPOINT = process.env.CLOUDFLARE_ACCOUNT_ID
   ? `https://${process.env.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`
@@ -243,6 +250,39 @@ async function listTransactionAttachments(
   return [...attachmentsById.values()].sort((left, right) => left.fileName.localeCompare(right.fileName));
 }
 
+type GetAttachmentViewUrlInput = {
+  key: string;
+  fileName: string;
+  contentType: string;
+  expiresInSeconds: number;
+};
+
+/**
+ * Signs a time-limited, view-only GET URL for an attachment object: `ResponseContentDisposition:
+ * inline` makes the browser render it (image/PDF) rather than prompting a download, and the
+ * signature itself expires — unlike the permanent public bucket URL, this is meant for
+ * short-lived contexts (a statement share view, or an exported PDF/CSV) where the object
+ * should never be reachable via a link that outlives its purpose.
+ */
+async function getAttachmentViewUrl({
+  key,
+  fileName,
+  contentType,
+  expiresInSeconds,
+}: GetAttachmentViewUrlInput): Promise<string> {
+  const client = getR2Client();
+  const { bucket } = getR2BucketConfig();
+
+  const command = new GetObjectCommand({
+    Bucket: bucket,
+    Key: key,
+    ResponseContentDisposition: `inline; filename="${fileName}"`,
+    ResponseContentType: contentType,
+  });
+
+  return getSignedUrl(client, command, { expiresIn: expiresInSeconds });
+}
+
 async function deleteAttachmentsUnderPrefix(client: S3Client, bucket: string, prefix: string): Promise<boolean> {
   const response = await client.send(
     new ListObjectsV2Command({
@@ -289,4 +329,4 @@ async function deleteTransactionAttachment(
   return deletedTenant || deletedLegacy;
 }
 
-export { deleteTransactionAttachment, listTransactionAttachments, uploadTransactionAttachment };
+export { deleteTransactionAttachment, getAttachmentViewUrl, listTransactionAttachments, uploadTransactionAttachment };

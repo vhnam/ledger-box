@@ -12,6 +12,7 @@ export const editTransactionSchema = v.object({
   ),
   description: v.pipe(v.string(), v.trim(), v.nonEmpty('validation.description.required')),
   occurredAt: v.optional(v.pipe(v.string(), v.isoDate())),
+  occurredTime: v.optional(v.pipe(v.string(), v.regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'validation.occurredTime.invalid'))),
 });
 
 export type EditTransactionInput = v.InferInput<typeof editTransactionSchema>;

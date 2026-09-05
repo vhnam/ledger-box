@@ -1,3 +1,6 @@
+import { formatInTimeZone } from '@vhnam/utils/date';
+import type { SupportedLocale } from '@vhnam/utils/locale';
+
 import { FILTER_OPTIONS } from '#/constants/filter-options';
 
 type PeriodBounds = {
@@ -99,6 +102,70 @@ export function calendarDateToOccurredAtStart(timezone: string, yyyyMmDd: string
   return startOfDayUtc(parseYyyyMmDd(yyyyMmDd), timezone);
 }
 
+type ZonedTimeParts = { hour: number; minute: number; second: number };
+
+function getZonedTimeParts(date: Date, timeZone: string): ZonedTimeParts {
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    hourCycle: 'h23',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+
+  const parts = formatter.formatToParts(date);
+  const map: Record<string, string> = {};
+
+  for (const part of parts) {
+    map[part.type] = part.value;
+  }
+
+  const hour = map.hour === '24' ? 0 : Number(map.hour);
+
+  return { hour, minute: Number(map.minute), second: Number(map.second) };
+}
+
+function parseHhMm(value: string): { hour: number; minute: number; second: number } {
+  const [hour, minute] = value.split(':').map(Number);
+
+  return { hour, minute, second: 0 };
+}
+
+function pad(value: number): string {
+  return String(value).padStart(2, '0');
+}
+
+/**
+ * Reads a UTC instant as calendar-date (`yyyy-MM-dd`) and clock-time (`HH:mm`) strings in
+ * `timezone` — the inverse of {@link resolveEditedOccurredAt}. Client-safe (no server-only
+ * imports); used to pre-fill a date/time picker pair from a stored instant.
+ */
+export function toZonedDateAndTimeStrings(instant: Date, timezone: string): { date: string; time: string } {
+  const { year, month, day } = getZonedDateParts(instant, timezone);
+  const { hour, minute } = getZonedTimeParts(instant, timezone);
+
+  return { date: `${year}-${pad(month)}-${pad(day)}`, time: `${pad(hour)}:${pad(minute)}` };
+}
+
+/**
+ * Resolves the occurred-at instant for an edit. `datePart` (`yyyy-MM-dd`) and `timePart`
+ * (`HH:mm`) are each optional and independently fall back to the corresponding wall-clock
+ * component of `referenceInstant` (the record's current occurredAt, read in `timezone`) —
+ * editing only the date preserves the existing time and vice versa, since the date and time
+ * pickers can be edited independently and neither implies a change to the other.
+ */
+export function resolveEditedOccurredAt(
+  timezone: string,
+  referenceInstant: Date,
+  datePart?: string,
+  timePart?: string,
+): Date {
+  const { year, month, day } = datePart ? parseYyyyMmDd(datePart) : getZonedDateParts(referenceInstant, timezone);
+  const { hour, minute, second } = timePart ? parseHhMm(timePart) : getZonedTimeParts(referenceInstant, timezone);
+
+  return zonedWallTimeToUtc(year, month - 1, day, hour, minute, second, timezone);
+}
+
 function dayBounds(parts: ZonedDateParts, timezone: string): PeriodBounds {
   return {
     start: startOfDayUtc(parts, timezone),
@@ -193,10 +260,10 @@ export function resolvePeriodBounds(
 export function formatDateInTimezone(
   date: Date,
   timezone: string,
-  locale: string = 'en-US',
-  pattern: Intl.DateTimeFormatOptions = { dateStyle: 'medium' },
+  locale: SupportedLocale = 'en-US',
+  pattern: string = 'MMM d, yyyy',
 ): string {
-  return new Intl.DateTimeFormat(locale, { ...pattern, timeZone: timezone }).format(date);
+  return formatInTimeZone(date, timezone, pattern, locale);
 }
 
 export type { PeriodBounds };

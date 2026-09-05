@@ -2,7 +2,13 @@ import { describe, expect, it } from 'vite-plus/test';
 
 import { FILTER_OPTIONS } from '#/constants/filter-options';
 
-import { calendarDateToOccurredAtStart, formatDateInTimezone, resolvePeriodBounds } from './period-bounds';
+import {
+  calendarDateToOccurredAtStart,
+  formatDateInTimezone,
+  resolveEditedOccurredAt,
+  resolvePeriodBounds,
+  toZonedDateAndTimeStrings,
+} from './period-bounds';
 
 describe('calendarDateToOccurredAtStart', () => {
   it('returns the UTC instant for local midnight in the given timezone', () => {
@@ -16,6 +22,62 @@ describe('calendarDateToOccurredAtStart', () => {
     const date = calendarDateToOccurredAtStart('UTC', '2026-01-01');
 
     expect(date.toISOString()).toBe('2026-01-01T00:00:00.000Z');
+  });
+});
+
+describe('toZonedDateAndTimeStrings', () => {
+  it('is the inverse of resolveEditedOccurredAt for a non-UTC timezone', () => {
+    const instant = new Date('2026-08-08T10:30:00.000Z');
+    const { date, time } = toZonedDateAndTimeStrings(instant, 'Asia/Ho_Chi_Minh');
+
+    expect(date).toBe('2026-08-08');
+    expect(time).toBe('17:30');
+    expect(resolveEditedOccurredAt('Asia/Ho_Chi_Minh', instant, date, time).toISOString()).toBe(instant.toISOString());
+  });
+
+  it('pads single-digit month, day, hour, and minute', () => {
+    const { date, time } = toZonedDateAndTimeStrings(new Date('2026-01-05T02:05:00.000Z'), 'UTC');
+
+    expect(date).toBe('2026-01-05');
+    expect(time).toBe('02:05');
+  });
+});
+
+describe('resolveEditedOccurredAt', () => {
+  // 2026-08-08T10:30:45Z is 2026-08-08T17:30:45 in Asia/Ho_Chi_Minh (UTC+7).
+  const reference = new Date('2026-08-08T10:30:45.000Z');
+
+  it('keeps the reference time when only the date changes', () => {
+    const date = resolveEditedOccurredAt('Asia/Ho_Chi_Minh', reference, '2026-08-10', undefined);
+
+    // Local 2026-08-10T17:30:45 in UTC+7 is 2026-08-10T10:30:45Z.
+    expect(date.toISOString()).toBe('2026-08-10T10:30:45.000Z');
+  });
+
+  it('keeps the reference date when only the time changes', () => {
+    const date = resolveEditedOccurredAt('Asia/Ho_Chi_Minh', reference, undefined, '09:15');
+
+    // Local 2026-08-08T09:15:00 in UTC+7 is 2026-08-08T02:15:00Z.
+    expect(date.toISOString()).toBe('2026-08-08T02:15:00.000Z');
+  });
+
+  it('applies both when date and time change, zeroing seconds from the time picker', () => {
+    const date = resolveEditedOccurredAt('Asia/Ho_Chi_Minh', reference, '2026-08-10', '09:15');
+
+    expect(date.toISOString()).toBe('2026-08-10T02:15:00.000Z');
+  });
+
+  it('returns the reference instant unchanged when neither part is given', () => {
+    const date = resolveEditedOccurredAt('Asia/Ho_Chi_Minh', reference, undefined, undefined);
+
+    expect(date.toISOString()).toBe(reference.toISOString());
+  });
+
+  it('handles UTC directly', () => {
+    const utcReference = new Date('2026-01-01T05:15:30.000Z');
+    const date = resolveEditedOccurredAt('UTC', utcReference, '2026-01-05', undefined);
+
+    expect(date.toISOString()).toBe('2026-01-05T05:15:30.000Z');
   });
 });
 

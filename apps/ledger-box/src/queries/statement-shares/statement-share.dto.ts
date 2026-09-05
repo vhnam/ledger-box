@@ -18,12 +18,25 @@ export type StatementShareDto = {
   isActive: boolean;
 };
 
+/** `url` is always a freshly signed, short-lived, view-only link — never a permanent one. */
+export type StatementAttachmentDto = {
+  id: string;
+  fileName: string;
+  contentType: string;
+  size: number;
+  url: string;
+};
+
 export type StatementRowDto = {
   type: 'income' | 'expense';
   amount: number;
   description: string;
   occurredAt: string;
   runningBalance: number;
+  // Server always resolves this to an array (possibly empty), including for statement shares
+  // created before attachments were captured — but treat it as optional defensively, since
+  // this rides on a frozen JSON blob whose shape isn't guaranteed by the type system.
+  attachments?: StatementAttachmentDto[];
 };
 
 export type StatementSnapshotDto = {

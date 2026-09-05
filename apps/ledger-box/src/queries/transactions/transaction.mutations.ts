@@ -33,6 +33,8 @@ export function useAddTransaction() {
 type UpdateTransactionPayload = EditTransactionOutput & {
   walletId: string;
   transactionId: string;
+  /** IANA zone the submitted `occurredAt`/`occurredTime` were read in; interpreted server-side. */
+  timezone: string;
 };
 
 export function useUpdateTransaction() {

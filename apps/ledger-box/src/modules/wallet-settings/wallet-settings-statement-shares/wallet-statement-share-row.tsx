@@ -21,6 +21,8 @@ type WalletStatementShareRowProps = {
   walletId: string;
   share: StatementShareDto;
   onRevoke: (shareId: string) => void;
+  onRegenerate: (shareId: string) => void;
+  isRegenerating: boolean;
 };
 
 function getStatusVariant(share: StatementShareDto): 'default' | 'secondary' | 'destructive' {
@@ -35,7 +37,13 @@ function getStatusVariant(share: StatementShareDto): 'default' | 'secondary' | '
   return 'default';
 }
 
-function WalletStatementShareRow({ walletId, share, onRevoke }: WalletStatementShareRowProps) {
+function WalletStatementShareRow({
+  walletId,
+  share,
+  onRevoke,
+  onRegenerate,
+  isRegenerating,
+}: WalletStatementShareRowProps) {
   const intl = useIntl();
   const locale = useAppLocale();
   const statusVariant = getStatusVariant(share);
@@ -84,6 +92,21 @@ function WalletStatementShareRow({ walletId, share, onRevoke }: WalletStatementS
         </p>
       </div>
       <div className="flex shrink-0 items-center gap-2">
+        {!share.revokedAt ? (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onRegenerate(share.id)}
+            disabled={isRegenerating}
+            title={intl.formatMessage({
+              id: 'wallet.settings.shares.row.regenerateHint',
+              defaultMessage: 'Issues a new link and invalidates the old one',
+            })}
+          >
+            <Icon name="ArrowClockwiseIcon" />
+            <FormattedMessage id="wallet.settings.shares.row.regenerate" defaultMessage="Regenerate link" />
+          </Button>
+        ) : null}
         <DropdownMenu>
           <DropdownMenuTrigger
             render={
