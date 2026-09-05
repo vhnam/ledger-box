@@ -4,7 +4,11 @@ import { DEFAULT_LOCALE, isSupportedLocale, parseAcceptLanguage, type SupportedL
 
 import { auth } from '#/lib/auth/auth.ts';
 import { db } from '#/lib/db/index.ts';
-import type { StatementSnapshot } from '#/lib/wallet/statement.ts';
+import {
+  ATTACHMENT_EXPORT_URL_TTL_SECONDS,
+  resolveAttachmentViewUrls,
+  type StatementSnapshot,
+} from '#/lib/wallet/statement.ts';
 import {
   buildStatementCsvFilename,
   buildStatementExportFilename,
@@ -77,7 +81,8 @@ export default async (request: Request, context: Context) => {
   const locale: SupportedLocale = isSupportedLocale(parsedLocale) ? parsedLocale : DEFAULT_LOCALE;
 
   if (format === 'pdf') {
-    const body = await encodeStatementPdf(snapshot, share.displayTitle, { locale });
+    const resolved = await resolveAttachmentViewUrls(snapshot, ATTACHMENT_EXPORT_URL_TTL_SECONDS);
+    const body = await encodeStatementPdf(resolved, share.displayTitle, { locale });
     const filename = buildStatementExportFilename(snapshot, wallet.name, 'pdf');
 
     return new Response(Buffer.from(body), {
@@ -89,8 +94,9 @@ export default async (request: Request, context: Context) => {
   }
 
   const filename = buildStatementCsvFilename(snapshot, wallet.name);
+  const resolved = await resolveAttachmentViewUrls(snapshot, ATTACHMENT_EXPORT_URL_TTL_SECONDS);
 
-  return new Response(encodeStatementCsv(snapshot, share.displayTitle), {
+  return new Response(encodeStatementCsv(resolved, share.displayTitle), {
     headers: {
       'Content-Type': 'text/csv; charset=utf-8',
       'Content-Disposition': `attachment; filename="${filename}"`,

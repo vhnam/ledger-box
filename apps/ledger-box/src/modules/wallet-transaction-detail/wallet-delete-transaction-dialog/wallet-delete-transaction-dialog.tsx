@@ -10,7 +10,7 @@ import { formatErrorMessage } from '#/lib/locale/intl-message';
 
 import type { TransactionDto } from '#/queries/transactions/transaction.dto';
 
-import { useDeleteTransactionDialogActions } from '#/modules/wallet-transactions/wallet-delete-transaction-dialog/wallet-delete-transaction-dialog.actions';
+import { useDeleteTransactionDialogActions } from './wallet-delete-transaction-dialog.actions';
 
 type DeleteTransactionDialogProps = {
   open: boolean;

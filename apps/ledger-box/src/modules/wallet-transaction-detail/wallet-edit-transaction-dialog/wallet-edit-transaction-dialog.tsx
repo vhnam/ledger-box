@@ -10,8 +10,8 @@ import type { EditTransactionOutput } from '#/schemas/edit-transaction.schema';
 import type { TransactionDto } from '#/queries/transactions/transaction.dto';
 import { useWallets } from '#/queries/wallets/wallet.queries';
 
-import { useEditTransactionDialogActions } from '#/modules/wallet-transactions/wallet-edit-transaction-dialog/wallet-edit-transaction-dialog.actions';
-import { EditTransactionForm } from '#/modules/wallet-transactions/wallet-edit-transaction-dialog/wallet-edit-transaction-form';
+import { useEditTransactionDialogActions } from './wallet-edit-transaction-dialog.actions';
+import { EditTransactionForm } from './wallet-edit-transaction-form';
 
 interface EditTransactionDialogProps {
   open: boolean;

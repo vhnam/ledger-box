@@ -8,26 +8,28 @@ import { Card, CardHeader, CardTitle } from '@vhnam/ui/components/ui/card';
 import { cn } from '@vhnam/ui/lib/cn';
 
 import { formatSignedCurrency } from '@vhnam/utils/currency';
-import { format, toDate } from '@vhnam/utils/date';
+import { DateFormat, formatInTimeZone, LOCALE_TIMEZONE } from '@vhnam/utils/date';
 
 import { getTransactionAmountClassName } from '#/utils/transaction/transaction-amount';
 
 import { formatErrorMessage } from '#/lib/locale/intl-message';
+import { useAppLocale } from '#/lib/locale/locale-context';
 
 import type { TransactionDto } from '#/queries/transactions/transaction.dto';
 import { useWallets } from '#/queries/wallets/wallet.queries';
 
+import { AttachmentPreview } from '#/components/attachment-preview';
+
 import { DeleteTransactionAttachmentDialog } from '#/modules/wallet-transaction-detail/wallet-delete-transaction-attachment-dialog';
+import { DeleteTransactionDialog } from '#/modules/wallet-transaction-detail/wallet-delete-transaction-dialog';
+import { EditTransactionDialog } from '#/modules/wallet-transaction-detail/wallet-edit-transaction-dialog';
 import {
   TransactionAttachmentEmptyState,
   TransactionAttachmentList,
   TransactionAttachmentLoadingState,
-  TransactionAttachmentPreview,
   TransactionAttachmentUpload,
   useTransactionAttachments,
 } from '#/modules/wallet-transaction-detail/wallet-transaction-attachments';
-import { DeleteTransactionDialog } from '#/modules/wallet-transactions/wallet-delete-transaction-dialog';
-import { EditTransactionDialog } from '#/modules/wallet-transactions/wallet-edit-transaction-dialog';
 
 import { useWalletTransactionDetail } from './wallet-transaction-detail.actions';
 
@@ -42,13 +44,14 @@ type DetailStatTileProps = {
 };
 
 function TransactionDetailDateTime({ date }: { date: string }) {
-  const occurredAt = toDate(date);
+  const locale = useAppLocale();
+  const timeZone = LOCALE_TIMEZONE[locale];
 
   return (
     <time dateTime={date}>
-      <span className="block lg:inline">{format(occurredAt, 'MMM d, yyyy')}</span>
+      <span className="block lg:inline">{formatInTimeZone(date, timeZone, DateFormat.Medium, locale)}</span>
       <span className="hidden lg:inline"> • </span>
-      <span className="block lg:inline">{format(occurredAt, 'h:mm a')}</span>
+      <span className="block lg:inline">{formatInTimeZone(date, timeZone, 'HH:mm')}</span>
     </time>
   );
 }
@@ -236,7 +239,7 @@ function WalletTransactionDetail({ transaction }: WalletTransactionDetailProps) 
         onDeleted={handleDeleted}
       />
 
-      <TransactionAttachmentPreview
+      <AttachmentPreview
         open={previewOpen}
         onOpenChange={setPreviewOpen}
         attachments={previewableAttachments}

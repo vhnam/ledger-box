@@ -4,7 +4,12 @@ import { DEFAULT_LOCALE, isSupportedLocale, parseAcceptLanguage, type SupportedL
 
 import { auth } from '#/lib/auth/auth.ts';
 import { db } from '#/lib/db/index.ts';
-import { buildStatement } from '#/lib/wallet/statement.ts';
+import {
+  ATTACHMENT_EXPORT_URL_TTL_SECONDS,
+  ATTACHMENT_VIEW_URL_TTL_SECONDS,
+  buildStatement,
+  resolveAttachmentViewUrls,
+} from '#/lib/wallet/statement.ts';
 import { calendarDateToOccurredAtStart } from '#/utils/wallet/period-bounds.ts';
 import { generateShareToken } from '#/utils/wallet/share-token.ts';
 import {
@@ -153,15 +158,16 @@ export default async (request: Request, context: Context) => {
       endExclusive: new Date(calendarDateToOccurredAtStart(wallet.timezone, periodTo).getTime() + 24 * 60 * 60 * 1000),
     };
 
-    const snapshot = await buildStatement(db, walletId, bounds, wallet.timezone);
+    const snapshot = await buildStatement(db, walletId, wallet.tenantId, bounds, wallet.timezone);
 
     const url = new URL(request.url);
 
     if (url.searchParams.get('preview') === 'true') {
       if (url.searchParams.get('format') === 'csv') {
         const filename = buildStatementCsvFilename(snapshot, wallet.name);
+        const resolved = await resolveAttachmentViewUrls(snapshot, ATTACHMENT_EXPORT_URL_TTL_SECONDS);
 
-        return new Response(encodeStatementCsv(snapshot, displayTitle), {
+        return new Response(encodeStatementCsv(resolved, displayTitle), {
           headers: {
             'Content-Type': 'text/csv; charset=utf-8',
             'Content-Disposition': `attachment; filename="${filename}"`,
@@ -172,7 +178,8 @@ export default async (request: Request, context: Context) => {
       if (url.searchParams.get('format') === 'pdf') {
         const parsedLocale = parseAcceptLanguage(request.headers.get('accept-language'));
         const locale: SupportedLocale = isSupportedLocale(parsedLocale) ? parsedLocale : DEFAULT_LOCALE;
-        const body = await encodeStatementPdf(snapshot, displayTitle, { locale });
+        const resolved = await resolveAttachmentViewUrls(snapshot, ATTACHMENT_EXPORT_URL_TTL_SECONDS);
+        const body = await encodeStatementPdf(resolved, displayTitle, { locale });
         const filename = buildStatementExportFilename(snapshot, wallet.name, 'pdf');
 
         return new Response(Buffer.from(body), {
@@ -183,7 +190,9 @@ export default async (request: Request, context: Context) => {
         });
       }
 
-      return Response.json({ preview: snapshot });
+      const resolved = await resolveAttachmentViewUrls(snapshot, ATTACHMENT_VIEW_URL_TTL_SECONDS);
+
+      return Response.json({ preview: resolved });
     }
 
     // explicit `null` means the owner opted into no expiry; omitted means the 90-day default.

@@ -30,6 +30,7 @@ const ACTION_DEFAULTS: Record<string, string> = {
   invite: 'Invited member',
   role_change: 'Changed member role',
   revoke: 'Revoked statement share',
+  regenerate: 'Regenerated statement link',
   rename: 'Renamed wallet',
   invite_resend: 'Resent invite',
   invite_email_failed: 'Invite email failed',

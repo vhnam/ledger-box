@@ -17,6 +17,7 @@ import {
   useCreateStatementShare,
   useDownloadStatementPreviewExport,
   usePreviewStatementShare,
+  useRegenerateStatementShareLink,
   useRevokeStatementShare,
 } from '#/queries/statement-shares/statement-share.mutations';
 import { useStatementShares } from '#/queries/statement-shares/statement-share.queries';
@@ -56,6 +57,7 @@ export function useWalletSettingsStatementSharesActions({ wallet }: UseWalletSet
   const { mutate: preview, isPending: isPreviewing } = usePreviewStatementShare(wallet.id);
   const { mutate: createShare, isPending: isCreating } = useCreateStatementShare(wallet.id);
   const { mutate: revokeShare } = useRevokeStatementShare(wallet.id);
+  const { mutate: regenerateLink, isPending: isRegenerating } = useRegenerateStatementShareLink(wallet.id);
   const { mutate: downloadExport, isPending: isDownloading } = useDownloadStatementPreviewExport(wallet.id);
 
   const [periodFrom, setPeriodFrom] = useState<string | undefined>(undefined);
@@ -185,6 +187,33 @@ export function useWalletSettingsStatementSharesActions({ wallet }: UseWalletSet
     });
   }
 
+  function handleRegenerate(shareId: string, onSuccess: () => void) {
+    setError(null);
+
+    regenerateLink(shareId, {
+      onSuccess: (response) => {
+        setCreatedLink(response);
+        onSuccess();
+        toast.add({
+          title: intl.formatMessage({ id: 'toast.shares.regenerated', defaultMessage: 'Share link regenerated' }),
+          type: 'success',
+        });
+      },
+      onError: (regenerateError) => {
+        const message =
+          regenerateError instanceof Error ? regenerateError.message : 'toast.shares.regenerateErrorFallback';
+        toast.add({
+          title: intl.formatMessage({
+            id: 'toast.shares.regenerateFailed',
+            defaultMessage: 'Failed to regenerate share link',
+          }),
+          description: formatErrorMessage(intl, message),
+          type: 'error',
+        });
+      },
+    });
+  }
+
   function resetCreateFlow() {
     setPeriodFrom(undefined);
     setPeriodTo(undefined);
@@ -219,11 +248,13 @@ export function useWalletSettingsStatementSharesActions({ wallet }: UseWalletSet
     isPreviewing,
     isCreating,
     isDownloading,
+    isRegenerating,
     handlePreview,
     handleCreate,
     handleDownloadCsv,
     handleDownloadPdf,
     handleRevoke,
+    handleRegenerate,
     resetCreateFlow,
   };
 }

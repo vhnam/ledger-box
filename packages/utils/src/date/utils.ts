@@ -101,6 +101,19 @@ export function formatDateTimeShort(date: DateInput, locale: SupportedLocale = D
   return formatDateTime(date, DateTimeFormat.Short, locale);
 }
 
+/**
+ * Formats `date` with a raw date-fns pattern in an explicit `timezone` — the escape hatch for
+ * callers that need a zone other than `LOCALE_TIMEZONE[locale]` (e.g. a wallet's own stored
+ * timezone) or a pattern outside the `DateFormat`/`DateTimeFormat` tables (e.g. time-only, or
+ * a locale-independent machine format). Prefer `formatDate`/`formatDateTime` when the
+ * locale-implied timezone and a cataloged pattern are enough.
+ */
+export function formatInTimeZone(date: DateInput, timezone: string, pattern: string, locale?: SupportedLocale): string {
+  return format(new TZDate(toDate(date), timezone), pattern, {
+    locale: locale ? LOCALE_DATE_FNS_LOCALE[locale] : undefined,
+  });
+}
+
 export function formatRelative(date: DateInput, locale: SupportedLocale = DEFAULT_DATE_LOCALE): string {
   return formatDistanceToNow(toDate(date), { addSuffix: true, locale: LOCALE_DATE_FNS_LOCALE[locale] });
 }

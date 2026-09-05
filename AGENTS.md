@@ -343,7 +343,7 @@ the message body or trailers.
 
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **ledger-box** (33781 symbols, 80334 relationships, 880 execution flows).
+This project is indexed by GitNexus as **ledger-box** (33918 symbols, 80521 relationships, 870 execution flows).
 
 > Index stale? Run `node .gitnexus/run.cjs analyze --index-only` from the project root — it auto-selects an available runner. No `.gitnexus/run.cjs` yet? Bootstrap with `npx`, `bunx`, or `pnpm dlx` — e.g. `bunx gitnexus@latest analyze` (npm 11 npx crash; #1939).
 

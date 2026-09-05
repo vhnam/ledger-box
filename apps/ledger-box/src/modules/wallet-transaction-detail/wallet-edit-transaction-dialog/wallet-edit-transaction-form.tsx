@@ -8,14 +8,17 @@ import { DatePicker } from '@vhnam/ui/components/ui/date-picker';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@vhnam/ui/components/ui/field';
 import { Spinner } from '@vhnam/ui/components/ui/spinner';
 import { Textarea } from '@vhnam/ui/components/ui/textarea';
+import { TimePicker } from '@vhnam/ui/components/ui/time-picker';
 import { ToggleGroup, ToggleGroupItem } from '@vhnam/ui/components/ui/toggle-group';
 import { cn } from '@vhnam/ui/lib/cn';
+
+import { format, parseISO } from '@vhnam/utils/date';
 
 import type { EditTransactionOutput } from '#/schemas/edit-transaction.schema';
 
 import { formatErrorMessage } from '#/lib/locale/intl-message';
 
-import type { useEditTransactionDialogActions } from '#/modules/wallet-transactions/wallet-edit-transaction-dialog/wallet-edit-transaction-dialog.actions';
+import type { useEditTransactionDialogActions } from '#/modules/wallet-transaction-detail/wallet-edit-transaction-dialog/wallet-edit-transaction-dialog.actions';
 
 type EditTransactionFormProps = Pick<
   ReturnType<typeof useEditTransactionDialogActions>,
@@ -126,27 +129,51 @@ function EditTransactionForm({ form, onSubmit, isPending, error, currency }: Edi
           )}
         />
 
-        <FormField
-          of={form}
-          path={['occurredAt']}
-          children={(field) => (
-            <Field data-invalid={!!field.errors}>
-              <FieldLabel htmlFor={field.props.name}>
-                <FormattedMessage id="transaction.edit.date.label" defaultMessage="Date" />
-              </FieldLabel>
-              <DatePicker
-                id={field.props.name}
-                value={field.input ? new Date(field.input) : undefined}
-                placeholder={intl.formatMessage({
-                  id: 'transaction.edit.date.placeholder',
-                  defaultMessage: 'Pick a date',
-                })}
-                onChange={(date) => field.onChange(date ? date.toISOString().slice(0, 10) : undefined)}
-              />
-              {field.errors && <FieldError>{formatErrorMessage(intl, field.errors[0])}</FieldError>}
-            </Field>
-          )}
-        />
+        <div className="flex gap-3">
+          <FormField
+            of={form}
+            path={['occurredAt']}
+            children={(field) => (
+              <Field className="flex-1" data-invalid={!!field.errors}>
+                <FieldLabel htmlFor={field.props.name}>
+                  <FormattedMessage id="transaction.edit.date.label" defaultMessage="Date" />
+                </FieldLabel>
+                <DatePicker
+                  id={field.props.name}
+                  className="w-full"
+                  buttonClassName="w-full"
+                  value={field.input ? parseISO(field.input) : undefined}
+                  placeholder={intl.formatMessage({
+                    id: 'transaction.edit.date.placeholder',
+                    defaultMessage: 'Pick a date',
+                  })}
+                  onChange={(date) => field.onChange(date ? format(date, 'yyyy-MM-dd') : undefined)}
+                />
+                {field.errors && <FieldError>{formatErrorMessage(intl, field.errors[0])}</FieldError>}
+              </Field>
+            )}
+          />
+
+          <FormField
+            of={form}
+            path={['occurredTime']}
+            children={(field) => (
+              <Field className="flex-1" data-invalid={!!field.errors}>
+                <FieldLabel htmlFor={field.props.name}>
+                  <FormattedMessage id="transaction.edit.time.label" defaultMessage="Time" />
+                </FieldLabel>
+                <TimePicker
+                  id={field.props.name}
+                  className="w-full"
+                  inputClassName="w-full"
+                  value={field.input}
+                  onChange={(time) => field.onChange(time)}
+                />
+                {field.errors && <FieldError>{formatErrorMessage(intl, field.errors[0])}</FieldError>}
+              </Field>
+            )}
+          />
+        </div>
       </FieldGroup>
 
       {error ? <FieldError>{formatErrorMessage(intl, error)}</FieldError> : null}

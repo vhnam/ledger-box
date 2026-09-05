@@ -4,13 +4,18 @@ import { useIntl } from 'react-intl';
 
 import { toast } from '@vhnam/ui/components/ui/toast';
 
+import { LOCALE_TIMEZONE } from '@vhnam/utils/date';
+
 import {
   editTransactionSchema,
   type EditTransactionInput,
   type EditTransactionOutput,
 } from '#/schemas/edit-transaction.schema';
 
+import { toZonedDateAndTimeStrings } from '#/utils/wallet/period-bounds';
+
 import { formatErrorMessage } from '#/lib/locale/intl-message';
+import { useAppLocale } from '#/lib/locale/locale-context';
 
 import type { TransactionDto } from '#/queries/transactions/transaction.dto';
 import { useUpdateTransaction } from '#/queries/transactions/transaction.mutations';
@@ -24,17 +29,22 @@ function formatAmountForInput(amount: number): string {
   return String(Math.round(amount));
 }
 
-function getInitialInput(transaction: TransactionDto): EditTransactionInput {
+function getInitialInput(transaction: TransactionDto, timezone: string): EditTransactionInput {
+  const { date, time } = toZonedDateAndTimeStrings(new Date(transaction.occurredAt), timezone);
+
   return {
     type: transaction.type,
     amount: formatAmountForInput(transaction.amount),
     description: transaction.description,
-    occurredAt: transaction.occurredAt.slice(0, 10),
+    occurredAt: date,
+    occurredTime: time,
   };
 }
 
 export function useEditTransactionDialogActions({ open, transaction }: UseEditTransactionDialogActionsOptions) {
   const intl = useIntl();
+  const locale = useAppLocale();
+  const timezone = LOCALE_TIMEZONE[locale];
   const form = useForm({ schema: editTransactionSchema });
   const { mutate: updateTransaction, isPending } = useUpdateTransaction();
   const [error, setError] = useState<string | null>(null);
@@ -46,9 +56,9 @@ export function useEditTransactionDialogActions({ open, transaction }: UseEditTr
 
     setError(null);
     reset(form, {
-      initialInput: getInitialInput(transaction),
+      initialInput: getInitialInput(transaction, timezone),
     });
-  }, [open, transaction, form]);
+  }, [open, transaction, timezone, form]);
 
   function handleOpenChange(nextOpen: boolean) {
     if (!nextOpen) {
@@ -61,7 +71,7 @@ export function useEditTransactionDialogActions({ open, transaction }: UseEditTr
     setError(null);
 
     updateTransaction(
-      { walletId: transaction.walletId, transactionId: transaction.id, ...output },
+      { walletId: transaction.walletId, transactionId: transaction.id, timezone, ...output },
       {
         onSuccess: () => {
           toast.add({

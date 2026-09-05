@@ -12,6 +12,8 @@ import { Textarea } from '@vhnam/ui/components/ui/textarea';
 import { ToggleGroup, ToggleGroupItem } from '@vhnam/ui/components/ui/toggle-group';
 import { cn } from '@vhnam/ui/lib/cn';
 
+import { format, parseISO } from '@vhnam/utils/date';
+
 import type { AddTransactionOutput } from '#/schemas/add-transaction.schema';
 
 import { formatErrorMessage } from '#/lib/locale/intl-message';
@@ -174,12 +176,12 @@ function AddTransactionDialog({ open, onOpenChange, walletId }: AddTransactionDi
                 </FieldLabel>
                 <DatePicker
                   id={field.props.name}
-                  value={field.input ? new Date(field.input) : undefined}
+                  value={field.input ? parseISO(field.input) : undefined}
                   placeholder={intl.formatMessage({
                     id: 'transaction.add.date.placeholder',
                     defaultMessage: 'Today',
                   })}
-                  onChange={(date) => field.onChange(date ? date.toISOString().slice(0, 10) : undefined)}
+                  onChange={(date) => field.onChange(date ? format(date, 'yyyy-MM-dd') : undefined)}
                 />
                 {field.errors && <FieldError>{formatErrorMessage(intl, field.errors[0])}</FieldError>}
               </Field>

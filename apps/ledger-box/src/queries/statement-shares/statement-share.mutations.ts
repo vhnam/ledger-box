@@ -4,6 +4,7 @@ import {
   createStatementShare,
   downloadStatementPreviewExport,
   previewStatementShare,
+  regenerateStatementShareLink,
   revokeStatementShare,
   type StatementExportFormat,
 } from '#/queries/statement-shares/statement-share.api';
@@ -48,6 +49,20 @@ export function useRevokeStatementShare(walletId: string) {
 
   return useMutation({
     mutationFn: (shareId: string) => revokeStatementShare(walletId, shareId),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['wallets', walletId, 'statement-shares'] }),
+        queryClient.invalidateQueries({ queryKey: ['activity', walletId] }),
+      ]);
+    },
+  });
+}
+
+export function useRegenerateStatementShareLink(walletId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (shareId: string) => regenerateStatementShareLink(walletId, shareId),
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['wallets', walletId, 'statement-shares'] }),

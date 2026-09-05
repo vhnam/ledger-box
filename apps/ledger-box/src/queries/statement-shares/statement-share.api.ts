@@ -62,6 +62,21 @@ export async function revokeStatementShare(walletId: string, shareId: string): P
   }
 }
 
+export async function regenerateStatementShareLink(
+  walletId: string,
+  shareId: string,
+): Promise<CreateStatementShareResponse> {
+  try {
+    const { data } = await axios.patch<CreateStatementShareResponse>(
+      `/api/wallets/${walletId}/statement-shares/${shareId}`,
+    );
+
+    return data;
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, 'toast.shares.regenerateErrorFallback'));
+  }
+}
+
 export async function fetchPublicStatement(token: string): Promise<PublicStatementResponse> {
   const { data } = await axios.get<PublicStatementResponse>(`/api/public/statements/${token}`);
 

@@ -8,6 +8,7 @@ import {
   formatDateShort,
   formatDateTime,
   formatDateTimeShort,
+  formatInTimeZone,
   formatIsoDate,
   formatRelative,
   getLastMonthRange,
@@ -130,6 +131,24 @@ describe('locale time zone conversion', () => {
 
     expect(formatDateNumeric(lateUtc, 'ja-JP')).toBe('2026/07/14');
     expect(formatDateNumeric(lateUtc, 'en-US')).toBe('07/13/2026');
+  });
+});
+
+describe('formatInTimeZone', () => {
+  it('formats an explicit timezone independent of any locale-implied zone', () => {
+    // 2026-07-13T12:30:00Z: sampleDate's default vi-VN zone would render 19:30, but an
+    // explicit America/New_York zone must win regardless.
+    expect(formatInTimeZone(sampleDate, 'America/New_York', 'HH:mm')).toBe('08:30');
+  });
+
+  it('applies locale month names when a locale is given', () => {
+    expect(formatInTimeZone(sampleDate, 'UTC', 'MMM d, yyyy', 'en-US')).toBe('Jul 13, 2026');
+    expect(formatInTimeZone(sampleDate, 'UTC', 'd MMM yyyy', 'vi-VN')).toBe('13 thg 7 2026');
+  });
+
+  it('supports locale-independent machine patterns with no locale argument', () => {
+    expect(formatInTimeZone(sampleDate, 'UTC', 'yyyy-MM-dd')).toBe('2026-07-13');
+    expect(formatInTimeZone(sampleDate, 'UTC', 'yyyyMMddHHmm')).toBe('202607131230');
   });
 });
 

@@ -6,6 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### [mr-31 — Statement attachments, share regenerate, transaction time](docs/changelogs/mr-31-statement-attachments-share-regenerate-time.md)
+
+#### Added
+
+- Statement snapshots freeze attachment keys and sign short-lived view URLs on
+  read/export; public/preview UI, CSV, and PDF surface them. Share-link regenerate
+  (`PATCH` share, activity `regenerate`, migration `0011`). `TimePicker` and
+  optional time on edit transaction (`occurredTime` / locale `timezone`).
+
+#### Changed
+
+- Edit/delete live on the transaction detail page; list rows show date and time.
+  Date edits keep the other of date/time when only one is sent.
+
+#### Removed
+
+- Desktop list-row transaction menu; detail-only attachment preview component.
+
 ### [mr-30 — Wallet settings lists, activities route, CodeBlock](docs/changelogs/mr-30-wallet-settings-ui.md)
 
 #### Added

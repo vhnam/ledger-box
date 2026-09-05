@@ -6,10 +6,13 @@ import PDFDocument from 'pdfkit';
 import { createIntl, createIntlCache } from 'react-intl';
 
 import { formatCurrency, formatSignedCurrency } from '@vhnam/utils/currency';
+import { formatInTimeZone, LOCALE_DATE_PATTERNS, LOCALE_DATE_TIME_PATTERNS } from '@vhnam/utils/date';
 import { MESSAGES, toMessageLanguage } from '@vhnam/utils/i18n/all-messages';
 import { DEFAULT_LOCALE, type SupportedLocale } from '@vhnam/utils/locale';
 
-import type { StatementSnapshot } from '#/lib/wallet/statement';
+import type { ResolvedStatementAttachment, StatementSnapshot } from '#/lib/wallet/statement';
+
+type ResolvedStatementSnapshot = StatementSnapshot<ResolvedStatementAttachment>;
 
 const intlCache = createIntlCache();
 
@@ -51,20 +54,16 @@ function labelLocaleFor(locale: SupportedLocale): SupportedLocale {
   return CJK_LOCALES.has(locale) ? DEFAULT_LOCALE : locale;
 }
 
-function formatPdfDate(isoValue: string | null, timezone: string, locale: string): string {
+function formatPdfDate(isoValue: string | null, timezone: string, locale: SupportedLocale): string {
   if (!isoValue) {
     return '';
   }
 
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeZone: timezone }).format(new Date(isoValue));
+  return formatInTimeZone(isoValue, timezone, LOCALE_DATE_PATTERNS[locale].Medium, locale);
 }
 
-function formatPdfGeneratedAt(isoValue: string, timezone: string, locale: string): string {
-  return new Intl.DateTimeFormat(locale, {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-    timeZone: timezone,
-  }).format(new Date(isoValue));
+function formatPdfGeneratedAt(isoValue: string, timezone: string, locale: SupportedLocale): string {
+  return formatInTimeZone(isoValue, timezone, LOCALE_DATE_TIME_PATTERNS[locale].Medium, locale);
 }
 
 function ensureFontsExist(): { regular: string; bold: string } {
@@ -77,7 +76,7 @@ function ensureFontsExist(): { regular: string; bold: string } {
 }
 
 export async function encodeStatementPdf(
-  snapshot: StatementSnapshot,
+  snapshot: ResolvedStatementSnapshot,
   displayTitle: string | null,
   options: EncodeStatementPdfOptions,
 ): Promise<Uint8Array> {
@@ -226,15 +225,19 @@ export async function encodeStatementPdf(
   } else {
     drawColumnHeaders();
 
+    const attachmentLineHeight = 12;
+
     for (const row of snapshot.rows) {
       const dateText = formatPdfDate(row.occurredAt, snapshot.timezone, locale);
       const amountText = formatSignedCurrency(row.amount, row.type, currencyOptions);
       const balanceText = formatCurrency(row.runningBalance, currencyOptions);
+      const attachments = row.attachments ?? [];
       doc.font('NotoSans').fontSize(9);
       const descriptionHeight = doc.heightOfString(row.description || ' ', {
         width: descriptionColWidth,
       });
-      const rowHeight = Math.max(22, descriptionHeight + 6);
+      const attachmentsHeight = attachments.length > 0 ? attachments.length * attachmentLineHeight + 2 : 0;
+      const rowHeight = Math.max(22, descriptionHeight + attachmentsHeight + 6);
 
       ensureSpace(rowHeight);
 
@@ -242,6 +245,23 @@ export async function encodeStatementPdf(
       doc.font('NotoSans').fontSize(9).fillColor('#111111');
       doc.text(dateText, margin, rowTop, { width: dateColWidth, lineBreak: false });
       doc.text(row.description, margin + dateColWidth + 4, rowTop, { width: descriptionColWidth });
+
+      if (attachments.length > 0) {
+        let attachmentY = rowTop + descriptionHeight + 2;
+
+        doc.font('NotoSans').fontSize(8).fillColor('#2563eb');
+
+        for (const attachment of attachments) {
+          doc.text(attachment.fileName, margin + dateColWidth + 4, attachmentY, {
+            width: descriptionColWidth,
+            link: attachment.url,
+            underline: true,
+            lineBreak: false,
+          });
+          attachmentY += attachmentLineHeight;
+        }
+      }
+
       doc.fillColor(row.type === 'income' ? '#059669' : '#e11d48');
       doc.text(amountText, margin + dateColWidth + descriptionColWidth + 8, rowTop, {
         width: amountColWidth,

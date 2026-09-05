@@ -1,11 +1,13 @@
 import { describe, expect, it } from 'vite-plus/test';
 
-import type { StatementSnapshot } from '#/lib/wallet/statement';
+import type { ResolvedStatementAttachment, StatementSnapshot } from '#/lib/wallet/statement';
 
 import { buildStatementCsvFilename, buildStatementExportFilename, encodeStatementCsv } from './statement-export';
 import { encodeStatementPdf } from './statement-export-pdf';
 
-function makeSnapshot(overrides: Partial<StatementSnapshot> = {}): StatementSnapshot {
+type ResolvedStatementSnapshot = StatementSnapshot<ResolvedStatementAttachment>;
+
+function makeSnapshot(overrides: Partial<ResolvedStatementSnapshot> = {}): ResolvedStatementSnapshot {
   return {
     timezone: 'UTC',
     currency: 'USD',
@@ -23,6 +25,15 @@ function makeSnapshot(overrides: Partial<StatementSnapshot> = {}): StatementSnap
         description: 'Salary',
         occurredAt: '2026-08-02T00:00:00.000Z',
         runningBalance: 180,
+        attachments: [
+          {
+            id: 'a1',
+            fileName: 'payslip.pdf',
+            contentType: 'application/pdf',
+            size: 1024,
+            url: 'https://cdn.example.com/a1?sig=abc',
+          },
+        ],
       },
       {
         type: 'expense',
@@ -30,6 +41,7 @@ function makeSnapshot(overrides: Partial<StatementSnapshot> = {}): StatementSnap
         description: '=SUM(A1)',
         occurredAt: '2026-08-03T00:00:00.000Z',
         runningBalance: 150,
+        attachments: [],
       },
     ],
     ...overrides,
@@ -43,8 +55,14 @@ describe('encodeStatementCsv', () => {
     expect(csv.startsWith('﻿Statement,My Wallet')).toBe(true);
     expect(csv).toContain('Period,2026-08-01 to 2026-08-08');
     expect(csv).toContain('Opening balance,100.00');
-    expect(csv).toContain('Date,Description,Type,Amount,Running balance');
-    expect(csv).toContain('2026-08-02,Salary,income,80.00,180.00');
+    expect(csv).toContain('Date,Description,Type,Amount,Running balance,Attachments');
+    expect(csv).toContain('2026-08-02,Salary,income,80.00,180.00,payslip.pdf: https://cdn.example.com/a1?sig=abc');
+  });
+
+  it('leaves the attachments cell empty for a row with none', () => {
+    const csv = encodeStatementCsv(makeSnapshot(), 'My Wallet');
+
+    expect(csv).toContain("2026-08-03,'=SUM(A1),expense,-30.00,150.00,");
   });
 
   it('guards formula-trigger characters and negates expense amounts', () => {

@@ -1,6 +1,9 @@
 import { getCurrencyFractionDigits } from '@vhnam/utils/currency';
+import { formatInTimeZone } from '@vhnam/utils/date';
 
-import type { StatementSnapshot } from '#/lib/wallet/statement';
+import type { ResolvedStatementAttachment, StatementSnapshot } from '#/lib/wallet/statement';
+
+type ResolvedStatementSnapshot = StatementSnapshot<ResolvedStatementAttachment>;
 
 const CSV_BOM = '﻿';
 const FORMULA_TRIGGER_CHARS = ['=', '+', '-', '@'];
@@ -25,19 +28,14 @@ function formatCsvDate(isoValue: string | null, timezone: string): string {
     return '';
   }
 
-  const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone: timezone,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).formatToParts(new Date(isoValue));
-
-  const lookup = Object.fromEntries(parts.map((part) => [part.type, part.value]));
-
-  return `${lookup.year}-${lookup.month}-${lookup.day}`;
+  return formatInTimeZone(isoValue, timezone, 'yyyy-MM-dd');
 }
 
-function formatPeriodLabel(snapshot: StatementSnapshot): string {
+function formatAttachmentsCell(attachments: ResolvedStatementAttachment[] | undefined): string {
+  return (attachments ?? []).map((attachment) => `${attachment.fileName}: ${attachment.url}`).join('; ');
+}
+
+function formatPeriodLabel(snapshot: Pick<StatementSnapshot, 'periodFrom' | 'periodTo' | 'timezone'>): string {
   if (!snapshot.periodFrom || !snapshot.periodTo) {
     return 'All time';
   }
@@ -57,7 +55,7 @@ type EncodeStatementCsvOptions = {
 };
 
 export function encodeStatementCsv(
-  snapshot: StatementSnapshot,
+  snapshot: ResolvedStatementSnapshot,
   displayTitle: string | null,
   // Accepted for API forward-compatibility; see `EncodeStatementCsvOptions` for why it's unused today.
   _options: EncodeStatementCsvOptions = {},
@@ -74,7 +72,7 @@ export function encodeStatementCsv(
   lines.push(`Total in,${formatCsvAmount(snapshot.totalIn, snapshot.currency)}`);
   lines.push(`Total out,${formatCsvAmount(snapshot.totalOut, snapshot.currency)}`);
   lines.push('');
-  lines.push('Date,Description,Type,Amount,Running balance');
+  lines.push('Date,Description,Type,Amount,Running balance,Attachments');
 
   for (const row of snapshot.rows) {
     const signedAmount = row.type === 'income' ? row.amount : -row.amount;
@@ -86,6 +84,7 @@ export function encodeStatementCsv(
         row.type,
         formatCsvAmount(signedAmount, snapshot.currency),
         formatCsvAmount(row.runningBalance, snapshot.currency),
+        escapeCsvField(formatAttachmentsCell(row.attachments)),
       ].join(','),
     );
   }
@@ -103,25 +102,15 @@ function sanitizeFilenameSegment(value: string): string {
 }
 
 function formatFilenameTimestamp(isoValue: string, timezone: string): string {
-  const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone: timezone,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  }).formatToParts(new Date(isoValue));
-
-  const lookup = Object.fromEntries(parts.map((part) => [part.type, part.value]));
-
-  return `${lookup.year}${lookup.month}${lookup.day}${lookup.hour}${lookup.minute}`;
+  return formatInTimeZone(isoValue, timezone, 'yyyyMMddHHmm');
 }
 
 export type StatementExportFormat = 'csv' | 'pdf';
 
+type StatementFilenameFields = Pick<StatementSnapshot, 'periodFrom' | 'periodTo' | 'timezone' | 'snapshotAt'>;
+
 export function buildStatementExportFilename(
-  snapshot: StatementSnapshot,
+  snapshot: StatementFilenameFields,
   walletName: string,
   format: StatementExportFormat,
 ): string {
@@ -134,7 +123,7 @@ export function buildStatementExportFilename(
   return `statement-${sanitizeFilenameSegment(walletName)}-${period}-${generatedAt}.${format}`;
 }
 
-export function buildStatementCsvFilename(snapshot: StatementSnapshot, walletName: string): string {
+export function buildStatementCsvFilename(snapshot: StatementFilenameFields, walletName: string): string {
   return buildStatementExportFilename(snapshot, walletName, 'csv');
 }
 

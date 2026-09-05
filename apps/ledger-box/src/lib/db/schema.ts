@@ -12,6 +12,7 @@ export type ActivityAction =
   | 'invite'
   | 'role_change'
   | 'revoke'
+  | 'regenerate'
   | 'rename'
   | 'invite_resend'
   | 'invite_email_failed';

@@ -26,6 +26,8 @@ export const API_ERROR_MESSAGES = {
   AMOUNT_MUST_BE_POSITIVE: 'Amount must be greater than 0',
   DESCRIPTION_REQUIRED: 'Description is required',
   OCCURRED_AT_INVALID: 'Occurred at must be a date string',
+  OCCURRED_TIME_INVALID: 'Occurred time must be a HH:mm string',
+  TIMEZONE_INVALID: 'Timezone must be a valid IANA identifier',
 
   SOURCE_WALLET_REQUIRED: 'Source wallet is required',
   DESTINATION_WALLET_REQUIRED: 'Destination wallet is required',
@@ -63,6 +65,7 @@ export const API_ERROR_MESSAGES = {
   DISPLAY_TITLE_TOO_LONG: 'Display title must be 80 characters or fewer',
   EXPIRY_INVALID: 'Expiry must be a date string or null',
   SHARE_NOT_FOUND: 'Share not found',
+  SHARE_ALREADY_REVOKED: 'This link has already been revoked and cannot be regenerated',
 
   STATEMENT_LINK_INVALID: 'This link is not valid.',
   STATEMENT_LINK_REVOKED: 'This link has been revoked.',

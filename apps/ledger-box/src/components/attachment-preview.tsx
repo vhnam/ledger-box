@@ -8,26 +8,21 @@ import { cn } from '@vhnam/ui/lib/cn';
 
 import { isPdfContentType } from '#/utils/attachments/file';
 
-type PreviewableTransactionAttachment = {
+type PreviewableAttachment = {
   id: string;
   fileName: string;
   contentType: string;
   previewUrl: string;
 };
 
-type TransactionAttachmentPreviewProps = {
+type AttachmentPreviewProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  attachments: PreviewableTransactionAttachment[];
+  attachments: PreviewableAttachment[];
   initialAttachmentId?: string;
 };
 
-function TransactionAttachmentPreview({
-  open,
-  onOpenChange,
-  attachments,
-  initialAttachmentId,
-}: TransactionAttachmentPreviewProps) {
+function AttachmentPreview({ open, onOpenChange, attachments, initialAttachmentId }: AttachmentPreviewProps) {
   const intl = useIntl();
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -151,4 +146,5 @@ function TransactionAttachmentPreview({
   );
 }
 
-export { TransactionAttachmentPreview };
+export { AttachmentPreview };
+export type { PreviewableAttachment };

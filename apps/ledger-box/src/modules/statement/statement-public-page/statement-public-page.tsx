@@ -1,7 +1,7 @@
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { Icon } from '@vhnam/ui/components/icon';
-import { buttonVariants } from '@vhnam/ui/components/ui/button';
+import { Button } from '@vhnam/ui/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,15 +32,18 @@ function StatementPublicPage({ token }: StatementPublicPageProps) {
 
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-2xl flex-col gap-6 p-4 lg:p-8">
-      <div className="flex items-center justify-between gap-3">
-        <h1 className="font-display text-lg font-medium">{data?.displayTitle ?? fallbackTitle}</h1>
+      <div className="flex items-center justify-end">
         {data ? (
           <DropdownMenu>
-            <DropdownMenuTrigger className={buttonVariants({ variant: 'outline', size: 'sm' })}>
-              <Icon name="DownloadIcon" />
-              <FormattedMessage id="statement.public.download" defaultMessage="Download" />
-              <Icon name="CaretDownIcon" className="size-3.5 opacity-70" />
-            </DropdownMenuTrigger>
+            <DropdownMenuTrigger
+              render={
+                <Button size="sm">
+                  <Icon name="DownloadIcon" />
+                  <FormattedMessage id="statement.public.download" defaultMessage="Download" />
+                  <Icon name="CaretDownIcon" className="size-3.5 opacity-70" />
+                </Button>
+              }
+            />
             <DropdownMenuContent align="end">
               <DropdownMenuGroup>
                 <DropdownMenuItem
@@ -60,6 +63,7 @@ function StatementPublicPage({ token }: StatementPublicPageProps) {
           </DropdownMenu>
         ) : null}
       </div>
+      <h1 className="font-display text-lg font-medium">{data?.displayTitle ?? fallbackTitle}</h1>
 
       {isPending ? (
         <div className="flex flex-1 items-center justify-center py-16">

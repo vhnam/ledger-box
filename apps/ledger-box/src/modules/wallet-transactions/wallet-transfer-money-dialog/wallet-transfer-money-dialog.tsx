@@ -13,6 +13,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Spinner } from '@vhnam/ui/components/ui/spinner';
 import { Textarea } from '@vhnam/ui/components/ui/textarea';
 
+import { format, parseISO } from '@vhnam/utils/date';
+
 import type { TransferMoneyOutput } from '#/schemas/transfer-money.schema';
 
 import { formatErrorMessage } from '#/lib/locale/intl-message';
@@ -199,12 +201,12 @@ function TransferMoneyDialog({ open, onOpenChange, walletId }: TransferMoneyDial
                 </FieldLabel>
                 <DatePicker
                   id={field.props.name}
-                  value={field.input ? new Date(field.input) : undefined}
+                  value={field.input ? parseISO(field.input) : undefined}
                   placeholder={intl.formatMessage({
                     id: 'transfer.date.placeholder',
                     defaultMessage: 'Today',
                   })}
-                  onChange={(date) => field.onChange(date ? date.toISOString().slice(0, 10) : undefined)}
+                  onChange={(date) => field.onChange(date ? format(date, 'yyyy-MM-dd') : undefined)}
                 />
                 {field.errors && <FieldError>{formatErrorMessage(intl, field.errors[0])}</FieldError>}
               </Field>
